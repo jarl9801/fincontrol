@@ -153,7 +153,10 @@ const TransactionFormModal = ({ isOpen, onClose, onSubmit, editingTransaction, u
               value={formData.costCenter}
               onChange={e => setFormData({...formData, costCenter: e.target.value})}
             >
-              {COST_CENTERS.map(cc => <option key={cc} value={cc}>{cc}</option>)}
+              <option value="Sin asignar">Sin asignar</option>
+              {COST_CENTERS.map(cc => (
+                <option key={cc.id} value={cc.name}>{cc.id} - {cc.name}</option>
+              ))}
             </select>
           </div>
 
