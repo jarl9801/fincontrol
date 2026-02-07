@@ -1,16 +1,100 @@
-# React + Vite
+# FinControl - Sistema de Control Financiero
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema de gestión financiera empresarial desarrollado con React y Firebase.
 
-Currently, two official plugins are available:
+## 🚀 Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Dashboard Financiero
+- KPIs en tiempo real (ingresos, gastos, balance)
+- Gráficos de tendencia
+- Métricas de rendimiento
 
-## React Compiler
+### Gestión de Transacciones
+- Registro de ingresos y gastos
+- Ordenamiento por fecha y monto
+- Filtros avanzados por tipo, categoría, proyecto
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Cuentas por Pagar/Cobrar
+- Control de CXP y CXC
+- Estados de pago (pendiente, parcial, pagado)
+- Alertas de vencimiento
 
-## Expanding the ESLint configuration
+### Reportes Financieros
+- **Resumen Ejecutivo**: KPIs, alertas, recomendaciones
+- **Estado de Resultados**: Estructura contable profesional (EBIT, utilidad neta)
+- **Ratios Financieros**: Liquidez, actividad, rentabilidad con indicadores visuales
+- **Flujo de Caja**: Proyecciones y análisis
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Configuración
+- **Proyectos**: Gestión de proyectos con presupuesto
+- **Categorías**: Categorías de ingreso y gasto personalizables
+- **Centros de Costo**: Presupuesto mensualizado con barras de progreso
+- **Cuenta Bancaria**: Balance con línea de crédito
+
+## 🛠️ Tecnologías
+
+- **Frontend**: React 18, Vite
+- **Styling**: Tailwind CSS 4.x
+- **Backend**: Firebase (Firestore, Auth)
+- **Charts**: Recharts
+- **Icons**: Lucide React
+- **Hosting**: Firebase Hosting
+
+## 📦 Instalación
+
+```bash
+# Clonar repositorio
+git clone https://github.com/jarl9801/fincontrol.git
+cd fincontrol
+
+# Instalar dependencias
+npm install
+
+# Configurar Firebase (crear .env con credenciales)
+cp .env.example .env
+
+# Ejecutar en desarrollo
+npm run dev
+
+# Build para producción
+npm run build
+```
+
+## 🔐 Roles de Usuario
+
+- **Admin**: Acceso completo (dashboard, reportes, configuración)
+- **Editor**: Acceso limitado (transacciones)
+
+## 📁 Estructura del Proyecto
+
+```
+src/
+├── components/
+│   ├── layout/          # Sidebar, MobileMenu
+│   └── ui/              # Card, Modal, Toast, etc.
+├── features/
+│   ├── auth/            # Login
+│   ├── dashboard/       # Dashboard principal
+│   ├── transactions/    # Lista de transacciones
+│   ├── cxp/             # Cuentas por pagar
+│   ├── cxc/             # Cuentas por cobrar
+│   ├── reports/         # Reportes financieros
+│   ├── cashflow/        # Flujo de caja
+│   └── settings/        # Configuración
+├── hooks/               # Custom hooks (useCategories, etc.)
+├── services/            # Firebase config
+├── utils/               # Utilidades (formatters)
+└── constants/           # Configuración
+```
+
+## 🎨 Design System
+
+Basado en HMR NEXUS Design System:
+- Colores: Slate, Blue, Emerald, Amber, Red
+- Tipografía: Inter
+- Bordes redondeados: xl/2xl
+- Sombras suaves
+
+---
+
+Desarrollado por **HMR NEXUS**
