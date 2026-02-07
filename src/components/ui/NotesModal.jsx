@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
 import { X, MessageSquare, FileText, AlertCircle } from 'lucide-react';
 
-const NotesModal = ({ isOpen, onClose, transaction, onAddNote, user }) => {
+const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
   const [newNote, setNewNote] = useState('');
   const [activeTab, setActiveTab] = useState('comments');
 
   // Reset tab when modal opens
   useEffect(() => {
     if (isOpen) {
-      setActiveTab('comments');
-      setNewNote('');
+      // Use timeout to avoid synchronous setState during render
+      setTimeout(() => {
+        setActiveTab('comments');
+        setNewNote('');
+      }, 0);
     }
   }, [isOpen]);
 
