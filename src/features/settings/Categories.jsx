@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
-import { TrendingDown, TrendingUp, Edit2, Trash2, X, Check, Plus } from 'lucide-react';
-import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../constants/categories';
+import { TrendingDown, TrendingUp, Edit2, Trash2, X, Check, Plus, Loader2 } from 'lucide-react';
+import { useCategories } from '../../hooks/useCategories';
 
-const Categories = () => {
-  const [expenseCategories, setExpenseCategories] = useState(EXPENSE_CATEGORIES);
-  const [incomeCategories, setIncomeCategories] = useState(INCOME_CATEGORIES);
-  const [editingItem, setEditingItem] = useState(null); // { type: 'expense' | 'income', index: number }
+const Categories = ({ user }) => {
+  const {
+    expenseCategories,
+    incomeCategories,
+    loading,
+    addCategory,
+    updateCategory,
+    deleteCategory
+  } = useCategories(user);
+
+  const [editingItem, setEditingItem] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [newExpense, setNewExpense] = useState('');
   const [newIncome, setNewIncome] = useState('');
@@ -15,40 +22,33 @@ const Categories = () => {
     setEditValue(type === 'expense' ? expenseCategories[index] : incomeCategories[index]);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editValue.trim() || !editingItem) return;
 
-    if (editingItem.type === 'expense') {
-      const updated = [...expenseCategories];
-      updated[editingItem.index] = editValue.trim();
-      setExpenseCategories(updated);
-    } else {
-      const updated = [...incomeCategories];
-      updated[editingItem.index] = editValue.trim();
-      setIncomeCategories(updated);
-    }
+    const oldValue = editingItem.type === 'expense'
+      ? expenseCategories[editingItem.index]
+      : incomeCategories[editingItem.index];
+
+    await updateCategory(oldValue, editValue.trim(), editingItem.type);
     setEditingItem(null);
     setEditValue('');
   };
 
-  const handleDelete = (type, index) => {
-    if (type === 'expense') {
-      setExpenseCategories(expenseCategories.filter((_, i) => i !== index));
-    } else {
-      setIncomeCategories(incomeCategories.filter((_, i) => i !== index));
-    }
+  const handleDelete = async (type, index) => {
+    const category = type === 'expense' ? expenseCategories[index] : incomeCategories[index];
+    await deleteCategory(category, type);
   };
 
-  const handleAddExpense = () => {
+  const handleAddExpense = async () => {
     if (newExpense.trim() && !expenseCategories.includes(newExpense.trim())) {
-      setExpenseCategories([...expenseCategories, newExpense.trim()].sort());
+      await addCategory(newExpense.trim(), 'expense');
       setNewExpense('');
     }
   };
 
-  const handleAddIncome = () => {
+  const handleAddIncome = async () => {
     if (newIncome.trim() && !incomeCategories.includes(newIncome.trim())) {
-      setIncomeCategories([...incomeCategories, newIncome.trim()].sort());
+      await addCategory(newIncome.trim(), 'income');
       setNewIncome('');
     }
   };
@@ -104,9 +104,18 @@ const Categories = () => {
     );
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+        <span className="ml-3 text-slate-500">Cargando categorias...</span>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {/* Categorías de Gastos */}
+      {/* Categorias de Gastos */}
       <div className="bg-rose-50 rounded-2xl p-6 border border-rose-100">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-rose-100 rounded-lg">
@@ -118,7 +127,7 @@ const Categories = () => {
           </div>
         </div>
 
-        {/* Agregar nueva categoría de gasto */}
+        {/* Agregar nueva categoria de gasto */}
         <div className="flex gap-2 mb-4">
           <input
             type="text"
@@ -143,7 +152,7 @@ const Categories = () => {
         </div>
       </div>
 
-      {/* Categorías de Ingresos */}
+      {/* Categorias de Ingresos */}
       <div className="bg-emerald-50 rounded-2xl p-6 border border-emerald-100">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-emerald-100 rounded-lg">
@@ -155,7 +164,7 @@ const Categories = () => {
           </div>
         </div>
 
-        {/* Agregar nueva categoría de ingreso */}
+        {/* Agregar nueva categoria de ingreso */}
         <div className="flex gap-2 mb-4">
           <input
             type="text"
