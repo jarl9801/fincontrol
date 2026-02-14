@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, Filter, Download, Plus, FileText, X, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Search, Filter, Download, Plus, FileText, X, ArrowUpDown, ArrowUp, ArrowDown, CheckCircle, MessageSquare, Sparkles, Eye } from 'lucide-react';
 import TransactionRow from '../../components/ui/TransactionRow';
 import FilterPanel from '../../components/ui/FilterPanel';
 import TransactionFormModal from '../../components/ui/TransactionFormModal';
@@ -28,6 +28,8 @@ const TransactionList = ({
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [transactionToDelete, setTransactionToDelete] = useState(null);
   const [sortConfig, setSortConfig] = useState({ field: 'date', direction: 'desc' });
+  const [toast, setToast] = useState(null);
+  const [quickFilter, setQuickFilter] = useState('all');
 
   const {
     createTransaction,
@@ -41,6 +43,48 @@ const TransactionList = ({
   const { expenseCategories, incomeCategories } = useCategories(user);
   const { costCenters } = useCostCenters(user);
 
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  // Quick filter counts & filtered transactions
+  const sevenDaysAgo = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 7);
+    return d;
+  }, []);
+
+  const quickFilterCounts = useMemo(() => {
+    let nuevas = 0;
+    let sinLeer = 0;
+    let conComentarios = 0;
+    for (const t of transactions) {
+      const createdAt = t.createdAt?.toDate ? t.createdAt.toDate() : t.createdAt ? new Date(t.createdAt) : null;
+      if (createdAt && createdAt >= sevenDaysAgo) nuevas++;
+      if (t.hasUnreadUpdates) sinLeer++;
+      if (t.notes?.some(n => n.type === 'comment')) conComentarios++;
+    }
+    return { all: transactions.length, nuevas, sinLeer, conComentarios };
+  }, [transactions, sevenDaysAgo]);
+
+  const filteredByQuick = useMemo(() => {
+    if (quickFilter === 'all') return transactions;
+    if (quickFilter === 'nuevas') {
+      return transactions.filter(t => {
+        const createdAt = t.createdAt?.toDate ? t.createdAt.toDate() : t.createdAt ? new Date(t.createdAt) : null;
+        return createdAt && createdAt >= sevenDaysAgo;
+      });
+    }
+    if (quickFilter === 'sinLeer') {
+      return transactions.filter(t => t.hasUnreadUpdates === true);
+    }
+    if (quickFilter === 'conComentarios') {
+      return transactions.filter(t => t.notes?.some(n => n.type === 'comment'));
+    }
+    return transactions;
+  }, [transactions, quickFilter, sevenDaysAgo]);
+
   // Sorting logic
   const handleSort = (field) => {
     setSortConfig(prev => ({
@@ -49,7 +93,7 @@ const TransactionList = ({
     }));
   };
 
-  const sortedTransactions = [...transactions].sort((a, b) => {
+  const sortedTransactions = [...filteredByQuick].sort((a, b) => {
     if (sortConfig.field === 'date') {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
@@ -118,7 +162,6 @@ const TransactionList = ({
     if (editingTransaction) {
       await updateTransaction(editingTransaction.id, formData, editingTransaction.notes);
     } else {
-      // Create new transaction
       await createTransaction(formData);
     }
     setIsFormModalOpen(false);
@@ -126,19 +169,23 @@ const TransactionList = ({
   };
 
   const handleAddNote = async (transaction, noteText) => {
-    await addNote(transaction, noteText);
-    const updatedTransaction = {
-      ...transaction,
-      notes: [
-        ...transaction.notes,
-        {
-          text: noteText,
-          timestamp: new Date().toISOString(),
-          user: user.email
-        }
-      ]
-    };
-    setSelectedTransaction(updatedTransaction);
+    const result = await addNote(transaction, noteText);
+    if (result?.success) {
+      showToast('Comentario agregado correctamente');
+      const updatedTransaction = {
+        ...transaction,
+        notes: [
+          ...(transaction.notes || []),
+          {
+            text: noteText.trim(),
+            timestamp: new Date().toISOString(),
+            user: user.email,
+            type: 'comment'
+          }
+        ]
+      };
+      setSelectedTransaction(updatedTransaction);
+    }
   };
 
   const exportToPDF = () => {
@@ -148,8 +195,25 @@ const TransactionList = ({
   // Contar filtros activos
   const activeFiltersCount = Object.values(filters).filter(v => v && v !== 'all').length;
 
+  const quickFilterButtons = [
+    { key: 'all', label: 'Todas', count: quickFilterCounts.all, icon: null },
+    { key: 'nuevas', label: 'Nuevas', count: quickFilterCounts.nuevas, icon: Sparkles },
+    { key: 'sinLeer', label: 'Sin leer', count: quickFilterCounts.sinLeer, icon: Eye },
+    { key: 'conComentarios', label: 'Con comentarios', count: quickFilterCounts.conComentarios, icon: MessageSquare },
+  ];
+
   return (
     <div className="space-y-4 animate-fadeIn">
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed top-6 right-6 z-[100] flex items-center gap-2 px-5 py-3 rounded-xl shadow-lg text-sm font-medium animate-fadeIn ${
+          toast.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'
+        }`}>
+          <CheckCircle size={16} />
+          {toast.message}
+        </div>
+      )}
+
       {/* Header con búsqueda y acciones */}
       <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -218,14 +282,45 @@ const TransactionList = ({
         )}
       </div>
 
+      {/* Quick Filter Pills */}
+      <div className="flex flex-wrap gap-2 px-1">
+        {quickFilterButtons.map(({ key, label, count, icon: Icon }) => (
+          <button
+            key={key}
+            onClick={() => setQuickFilter(key)}
+            className={`
+              inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200
+              ${quickFilter === key
+                ? 'bg-slate-800 text-white shadow-sm'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}
+            `}
+          >
+            {Icon && <Icon size={14} />}
+            {label}
+            <span className={`
+              text-xs px-1.5 py-0.5 rounded-full min-w-[20px] text-center
+              ${quickFilter === key
+                ? 'bg-slate-600 text-slate-200'
+                : 'bg-slate-200 text-slate-500'}
+            `}>
+              {count}
+            </span>
+          </button>
+        ))}
+      </div>
+
       {/* Results Summary */}
       <div className="flex items-center justify-between px-2">
         <p className="text-sm text-slate-500">
-          Mostrando <span className="font-semibold text-slate-700">{transactions.length}</span> transacciones
+          Mostrando <span className="font-semibold text-slate-700">{filteredByQuick.length}</span> transacciones
+          {quickFilter !== 'all' && (
+            <span className="text-slate-400"> de {transactions.length}</span>
+          )}
         </p>
-        {activeFiltersCount > 0 && (
+        {(activeFiltersCount > 0 || quickFilter !== 'all') && (
           <button
             onClick={() => {
+              setQuickFilter('all');
               setFilters({
                 dateFrom: '',
                 dateTo: '',
@@ -271,7 +366,7 @@ const TransactionList = ({
                   searchTerm={searchTerm}
                 />
               ))}
-              {transactions.length === 0 && (
+              {filteredByQuick.length === 0 && (
                 <tr>
                   <td colSpan="6" className="px-4 py-16 text-center">
                     <div className="flex flex-col items-center gap-3 text-slate-400">
@@ -279,10 +374,11 @@ const TransactionList = ({
                         <FileText className="w-8 h-8 text-slate-300" />
                       </div>
                       <p className="text-sm">No se encontraron transacciones</p>
-                      {(searchTerm || activeFiltersCount > 0) && (
+                      {(searchTerm || activeFiltersCount > 0 || quickFilter !== 'all') && (
                         <button
                           onClick={() => {
                             setSearchTerm('');
+                            setQuickFilter('all');
                             setFilters({
                               dateFrom: '',
                               dateTo: '',
@@ -321,6 +417,7 @@ const TransactionList = ({
         expenseCategories={expenseCategories}
         incomeCategories={incomeCategories}
         costCenters={costCenters}
+        transactions={transactions}
       />
 
       <NotesModal

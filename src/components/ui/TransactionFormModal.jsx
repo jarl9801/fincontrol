@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { X, ArrowUpCircle, ArrowDownCircle, Save, Loader2 } from 'lucide-react';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { X, ArrowUpCircle, ArrowDownCircle, Save, Loader2, RefreshCw } from 'lucide-react';
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../constants/categories';
 import { useProjects } from '../../hooks/useProjects';
 
@@ -11,7 +11,8 @@ const TransactionFormModal = ({
   user,
   expenseCategories = EXPENSE_CATEGORIES,
   incomeCategories = INCOME_CATEGORIES,
-  costCenters = []
+  costCenters = [],
+  transactions = []
 }) => {
   const { projects, loading: projectsLoading } = useProjects(user);
 
@@ -25,8 +26,17 @@ const TransactionFormModal = ({
     costCenter: 'Sin asignar',
     status: 'pending',
     comment: '',
-    notes: []
+    notes: [],
+    isRecurring: false,
+    recurringFrequency: 'monthly',
+    recurringEndDate: ''
   });
+
+  // Autocomplete state
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  const descriptionRef = useRef(null);
+  const suggestionsRef = useRef(null);
 
   // Filtrar solo proyectos activos para el selector
   const activeProjects = projects.filter(p => p.status === 'active');
@@ -34,6 +44,37 @@ const TransactionFormModal = ({
   const getCategoriesByType = (type) => {
     return type === 'income' ? incomeCategories : expenseCategories;
   };
+
+  // Compute suggestions based on description input and transaction type
+  const suggestions = useMemo(() => {
+    const query = formData.description.trim().toLowerCase();
+    if (!query || query.length < 2) return [];
+
+    const seen = new Set();
+    return transactions
+      .filter(t => t.type === formData.type && t.description?.toLowerCase().includes(query))
+      .filter(t => {
+        const key = t.description.toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .slice(0, 5);
+  }, [formData.description, formData.type, transactions]);
+
+  // Close suggestions on click outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        suggestionsRef.current && !suggestionsRef.current.contains(e.target) &&
+        descriptionRef.current && !descriptionRef.current.contains(e.target)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (editingTransaction) {
@@ -47,10 +88,12 @@ const TransactionFormModal = ({
         costCenter: editingTransaction.costCenter || 'Sin asignar',
         status: editingTransaction.status,
         comment: '',
-        notes: editingTransaction.notes || []
+        notes: editingTransaction.notes || [],
+        isRecurring: editingTransaction.isRecurring || false,
+        recurringFrequency: editingTransaction.recurringFrequency || 'monthly',
+        recurringEndDate: editingTransaction.recurringEndDate || ''
       });
     } else {
-      // Reset form with first active project if available
       const firstProject = activeProjects[0]?.displayName || activeProjects[0]?.name || '';
       setFormData({
         date: new Date().toISOString().split('T')[0],
@@ -62,9 +105,13 @@ const TransactionFormModal = ({
         costCenter: 'Sin asignar',
         status: 'pending',
         comment: '',
-        notes: []
+        notes: [],
+        isRecurring: false,
+        recurringFrequency: 'monthly',
+        recurringEndDate: ''
       });
     }
+    setShowSuggestions(false);
   }, [editingTransaction, isOpen, projects]);
 
   const handleTypeChange = (newType) => {
@@ -75,6 +122,43 @@ const TransactionFormModal = ({
       category: categories[0],
       costCenter: newType === 'income' ? 'Sin asignar' : formData.costCenter
     });
+  };
+
+  const handleDescriptionChange = (e) => {
+    const value = e.target.value;
+    setFormData({ ...formData, description: value });
+    setShowSuggestions(value.trim().length >= 2);
+    setActiveSuggestionIndex(-1);
+  };
+
+  const handleSelectSuggestion = (transaction) => {
+    setFormData({
+      ...formData,
+      description: transaction.description,
+      category: transaction.category || formData.category,
+      project: transaction.project || formData.project,
+      amount: transaction.amount || formData.amount
+    });
+    setShowSuggestions(false);
+  };
+
+  const handleDescriptionKeyDown = (e) => {
+    if (!showSuggestions || suggestions.length === 0) return;
+
+    if (e.key === 'Escape') {
+      setShowSuggestions(false);
+      return;
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveSuggestionIndex(prev => Math.min(prev + 1, suggestions.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveSuggestionIndex(prev => Math.max(prev - 1, 0));
+    } else if (e.key === 'Enter' && activeSuggestionIndex >= 0) {
+      e.preventDefault();
+      handleSelectSuggestion(suggestions[activeSuggestionIndex]);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -90,6 +174,14 @@ const TransactionFormModal = ({
   if (!isOpen) return null;
 
   const currentCategories = getCategoriesByType(formData.type);
+
+  const frequencyOptions = [
+    { value: 'weekly', label: 'Semanal' },
+    { value: 'biweekly', label: 'Quincenal' },
+    { value: 'monthly', label: 'Mensual' },
+    { value: 'quarterly', label: 'Trimestral' },
+    { value: 'yearly', label: 'Anual' }
+  ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
@@ -177,12 +269,13 @@ const TransactionFormModal = ({
             </div>
           </div>
 
-          {/* Description */}
-          <div>
+          {/* Description with Autocomplete */}
+          <div className="relative">
             <label className="block text-sm font-semibold text-slate-700 mb-2">
               Descripción <span className="text-rose-500">*</span>
             </label>
             <input
+              ref={descriptionRef}
               type="text"
               required
               placeholder={formData.type === 'income' 
@@ -190,8 +283,80 @@ const TransactionFormModal = ({
                 : "ej. Compra de materiales, Pago proveedor..."}
               className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all"
               value={formData.description}
-              onChange={e => setFormData({...formData, description: e.target.value})}
+              onChange={handleDescriptionChange}
+              onKeyDown={handleDescriptionKeyDown}
+              onFocus={() => formData.description.trim().length >= 2 && setShowSuggestions(true)}
+              autoComplete="off"
             />
+            {/* Suggestions Dropdown */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div
+                ref={suggestionsRef}
+                className="absolute z-10 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden"
+              >
+                {suggestions.map((s, idx) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => handleSelectSuggestion(s)}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                      idx === activeSuggestionIndex ? 'bg-slate-100' : 'hover:bg-slate-50'
+                    } ${idx > 0 ? 'border-t border-slate-100' : ''}`}
+                  >
+                    <span className="font-medium text-slate-800">{s.description}</span>
+                    <span className="text-xs text-slate-400 ml-2">
+                      {s.category} · €{Number(s.amount).toFixed(2)}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Recurring Transaction Toggle */}
+          <div className="space-y-3">
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  checked={formData.isRecurring}
+                  onChange={(e) => setFormData({ ...formData, isRecurring: e.target.checked })}
+                />
+                <div className="w-10 h-5 bg-slate-200 rounded-full peer-checked:bg-emerald-500 transition-colors"></div>
+                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform peer-checked:translate-x-5"></div>
+              </div>
+              <div className="flex items-center gap-2">
+                <RefreshCw size={16} className="text-slate-500" />
+                <span className="text-sm font-semibold text-slate-700">Transacción recurrente</span>
+              </div>
+            </label>
+
+            {formData.isRecurring && (
+              <div className="grid grid-cols-2 gap-4 pl-1 animate-fadeIn">
+                <div>
+                  <label className="block text-xs font-medium text-slate-600 mb-1.5">Frecuencia</label>
+                  <select
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all text-sm"
+                    value={formData.recurringFrequency}
+                    onChange={e => setFormData({ ...formData, recurringFrequency: e.target.value })}
+                  >
+                    {frequencyOptions.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600 mb-1.5">Fecha fin (opcional)</label>
+                  <input
+                    type="date"
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all text-sm"
+                    value={formData.recurringEndDate}
+                    onChange={e => setFormData({ ...formData, recurringEndDate: e.target.value })}
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Project */}

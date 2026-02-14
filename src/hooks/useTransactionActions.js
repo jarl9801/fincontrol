@@ -37,6 +37,9 @@ export const useTransactionActions = (user) => {
         costCenter: formData.costCenter || 'Sin asignar',
         status: formData.status,
         notes: notes,
+        isRecurring: formData.isRecurring || false,
+        recurringFrequency: formData.isRecurring ? formData.recurringFrequency : null,
+        recurringEndDate: formData.isRecurring && formData.recurringEndDate ? formData.recurringEndDate : null,
         hasUnreadUpdates: formData.comment ? true : false,
         lastModifiedBy: user.email,
         lastModifiedAt: new Date().toISOString(),
@@ -67,7 +70,7 @@ export const useTransactionActions = (user) => {
         }
       ];
 
-      // Si hay comentario, agregarlo como nota
+      // Si hay comentario, agregarlo al array de notes (no reemplazar)
       if (formData.comment && formData.comment.trim()) {
         newNotes.push({
           text: formData.comment.trim(),
@@ -87,6 +90,9 @@ export const useTransactionActions = (user) => {
         costCenter: formData.costCenter || 'Sin asignar',
         status: formData.status,
         notes: newNotes,
+        isRecurring: formData.isRecurring || false,
+        recurringFrequency: formData.isRecurring ? formData.recurringFrequency : null,
+        recurringEndDate: formData.isRecurring && formData.recurringEndDate ? formData.recurringEndDate : null,
         hasUnreadUpdates: true,
         lastModifiedBy: user.email,
         lastModifiedAt: new Date().toISOString()
@@ -122,7 +128,7 @@ export const useTransactionActions = (user) => {
       await updateDoc(transactionDoc, {
         status: newStatus,
         notes: [
-          ...transaction.notes,
+          ...(transaction.notes || []),
           {
             text: `Estado cambiado a ${newStatus === 'paid' ? 'Pagado' : 'Pendiente'} por ${user.email}`,
             timestamp: new Date().toISOString(),
@@ -143,14 +149,14 @@ export const useTransactionActions = (user) => {
   };
 
   const addNote = async (transaction, noteText) => {
-    if (!user || !noteText.trim()) return;
+    if (!user || !noteText.trim()) return { success: false };
 
     try {
       const transactionDoc = doc(db, 'artifacts', appId, 'public', 'data', 'transactions', transaction.id);
       const updatedNotes = [
-        ...transaction.notes,
+        ...(transaction.notes || []),
         {
-          text: noteText,
+          text: noteText.trim(),
           timestamp: new Date().toISOString(),
           user: user.email,
           type: 'comment'

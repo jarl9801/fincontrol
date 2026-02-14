@@ -143,7 +143,7 @@ function App() {
 
     switch (view) {
       case 'dashboard':
-        return userRole === 'admin' ? <Dashboard transactions={filteredTransactions} /> : null;
+        return userRole === 'admin' ? <Dashboard transactions={filteredTransactions} user={user} /> : null;
       case 'transactions':
         return <TransactionList {...commonProps} />;
       case 'cxp':

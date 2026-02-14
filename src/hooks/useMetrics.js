@@ -4,6 +4,7 @@ import { ALERT_THRESHOLDS } from '../constants/config';
 
 export const useMetrics = (filteredTransactions) => {
   return useMemo(() => {
+    // ALL income/expenses (for charts and totals)
     const totalIncome = filteredTransactions
       .filter(t => t.type === 'income')
       .reduce((sum, t) => sum + t.amount, 0);
@@ -12,6 +13,19 @@ export const useMetrics = (filteredTransactions) => {
       .filter(t => t.type === 'expense')
       .reduce((sum, t) => sum + t.amount, 0);
 
+    // COLLECTED income (paid/completed only — actual cash in)
+    const collectedIncome = filteredTransactions
+      .filter(t => t.type === 'income' && t.status !== 'pending')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    // PAID expenses (paid/completed only — actual cash out)
+    const paidExpenses = filteredTransactions
+      .filter(t => t.type === 'expense' && t.status !== 'pending')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    // Actual cash balance
+    const cashBalance = collectedIncome - paidExpenses;
+
     const pendingPayables = filteredTransactions
       .filter(t => t.type === 'expense' && t.status === 'pending')
       .reduce((sum, t) => sum + t.amount, 0);
@@ -19,6 +33,9 @@ export const useMetrics = (filteredTransactions) => {
     const pendingReceivables = filteredTransactions
       .filter(t => t.type === 'income' && t.status === 'pending')
       .reduce((sum, t) => sum + t.amount, 0);
+
+    // Projected liquidity = cash + what we'll collect - what we owe
+    const projectedLiquidity = cashBalance + pendingReceivables - pendingPayables;
 
     // Monthly trend
     const monthlyData = {};
@@ -95,6 +112,10 @@ export const useMetrics = (filteredTransactions) => {
     return {
       totalIncome,
       totalExpenses,
+      collectedIncome,
+      paidExpenses,
+      cashBalance,
+      projectedLiquidity,
       netBalance: totalIncome - totalExpenses,
       pendingPayables,
       pendingReceivables,
@@ -106,7 +127,7 @@ export const useMetrics = (filteredTransactions) => {
       overdueTransactions,
       negativeProjects,
       alerts: {
-        negativeBalance: (totalIncome - totalExpenses) < 0,
+        negativeBalance: cashBalance < 0,
         highCXP: pendingPayables > ALERT_THRESHOLDS.cxpLimit,
         highCXC: pendingReceivables > ALERT_THRESHOLDS.cxcLimit,
         hasOverdue: overdueTransactions.length > 0,

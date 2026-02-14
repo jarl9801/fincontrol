@@ -1,4 +1,4 @@
-import { CheckCircle2, Circle, MessageSquare, Edit2, Trash2, Sparkles, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
+import { CheckCircle2, Circle, MessageSquare, Edit2, Trash2, Sparkles, ArrowUpCircle, ArrowDownCircle, RefreshCw } from 'lucide-react';
 import { formatDate, formatCurrency, getDaysOverdue } from '../../utils/formatters';
 import { ALERT_THRESHOLDS } from '../../constants/config';
 
@@ -18,6 +18,15 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
   };
 
   const commentCount = t.notes?.filter(n => n.type === 'comment').length || 0;
+
+  // Check for recent comments (last 24h)
+  const hasRecentComments = t.notes?.some(n => {
+    if (n.type !== 'comment') return false;
+    const noteDate = new Date(n.timestamp);
+    const oneDayAgo = new Date();
+    oneDayAgo.setHours(oneDayAgo.getHours() - 24);
+    return noteDate >= oneDayAgo;
+  }) || false;
 
   // Status badge config
   const getStatusConfig = () => {
@@ -78,6 +87,11 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
+              {/* Unread dot indicator */}
+              {isNew && (
+                <span className="w-2 h-2 rounded-full bg-slate-500 flex-shrink-0" />
+              )}
+
               <span className="text-sm font-semibold text-slate-800">
                 {highlightText(t.description)}
               </span>
@@ -89,12 +103,27 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
                   Nueva
                 </span>
               )}
+
+              {/* Recurring Badge */}
+              {t.isRecurring && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                  <RefreshCw size={10} />
+                  Recurrente
+                </span>
+              )}
               
               {/* Comments Badge */}
               {commentCount > 0 && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-100 text-amber-700">
                   <MessageSquare size={10} />
                   {commentCount}
+                </span>
+              )}
+
+              {/* Recent comment indicator */}
+              {hasRecentComments && (
+                <span className="text-slate-400" title="Comentario reciente">
+                  <MessageSquare size={12} className="fill-slate-300" />
                 </span>
               )}
             </div>

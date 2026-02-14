@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
   TrendingUp, TrendingDown, DollarSign, Percent, AlertTriangle, CheckCircle2,
   ArrowUpRight, ArrowDownRight, Target, Activity, Clock, CreditCard, Wallet,
-  BarChart3, PieChart as PieChartIcon, Lightbulb
+  BarChart3, PieChart as PieChartIcon, Lightbulb, Calendar, ChevronDown,
+  ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 import {
@@ -10,10 +11,96 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
 
+const MONTH_NAMES_FULL = [
+  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+];
+
+const MONTH_NAMES_SHORT = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
 const ExecutiveSummary = ({ transactions }) => {
   const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
+  const realCurrentMonth = now.getMonth();
+  const realCurrentYear = now.getFullYear();
+
+  // Period state
+  const [selectedPeriod, setSelectedPeriod] = useState(`month:${realCurrentYear}-${String(realCurrentMonth + 1).padStart(2, '0')}`);
+  const [monthDropdownOpen, setMonthDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setMonthDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Derive available months from transactions
+  const availableMonths = useMemo(() => {
+    const monthSet = new Set();
+    transactions.forEach(t => {
+      if (t.date) {
+        const d = new Date(t.date);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        monthSet.add(key);
+      }
+    });
+    monthSet.add(`${realCurrentYear}-${String(realCurrentMonth + 1).padStart(2, '0')}`);
+    return Array.from(monthSet).sort().reverse();
+  }, [transactions, realCurrentMonth, realCurrentYear]);
+
+  // Group available months by year
+  const monthsByYear = useMemo(() => {
+    const grouped = {};
+    availableMonths.forEach(key => {
+      const [year] = key.split('-');
+      if (!grouped[year]) grouped[year] = [];
+      grouped[year].push(key);
+    });
+    return Object.entries(grouped).sort((a, b) => b[0] - a[0]);
+  }, [availableMonths]);
+
+  // Parse period type
+  const periodType = selectedPeriod.startsWith('month:') ? 'month' : selectedPeriod;
+  const selectedMonthKey = periodType === 'month' ? selectedPeriod.slice(6) : null;
+
+  // Derive "current month/year" from selection
+  const selectedMonth = useMemo(() => {
+    if (periodType === 'month' && selectedMonthKey) {
+      const [y, m] = selectedMonthKey.split('-').map(Number);
+      return { month: m - 1, year: y };
+    }
+    return { month: realCurrentMonth, year: realCurrentYear };
+  }, [periodType, selectedMonthKey, realCurrentMonth, realCurrentYear]);
+
+  // Previous month relative to selected
+  const prevMonthInfo = useMemo(() => {
+    const m = selectedMonth.month === 0 ? 11 : selectedMonth.month - 1;
+    const y = selectedMonth.month === 0 ? selectedMonth.year - 1 : selectedMonth.year;
+    return { month: m, year: y };
+  }, [selectedMonth]);
+
+  // Navigate months
+  const navigateMonth = (direction) => {
+    if (periodType !== 'month' || !selectedMonthKey) return;
+    const idx = availableMonths.indexOf(selectedMonthKey);
+    const newIdx = idx - direction;
+    if (newIdx >= 0 && newIdx < availableMonths.length) {
+      setSelectedPeriod(`month:${availableMonths[newIdx]}`);
+    }
+  };
+
+  const canNavigatePrev = periodType === 'month' && availableMonths.indexOf(selectedMonthKey) < availableMonths.length - 1;
+  const canNavigateNext = periodType === 'month' && availableMonths.indexOf(selectedMonthKey) > 0;
+
+  const formatMonthKey = (key) => {
+    const [y, m] = key.split('-').map(Number);
+    return `${MONTH_NAMES_FULL[m - 1]} ${y}`;
+  };
 
   // Helper functions
   const getMonthTransactions = (month, year) => {
@@ -30,16 +117,46 @@ const ExecutiveSummary = ({ transactions }) => {
     });
   };
 
+  // Filter by period (for quarter/year/all)
+  const filterByPeriod = (trans, period, offset = 0) => {
+    const transDate = new Date(trans.date);
+    if (period === 'all') return true;
+    if (period === 'quarter') {
+      const currentQuarter = Math.floor(selectedMonth.month / 3);
+      const targetQuarter = currentQuarter - offset;
+      const targetYear = targetQuarter < 0 ? selectedMonth.year - 1 : selectedMonth.year;
+      const adjustedQuarter = targetQuarter < 0 ? 4 + targetQuarter : targetQuarter;
+      const transQuarter = Math.floor(transDate.getMonth() / 3);
+      return transQuarter === adjustedQuarter && transDate.getFullYear() === targetYear;
+    }
+    if (period === 'year') {
+      return transDate.getFullYear() === (selectedMonth.year - offset);
+    }
+    return true;
+  };
+
+  // Current period transactions based on selection
+  const currentMonthTx = useMemo(() => {
+    if (periodType === 'month') {
+      return getMonthTransactions(selectedMonth.month, selectedMonth.year);
+    }
+    return transactions.filter(t => filterByPeriod(t, periodType, 0) && t.status === 'paid');
+  }, [transactions, periodType, selectedMonth]);
+
+  // Previous period transactions
+  const prevMonthTx = useMemo(() => {
+    if (periodType === 'month') {
+      return getMonthTransactions(prevMonthInfo.month, prevMonthInfo.year);
+    }
+    return transactions.filter(t => filterByPeriod(t, periodType, 1) && t.status === 'paid');
+  }, [transactions, periodType, prevMonthInfo, selectedMonth]);
+
   // Current month data
-  const currentMonthTx = getMonthTransactions(currentMonth, currentYear);
   const currentIncome = currentMonthTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
   const currentExpenses = currentMonthTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
   const currentProfit = currentIncome - currentExpenses;
 
   // Previous month data
-  const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-  const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
-  const prevMonthTx = getMonthTransactions(prevMonth, prevYear);
   const prevIncome = prevMonthTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
   const prevExpenses = prevMonthTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
   const prevProfit = prevIncome - prevExpenses;
@@ -49,14 +166,15 @@ const ExecutiveSummary = ({ transactions }) => {
   const expenseVariation = prevExpenses > 0 ? ((currentExpenses - prevExpenses) / prevExpenses * 100) : 0;
   const profitVariation = prevProfit !== 0 ? ((currentProfit - prevProfit) / Math.abs(prevProfit) * 100) : 0;
 
-  // YTD data
-  const ytdStart = new Date(currentYear, 0, 1);
-  const ytdTx = getPeriodTransactions(ytdStart, now);
+  // YTD data (relative to selected year)
+  const ytdStart = new Date(selectedMonth.year, 0, 1);
+  const ytdEnd = new Date(selectedMonth.year, selectedMonth.month + 1, 0, 23, 59, 59);
+  const ytdTx = getPeriodTransactions(ytdStart, ytdEnd);
   const ytdIncome = ytdTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
   const ytdExpenses = ytdTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
   const ytdProfit = ytdIncome - ytdExpenses;
 
-  // Pending amounts (CXC and CXP)
+  // Pending amounts (CXC and CXP) - these are always global/current
   const cxc = transactions.filter(t => t.type === 'income' && t.status === 'pending').reduce((s, t) => s + t.amount, 0);
   const cxp = transactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((s, t) => s + t.amount, 0);
 
@@ -71,28 +189,27 @@ const ExecutiveSummary = ({ transactions }) => {
   const avgDaysPayable = cxp > 0 && currentExpenses > 0 ? Math.round((cxp / (currentExpenses / 30))) : 0;
   const cashCycle = avgDaysReceivable - avgDaysPayable;
 
-  // Last 6 months trend
+  // Last 6 months trend (relative to selected month)
   const last6Months = [];
   for (let i = 5; i >= 0; i--) {
-    const m = new Date(currentYear, currentMonth - i, 1);
+    const m = new Date(selectedMonth.year, selectedMonth.month - i, 1);
     const month = m.getMonth();
     const year = m.getFullYear();
     const tx = getMonthTransactions(month, year);
     const income = tx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
     const expenses = tx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
 
-    const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     last6Months.push({
-      name: monthNames[month],
+      name: MONTH_NAMES_SHORT[month],
       ingresos: income,
       gastos: expenses,
       utilidad: income - expenses
     });
   }
 
-  // Project profitability analysis
+  // Project profitability analysis (scoped to current period)
   const projectData = {};
-  transactions.filter(t => t.status === 'paid').forEach(t => {
+  currentMonthTx.forEach(t => {
     if (!projectData[t.project]) {
       projectData[t.project] = { name: t.project, ingresos: 0, gastos: 0 };
     }
@@ -134,7 +251,7 @@ const ExecutiveSummary = ({ transactions }) => {
     recommendations.push('Gestionar cobranza de facturas vencidas urgentemente');
   }
   if (expenseVariation > 15) {
-    alerts.push({ type: 'warning', text: `Gastos aumentaron ${expenseVariation.toFixed(1)}% vs mes anterior` });
+    alerts.push({ type: 'warning', text: `Gastos aumentaron ${expenseVariation.toFixed(1)}% vs período anterior` });
     recommendations.push('Revisar gastos extraordinarios y evaluar medidas de control');
   }
   if (cashCycle > 45) {
@@ -142,10 +259,28 @@ const ExecutiveSummary = ({ transactions }) => {
     recommendations.push('Optimizar ciclo de conversión de efectivo');
   }
 
-  // If no alerts, show positive message
   if (alerts.length === 0) {
     alerts.push({ type: 'success', text: 'Indicadores financieros dentro de parámetros saludables' });
   }
+
+  // Period labels
+  const getPeriodLabel = () => {
+    if (periodType === 'month' && selectedMonthKey) {
+      return formatMonthKey(selectedMonthKey);
+    }
+    if (periodType === 'quarter') return `Q${Math.floor(selectedMonth.month / 3) + 1} ${selectedMonth.year}`;
+    if (periodType === 'year') return `Año ${selectedMonth.year}`;
+    return 'Todo el período';
+  };
+
+  const getPreviousPeriodLabel = () => {
+    if (periodType === 'month') {
+      return `${MONTH_NAMES_FULL[prevMonthInfo.month]} ${prevMonthInfo.year}`;
+    }
+    if (periodType === 'quarter') return `Q${Math.floor(selectedMonth.month / 3)} ${selectedMonth.year}`;
+    if (periodType === 'year') return `Año ${selectedMonth.year - 1}`;
+    return '';
+  };
 
   const KPICard = ({ title, value, subtitle, icon: Icon, trend, trendValue, color = 'blue' }) => {
     const colorClasses = {
@@ -231,14 +366,115 @@ const ExecutiveSummary = ({ transactions }) => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
+      {/* Period Selector */}
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Month selector with dropdown */}
+          <div className="relative" ref={dropdownRef}>
+            <div className="flex items-center">
+              <button
+                onClick={() => navigateMonth(-1)}
+                disabled={!canNavigatePrev}
+                className="p-2 rounded-l-xl border border-r-0 border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronLeft size={16} className="text-slate-500" />
+              </button>
+
+              <button
+                onClick={() => setMonthDropdownOpen(!monthDropdownOpen)}
+                className={`flex items-center gap-2 px-4 py-2 border text-sm font-medium transition-all ${
+                  periodType === 'month'
+                    ? 'bg-slate-800 text-white border-slate-800 shadow-sm'
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                <Calendar size={15} />
+                {periodType === 'month' ? formatMonthKey(selectedMonthKey) : 'Mes'}
+                <ChevronDown size={14} className={`transition-transform duration-200 ${monthDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              <button
+                onClick={() => navigateMonth(1)}
+                disabled={!canNavigateNext}
+                className="p-2 rounded-r-xl border border-l-0 border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronRight size={16} className="text-slate-500" />
+              </button>
+            </div>
+
+            {monthDropdownOpen && (
+              <div className="absolute top-full left-0 mt-2 z-50 bg-white rounded-xl shadow-xl border border-slate-200 py-2 min-w-[220px] max-h-[320px] overflow-y-auto animate-[fadeIn_150ms_ease-out]">
+                {monthsByYear.map(([year, months]) => (
+                  <div key={year}>
+                    <div className="px-4 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider sticky top-0 bg-white">
+                      {year}
+                    </div>
+                    {months.map(key => {
+                      const isSelected = selectedMonthKey === key && periodType === 'month';
+                      return (
+                        <button
+                          key={key}
+                          onClick={() => {
+                            setSelectedPeriod(`month:${key}`);
+                            setMonthDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                            isSelected
+                              ? 'bg-slate-100 text-slate-800 font-semibold'
+                              : 'text-slate-600 hover:bg-slate-50'
+                          }`}
+                        >
+                          {formatMonthKey(key)}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="w-px h-8 bg-slate-200 mx-1 hidden sm:block" />
+
+          {[
+            { key: 'quarter', label: 'Trimestre' },
+            { key: 'year', label: 'Año' },
+            { key: 'all', label: 'Todo' }
+          ].map(period => (
+            <button
+              key={period.key}
+              onClick={() => setSelectedPeriod(period.key)}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+                periodType === period.key
+                  ? 'bg-slate-800 text-white shadow-sm'
+                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'
+              }`}
+            >
+              {period.label}
+            </button>
+          ))}
+        </div>
+
+        {periodType !== 'all' && (
+          <div className="mt-3 pt-3 border-t border-slate-100 flex items-center gap-4 text-xs text-slate-400">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-slate-700" />
+              Actual: <span className="font-medium text-slate-600">{getPeriodLabel()}</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-slate-300" />
+              Anterior: <span className="font-medium text-slate-500">{getPreviousPeriodLabel()}</span>
+            </span>
+          </div>
+        )}
+      </div>
+
       {/* Header */}
       <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">Resumen Ejecutivo</h2>
-            <p className="text-slate-300 mt-1">
-              {now.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
-            </p>
+            <p className="text-slate-300 mt-1">{getPeriodLabel()}</p>
           </div>
           <div className="text-right">
             <p className="text-sm text-slate-400">Utilidad YTD</p>
@@ -252,18 +488,18 @@ const ExecutiveSummary = ({ transactions }) => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
-          title="Ingresos del Mes"
+          title="Ingresos del Período"
           value={formatCurrency(currentIncome)}
-          subtitle={`vs ${formatCurrency(prevIncome)} mes anterior`}
+          subtitle={`vs ${formatCurrency(prevIncome)} período anterior`}
           icon={TrendingUp}
           trend={incomeVariation >= 0 ? 'up' : 'down'}
           trendValue={incomeVariation}
           color="emerald"
         />
         <KPICard
-          title="Gastos del Mes"
+          title="Gastos del Período"
           value={formatCurrency(currentExpenses)}
-          subtitle={`vs ${formatCurrency(prevExpenses)} mes anterior`}
+          subtitle={`vs ${formatCurrency(prevExpenses)} período anterior`}
           icon={TrendingDown}
           trend={expenseVariation <= 0 ? 'up' : 'down'}
           trendValue={expenseVariation}

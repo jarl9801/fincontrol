@@ -8,7 +8,6 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
   // Reset tab when modal opens
   useEffect(() => {
     if (isOpen) {
-      // Use timeout to avoid synchronous setState during render
       setTimeout(() => {
         setActiveTab('comments');
         setNewNote('');
@@ -18,7 +17,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
 
   const handleAddNote = () => {
     if (!newNote.trim()) return;
-    onAddNote(transaction, newNote);
+    onAddNote(transaction, newNote.trim());
     setNewNote('');
   };
 
@@ -85,7 +84,6 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
 
         <div className="flex-1 overflow-y-auto p-6 space-y-3">
           {activeTab === 'comments' ? (
-            // Tab de Comentarios
             comments.length > 0 ? (
               comments.map((note, idx) => (
                 <div key={idx} className="p-4 rounded-lg border bg-blue-50 border-blue-200">
@@ -109,7 +107,6 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
               <p className="text-center text-slate-400 py-8">No hay comentarios aún.</p>
             )
           ) : (
-            // Tab de Logs del Sistema
             systemLogs.length > 0 ? (
               systemLogs.map((note, idx) => (
                 <div key={idx} className="p-4 rounded-lg border bg-slate-50 border-slate-200">
@@ -144,11 +141,16 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
                 className="flex-1 px-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleAddNote()}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddNote()}
               />
               <button
                 onClick={handleAddNote}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                disabled={!newNote.trim()}
+                className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+                  newNote.trim()
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'bg-blue-300 text-white cursor-not-allowed'
+                }`}
               >
                 Agregar
               </button>
