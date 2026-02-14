@@ -20,7 +20,7 @@ const Login = () => {
   return (
     <div className="flex h-screen bg-[#0f0f1a] items-center justify-center p-4">
       <div className="bg-[#1a1a2e] rounded-2xl shadow-2xl w-full max-w-md p-8">
-        <div className="flex items-center justify-center gap-3 text-blue-600 mb-8">
+        <div className="flex items-center justify-center gap-3 text-[#60a5fa] mb-8">
           <Briefcase size={40} />
           <div>
             <h1 className="text-2xl font-bold tracking-tight">UMTELKOMD</h1>
@@ -54,7 +54,7 @@ const Login = () => {
           </div>
 
           {loginError && (
-            <div className="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-lg text-sm">
+            <div className="bg-[rgba(239,68,68,0.08)] border border-[rgba(239,68,68,0.25)] text-[#f87171] px-4 py-3 rounded-lg text-sm">
               {loginError}
             </div>
           )}

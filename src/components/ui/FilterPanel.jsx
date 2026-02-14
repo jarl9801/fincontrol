@@ -21,7 +21,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
           });
           onApply();
         }}
-        className="text-sm text-blue-600 hover:text-blue-700"
+        className="text-sm text-[#60a5fa] hover:text-[#60a5fa]"
       >
         Limpiar filtros
       </button>
@@ -33,7 +33,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         onClick={() => setFilters(prev => ({ ...prev, quickFilter: 'month' }))}
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'month'
-            ? 'bg-blue-50 border-blue-500 text-blue-700'
+            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#60a5fa]'
             : 'border-[#2a2a4a] text-[#9898b8] hover:bg-[#13132a]'
         }`}
       >
@@ -43,7 +43,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         onClick={() => setFilters(prev => ({ ...prev, quickFilter: 'quarter' }))}
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'quarter'
-            ? 'bg-blue-50 border-blue-500 text-blue-700'
+            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#60a5fa]'
             : 'border-[#2a2a4a] text-[#9898b8] hover:bg-[#13132a]'
         }`}
       >
@@ -53,7 +53,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         onClick={() => setFilters(prev => ({ ...prev, quickFilter: 'year' }))}
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'year'
-            ? 'bg-blue-50 border-blue-500 text-blue-700'
+            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#60a5fa]'
             : 'border-[#2a2a4a] text-[#9898b8] hover:bg-[#13132a]'
         }`}
       >
@@ -63,7 +63,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         onClick={() => setFilters(prev => ({ ...prev, quickFilter: 'all' }))}
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'all'
-            ? 'bg-blue-50 border-blue-500 text-blue-700'
+            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#60a5fa]'
             : 'border-[#2a2a4a] text-[#9898b8] hover:bg-[#13132a]'
         }`}
       >

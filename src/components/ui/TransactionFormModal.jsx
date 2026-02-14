@@ -213,7 +213,7 @@ const TransactionFormModal = ({
               className={`
                 flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
                 ${formData.type === 'income' 
-                  ? 'bg-[#1a1a2e] text-emerald-600 shadow-md' 
+                  ? 'bg-[#1a1a2e] text-[#34d399] shadow-md' 
                   : 'text-[#8888b0] hover:text-[#b8b8d0]'}
               `}
             >
@@ -226,7 +226,7 @@ const TransactionFormModal = ({
               className={`
                 flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
                 ${formData.type === 'expense' 
-                  ? 'bg-[#1a1a2e] text-rose-600 shadow-md' 
+                  ? 'bg-[#1a1a2e] text-[#f87171] shadow-md' 
                   : 'text-[#8888b0] hover:text-[#b8b8d0]'}
               `}
             >
@@ -239,7 +239,7 @@ const TransactionFormModal = ({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">
-                Fecha <span className="text-rose-500">*</span>
+                Fecha <span className="text-[#f87171]">*</span>
               </label>
               <input
                 type="date"
@@ -251,7 +251,7 @@ const TransactionFormModal = ({
             </div>
             <div>
               <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">
-                Monto (EUR) <span className="text-rose-500">*</span>
+                Monto (EUR) <span className="text-[#f87171]">*</span>
               </label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6868a0] font-medium">€</span>
@@ -272,7 +272,7 @@ const TransactionFormModal = ({
           {/* Description with Autocomplete */}
           <div className="relative">
             <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">
-              Descripción <span className="text-rose-500">*</span>
+              Descripción <span className="text-[#f87171]">*</span>
             </label>
             <input
               ref={descriptionRef}
@@ -323,7 +323,7 @@ const TransactionFormModal = ({
                   checked={formData.isRecurring}
                   onChange={(e) => setFormData({ ...formData, isRecurring: e.target.checked })}
                 />
-                <div className="w-10 h-5 bg-[#252540] rounded-full peer-checked:bg-emerald-500 transition-colors"></div>
+                <div className="w-10 h-5 bg-[#252540] rounded-full peer-checked:bg-[rgba(16,185,129,0.08)]0 transition-colors"></div>
                 <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-[#1a1a2e] rounded-full shadow-sm transition-transform peer-checked:translate-x-5"></div>
               </div>
               <div className="flex items-center gap-2">
@@ -362,7 +362,7 @@ const TransactionFormModal = ({
           {/* Project */}
           <div>
             <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">
-              Proyecto <span className="text-rose-500">*</span>
+              Proyecto <span className="text-[#f87171]">*</span>
             </label>
             <div className="relative">
               {projectsLoading ? (
@@ -371,7 +371,7 @@ const TransactionFormModal = ({
                   Cargando proyectos...
                 </div>
               ) : activeProjects.length === 0 ? (
-                <div className="w-full px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-700 text-sm">
+                <div className="w-full px-4 py-3 bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.25)] rounded-xl text-[#fbbf24] text-sm">
                   No hay proyectos activos. Crea uno primero en Configuración → Proyectos.
                 </div>
               ) : (
@@ -431,8 +431,8 @@ const TransactionFormModal = ({
                 className={`
                   flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
                   ${formData.status === 'pending'
-                    ? 'border-amber-400 bg-amber-50 text-amber-700'
-                    : 'border-[#2a2a4a] text-[#9898b8] hover:border-amber-200'}
+                    ? 'border-amber-400 bg-[rgba(245,158,11,0.08)] text-[#fbbf24]'
+                    : 'border-[#2a2a4a] text-[#9898b8] hover:border-[rgba(245,158,11,0.25)]'}
                 `}
               >
                 Pendiente
@@ -443,8 +443,8 @@ const TransactionFormModal = ({
                 className={`
                   flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
                   ${formData.status === 'paid'
-                    ? 'border-emerald-400 bg-emerald-50 text-emerald-700'
-                    : 'border-[#2a2a4a] text-[#9898b8] hover:border-emerald-200'}
+                    ? 'border-emerald-400 bg-[rgba(16,185,129,0.08)] text-[#34d399]'
+                    : 'border-[#2a2a4a] text-[#9898b8] hover:border-[rgba(16,185,129,0.25)]'}
                 `}
               >
                 Pagado

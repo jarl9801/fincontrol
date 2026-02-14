@@ -10,13 +10,13 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, confirmText 
 
   const variantStyles = {
     danger: {
-      icon: 'text-rose-600',
-      bg: 'bg-rose-50',
+      icon: 'text-[#f87171]',
+      bg: 'bg-[rgba(239,68,68,0.08)]',
       button: 'bg-rose-600 hover:bg-rose-700 text-white'
     },
     warning: {
-      icon: 'text-amber-600',
-      bg: 'bg-amber-50',
+      icon: 'text-[#fbbf24]',
+      bg: 'bg-[rgba(245,158,11,0.08)]',
       button: 'bg-amber-600 hover:bg-amber-700 text-white'
     }
   };

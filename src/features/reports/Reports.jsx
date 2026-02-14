@@ -303,8 +303,8 @@ const Reports = ({ transactions }) => {
               {variation !== null && (
                 <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium transition-colors ${
                   variation >= 0
-                    ? (isNegative ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600')
-                    : (isNegative ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600')
+                    ? (isNegative ? 'bg-[rgba(239,68,68,0.08)] text-[#f87171]' : 'bg-[rgba(16,185,129,0.08)] text-[#34d399]')
+                    : (isNegative ? 'bg-[rgba(16,185,129,0.08)] text-[#34d399]' : 'bg-[rgba(239,68,68,0.08)] text-[#f87171]')
                 }`}>
                   {variation >= 0 ? <ArrowUpRight size={11} /> : <ArrowDownRight size={11} />}
                   {Math.abs(variation).toFixed(1)}%
@@ -322,7 +322,7 @@ const Reports = ({ transactions }) => {
       emerald: 'bg-emerald-600/90 text-white',
       rose: 'bg-rose-600/90 text-white',
       blue: 'bg-[#3a3a5a]/90 text-white',
-      amber: 'bg-amber-500/90 text-white',
+      amber: 'bg-[rgba(245,158,11,0.08)]0/90 text-white',
       slate: 'bg-slate-600/90 text-white'
     };
 
@@ -341,7 +341,7 @@ const Reports = ({ transactions }) => {
     borderRadius: '12px',
     padding: '10px 14px',
     boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)',
-    color: '#f1f5f9',
+    color: '#0f0f1a',
     fontSize: '13px'
   };
 
@@ -451,7 +451,7 @@ const Reports = ({ transactions }) => {
                 type="checkbox"
                 checked={compareMode}
                 onChange={(e) => setCompareMode(e.target.checked)}
-                className="w-4 h-4 rounded border-[#3a3a5a] text-blue-600 focus:ring-blue-500"
+                className="w-4 h-4 rounded border-[#3a3a5a] text-[#60a5fa] focus:ring-blue-500"
               />
               Comparar con {periodType === 'month' ? 'mes' : 'período'} anterior
             </label>
@@ -484,18 +484,18 @@ const Reports = ({ transactions }) => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Ingresos */}
         <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(16,185,129,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(16,185,129,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-100/40 rounded-full -translate-y-6 translate-x-6" />
+          <div className="absolute top-0 right-0 w-20 h-20 bg-[rgba(16,185,129,0.06)] rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
             <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
-              <div className="p-1.5 rounded-lg bg-emerald-100">
-                <TrendingUp size={14} className="text-emerald-600" />
+              <div className="p-1.5 rounded-lg bg-[rgba(16,185,129,0.12)]">
+                <TrendingUp size={14} className="text-[#34d399]" />
               </div>
               Ingresos
             </div>
-            <div className="text-2xl font-bold text-emerald-700 tracking-tight">{formatCurrency(current.income)}</div>
+            <div className="text-2xl font-bold text-[#34d399] tracking-tight">{formatCurrency(current.income)}</div>
             {compareMode && previous.income > 0 && (
               <div className={`text-xs mt-2 flex items-center gap-1 font-medium ${
-                calcVariation(current.income, previous.income) >= 0 ? 'text-emerald-600' : 'text-rose-600'
+                calcVariation(current.income, previous.income) >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'
               }`}>
                 {calcVariation(current.income, previous.income) >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
                 {Math.abs(calcVariation(current.income, previous.income)).toFixed(1)}% vs anterior
@@ -506,18 +506,18 @@ const Reports = ({ transactions }) => {
 
         {/* Gastos */}
         <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(239,68,68,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(239,68,68,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-rose-100/40 rounded-full -translate-y-6 translate-x-6" />
+          <div className="absolute top-0 right-0 w-20 h-20 bg-[rgba(239,68,68,0.06)] rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
             <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
-              <div className="p-1.5 rounded-lg bg-rose-100">
-                <TrendingDown size={14} className="text-rose-600" />
+              <div className="p-1.5 rounded-lg bg-[rgba(239,68,68,0.12)]">
+                <TrendingDown size={14} className="text-[#f87171]" />
               </div>
               Gastos
             </div>
-            <div className="text-2xl font-bold text-rose-700 tracking-tight">{formatCurrency(current.expenses)}</div>
+            <div className="text-2xl font-bold text-[#f87171] tracking-tight">{formatCurrency(current.expenses)}</div>
             {compareMode && previous.expenses > 0 && (
               <div className={`text-xs mt-2 flex items-center gap-1 font-medium ${
-                calcVariation(current.expenses, previous.expenses) <= 0 ? 'text-emerald-600' : 'text-rose-600'
+                calcVariation(current.expenses, previous.expenses) <= 0 ? 'text-[#34d399]' : 'text-[#f87171]'
               }`}>
                 {calcVariation(current.expenses, previous.expenses) >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
                 {Math.abs(calcVariation(current.expenses, previous.expenses)).toFixed(1)}% vs anterior
@@ -528,15 +528,15 @@ const Reports = ({ transactions }) => {
 
         {/* Utilidad Neta */}
         <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(59,130,246,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(59,130,246,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-blue-100/40 rounded-full -translate-y-6 translate-x-6" />
+          <div className="absolute top-0 right-0 w-20 h-20 bg-[rgba(59,130,246,0.06)] rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
             <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
-              <div className="p-1.5 rounded-lg bg-blue-100">
-                <DollarSign size={14} className="text-blue-600" />
+              <div className="p-1.5 rounded-lg bg-[rgba(59,130,246,0.12)]">
+                <DollarSign size={14} className="text-[#60a5fa]" />
               </div>
               Utilidad Neta
             </div>
-            <div className={`text-2xl font-bold tracking-tight ${netProfit >= 0 ? 'text-blue-700' : 'text-rose-700'}`}>
+            <div className={`text-2xl font-bold tracking-tight ${netProfit >= 0 ? 'text-[#60a5fa]' : 'text-[#f87171]'}`}>
               {formatCurrency(netProfit)}
             </div>
             <div className="text-xs text-[#6868a0] mt-2 font-medium">Margen: {netMargin.toFixed(1)}%</div>
@@ -545,15 +545,15 @@ const Reports = ({ transactions }) => {
 
         {/* Margen Operacional */}
         <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(99,102,241,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(99,102,241,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-indigo-100/40 rounded-full -translate-y-6 translate-x-6" />
+          <div className="absolute top-0 right-0 w-20 h-20 bg-[rgba(99,102,241,0.06)] rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
             <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
-              <div className="p-1.5 rounded-lg bg-indigo-100">
-                <Percent size={14} className="text-indigo-600" />
+              <div className="p-1.5 rounded-lg bg-[rgba(99,102,241,0.12)]">
+                <Percent size={14} className="text-[#818cf8]" />
               </div>
               Margen Operacional
             </div>
-            <div className={`text-2xl font-bold tracking-tight ${operationalMargin >= 0 ? 'text-indigo-700' : 'text-rose-700'}`}>
+            <div className={`text-2xl font-bold tracking-tight ${operationalMargin >= 0 ? 'text-[#818cf8]' : 'text-[#f87171]'}`}>
               {operationalMargin.toFixed(1)}%
             </div>
             <div className="text-xs text-[#6868a0] mt-2 font-medium">EBIT: {formatCurrency(operationalProfit)}</div>
@@ -666,10 +666,10 @@ const Reports = ({ transactions }) => {
               {/* UTILIDAD BRUTA */}
               <tr className="bg-[rgba(16,185,129,0.1)] font-bold border-b-2 border-[rgba(16,185,129,0.25)]">
                 <td className="px-5 py-4 text-emerald-800">UTILIDAD BRUTA</td>
-                <td className={`px-5 py-4 text-right text-lg tabular-nums ${grossProfit >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+                <td className={`px-5 py-4 text-right text-lg tabular-nums ${grossProfit >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                   {formatCurrency(grossProfit)}
                 </td>
-                <td className="px-5 py-4 text-right text-emerald-600 tabular-nums">{grossMargin.toFixed(1)}%</td>
+                <td className="px-5 py-4 text-right text-[#34d399] tabular-nums">{grossMargin.toFixed(1)}%</td>
                 {compareMode && (
                   <>
                     <td className="px-5 py-4 text-right text-[#8888b0] tabular-nums">
@@ -715,10 +715,10 @@ const Reports = ({ transactions }) => {
               {/* UTILIDAD OPERACIONAL */}
               <tr className="bg-[rgba(59,130,246,0.1)] font-bold border-b-2 border-[rgba(59,130,246,0.25)]">
                 <td className="px-5 py-4 text-blue-800">UTILIDAD OPERACIONAL (EBIT)</td>
-                <td className={`px-5 py-4 text-right text-lg tabular-nums ${operationalProfit >= 0 ? 'text-blue-700' : 'text-rose-700'}`}>
+                <td className={`px-5 py-4 text-right text-lg tabular-nums ${operationalProfit >= 0 ? 'text-[#60a5fa]' : 'text-[#f87171]'}`}>
                   {formatCurrency(operationalProfit)}
                 </td>
-                <td className="px-5 py-4 text-right text-blue-600 tabular-nums">{operationalMargin.toFixed(1)}%</td>
+                <td className="px-5 py-4 text-right text-[#60a5fa] tabular-nums">{operationalMargin.toFixed(1)}%</td>
                 {compareMode && (
                   <>
                     <td className="px-5 py-4 text-right text-[#8888b0]">-</td>
@@ -757,10 +757,10 @@ const Reports = ({ transactions }) => {
               {/* UTILIDAD ANTES DE IMPUESTOS */}
               <tr className="bg-[rgba(99,102,241,0.1)] font-bold border-b border-[rgba(99,102,241,0.25)]">
                 <td className="px-5 py-4 text-indigo-800">UTILIDAD ANTES DE IMPUESTOS</td>
-                <td className={`px-5 py-4 text-right text-lg tabular-nums ${profitBeforeTax >= 0 ? 'text-indigo-700' : 'text-rose-700'}`}>
+                <td className={`px-5 py-4 text-right text-lg tabular-nums ${profitBeforeTax >= 0 ? 'text-[#818cf8]' : 'text-[#f87171]'}`}>
                   {formatCurrency(profitBeforeTax)}
                 </td>
-                <td className="px-5 py-4 text-right text-indigo-600 tabular-nums">
+                <td className="px-5 py-4 text-right text-[#818cf8] tabular-nums">
                   {current.income > 0 ? (profitBeforeTax / current.income * 100).toFixed(1) : 0}%
                 </td>
                 {compareMode && (
@@ -811,12 +811,12 @@ const Reports = ({ transactions }) => {
       {projectsWithLoss.length > 0 && (
         <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.2)] p-5 rounded-2xl transition-all duration-300">
           <div className="flex items-start gap-3">
-            <div className="p-2 rounded-xl bg-amber-100">
-              <AlertTriangle className="w-5 h-5 text-amber-600" />
+            <div className="p-2 rounded-xl bg-[rgba(245,158,11,0.12)]">
+              <AlertTriangle className="w-5 h-5 text-[#fbbf24]" />
             </div>
             <div>
               <h4 className="font-bold text-amber-800">Proyectos con Pérdida</h4>
-              <ul className="mt-2 text-sm text-amber-700 space-y-1.5">
+              <ul className="mt-2 text-sm text-[#fbbf24] space-y-1.5">
                 {projectsWithLoss.map(p => (
                   <li key={p.name} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
@@ -834,8 +834,8 @@ const Reports = ({ transactions }) => {
         {/* Gastos por Categoría */}
         <div className="bg-[#1a1a2e] rounded-2xl p-6 shadow-sm border border-[#2a2a4a] transition-all duration-300 hover:shadow-md">
           <h3 className="text-lg font-bold text-[#d0d0e0] mb-5 flex items-center gap-2.5">
-            <div className="p-1.5 rounded-lg bg-blue-50">
-              <BarChart3 size={18} className="text-blue-600" />
+            <div className="p-1.5 rounded-lg bg-[rgba(59,130,246,0.08)]">
+              <BarChart3 size={18} className="text-[#60a5fa]" />
             </div>
             Distribución de Gastos
           </h3>
@@ -871,8 +871,8 @@ const Reports = ({ transactions }) => {
         {/* Rentabilidad por Proyecto */}
         <div className="bg-[#1a1a2e] rounded-2xl p-6 shadow-sm border border-[#2a2a4a] transition-all duration-300 hover:shadow-md">
           <h3 className="text-lg font-bold text-[#d0d0e0] mb-5 flex items-center gap-2.5">
-            <div className="p-1.5 rounded-lg bg-indigo-50">
-              <Target size={18} className="text-indigo-600" />
+            <div className="p-1.5 rounded-lg bg-[rgba(99,102,241,0.08)]">
+              <Target size={18} className="text-[#818cf8]" />
             </div>
             Rentabilidad por Proyecto
           </h3>
@@ -922,19 +922,19 @@ const Reports = ({ transactions }) => {
               {projectChartData.map((project) => (
                 <tr key={project.name} className="hover:bg-[rgba(59,130,246,0.08)]/30 transition-colors duration-150">
                   <td className="px-5 py-3.5 font-medium text-[#b8b8d0]">{project.name}</td>
-                  <td className="px-5 py-3.5 text-right text-emerald-600 font-medium tabular-nums">{formatCurrency(project.ingresos)}</td>
-                  <td className="px-5 py-3.5 text-right text-rose-600 font-medium tabular-nums">{formatCurrency(project.gastos)}</td>
-                  <td className={`px-5 py-3.5 text-right font-bold tabular-nums ${project.margen >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                  <td className="px-5 py-3.5 text-right text-[#34d399] font-medium tabular-nums">{formatCurrency(project.ingresos)}</td>
+                  <td className="px-5 py-3.5 text-right text-[#f87171] font-medium tabular-nums">{formatCurrency(project.gastos)}</td>
+                  <td className={`px-5 py-3.5 text-right font-bold tabular-nums ${project.margen >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                     {project.margen >= 0 ? '' : '-'}{formatCurrency(Math.abs(project.margen))}
                   </td>
-                  <td className={`px-5 py-3.5 text-right font-bold tabular-nums ${project.margenPercent >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                  <td className={`px-5 py-3.5 text-right font-bold tabular-nums ${project.margenPercent >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                     {project.margenPercent.toFixed(1)}%
                   </td>
                   <td className="px-5 py-3.5 text-center">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-                      project.margenPercent >= 30 ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200' :
-                      project.margenPercent >= 0 ? 'bg-amber-50 text-amber-700 ring-1 ring-amber-200' :
-                      'bg-rose-50 text-rose-700 ring-1 ring-rose-200'
+                      project.margenPercent >= 30 ? 'bg-[rgba(16,185,129,0.08)] text-[#34d399] ring-1 ring-[rgba(16,185,129,0.2)]' :
+                      project.margenPercent >= 0 ? 'bg-[rgba(245,158,11,0.08)] text-[#fbbf24] ring-1 ring-[rgba(245,158,11,0.2)]' :
+                      'bg-[rgba(239,68,68,0.08)] text-[#f87171] ring-1 ring-[rgba(239,68,68,0.2)]'
                     }`}>
                       {project.margenPercent >= 30 ? 'Rentable' :
                        project.margenPercent >= 0 ? 'Bajo margen' :
@@ -947,12 +947,12 @@ const Reports = ({ transactions }) => {
             <tfoot className="bg-[rgba(255,255,255,0.02)] font-bold border-t-2 border-[#2a2a4a]">
               <tr>
                 <td className="px-5 py-4 text-[#d0d0e0]">TOTALES</td>
-                <td className="px-5 py-4 text-right text-emerald-700 tabular-nums">{formatCurrency(current.income)}</td>
-                <td className="px-5 py-4 text-right text-rose-700 tabular-nums">{formatCurrency(current.expenses)}</td>
-                <td className={`px-5 py-4 text-right tabular-nums ${current.profit >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+                <td className="px-5 py-4 text-right text-[#34d399] tabular-nums">{formatCurrency(current.income)}</td>
+                <td className="px-5 py-4 text-right text-[#f87171] tabular-nums">{formatCurrency(current.expenses)}</td>
+                <td className={`px-5 py-4 text-right tabular-nums ${current.profit >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                   {current.profit >= 0 ? '' : '-'}{formatCurrency(Math.abs(current.profit))}
                 </td>
-                <td className={`px-5 py-4 text-right tabular-nums ${grossMargin >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+                <td className={`px-5 py-4 text-right tabular-nums ${grossMargin >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                   {grossMargin.toFixed(1)}%
                 </td>
                 <td></td>

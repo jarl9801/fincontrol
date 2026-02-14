@@ -40,7 +40,7 @@ const BankAccount = ({ user, transactions }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#60a5fa] animate-spin" />
         <span className="ml-3 text-[#8888b0]">Cargando datos bancarios...</span>
       </div>
     );
@@ -55,8 +55,8 @@ const BankAccount = ({ user, transactions }) => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="p-3 bg-blue-100 rounded-xl">
-          <Landmark className="text-blue-600" size={24} />
+        <div className="p-3 bg-[rgba(59,130,246,0.12)] rounded-xl">
+          <Landmark className="text-[#60a5fa]" size={24} />
         </div>
         <div>
           <h2 className="text-xl font-bold text-[#d0d0e0]">Cuenta Bancaria</h2>
@@ -124,7 +124,7 @@ const BankAccount = ({ user, transactions }) => {
             {saving ? 'Guardando...' : 'Guardar Configuracion'}
           </button>
           {saved && (
-            <span className="text-sm text-emerald-600 font-medium">Guardado correctamente</span>
+            <span className="text-sm text-[#34d399] font-medium">Guardado correctamente</span>
           )}
         </div>
       </div>
@@ -135,9 +135,9 @@ const BankAccount = ({ user, transactions }) => {
           <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-[#2a2a4a]">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Saldo Inicial</h3>
-              <Landmark className="text-blue-500" size={20} />
+              <Landmark className="text-[#60a5fa]" size={20} />
             </div>
-            <p className="text-2xl font-bold text-blue-600">{formatCurrency(realBalance.startingBalance)}</p>
+            <p className="text-2xl font-bold text-[#60a5fa]">{formatCurrency(realBalance.startingBalance)}</p>
             <p className="text-xs text-[#6868a0] mt-1">Al {bankAccount.balanceDate}</p>
           </div>
 
@@ -145,33 +145,33 @@ const BankAccount = ({ user, transactions }) => {
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Movimiento Neto</h3>
               {realBalance.netMovement >= 0
-                ? <TrendingUp className="text-emerald-500" size={20} />
-                : <TrendingDown className="text-rose-500" size={20} />
+                ? <TrendingUp className="text-[#34d399]" size={20} />
+                : <TrendingDown className="text-[#f87171]" size={20} />
               }
             </div>
-            <p className={`text-2xl font-bold ${realBalance.netMovement >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+            <p className={`text-2xl font-bold ${realBalance.netMovement >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
               {realBalance.netMovement >= 0 ? '+' : ''}{formatCurrency(realBalance.netMovement)}
             </p>
             <p className="text-xs text-[#6868a0] mt-1">{realBalance.transactionsCount} transacciones pagadas</p>
           </div>
 
-          <div className={`bg-[#1a1a2e] rounded-xl p-5 shadow-sm border ${realBalance.currentBalance < 0 ? 'border-rose-200' : 'border-[#2a2a4a]'}`}>
+          <div className={`bg-[#1a1a2e] rounded-xl p-5 shadow-sm border ${realBalance.currentBalance < 0 ? 'border-[rgba(239,68,68,0.25)]' : 'border-[#2a2a4a]'}`}>
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Saldo Actual</h3>
-              <Landmark className={realBalance.currentBalance >= 0 ? 'text-emerald-500' : 'text-rose-500'} size={20} />
+              <Landmark className={realBalance.currentBalance >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'} size={20} />
             </div>
-            <p className={`text-2xl font-bold ${realBalance.currentBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+            <p className={`text-2xl font-bold ${realBalance.currentBalance >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
               {formatCurrency(realBalance.currentBalance)}
             </p>
             <p className="text-xs text-[#6868a0] mt-1">Saldo proyectado hoy</p>
           </div>
 
-          <div className={`bg-[#1a1a2e] rounded-xl p-5 shadow-sm border ${parseFloat(creditUtilizationPct) > 80 ? 'border-rose-200' : 'border-[#2a2a4a]'}`}>
+          <div className={`bg-[#1a1a2e] rounded-xl p-5 shadow-sm border ${parseFloat(creditUtilizationPct) > 80 ? 'border-[rgba(239,68,68,0.25)]' : 'border-[#2a2a4a]'}`}>
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Credito Disponible</h3>
-              <CreditCard className={parseFloat(creditUtilizationPct) > 80 ? 'text-rose-500' : 'text-blue-500'} size={20} />
+              <CreditCard className={parseFloat(creditUtilizationPct) > 80 ? 'text-[#f87171]' : 'text-[#60a5fa]'} size={20} />
             </div>
-            <p className={`text-2xl font-bold ${parseFloat(creditUtilizationPct) > 80 ? 'text-rose-600' : 'text-blue-600'}`}>
+            <p className={`text-2xl font-bold ${parseFloat(creditUtilizationPct) > 80 ? 'text-[#f87171]' : 'text-[#60a5fa]'}`}>
               {formatCurrency(realBalance.availableCredit)}
             </p>
             <p className="text-xs text-[#6868a0] mt-1">
@@ -189,15 +189,15 @@ const BankAccount = ({ user, transactions }) => {
           <div className="mb-4">
             <div className="flex justify-between text-sm mb-2">
               <span className="text-[#9898b8]">Limite: {formatCurrency(Math.abs(creditLimit))}</span>
-              <span className={`font-medium ${parseFloat(creditUtilizationPct) > 80 ? 'text-rose-600' : 'text-blue-600'}`}>
+              <span className={`font-medium ${parseFloat(creditUtilizationPct) > 80 ? 'text-[#f87171]' : 'text-[#60a5fa]'}`}>
                 {creditUtilizationPct}% utilizado
               </span>
             </div>
             <div className="w-full h-4 bg-[#252540] rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${
-                  parseFloat(creditUtilizationPct) > 80 ? 'bg-rose-500' :
-                  parseFloat(creditUtilizationPct) > 50 ? 'bg-amber-500' : 'bg-blue-500'
+                  parseFloat(creditUtilizationPct) > 80 ? 'bg-[rgba(239,68,68,0.08)]0' :
+                  parseFloat(creditUtilizationPct) > 50 ? 'bg-[rgba(245,158,11,0.08)]0' : 'bg-[rgba(59,130,246,0.08)]0'
                 }`}
                 style={{ width: `${Math.min(parseFloat(creditUtilizationPct), 100)}%` }}
               />
@@ -212,18 +212,18 @@ const BankAccount = ({ user, transactions }) => {
           </div>
 
           {realBalance.currentBalance <= creditLimit && (
-            <div className="mt-4 p-3 bg-rose-50 border border-rose-200 rounded-lg flex items-center gap-2">
-              <AlertTriangle className="text-rose-600" size={18} />
-              <span className="text-sm text-rose-700 font-medium">
+            <div className="mt-4 p-3 bg-[rgba(239,68,68,0.08)] border border-[rgba(239,68,68,0.25)] rounded-lg flex items-center gap-2">
+              <AlertTriangle className="text-[#f87171]" size={18} />
+              <span className="text-sm text-[#f87171] font-medium">
                 Has excedido el limite de la linea de credito
               </span>
             </div>
           )}
 
           {parseFloat(creditUtilizationPct) > 80 && realBalance.currentBalance > creditLimit && (
-            <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-2">
-              <AlertTriangle className="text-amber-600" size={18} />
-              <span className="text-sm text-amber-700 font-medium">
+            <div className="mt-4 p-3 bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.25)] rounded-lg flex items-center gap-2">
+              <AlertTriangle className="text-[#fbbf24]" size={18} />
+              <span className="text-sm text-[#fbbf24] font-medium">
                 Estas usando mas del 80% de tu linea de credito
               </span>
             </div>

@@ -69,7 +69,7 @@ const Categories = ({ user }) => {
           />
           <button
             onClick={handleSaveEdit}
-            className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded transition-colors"
+            className="p-1.5 text-[#34d399] hover:bg-[rgba(16,185,129,0.12)] rounded transition-colors"
           >
             <Check size={16} />
           </button>
@@ -89,13 +89,13 @@ const Categories = ({ user }) => {
         <div className="flex items-center gap-1">
           <button
             onClick={() => handleEdit(type, index)}
-            className="p-1.5 text-[#6868a0] hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
+            className="p-1.5 text-[#6868a0] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
           >
             <Edit2 size={14} />
           </button>
           <button
             onClick={() => handleDelete(type, index)}
-            className="p-1.5 text-[#6868a0] hover:text-rose-600 hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
+            className="p-1.5 text-[#6868a0] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
           >
             <Trash2 size={14} />
           </button>
@@ -107,7 +107,7 @@ const Categories = ({ user }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#60a5fa] animate-spin" />
         <span className="ml-3 text-[#8888b0]">Cargando categorias...</span>
       </div>
     );
@@ -116,14 +116,14 @@ const Categories = ({ user }) => {
   return (
     <div className="space-y-6">
       {/* Categorias de Gastos */}
-      <div className="bg-rose-50 rounded-2xl p-6 border border-rose-100">
+      <div className="bg-[rgba(239,68,68,0.08)] rounded-2xl p-6 border border-[rgba(239,68,68,0.2)]">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-rose-100 rounded-lg">
-            <TrendingDown className="text-rose-600" size={20} />
+          <div className="p-2 bg-[rgba(239,68,68,0.12)] rounded-lg">
+            <TrendingDown className="text-[#f87171]" size={20} />
           </div>
           <div>
             <h3 className="text-lg font-bold text-rose-800">Categorias de Gastos</h3>
-            <p className="text-sm text-rose-600">{expenseCategories.length} categorias</p>
+            <p className="text-sm text-[#f87171]">{expenseCategories.length} categorias</p>
           </div>
         </div>
 
@@ -132,7 +132,7 @@ const Categories = ({ user }) => {
           <input
             type="text"
             placeholder="Nueva categoria de gasto..."
-            className="flex-1 px-3 py-2 text-sm border border-rose-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none bg-[#1a1a2e]"
+            className="flex-1 px-3 py-2 text-sm border border-[rgba(239,68,68,0.25)] rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none bg-[#1a1a2e]"
             value={newExpense}
             onChange={(e) => setNewExpense(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleAddExpense()}
@@ -153,14 +153,14 @@ const Categories = ({ user }) => {
       </div>
 
       {/* Categorias de Ingresos */}
-      <div className="bg-emerald-50 rounded-2xl p-6 border border-emerald-100">
+      <div className="bg-[rgba(16,185,129,0.08)] rounded-2xl p-6 border border-[rgba(16,185,129,0.2)]">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-emerald-100 rounded-lg">
-            <TrendingUp className="text-emerald-600" size={20} />
+          <div className="p-2 bg-[rgba(16,185,129,0.12)] rounded-lg">
+            <TrendingUp className="text-[#34d399]" size={20} />
           </div>
           <div>
             <h3 className="text-lg font-bold text-emerald-800">Categorias de Ingresos</h3>
-            <p className="text-sm text-emerald-600">{incomeCategories.length} categorias</p>
+            <p className="text-sm text-[#34d399]">{incomeCategories.length} categorias</p>
           </div>
         </div>
 
@@ -169,7 +169,7 @@ const Categories = ({ user }) => {
           <input
             type="text"
             placeholder="Nueva categoria de ingreso..."
-            className="flex-1 px-3 py-2 text-sm border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none bg-[#1a1a2e]"
+            className="flex-1 px-3 py-2 text-sm border border-[rgba(16,185,129,0.25)] rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none bg-[#1a1a2e]"
             value={newIncome}
             onChange={(e) => setNewIncome(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleAddIncome()}

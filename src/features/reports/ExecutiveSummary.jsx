@@ -300,7 +300,7 @@ const ExecutiveSummary = ({ transactions }) => {
             </div>
             {trend && (
               <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold ${
-                trend === 'up' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
+                trend === 'up' ? 'bg-[rgba(16,185,129,0.12)] text-[#34d399]' : 'bg-[rgba(239,68,68,0.12)] text-[#f87171]'
               }`}>
                 {trend === 'up' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
                 {Math.abs(trendValue).toFixed(1)}%
@@ -326,15 +326,15 @@ const ExecutiveSummary = ({ transactions }) => {
     }
 
     const statusColors = {
-      good: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-      warning: 'bg-amber-100 text-amber-700 border-amber-200',
-      bad: 'bg-rose-100 text-rose-700 border-rose-200'
+      good: 'bg-[rgba(16,185,129,0.12)] text-[#34d399] border-[rgba(16,185,129,0.25)]',
+      warning: 'bg-[rgba(245,158,11,0.12)] text-[#fbbf24] border-[rgba(245,158,11,0.25)]',
+      bad: 'bg-[rgba(239,68,68,0.12)] text-[#f87171] border-[rgba(239,68,68,0.25)]'
     };
 
     const dotColors = {
-      good: 'bg-emerald-500',
-      warning: 'bg-amber-500',
-      bad: 'bg-rose-500'
+      good: 'bg-[#34d399]',
+      warning: 'bg-[#fbbf24]',
+      bad: 'bg-[#f87171]'
     };
 
     return (
@@ -458,11 +458,11 @@ const ExecutiveSummary = ({ transactions }) => {
         {periodType !== 'all' && (
           <div className="mt-3 pt-3 border-t border-[#2a2a4a] flex items-center gap-4 text-xs text-[#6868a0]">
             <span className="inline-flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-slate-700" />
+              <span className="w-2 h-2 rounded-full bg-[#3a3a5a]" />
               Actual: <span className="font-medium text-[#9898b8]">{getPeriodLabel()}</span>
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-slate-300" />
+              <span className="w-2 h-2 rounded-full bg-[#585890]" />
               Anterior: <span className="font-medium text-[#8888b0]">{getPreviousPeriodLabel()}</span>
             </span>
           </div>
@@ -528,8 +528,8 @@ const ExecutiveSummary = ({ transactions }) => {
         {/* Ratios de Liquidez */}
         <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Activity className="text-blue-600" size={20} />
+            <div className="p-2 bg-[rgba(59,130,246,0.12)] rounded-lg">
+              <Activity className="text-[#60a5fa]" size={20} />
             </div>
             <div>
               <h3 className="font-bold text-[#d0d0e0]">Indicadores de Liquidez</h3>
@@ -547,8 +547,8 @@ const ExecutiveSummary = ({ transactions }) => {
         {/* Ratios de Rentabilidad */}
         <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-emerald-100 rounded-lg">
-              <Percent className="text-emerald-600" size={20} />
+            <div className="p-2 bg-[rgba(16,185,129,0.12)] rounded-lg">
+              <Percent className="text-[#34d399]" size={20} />
             </div>
             <div>
               <h3 className="font-bold text-[#d0d0e0]">Indicadores de Rentabilidad</h3>
@@ -579,8 +579,8 @@ const ExecutiveSummary = ({ transactions }) => {
         {/* Alerts */}
         <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <AlertTriangle className="text-amber-600" size={20} />
+            <div className="p-2 bg-[rgba(245,158,11,0.12)] rounded-lg">
+              <AlertTriangle className="text-[#fbbf24]" size={20} />
             </div>
             <div>
               <h3 className="font-bold text-[#d0d0e0]">Alertas Financieras</h3>
@@ -592,26 +592,26 @@ const ExecutiveSummary = ({ transactions }) => {
               <div
                 key={idx}
                 className={`flex items-start gap-3 p-3 rounded-xl ${
-                  alert.type === 'danger' ? 'bg-rose-50 border border-rose-200' :
-                  alert.type === 'warning' ? 'bg-amber-50 border border-amber-200' :
-                  alert.type === 'success' ? 'bg-emerald-50 border border-emerald-200' :
-                  'bg-blue-50 border border-blue-200'
+                  alert.type === 'danger' ? 'bg-[rgba(239,68,68,0.08)] border border-[rgba(239,68,68,0.25)]' :
+                  alert.type === 'warning' ? 'bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.25)]' :
+                  alert.type === 'success' ? 'bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.25)]' :
+                  'bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)]'
                 }`}
               >
                 {alert.type === 'success' ? (
-                  <CheckCircle2 className="text-emerald-600 flex-shrink-0 mt-0.5" size={16} />
+                  <CheckCircle2 className="text-[#34d399] flex-shrink-0 mt-0.5" size={16} />
                 ) : (
                   <AlertTriangle className={`flex-shrink-0 mt-0.5 ${
-                    alert.type === 'danger' ? 'text-rose-600' :
-                    alert.type === 'warning' ? 'text-amber-600' :
-                    'text-blue-600'
+                    alert.type === 'danger' ? 'text-[#f87171]' :
+                    alert.type === 'warning' ? 'text-[#fbbf24]' :
+                    'text-[#60a5fa]'
                   }`} size={16} />
                 )}
                 <span className={`text-sm ${
-                  alert.type === 'danger' ? 'text-rose-700' :
-                  alert.type === 'warning' ? 'text-amber-700' :
-                  alert.type === 'success' ? 'text-emerald-700' :
-                  'text-blue-700'
+                  alert.type === 'danger' ? 'text-[#f87171]' :
+                  alert.type === 'warning' ? 'text-[#fbbf24]' :
+                  alert.type === 'success' ? 'text-[#34d399]' :
+                  'text-[#60a5fa]'
                 }`}>
                   {alert.text}
                 </span>
@@ -623,8 +623,8 @@ const ExecutiveSummary = ({ transactions }) => {
         {/* Recommendations */}
         <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-indigo-100 rounded-lg">
-              <Lightbulb className="text-indigo-600" size={20} />
+            <div className="p-2 bg-[rgba(99,102,241,0.12)] rounded-lg">
+              <Lightbulb className="text-[#818cf8]" size={20} />
             </div>
             <div>
               <h3 className="font-bold text-[#d0d0e0]">Recomendaciones</h3>
@@ -633,14 +633,14 @@ const ExecutiveSummary = ({ transactions }) => {
           </div>
           <div className="space-y-2">
             {recommendations.length > 0 ? recommendations.map((rec, idx) => (
-              <div key={idx} className="flex items-start gap-3 p-3 rounded-xl bg-indigo-50 border border-indigo-200">
-                <Target className="text-indigo-600 flex-shrink-0 mt-0.5" size={16} />
-                <span className="text-sm text-indigo-700">{rec}</span>
+              <div key={idx} className="flex items-start gap-3 p-3 rounded-xl bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.25)]">
+                <Target className="text-[#818cf8] flex-shrink-0 mt-0.5" size={16} />
+                <span className="text-sm text-[#818cf8]">{rec}</span>
               </div>
             )) : (
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200">
-                <CheckCircle2 className="text-emerald-600 flex-shrink-0 mt-0.5" size={16} />
-                <span className="text-sm text-emerald-700">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.25)]">
+                <CheckCircle2 className="text-[#34d399] flex-shrink-0 mt-0.5" size={16} />
+                <span className="text-sm text-[#34d399]">
                   No hay recomendaciones urgentes. Mantener buenas prácticas financieras.
                 </span>
               </div>
@@ -652,8 +652,8 @@ const ExecutiveSummary = ({ transactions }) => {
       {/* 6-Month Trend Chart */}
       <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <BarChart3 className="text-blue-600" size={20} />
+          <div className="p-2 bg-[rgba(59,130,246,0.12)] rounded-lg">
+            <BarChart3 className="text-[#60a5fa]" size={20} />
           </div>
           <div>
             <h3 className="font-bold text-[#d0d0e0]">Tendencia Últimos 6 Meses</h3>
@@ -687,12 +687,12 @@ const ExecutiveSummary = ({ transactions }) => {
       {/* Projects with Low Margin */}
       {projectsWithLowMargin.length > 0 && (
         <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] overflow-hidden">
-          <div className="px-6 py-4 border-b border-[#2a2a4a] bg-amber-50">
+          <div className="px-6 py-4 border-b border-[#2a2a4a] bg-[rgba(245,158,11,0.08)]">
             <div className="flex items-center gap-3">
-              <AlertTriangle className="text-amber-600" size={20} />
+              <AlertTriangle className="text-[#fbbf24]" size={20} />
               <div>
                 <h3 className="font-bold text-amber-800">Proyectos con Margen Bajo (&lt;20%)</h3>
-                <p className="text-xs text-amber-600">Requieren atención para mejorar rentabilidad</p>
+                <p className="text-xs text-[#fbbf24]">Requieren atención para mejorar rentabilidad</p>
               </div>
             </div>
           </div>
@@ -712,14 +712,14 @@ const ExecutiveSummary = ({ transactions }) => {
                   {projectsWithLowMargin.slice(0, 5).map((p, idx) => (
                     <tr key={idx} className="hover:bg-[#13132a]">
                       <td className="px-4 py-3 font-medium text-[#b8b8d0]">{p.name}</td>
-                      <td className="px-4 py-3 text-right text-emerald-600">{formatCurrency(p.ingresos)}</td>
-                      <td className="px-4 py-3 text-right text-rose-600">{formatCurrency(p.gastos)}</td>
-                      <td className={`px-4 py-3 text-right font-bold ${p.margin >= 0 ? 'text-amber-600' : 'text-rose-600'}`}>
+                      <td className="px-4 py-3 text-right text-[#34d399]">{formatCurrency(p.ingresos)}</td>
+                      <td className="px-4 py-3 text-right text-[#f87171]">{formatCurrency(p.gastos)}</td>
+                      <td className={`px-4 py-3 text-right font-bold ${p.margin >= 0 ? 'text-[#fbbf24]' : 'text-[#f87171]'}`}>
                         {p.margin.toFixed(1)}%
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          p.margin < 0 ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'
+                          p.margin < 0 ? 'bg-[rgba(239,68,68,0.12)] text-[#f87171]' : 'bg-[rgba(245,158,11,0.12)] text-[#fbbf24]'
                         }`}>
                           {p.margin < 0 ? 'Pérdida' : 'Bajo Margen'}
                         </span>

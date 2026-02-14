@@ -141,15 +141,15 @@ const CostCenters = ({ user }) => {
   };
 
   const getProgressColor = (percent) => {
-    if (percent > 100) return 'bg-rose-500';
-    if (percent > 80) return 'bg-amber-500';
-    return 'bg-emerald-500';
+    if (percent > 100) return 'bg-[rgba(239,68,68,0.08)]0';
+    if (percent > 80) return 'bg-[rgba(245,158,11,0.08)]0';
+    return 'bg-[rgba(16,185,129,0.08)]0';
   };
 
   const getProgressBgColor = (percent) => {
-    if (percent > 100) return 'bg-rose-100';
-    if (percent > 80) return 'bg-amber-100';
-    return 'bg-emerald-100';
+    if (percent > 100) return 'bg-[rgba(239,68,68,0.12)]';
+    if (percent > 80) return 'bg-[rgba(245,158,11,0.12)]';
+    return 'bg-[rgba(16,185,129,0.12)]';
   };
 
   // Monthly Budget View Component
@@ -184,10 +184,10 @@ const CostCenters = ({ user }) => {
             </div>
             <div className={`rounded-lg px-3 py-2 ${getProgressBgColor(ytdPercent)}`}>
               <span className="text-[#8888b0]">YTD: </span>
-              <span className={`font-bold ${ytdPercent > 100 ? 'text-rose-700' : ytdPercent > 80 ? 'text-amber-700' : 'text-emerald-700'}`}>
+              <span className={`font-bold ${ytdPercent > 100 ? 'text-[#f87171]' : ytdPercent > 80 ? 'text-[#fbbf24]' : 'text-[#34d399]'}`}>
                 {formatCurrency(ytdExecuted)} / {formatCurrency(ytdBudget)}
               </span>
-              <span className={`ml-2 text-xs font-medium ${ytdPercent > 100 ? 'text-rose-600' : ytdPercent > 80 ? 'text-amber-600' : 'text-emerald-600'}`}>
+              <span className={`ml-2 text-xs font-medium ${ytdPercent > 100 ? 'text-[#f87171]' : ytdPercent > 80 ? 'text-[#fbbf24]' : 'text-[#34d399]'}`}>
                 ({ytdPercent.toFixed(0)}%)
               </span>
             </div>
@@ -205,13 +205,13 @@ const CostCenters = ({ user }) => {
               <div
                 key={index}
                 className={`relative rounded-xl p-2 transition-all ${
-                  isCurrentMonth ? 'ring-2 ring-blue-500 bg-blue-50' :
+                  isCurrentMonth ? 'ring-2 ring-blue-500 bg-[rgba(59,130,246,0.08)]' :
                   isFutureMonth ? 'bg-[#1e1e38] opacity-50' :
                   'bg-[#1a1a2e] border border-[#2a2a4a]'
                 }`}
               >
                 <div className="text-center mb-2">
-                  <p className={`text-xs font-bold ${isCurrentMonth ? 'text-blue-600' : 'text-[#9898b8]'}`}>
+                  <p className={`text-xs font-bold ${isCurrentMonth ? 'text-[#60a5fa]' : 'text-[#9898b8]'}`}>
                     {data.month}
                   </p>
                 </div>
@@ -232,9 +232,9 @@ const CostCenters = ({ user }) => {
 
                 <div className="mt-2 text-center">
                   <p className={`text-xs font-bold ${
-                    percent > 100 ? 'text-rose-600' :
-                    percent > 80 ? 'text-amber-600' :
-                    percent > 0 ? 'text-emerald-600' :
+                    percent > 100 ? 'text-[#f87171]' :
+                    percent > 80 ? 'text-[#fbbf24]' :
+                    percent > 0 ? 'text-[#34d399]' :
                     'text-[#6868a0]'
                   }`}>
                     {percent > 0 ? `${percent.toFixed(0)}%` : '-'}
@@ -251,15 +251,15 @@ const CostCenters = ({ user }) => {
         {/* Legend */}
         <div className="flex items-center justify-center gap-6 mt-4 text-xs">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-emerald-500" />
+            <div className="w-3 h-3 rounded bg-[rgba(16,185,129,0.08)]0" />
             <span className="text-[#9898b8]">&lt;80% utilizado</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-amber-500" />
+            <div className="w-3 h-3 rounded bg-[rgba(245,158,11,0.08)]0" />
             <span className="text-[#9898b8]">80-100% utilizado</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-rose-500" />
+            <div className="w-3 h-3 rounded bg-[rgba(239,68,68,0.08)]0" />
             <span className="text-[#9898b8]">&gt;100% sobrepasado</span>
           </div>
         </div>
@@ -281,14 +281,14 @@ const CostCenters = ({ user }) => {
           <td className="px-4 py-4 text-sm font-medium text-[#d0d0e0]">{center.name}</td>
           <td className="px-4 py-4">
             <span className={`px-2 py-1 text-xs font-medium rounded ${
-              center.type === 'Costos' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'
+              center.type === 'Costos' ? 'bg-[rgba(239,68,68,0.12)] text-[#f87171]' : 'bg-[rgba(16,185,129,0.12)] text-[#34d399]'
             }`}>
               {center.type}
             </span>
           </td>
           <td className="px-4 py-4 text-sm text-[#9898b8]">{formatCurrency(center.budget)}</td>
           <td className="px-4 py-4 text-sm text-[#8888b0]">{formatCurrency(center.budget / 12)}/mes</td>
-          <td className="px-4 py-4 text-sm font-medium text-rose-600">{formatCurrency(ytdExecuted)}</td>
+          <td className="px-4 py-4 text-sm font-medium text-[#f87171]">{formatCurrency(ytdExecuted)}</td>
           <td className="px-4 py-4">
             <div className="flex items-center gap-2">
               <div className="w-20 h-2.5 bg-[#252540] rounded-full overflow-hidden">
@@ -298,9 +298,9 @@ const CostCenters = ({ user }) => {
                 />
               </div>
               <span className={`text-xs font-bold ${
-                utilization > 100 ? 'text-rose-600' :
-                utilization > 80 ? 'text-amber-600' :
-                'text-emerald-600'
+                utilization > 100 ? 'text-[#f87171]' :
+                utilization > 80 ? 'text-[#fbbf24]' :
+                'text-[#34d399]'
               }`}>
                 {utilization.toFixed(0)}%
               </span>
@@ -312,7 +312,7 @@ const CostCenters = ({ user }) => {
               <button
                 onClick={() => setExpandedCenter(isExpanded ? null : center.id)}
                 className={`p-1.5 rounded transition-colors ${
-                  isExpanded ? 'text-blue-600 bg-blue-50' : 'text-[#6868a0] hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)]'
+                  isExpanded ? 'text-[#60a5fa] bg-[rgba(59,130,246,0.08)]' : 'text-[#6868a0] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)]'
                 }`}
                 title="Ver detalle mensual"
               >
@@ -320,13 +320,13 @@ const CostCenters = ({ user }) => {
               </button>
               <button
                 onClick={() => onEdit(center)}
-                className="p-1.5 text-[#6868a0] hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
+                className="p-1.5 text-[#6868a0] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
               >
                 <Edit2 size={14} />
               </button>
               <button
                 onClick={() => onDelete(center.id)}
-                className="p-1.5 text-[#6868a0] hover:text-rose-600 hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
+                className="p-1.5 text-[#6868a0] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
               >
                 <Trash2 size={14} />
               </button>
@@ -347,7 +347,7 @@ const CostCenters = ({ user }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#60a5fa] animate-spin" />
         <span className="ml-3 text-[#8888b0]">Cargando centros de costo...</span>
       </div>
     );
@@ -366,47 +366,47 @@ const CostCenters = ({ user }) => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-[#2a2a4a]">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-rose-100 rounded-lg">
-              <TrendingDown className="text-rose-600" size={20} />
+            <div className="p-2 bg-[rgba(239,68,68,0.12)] rounded-lg">
+              <TrendingDown className="text-[#f87171]" size={20} />
             </div>
             <h3 className="font-bold text-rose-800">Centros de Costos</h3>
           </div>
-          <p className="text-2xl font-bold text-rose-600">{costCenters.length}</p>
+          <p className="text-2xl font-bold text-[#f87171]">{costCenters.length}</p>
           <p className="text-xs text-[#8888b0]">activos</p>
         </div>
 
         <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-[#2a2a4a]">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <BarChart3 className="text-blue-600" size={20} />
+            <div className="p-2 bg-[rgba(59,130,246,0.12)] rounded-lg">
+              <BarChart3 className="text-[#60a5fa]" size={20} />
             </div>
             <h3 className="font-bold text-blue-800">Presupuesto Anual</h3>
           </div>
-          <p className="text-2xl font-bold text-blue-600">{formatCurrency(totalBudget)}</p>
+          <p className="text-2xl font-bold text-[#60a5fa]">{formatCurrency(totalBudget)}</p>
           <p className="text-xs text-[#8888b0]">{formatCurrency(totalBudget / 12)}/mes</p>
         </div>
 
         <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-[#2a2a4a]">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <TrendingUpDown className="text-amber-600" size={20} />
+            <div className="p-2 bg-[rgba(245,158,11,0.12)] rounded-lg">
+              <TrendingUpDown className="text-[#fbbf24]" size={20} />
             </div>
             <h3 className="font-bold text-amber-800">Ejecutado YTD</h3>
           </div>
-          <p className="text-2xl font-bold text-amber-600">{formatCurrency(totalExecuted)}</p>
+          <p className="text-2xl font-bold text-[#fbbf24]">{formatCurrency(totalExecuted)}</p>
           <p className="text-xs text-[#8888b0]">de {formatCurrency(ytdBudget)} presupuestado</p>
         </div>
 
         <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-[#2a2a4a]">
           <div className="flex items-center gap-3 mb-3">
             <div className={`p-2 rounded-lg ${getProgressBgColor(overallUtilization)}`}>
-              <Calendar className={`${overallUtilization > 100 ? 'text-rose-600' : overallUtilization > 80 ? 'text-amber-600' : 'text-emerald-600'}`} size={20} />
+              <Calendar className={`${overallUtilization > 100 ? 'text-[#f87171]' : overallUtilization > 80 ? 'text-[#fbbf24]' : 'text-[#34d399]'}`} size={20} />
             </div>
             <h3 className={`font-bold ${overallUtilization > 100 ? 'text-rose-800' : overallUtilization > 80 ? 'text-amber-800' : 'text-emerald-800'}`}>
               Utilización YTD
             </h3>
           </div>
-          <p className={`text-2xl font-bold ${overallUtilization > 100 ? 'text-rose-600' : overallUtilization > 80 ? 'text-amber-600' : 'text-emerald-600'}`}>
+          <p className={`text-2xl font-bold ${overallUtilization > 100 ? 'text-[#f87171]' : overallUtilization > 80 ? 'text-[#fbbf24]' : 'text-[#34d399]'}`}>
             {overallUtilization.toFixed(1)}%
           </p>
           <div className="w-full h-2 bg-[#252540] rounded-full overflow-hidden mt-2">
@@ -439,14 +439,14 @@ const CostCenters = ({ user }) => {
       </div>
 
       {/* Cost Centers Table */}
-      <div className="bg-rose-50 rounded-2xl p-6 border border-rose-100">
+      <div className="bg-[rgba(239,68,68,0.08)] rounded-2xl p-6 border border-[rgba(239,68,68,0.2)]">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-rose-100 rounded-lg">
-            <TrendingDown className="text-rose-600" size={20} />
+          <div className="p-2 bg-[rgba(239,68,68,0.12)] rounded-lg">
+            <TrendingDown className="text-[#f87171]" size={20} />
           </div>
           <div>
             <h3 className="text-lg font-bold text-rose-800">Centros de Costos</h3>
-            <p className="text-sm text-rose-600">Click en la flecha para ver detalle mensual</p>
+            <p className="text-sm text-[#f87171]">Click en la flecha para ver detalle mensual</p>
           </div>
         </div>
 
@@ -483,14 +483,14 @@ const CostCenters = ({ user }) => {
 
       {/* Income Centers Table */}
       {incomeCenters.length > 0 && (
-        <div className="bg-emerald-50 rounded-2xl p-6 border border-emerald-100">
+        <div className="bg-[rgba(16,185,129,0.08)] rounded-2xl p-6 border border-[rgba(16,185,129,0.2)]">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-emerald-100 rounded-lg">
-              <TrendingUp className="text-emerald-600" size={20} />
+            <div className="p-2 bg-[rgba(16,185,129,0.12)] rounded-lg">
+              <TrendingUp className="text-[#34d399]" size={20} />
             </div>
             <div>
               <h3 className="text-lg font-bold text-emerald-800">Centros de Ingresos</h3>
-              <p className="text-sm text-emerald-600">Solo registra VENTAS</p>
+              <p className="text-sm text-[#34d399]">Solo registra VENTAS</p>
             </div>
           </div>
 

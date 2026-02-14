@@ -138,7 +138,7 @@ const CashFlow = ({ transactions, user }) => {
           <button
             onClick={() => setView('monthly')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              view === 'monthly' ? 'bg-slate-700 text-white' : 'bg-[#1e1e38] text-[#9898b8] hover:bg-[#252540]'
+              view === 'monthly' ? 'bg-[#3a3a5a] text-white' : 'bg-[#1e1e38] text-[#9898b8] hover:bg-[#252540]'
             }`}
           >
             Vista Mensual
@@ -146,7 +146,7 @@ const CashFlow = ({ transactions, user }) => {
           <button
             onClick={() => setView('weekly')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              view === 'weekly' ? 'bg-slate-700 text-white' : 'bg-[#1e1e38] text-[#9898b8] hover:bg-[#252540]'
+              view === 'weekly' ? 'bg-[#3a3a5a] text-white' : 'bg-[#1e1e38] text-[#9898b8] hover:bg-[#252540]'
             }`}
           >
             Vista Semanal
@@ -173,7 +173,7 @@ const CashFlow = ({ transactions, user }) => {
             </div>
             <div className="bg-[#1a1a2e] rounded-lg p-3 border border-[#2a2a4a]">
               <p className="text-xs text-[#8888b0] mb-1">Saldo Actual</p>
-              <p className={`text-lg font-bold ${realBalance.currentBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+              <p className={`text-lg font-bold ${realBalance.currentBalance >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                 {formatCurrency(realBalance.currentBalance)}
               </p>
             </div>
@@ -183,7 +183,7 @@ const CashFlow = ({ transactions, user }) => {
             </div>
             <div className="bg-[#1a1a2e] rounded-lg p-3 border border-[#2a2a4a]">
               <p className="text-xs text-[#8888b0] mb-1">Disponible Total</p>
-              <p className={`text-lg font-bold ${realBalance.availableCredit > 10000 ? 'text-emerald-600' : realBalance.availableCredit > 0 ? 'text-amber-600' : 'text-rose-600'}`}>
+              <p className={`text-lg font-bold ${realBalance.availableCredit > 10000 ? 'text-[#34d399]' : realBalance.availableCredit > 0 ? 'text-[#fbbf24]' : 'text-[#f87171]'}`}>
                 {formatCurrency(realBalance.availableCredit)}
               </p>
             </div>
@@ -192,11 +192,11 @@ const CashFlow = ({ transactions, user }) => {
       )}
 
       {!hasBankAccount && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-3">
-          <AlertTriangle className="text-amber-600" size={20} />
+        <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.25)] rounded-xl p-4 flex items-center gap-3">
+          <AlertTriangle className="text-[#fbbf24]" size={20} />
           <div>
             <p className="text-sm font-medium text-amber-800">Sin cuenta bancaria configurada</p>
-            <p className="text-xs text-amber-600">Ve a Configuración &gt; Cuenta Bancaria para ingresar tu saldo y línea de crédito</p>
+            <p className="text-xs text-[#fbbf24]">Ve a Configuración &gt; Cuenta Bancaria para ingresar tu saldo y línea de crédito</p>
           </div>
         </div>
       )}
@@ -206,25 +206,25 @@ const CashFlow = ({ transactions, user }) => {
         <div className="bg-[#1a1a2e] rounded-xl p-5 border border-[#2a2a4a]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#b8b8d0]">Total Entradas</h3>
-            <TrendingUp className="text-emerald-500" size={18} />
+            <TrendingUp className="text-[#34d399]" size={18} />
           </div>
-          <p className="text-2xl font-bold text-emerald-600">{formatCurrency(totalIncome)}</p>
+          <p className="text-2xl font-bold text-[#34d399]">{formatCurrency(totalIncome)}</p>
         </div>
 
         <div className="bg-[#1a1a2e] rounded-xl p-5 border border-[#2a2a4a]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#b8b8d0]">Total Salidas</h3>
-            <TrendingDown className="text-rose-500" size={18} />
+            <TrendingDown className="text-[#f87171]" size={18} />
           </div>
-          <p className="text-2xl font-bold text-rose-600">{formatCurrency(totalExpenses)}</p>
+          <p className="text-2xl font-bold text-[#f87171]">{formatCurrency(totalExpenses)}</p>
         </div>
 
         <div className="bg-[#1a1a2e] rounded-xl p-5 border border-[#2a2a4a]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#b8b8d0]">Flujo Neto</h3>
-            <DollarSign className={netCashFlow >= 0 ? 'text-emerald-500' : 'text-rose-500'} size={18} />
+            <DollarSign className={netCashFlow >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'} size={18} />
           </div>
-          <p className={`text-2xl font-bold ${netCashFlow >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+          <p className={`text-2xl font-bold ${netCashFlow >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
             {netCashFlow >= 0 ? '+' : ''}{formatCurrency(netCashFlow)}
           </p>
         </div>
@@ -235,12 +235,12 @@ const CashFlow = ({ transactions, user }) => {
               {hasBankAccount ? 'Saldo Banco' : 'Saldo Acumulado'}
             </h3>
             {hasBankAccount
-              ? <Landmark className={realBalance.currentBalance >= 0 ? 'text-[#8888b0]' : 'text-rose-500'} size={18} />
-              : <DollarSign className={lastPeriod.acumulado >= 0 ? 'text-[#8888b0]' : 'text-rose-500'} size={18} />
+              ? <Landmark className={realBalance.currentBalance >= 0 ? 'text-[#8888b0]' : 'text-[#f87171]'} size={18} />
+              : <DollarSign className={lastPeriod.acumulado >= 0 ? 'text-[#8888b0]' : 'text-[#f87171]'} size={18} />
             }
           </div>
           <p className={`text-2xl font-bold ${
-            (hasBankAccount ? realBalance.currentBalance : lastPeriod.acumulado) >= 0 ? 'text-[#b8b8d0]' : 'text-rose-600'
+            (hasBankAccount ? realBalance.currentBalance : lastPeriod.acumulado) >= 0 ? 'text-[#b8b8d0]' : 'text-[#f87171]'
           }`}>
             {formatCurrency(hasBankAccount ? realBalance.currentBalance : Math.abs(lastPeriod.acumulado))}
           </p>
@@ -270,12 +270,12 @@ const CashFlow = ({ transactions, user }) => {
                 {cashFlowData.map((row, i) => (
                   <tr key={i} className="hover:bg-[#13132a] transition-colors">
                     <td className="px-6 py-3 font-medium text-[#b8b8d0]">{row.label}</td>
-                    <td className="px-6 py-3 text-right text-emerald-600">{formatCurrency(row.ingresos)}</td>
-                    <td className="px-6 py-3 text-right text-rose-600">{formatCurrency(row.gastos)}</td>
-                    <td className={`px-6 py-3 text-right font-medium ${row.neto >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                    <td className="px-6 py-3 text-right text-[#34d399]">{formatCurrency(row.ingresos)}</td>
+                    <td className="px-6 py-3 text-right text-[#f87171]">{formatCurrency(row.gastos)}</td>
+                    <td className={`px-6 py-3 text-right font-medium ${row.neto >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                       {row.neto >= 0 ? '+' : ''}{formatCurrency(row.neto)}
                     </td>
-                    <td className={`px-6 py-3 text-right font-bold ${row.acumulado < 0 ? 'text-rose-600' : 'text-[#b8b8d0]'}`}>
+                    <td className={`px-6 py-3 text-right font-bold ${row.acumulado < 0 ? 'text-[#f87171]' : 'text-[#b8b8d0]'}`}>
                       {formatCurrency(row.acumulado)}
                     </td>
                   </tr>
@@ -284,9 +284,9 @@ const CashFlow = ({ transactions, user }) => {
               <tfoot>
                 <tr className="border-t-2 border-[#3a3a5a] bg-[#13132a]">
                   <td className="px-6 py-3 font-bold text-[#b8b8d0]">Total</td>
-                  <td className="px-6 py-3 text-right font-bold text-emerald-600">{formatCurrency(totalIncome)}</td>
-                  <td className="px-6 py-3 text-right font-bold text-rose-600">{formatCurrency(totalExpenses)}</td>
-                  <td className={`px-6 py-3 text-right font-bold ${netCashFlow >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                  <td className="px-6 py-3 text-right font-bold text-[#34d399]">{formatCurrency(totalIncome)}</td>
+                  <td className="px-6 py-3 text-right font-bold text-[#f87171]">{formatCurrency(totalExpenses)}</td>
+                  <td className={`px-6 py-3 text-right font-bold ${netCashFlow >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                     {netCashFlow >= 0 ? '+' : ''}{formatCurrency(netCashFlow)}
                   </td>
                   <td className="px-6 py-3 text-right font-bold text-[#b8b8d0]">—</td>

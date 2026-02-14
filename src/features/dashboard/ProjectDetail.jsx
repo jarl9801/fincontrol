@@ -124,23 +124,23 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
 
         {/* KPI row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-emerald-50 rounded-lg p-3 border border-emerald-100">
-            <p className="text-xs text-emerald-600 font-medium">Ingresos</p>
-            <p className="text-lg font-bold text-emerald-700">{formatCurrency(totalIncome)} €</p>
+          <div className="bg-[rgba(16,185,129,0.08)] rounded-lg p-3 border border-[rgba(16,185,129,0.2)]">
+            <p className="text-xs text-[#34d399] font-medium">Ingresos</p>
+            <p className="text-lg font-bold text-[#34d399]">{formatCurrency(totalIncome)} €</p>
           </div>
-          <div className="bg-rose-50 rounded-lg p-3 border border-rose-100">
-            <p className="text-xs text-rose-600 font-medium">Gastos</p>
-            <p className="text-lg font-bold text-rose-700">{formatCurrency(totalExpenses)} €</p>
+          <div className="bg-[rgba(239,68,68,0.08)] rounded-lg p-3 border border-[rgba(239,68,68,0.2)]">
+            <p className="text-xs text-[#f87171] font-medium">Gastos</p>
+            <p className="text-lg font-bold text-[#f87171]">{formatCurrency(totalExpenses)} €</p>
           </div>
-          <div className={`rounded-lg p-3 border ${margin >= 0 ? 'bg-emerald-50 border-emerald-100' : 'bg-rose-50 border-rose-100'}`}>
-            <p className={`text-xs font-medium ${margin >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>Margen</p>
-            <p className={`text-lg font-bold ${margin >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+          <div className={`rounded-lg p-3 border ${margin >= 0 ? 'bg-[rgba(16,185,129,0.08)] border-[rgba(16,185,129,0.2)]' : 'bg-[rgba(239,68,68,0.08)] border-[rgba(239,68,68,0.2)]'}`}>
+            <p className={`text-xs font-medium ${margin >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>Margen</p>
+            <p className={`text-lg font-bold ${margin >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
               {margin >= 0 ? '+' : ''}{formatCurrency(margin)} €
             </p>
           </div>
-          <div className={`rounded-lg p-3 border ${roi >= 0 ? 'bg-[#13132a] border-[#2a2a4a]' : 'bg-rose-50 border-rose-100'}`}>
-            <p className={`text-xs font-medium ${roi >= 0 ? 'text-[#9898b8]' : 'text-rose-600'}`}>ROI</p>
-            <p className={`text-lg font-bold ${roi >= 0 ? 'text-[#b8b8d0]' : 'text-rose-700'}`}>
+          <div className={`rounded-lg p-3 border ${roi >= 0 ? 'bg-[#13132a] border-[#2a2a4a]' : 'bg-[rgba(239,68,68,0.08)] border-[rgba(239,68,68,0.2)]'}`}>
+            <p className={`text-xs font-medium ${roi >= 0 ? 'text-[#9898b8]' : 'text-[#f87171]'}`}>ROI</p>
+            <p className={`text-lg font-bold ${roi >= 0 ? 'text-[#b8b8d0]' : 'text-[#f87171]'}`}>
               {roi.toFixed(1)}%
             </p>
           </div>
@@ -225,7 +225,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
             onClick={() => setActiveTab('income')}
             className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all ${
               activeTab === 'income'
-                ? 'text-emerald-700 border-b-2 border-emerald-500 bg-emerald-50/50'
+                ? 'text-[#34d399] border-b-2 border-emerald-500 bg-[rgba(16,185,129,0.08)]/50'
                 : 'text-[#8888b0] hover:text-[#b8b8d0] hover:bg-[#13132a]'
             }`}
           >
@@ -236,7 +236,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
             onClick={() => setActiveTab('expense')}
             className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all ${
               activeTab === 'expense'
-                ? 'text-rose-700 border-b-2 border-rose-500 bg-rose-50/50'
+                ? 'text-[#f87171] border-b-2 border-rose-500 bg-[rgba(239,68,68,0.08)]/50'
                 : 'text-[#8888b0] hover:text-[#b8b8d0] hover:bg-[#13132a]'
             }`}
           >
@@ -269,22 +269,22 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
                   <td className="px-4 py-3 hidden md:table-cell">
                     <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${
                       t.type === 'income'
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
-                        : 'bg-rose-50 text-rose-700 border border-rose-100'
+                        ? 'bg-[rgba(16,185,129,0.08)] text-[#34d399] border border-[rgba(16,185,129,0.2)]'
+                        : 'bg-[rgba(239,68,68,0.08)] text-[#f87171] border border-[rgba(239,68,68,0.2)]'
                     }`}>
                       {t.category}
                     </span>
                   </td>
                   <td className={`px-4 py-3 text-right font-medium ${
-                    t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
+                    t.type === 'income' ? 'text-[#34d399]' : 'text-[#f87171]'
                   }`}>
                     {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)} €
                   </td>
                   <td className="px-4 py-3 text-center">
                     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${
                       t.status === 'paid'
-                        ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
-                        : 'bg-amber-100 text-amber-700 border-amber-200'
+                        ? 'bg-[rgba(16,185,129,0.12)] text-[#34d399] border-[rgba(16,185,129,0.25)]'
+                        : 'bg-[rgba(245,158,11,0.12)] text-[#fbbf24] border-[rgba(245,158,11,0.25)]'
                     }`}>
                       {t.status === 'paid' ? <CheckCircle2 size={12} /> : <Circle size={12} />}
                       {t.status === 'paid' ? 'Pagado' : 'Pendiente'}
@@ -293,7 +293,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
                   <td className="px-4 py-3 text-center">
                     <button
                       onClick={() => handleEdit(t)}
-                      className="p-1.5 text-[#6868a0] hover:text-blue-500 hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all opacity-60 group-hover:opacity-100"
+                      className="p-1.5 text-[#6868a0] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all opacity-60 group-hover:opacity-100"
                       title="Editar"
                     >
                       <Edit2 size={15} />

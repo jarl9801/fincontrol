@@ -9,17 +9,17 @@ const icons = {
 };
 
 const styles = {
-  success: 'bg-emerald-50 border-emerald-200 text-emerald-700',
-  error: 'bg-red-50 border-red-200 text-red-700',
-  warning: 'bg-amber-50 border-amber-200 text-amber-700',
-  info: 'bg-blue-50 border-blue-200 text-blue-700'
+  success: 'bg-[rgba(16,185,129,0.08)] border-[rgba(16,185,129,0.25)] text-[#34d399]',
+  error: 'bg-[rgba(239,68,68,0.08)] border-[rgba(239,68,68,0.25)] text-[#f87171]',
+  warning: 'bg-[rgba(245,158,11,0.08)] border-[rgba(245,158,11,0.25)] text-[#fbbf24]',
+  info: 'bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-[#60a5fa]'
 };
 
 const iconColors = {
-  success: 'text-emerald-500',
-  error: 'text-red-500',
-  warning: 'text-amber-500',
-  info: 'text-blue-500'
+  success: 'text-[#34d399]',
+  error: 'text-[#f87171]',
+  warning: 'text-[#fbbf24]',
+  info: 'text-[#60a5fa]'
 };
 
 export const Toast = ({ message, type = 'info', onClose, duration = 3000 }) => {

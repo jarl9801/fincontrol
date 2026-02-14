@@ -115,9 +115,9 @@ const FinancialRatios = ({ transactions }) => {
   };
 
   const statusColors = {
-    good: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', icon: 'text-emerald-500' },
-    warning: { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200', icon: 'text-amber-500' },
-    bad: { bg: 'bg-rose-100', text: 'text-rose-700', border: 'border-rose-200', icon: 'text-rose-500' }
+    good: { bg: 'bg-[rgba(16,185,129,0.12)]', text: 'text-[#34d399]', border: 'border-[rgba(16,185,129,0.25)]', icon: 'text-[#34d399]' },
+    warning: { bg: 'bg-[rgba(245,158,11,0.12)]', text: 'text-[#fbbf24]', border: 'border-[rgba(245,158,11,0.25)]', icon: 'text-[#fbbf24]' },
+    bad: { bg: 'bg-[rgba(239,68,68,0.12)]', text: 'text-[#f87171]', border: 'border-[rgba(239,68,68,0.25)]', icon: 'text-[#f87171]' }
   };
 
   const RatioCard = ({ title, value, unit = '', benchmark, inverse = false, description, icon: Icon }) => {
@@ -145,11 +145,11 @@ const FinancialRatios = ({ transactions }) => {
               </div>
             </div>
             {status === 'good' ? (
-              <CheckCircle2 className="text-emerald-500" size={20} />
+              <CheckCircle2 className="text-[#34d399]" size={20} />
             ) : status === 'warning' ? (
-              <AlertTriangle className="text-amber-500" size={20} />
+              <AlertTriangle className="text-[#fbbf24]" size={20} />
             ) : (
-              <AlertTriangle className="text-rose-500" size={20} />
+              <AlertTriangle className="text-[#f87171]" size={20} />
             )}
           </div>
 
@@ -187,7 +187,7 @@ const FinancialRatios = ({ transactions }) => {
         </div>
 
         <div className={`px-4 py-2 ${colors.bg} flex items-center gap-2`}>
-          <span className={`w-2 h-2 rounded-full ${status === 'good' ? 'bg-emerald-500' : status === 'warning' ? 'bg-amber-500' : 'bg-rose-500'}`} />
+          <span className={`w-2 h-2 rounded-full ${status === 'good' ? 'bg-[#34d399]' : status === 'warning' ? 'bg-[#fbbf24]' : 'bg-[#f87171]'}`} />
           <span className={`text-xs font-medium ${colors.text}`}>
             {status === 'good' ? 'Saludable' : status === 'warning' ? 'Requiere atención' : 'Crítico'}
           </span>
@@ -232,10 +232,10 @@ const FinancialRatios = ({ transactions }) => {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">Ratios Financieros</h2>
-            <p className="text-indigo-200 mt-1">Análisis de indicadores clave de rendimiento</p>
+            <p className="text-[#818cf8] mt-1">Análisis de indicadores clave de rendimiento</p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-indigo-200">Período</p>
+            <p className="text-sm text-[#818cf8]">Período</p>
             <p className="text-lg font-semibold">
               {now.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
             </p>
@@ -277,8 +277,8 @@ const FinancialRatios = ({ transactions }) => {
       {/* Liquidity Ratios */}
       <div>
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <Wallet className="text-blue-600" size={20} />
+          <div className="p-2 bg-[rgba(59,130,246,0.12)] rounded-lg">
+            <Wallet className="text-[#60a5fa]" size={20} />
           </div>
           <div>
             <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Liquidez</h3>
@@ -324,8 +324,8 @@ const FinancialRatios = ({ transactions }) => {
       {/* Activity Ratios */}
       <div>
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-amber-100 rounded-lg">
-            <Clock className="text-amber-600" size={20} />
+          <div className="p-2 bg-[rgba(245,158,11,0.12)] rounded-lg">
+            <Clock className="text-[#fbbf24]" size={20} />
           </div>
           <div>
             <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Actividad</h3>
@@ -374,8 +374,8 @@ const FinancialRatios = ({ transactions }) => {
       {/* Profitability Ratios */}
       <div>
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-emerald-100 rounded-lg">
-            <Percent className="text-emerald-600" size={20} />
+          <div className="p-2 bg-[rgba(16,185,129,0.12)] rounded-lg">
+            <Percent className="text-[#34d399]" size={20} />
           </div>
           <div>
             <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Rentabilidad</h3>
@@ -421,8 +421,8 @@ const FinancialRatios = ({ transactions }) => {
       {/* Efficiency Ratios */}
       <div>
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-indigo-100 rounded-lg">
-            <Target className="text-indigo-600" size={20} />
+          <div className="p-2 bg-[rgba(99,102,241,0.12)] rounded-lg">
+            <Target className="text-[#818cf8]" size={20} />
           </div>
           <div>
             <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Eficiencia</h3>
@@ -461,7 +461,7 @@ const FinancialRatios = ({ transactions }) => {
       {/* Comparison Chart */}
       <div className="bg-[#1a1a2e] rounded-xl shadow-sm border border-[#2a2a4a] p-6">
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-purple-100 rounded-lg">
+          <div className="p-2 bg-[rgba(168,85,247,0.12)] rounded-lg">
             <BarChart3 className="text-purple-600" size={20} />
           </div>
           <div>
@@ -494,12 +494,12 @@ const FinancialRatios = ({ transactions }) => {
       </div>
 
       {/* Info Card */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+      <div className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] rounded-xl p-5">
         <div className="flex items-start gap-3">
-          <Info className="text-blue-600 mt-0.5 flex-shrink-0" size={20} />
+          <Info className="text-[#60a5fa] mt-0.5 flex-shrink-0" size={20} />
           <div>
             <h4 className="font-bold text-blue-800 mb-2">Interpretación de Indicadores</h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-blue-700">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-[#60a5fa]">
               <div>
                 <p className="font-semibold mb-1">Liquidez</p>
                 <p>Un ratio corriente &gt;1.5 indica buena capacidad de pago. Valores muy altos pueden indicar recursos ociosos.</p>

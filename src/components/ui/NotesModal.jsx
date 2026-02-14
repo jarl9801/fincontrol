@@ -47,7 +47,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
               onClick={() => setActiveTab('comments')}
               className={`flex-1 px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
                 activeTab === 'comments'
-                  ? 'border-blue-500 text-blue-600 bg-blue-50'
+                  ? 'border-blue-500 text-[#60a5fa] bg-[rgba(59,130,246,0.08)]'
                   : 'border-transparent text-[#8888b0] hover:text-[#b8b8d0] hover:bg-[#13132a]'
               }`}
             >
@@ -55,7 +55,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
                 <MessageSquare size={16} />
                 <span>Comentarios</span>
                 {comments.length > 0 && (
-                  <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+                  <span className="bg-[rgba(59,130,246,0.08)]0 text-white text-xs px-2 py-0.5 rounded-full">
                     {comments.length}
                   </span>
                 )}
@@ -86,15 +86,15 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
           {activeTab === 'comments' ? (
             comments.length > 0 ? (
               comments.map((note, idx) => (
-                <div key={idx} className="p-4 rounded-lg border bg-blue-50 border-blue-200">
+                <div key={idx} className="p-4 rounded-lg border bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)]">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <MessageSquare size={14} className="text-blue-600" />
-                      <span className="text-xs font-semibold text-blue-700">
+                      <MessageSquare size={14} className="text-[#60a5fa]" />
+                      <span className="text-xs font-semibold text-[#60a5fa]">
                         {note.user}
                       </span>
                     </div>
-                    <span className="text-xs text-blue-500">
+                    <span className="text-xs text-[#60a5fa]">
                       {new Date(note.timestamp).toLocaleString('es-ES')}
                     </span>
                   </div>
@@ -133,7 +133,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
         </div>
 
         {activeTab === 'comments' && (
-          <div className="p-6 border-t border-[#2a2a4a] bg-blue-50">
+          <div className="p-6 border-t border-[#2a2a4a] bg-[rgba(59,130,246,0.08)]">
             <div className="flex gap-2">
               <input
                 type="text"

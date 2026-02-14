@@ -244,14 +244,14 @@ const TransactionList = ({
               className={`
                 flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all
                 ${showFilters || activeFiltersCount > 0
-                  ? 'bg-blue-100 text-blue-700 border-2 border-blue-200'
+                  ? 'bg-[rgba(59,130,246,0.12)] text-[#60a5fa] border-2 border-[rgba(59,130,246,0.25)]'
                   : 'bg-[#1e1e38] text-[#b8b8d0] border-2 border-transparent hover:bg-[#252540]'}
               `}
             >
               <Filter size={18} />
               Filtros
               {activeFiltersCount > 0 && (
-                <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+                <span className="bg-[rgba(59,130,246,0.08)]0 text-white text-xs px-2 py-0.5 rounded-full">
                   {activeFiltersCount}
                 </span>
               )}
@@ -332,7 +332,7 @@ const TransactionList = ({
               });
               applyFilters();
             }}
-            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+            className="text-sm text-[#60a5fa] hover:text-[#60a5fa] font-medium"
           >
             Limpiar filtros
           </button>
@@ -390,7 +390,7 @@ const TransactionList = ({
                             });
                             applyFilters();
                           }}
-                          className="text-sm text-blue-500 hover:text-blue-600 font-medium"
+                          className="text-sm text-[#60a5fa] hover:text-[#60a5fa] font-medium"
                         >
                           Limpiar búsqueda y filtros
                         </button>

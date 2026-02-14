@@ -179,8 +179,8 @@ const Projects = ({ user }) => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-[#1a1a2e] p-5 rounded-2xl shadow-sm border border-[#2a2a4a]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 bg-[rgba(59,130,246,0.12)] rounded-xl flex items-center justify-center">
+              <Briefcase className="w-5 h-5 text-[#60a5fa]" />
             </div>
             <div>
               <p className="text-sm text-[#8888b0]">Total Proyectos</p>
@@ -190,12 +190,12 @@ const Projects = ({ user }) => {
         </div>
         <div className="bg-[#1a1a2e] p-5 rounded-2xl shadow-sm border border-[#2a2a4a]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+            <div className="w-10 h-10 bg-[rgba(16,185,129,0.12)] rounded-xl flex items-center justify-center">
+              <CheckCircle2 className="w-5 h-5 text-[#34d399]" />
             </div>
             <div>
               <p className="text-sm text-[#8888b0]">Activos</p>
-              <p className="text-2xl font-bold text-emerald-600">{activeProjects.length}</p>
+              <p className="text-2xl font-bold text-[#34d399]">{activeProjects.length}</p>
             </div>
           </div>
         </div>
@@ -242,7 +242,7 @@ const Projects = ({ user }) => {
               {activeProjects.map((project) => (
                 <tr key={project.id} className="hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                   <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-bold">
+                    <span className="inline-flex items-center px-2.5 py-1 bg-[rgba(59,130,246,0.12)] text-[#60a5fa] rounded-lg text-sm font-bold">
                       {project.code}
                     </span>
                   </td>
@@ -270,7 +270,7 @@ const Projects = ({ user }) => {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-[rgba(16,185,129,0.12)] text-[#34d399] rounded-full text-xs font-medium">
                       <CheckCircle2 className="w-3 h-3" />
                       Activo
                     </span>
@@ -286,14 +286,14 @@ const Projects = ({ user }) => {
                       </button>
                       <button
                         onClick={() => handleOpenEdit(project)}
-                        className="p-2 text-[#6868a0] hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
+                        className="p-2 text-[#6868a0] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
                         title="Editar"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setProjectToDelete(project)}
-                        className="p-2 text-[#6868a0] hover:text-rose-600 hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
+                        className="p-2 text-[#6868a0] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
                         title="Eliminar"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -343,21 +343,21 @@ const Projects = ({ user }) => {
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => handleToggleStatus(project)}
-                        className="p-2 text-[#6868a0] hover:text-emerald-600 hover:bg-[rgba(16,185,129,0.08)] rounded-lg transition-all"
+                        className="p-2 text-[#6868a0] hover:text-[#34d399] hover:bg-[rgba(16,185,129,0.08)] rounded-lg transition-all"
                         title="Activar"
                       >
                         <Power className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(project)}
-                        className="p-2 text-[#6868a0] hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
+                        className="p-2 text-[#6868a0] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
                         title="Editar"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setProjectToDelete(project)}
-                        className="p-2 text-[#6868a0] hover:text-rose-600 hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
+                        className="p-2 text-[#6868a0] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
                         title="Eliminar"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -378,7 +378,7 @@ const Projects = ({ user }) => {
                       {searchTerm && (
                         <button
                           onClick={() => setSearchTerm('')}
-                          className="text-sm text-blue-500 hover:text-blue-600"
+                          className="text-sm text-[#60a5fa] hover:text-[#60a5fa]"
                         >
                           Limpiar búsqueda
                         </button>
@@ -415,7 +415,7 @@ const Projects = ({ user }) => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">
-                    Código <span className="text-rose-500">*</span>
+                    Código <span className="text-[#f87171]">*</span>
                   </label>
                   <input
                     type="text"
@@ -428,7 +428,7 @@ const Projects = ({ user }) => {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">
-                    Nombre <span className="text-rose-500">*</span>
+                    Nombre <span className="text-[#f87171]">*</span>
                   </label>
                   <input
                     type="text"
@@ -524,8 +524,8 @@ const Projects = ({ user }) => {
                     className={`
                       flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
                       ${formData.status === 'active'
-                        ? 'border-emerald-400 bg-emerald-50 text-emerald-700'
-                        : 'border-[#2a2a4a] text-[#9898b8] hover:border-emerald-200'}
+                        ? 'border-emerald-400 bg-[rgba(16,185,129,0.08)] text-[#34d399]'
+                        : 'border-[#2a2a4a] text-[#9898b8] hover:border-[rgba(16,185,129,0.25)]'}
                     `}
                   >
                     Activo

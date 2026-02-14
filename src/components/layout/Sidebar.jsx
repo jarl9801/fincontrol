@@ -61,7 +61,7 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
   return (
     <aside className="hidden md:flex flex-col w-[280px] h-screen sticky top-0" style={{ background: 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)' }}>
       {/* Logo */}
-      <div className="p-6 border-b border-slate-700/50">
+      <div className="p-6 border-b border-[rgba(58,58,90,0.5)]">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
             <Briefcase className="w-5 h-5 text-white" />
@@ -73,13 +73,13 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
         </div>
 
         {/* User Info Card */}
-        <div className="mt-4 p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+        <div className="mt-4 p-3 bg-[rgba(30,30,56,0.5)] rounded-xl border border-[rgba(58,58,90,0.5)]">
           <p className="text-sm font-medium text-slate-200 truncate">{user?.email}</p>
           <span className={`
             inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase
             ${userRole === 'admin'
-              ? 'bg-purple-500/20 text-purple-300'
-              : 'bg-blue-500/20 text-blue-300'}
+              ? 'bg-[rgba(168,85,247,0.08)]0/20 text-purple-300'
+              : 'bg-[rgba(59,130,246,0.08)]0/20 text-blue-300'}
           `}>
             {userRole === 'admin' ? 'Administrador' : 'Editor'}
           </span>
@@ -117,7 +117,7 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
       </nav>
 
       {/* Actions */}
-      <div className="p-4 border-t border-slate-700/50 space-y-3">
+      <div className="p-4 border-t border-[rgba(58,58,90,0.5)] space-y-3">
         <button
           onClick={onNewTransaction}
           className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3.5 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
@@ -126,14 +126,14 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
         </button>
         <button
           onClick={handleLogout}
-          className="flex items-center justify-center gap-2 w-full bg-slate-700/50 hover:bg-slate-700 text-[#585890] hover:text-white px-4 py-3 rounded-xl font-medium transition-all"
+          className="flex items-center justify-center gap-2 w-full bg-[#3a3a5a]/50 hover:bg-[#3a3a5a] text-[#585890] hover:text-white px-4 py-3 rounded-xl font-medium transition-all"
         >
           <LogOut size={18} /> Cerrar Sesion
         </button>
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-3 border-t border-slate-700/50 text-center">
+      <div className="px-4 py-3 border-t border-[rgba(58,58,90,0.5)] text-center">
         <p className="text-[10px] text-[#8888b0]">
           Desarrollado por <span className="font-semibold text-[#6868a0]">HMR NEXUS</span>
         </p>

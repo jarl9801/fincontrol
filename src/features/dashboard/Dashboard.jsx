@@ -78,24 +78,24 @@ const Dashboard = ({ transactions, user }) => {
       {Object.values(metrics.alerts).some(a => a) && (
         <div className="border-l-4 border-l-rose-400 bg-[#1a1a2e] rounded-r-lg border border-[#2a2a4a] p-4">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-rose-500 mt-0.5 shrink-0" />
+            <AlertTriangle className="w-5 h-5 text-[#f87171] mt-0.5 shrink-0" />
             <div className="space-y-1">
               <p className="text-sm font-medium text-[#b8b8d0]">Alertas activas</p>
               <div className="flex flex-wrap gap-x-4 gap-y-1">
                 {metrics.alerts.negativeBalance && (
-                  <span className="text-xs text-rose-600">• Balance negativo</span>
+                  <span className="text-xs text-[#f87171]">• Balance negativo</span>
                 )}
                 {metrics.alerts.highCXP && (
-                  <span className="text-xs text-rose-600">• CXP supera {formatCurrency(ALERT_THRESHOLDS.cxpLimit)}</span>
+                  <span className="text-xs text-[#f87171]">• CXP supera {formatCurrency(ALERT_THRESHOLDS.cxpLimit)}</span>
                 )}
                 {metrics.alerts.highCXC && (
-                  <span className="text-xs text-rose-600">• CXC supera {formatCurrency(ALERT_THRESHOLDS.cxcLimit)}</span>
+                  <span className="text-xs text-[#f87171]">• CXC supera {formatCurrency(ALERT_THRESHOLDS.cxcLimit)}</span>
                 )}
                 {metrics.alerts.hasOverdue && (
-                  <span className="text-xs text-rose-600">• {metrics.overdueTransactions.length} factura(s) vencida(s)</span>
+                  <span className="text-xs text-[#f87171]">• {metrics.overdueTransactions.length} factura(s) vencida(s)</span>
                 )}
                 {metrics.alerts.hasNegativeProjects && (
-                  <span className="text-xs text-rose-600">• {metrics.negativeProjects.length} proyecto(s) con pérdida</span>
+                  <span className="text-xs text-[#f87171]">• {metrics.negativeProjects.length} proyecto(s) con pérdida</span>
                 )}
               </div>
             </div>
@@ -268,7 +268,7 @@ const Dashboard = ({ transactions, user }) => {
                   return (
                     <tr key={idx} className="border-b border-[#2a2a4a] last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors cursor-pointer" onClick={() => setSelectedProject(project.name)}>
                       <td className="px-4 py-3">
-                        <span className="font-medium text-[#b8b8d0] hover:text-blue-600 transition-colors">{project.name}</span>
+                        <span className="font-medium text-[#b8b8d0] hover:text-[#60a5fa] transition-colors">{project.name}</span>
                       </td>
                       <td className="px-4 py-3 text-right text-[#9898b8]">
                         {formatCurrency(project.ingresos)}
@@ -276,19 +276,19 @@ const Dashboard = ({ transactions, user }) => {
                       <td className="px-4 py-3 text-right text-[#9898b8]">
                         {formatCurrency(project.gastos)}
                       </td>
-                      <td className={`px-4 py-3 text-right font-medium ${isPositive ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      <td className={`px-4 py-3 text-right font-medium ${isPositive ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                         {isPositive ? '+' : ''}{formatCurrency(margin)}
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <span className={`text-xs font-medium ${isPositive ? 'text-emerald-600' : 'text-rose-600'}`}>
+                        <span className={`text-xs font-medium ${isPositive ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                           {roi.toFixed(1)}%
                         </span>
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${
-                          isHighRoi ? 'bg-emerald-50 text-emerald-700' :
+                          isHighRoi ? 'bg-[rgba(16,185,129,0.08)] text-[#34d399]' :
                           isPositive ? 'bg-[#1e1e38] text-[#9898b8]' :
-                          'bg-rose-50 text-rose-700'
+                          'bg-[rgba(239,68,68,0.08)] text-[#f87171]'
                         }`}>
                           {isHighRoi ? 'Excelente' : isPositive ? 'Bueno' : 'Crítico'}
                         </span>
@@ -401,8 +401,8 @@ const Dashboard = ({ transactions, user }) => {
               <thead>
                 <tr className="border-b border-[#2a2a4a] bg-[#13132a]">
                   <th className="px-4 py-3 text-left text-xs font-medium text-[#8888b0]">Mes</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-emerald-600">Ingresos</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-rose-600">Egresos</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-[#34d399]">Ingresos</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-[#f87171]">Egresos</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-[#8888b0]">Flujo Neto</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-[#8888b0]">Acumulado</th>
                 </tr>
@@ -416,12 +416,12 @@ const Dashboard = ({ transactions, user }) => {
                     return (
                       <tr key={idx} className="border-b border-[#2a2a4a] last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                         <td className="px-4 py-3 font-medium text-[#b8b8d0]">{m.month}</td>
-                        <td className="px-4 py-3 text-right text-emerald-600">{formatCurrency(m.ingresos)}</td>
-                        <td className="px-4 py-3 text-right text-rose-600">{formatCurrency(m.gastos)}</td>
-                        <td className={`px-4 py-3 text-right font-medium ${netFlow >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                        <td className="px-4 py-3 text-right text-[#34d399]">{formatCurrency(m.ingresos)}</td>
+                        <td className="px-4 py-3 text-right text-[#f87171]">{formatCurrency(m.gastos)}</td>
+                        <td className={`px-4 py-3 text-right font-medium ${netFlow >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                           {netFlow >= 0 ? '+' : ''}{formatCurrency(netFlow)}
                         </td>
-                        <td className={`px-4 py-3 text-right font-semibold ${accumulated >= 0 ? 'text-[#b8b8d0]' : 'text-rose-600'}`}>
+                        <td className={`px-4 py-3 text-right font-semibold ${accumulated >= 0 ? 'text-[#b8b8d0]' : 'text-[#f87171]'}`}>
                           {formatCurrency(accumulated)}
                         </td>
                       </tr>
@@ -432,14 +432,14 @@ const Dashboard = ({ transactions, user }) => {
               <tfoot>
                 <tr className="bg-[#13132a] border-t-2 border-[#3a3a5a]">
                   <td className="px-4 py-3 font-semibold text-[#b8b8d0]">Total</td>
-                  <td className="px-4 py-3 text-right font-semibold text-emerald-600">
+                  <td className="px-4 py-3 text-right font-semibold text-[#34d399]">
                     {formatCurrency(metrics.monthlyTrend.reduce((s, m) => s + m.ingresos, 0))}
                   </td>
-                  <td className="px-4 py-3 text-right font-semibold text-rose-600">
+                  <td className="px-4 py-3 text-right font-semibold text-[#f87171]">
                     {formatCurrency(metrics.monthlyTrend.reduce((s, m) => s + m.gastos, 0))}
                   </td>
                   <td className={`px-4 py-3 text-right font-semibold ${
-                    metrics.monthlyTrend.reduce((s, m) => s + m.ingresos - m.gastos, 0) >= 0 ? 'text-emerald-600' : 'text-rose-600'
+                    metrics.monthlyTrend.reduce((s, m) => s + m.ingresos - m.gastos, 0) >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'
                   }`}>
                     {formatCurrency(metrics.monthlyTrend.reduce((s, m) => s + m.ingresos - m.gastos, 0))}
                   </td>
@@ -552,14 +552,14 @@ const Dashboard = ({ transactions, user }) => {
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
                         <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                          t.type === 'income' ? 'bg-emerald-500' : 'bg-rose-500'
+                          t.type === 'income' ? 'bg-[rgba(16,185,129,0.08)]0' : 'bg-[rgba(239,68,68,0.08)]0'
                         }`} />
                         <span className="text-[#b8b8d0]">{t.description}</span>
                       </div>
                     </td>
                     <td className="py-3 px-4 text-[#8888b0]">{t.project.split(' ')[0]}</td>
                     <td className={`py-3 px-4 text-right font-medium ${
-                      t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
+                      t.type === 'income' ? 'text-[#34d399]' : 'text-[#f87171]'
                     }`}>
                       {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
                     </td>
