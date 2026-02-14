@@ -176,7 +176,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-full bg-slate-50 font-sans text-slate-900 overflow-hidden">
+    <div className="flex h-full bg-[#0f0f1a] font-sans text-[#e8e8f0] overflow-hidden">
       <Sidebar
         user={user}
         userRole={userRole}
@@ -187,15 +187,15 @@ function App() {
 
       <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
         {/* Top Header */}
-        <div className="flex-shrink-0 bg-slate-50/95 backdrop-blur-sm border-b border-slate-200 px-4 md:px-8 py-4 z-30">
+        <div className="flex-shrink-0 bg-[#1a1a2e]/95 backdrop-blur-sm border-b border-[#2a2a4a] px-4 md:px-8 py-4 z-30">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <MobileMenuButton onClick={() => setIsMobileMenuOpen(true)} />
               <div>
-                <h2 className="text-xl md:text-2xl font-bold text-slate-800">
+                <h2 className="text-xl md:text-2xl font-bold text-[#e8e8f0]">
                   {VIEW_TITLES[view] || 'Dashboard'}
                 </h2>
-                <p className="text-xs text-slate-500 hidden md:block">
+                <p className="text-xs text-[#6868a0] hidden md:block">
                   {new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                 </p>
               </div>
@@ -203,9 +203,9 @@ function App() {
 
             {!loading && (
               <div className="hidden md:flex items-center gap-4">
-                <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-slate-200 shadow-sm">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm text-slate-600">
+                <div className="flex items-center gap-2 px-4 py-2 bg-[#252540] rounded-xl border border-[#2a2a4a] shadow-sm">
+                  <div className="w-2 h-2 bg-[#00C853] rounded-full animate-pulse"></div>
+                  <span className="text-sm text-[#9898b8]">
                     {filteredTransactions.length} transacciones
                   </span>
                 </div>
