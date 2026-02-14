@@ -39,14 +39,14 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
         className={`
           relative flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-150
           ${isActive
-            ? 'bg-blue-500/20 text-white'
-            : 'text-slate-300 hover:bg-white/8 hover:text-white'}
+            ? 'bg-[rgba(0,200,83,0.15)] text-white'
+            : 'text-slate-300 hover:bg-[rgba(255,255,255,0.05)] hover:text-white'}
         `}
       >
         {isActive && (
-          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-blue-500 rounded-r-md" />
+          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-[#00C853] rounded-r-md" />
         )}
-        <Icon size={20} className={isActive ? 'text-blue-400' : 'text-slate-400'} />
+        <Icon size={20} className={isActive ? 'text-[#00C853]' : 'text-slate-400'} />
         <span className="flex-1 text-left">{label}</span>
       </button>
     );
