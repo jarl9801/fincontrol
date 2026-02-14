@@ -18,7 +18,7 @@ const Card = ({ title, amount, icon: Icon, colorClass, subtext, alert, trend }) 
 
   return (
     <div className={`
-      relative bg-white p-5 rounded-xl border transition-all duration-200
+      relative bg-[#1a1a2e] p-5 rounded-xl border transition-all duration-200
       ${alert
         ? 'border-l-4 border-l-rose-400 border-t-slate-200 border-r-slate-200 border-b-slate-200 shadow-sm'
         : 'border-slate-200 shadow-sm hover:shadow-md'

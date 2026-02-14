@@ -110,7 +110,7 @@ const CashFlow = ({ transactions, user }) => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 rounded-xl shadow-lg border border-slate-200">
+        <div className="bg-[#1a1a2e] p-3 rounded-xl shadow-lg border border-slate-200">
           <p className="text-sm font-semibold text-slate-700 mb-2">{label}</p>
           {payload.map((entry, index) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
@@ -133,7 +133,7 @@ const CashFlow = ({ transactions, user }) => {
   return (
     <div className="space-y-6">
       {/* Controls */}
-      <div className="bg-white rounded-xl p-4 border border-slate-200">
+      <div className="bg-[#1a1a2e] rounded-xl p-4 border border-slate-200">
         <div className="flex gap-2">
           <button
             onClick={() => setView('monthly')}
@@ -156,7 +156,7 @@ const CashFlow = ({ transactions, user }) => {
 
       {/* Bank Balance Banner */}
       {hasBankAccount && (
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+        <div className="bg-[#13132a] border border-slate-200 rounded-xl p-5">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-slate-200 rounded-lg">
               <Landmark className="text-slate-600" size={20} />
@@ -167,21 +167,21 @@ const CashFlow = ({ transactions, user }) => {
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-white rounded-lg p-3 border border-slate-200">
+            <div className="bg-[#1a1a2e] rounded-lg p-3 border border-slate-200">
               <p className="text-xs text-slate-500 mb-1">Saldo Inicial</p>
               <p className="text-lg font-bold text-slate-700">{formatCurrency(bankAccount.balance)}</p>
             </div>
-            <div className="bg-white rounded-lg p-3 border border-slate-200">
+            <div className="bg-[#1a1a2e] rounded-lg p-3 border border-slate-200">
               <p className="text-xs text-slate-500 mb-1">Saldo Actual</p>
               <p className={`text-lg font-bold ${realBalance.currentBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                 {formatCurrency(realBalance.currentBalance)}
               </p>
             </div>
-            <div className="bg-white rounded-lg p-3 border border-slate-200">
+            <div className="bg-[#1a1a2e] rounded-lg p-3 border border-slate-200">
               <p className="text-xs text-slate-500 mb-1">Línea de Crédito</p>
               <p className="text-lg font-bold text-slate-600">{formatCurrency(Math.abs(creditLimit))}</p>
             </div>
-            <div className="bg-white rounded-lg p-3 border border-slate-200">
+            <div className="bg-[#1a1a2e] rounded-lg p-3 border border-slate-200">
               <p className="text-xs text-slate-500 mb-1">Disponible Total</p>
               <p className={`text-lg font-bold ${realBalance.availableCredit > 10000 ? 'text-emerald-600' : realBalance.availableCredit > 0 ? 'text-amber-600' : 'text-rose-600'}`}>
                 {formatCurrency(realBalance.availableCredit)}
@@ -203,7 +203,7 @@ const CashFlow = ({ transactions, user }) => {
 
       {/* Summary metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
+        <div className="bg-[#1a1a2e] rounded-xl p-5 border border-slate-200">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-700">Total Entradas</h3>
             <TrendingUp className="text-emerald-500" size={18} />
@@ -211,7 +211,7 @@ const CashFlow = ({ transactions, user }) => {
           <p className="text-2xl font-bold text-emerald-600">{formatCurrency(totalIncome)}</p>
         </div>
 
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
+        <div className="bg-[#1a1a2e] rounded-xl p-5 border border-slate-200">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-700">Total Salidas</h3>
             <TrendingDown className="text-rose-500" size={18} />
@@ -219,7 +219,7 @@ const CashFlow = ({ transactions, user }) => {
           <p className="text-2xl font-bold text-rose-600">{formatCurrency(totalExpenses)}</p>
         </div>
 
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
+        <div className="bg-[#1a1a2e] rounded-xl p-5 border border-slate-200">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-700">Flujo Neto</h3>
             <DollarSign className={netCashFlow >= 0 ? 'text-emerald-500' : 'text-rose-500'} size={18} />
@@ -229,7 +229,7 @@ const CashFlow = ({ transactions, user }) => {
           </p>
         </div>
 
-        <div className="bg-white rounded-xl p-5 border border-slate-200">
+        <div className="bg-[#1a1a2e] rounded-xl p-5 border border-slate-200">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-700">
               {hasBankAccount ? 'Saldo Banco' : 'Saldo Acumulado'}
@@ -249,7 +249,7 @@ const CashFlow = ({ transactions, user }) => {
 
       {/* Monthly Table */}
       {cashFlowData.length > 0 && (
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="bg-[#1a1a2e] rounded-xl border border-slate-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-200">
             <h3 className="text-sm font-semibold text-slate-700">
               Detalle por {view === 'monthly' ? 'Mes' : 'Semana'}
@@ -258,7 +258,7 @@ const CashFlow = ({ transactions, user }) => {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                <tr className="bg-[#13132a] text-slate-500 text-xs uppercase tracking-wider">
                   <th className="text-left px-6 py-3 font-semibold">{view === 'monthly' ? 'Mes' : 'Semana'}</th>
                   <th className="text-right px-6 py-3 font-semibold">Ingresos</th>
                   <th className="text-right px-6 py-3 font-semibold">Egresos</th>
@@ -268,7 +268,7 @@ const CashFlow = ({ transactions, user }) => {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {cashFlowData.map((row, i) => (
-                  <tr key={i} className="hover:bg-slate-50 transition-colors">
+                  <tr key={i} className="hover:bg-[#13132a] transition-colors">
                     <td className="px-6 py-3 font-medium text-slate-700">{row.label}</td>
                     <td className="px-6 py-3 text-right text-emerald-600">{formatCurrency(row.ingresos)}</td>
                     <td className="px-6 py-3 text-right text-rose-600">{formatCurrency(row.gastos)}</td>
@@ -282,7 +282,7 @@ const CashFlow = ({ transactions, user }) => {
                 ))}
               </tbody>
               <tfoot>
-                <tr className="border-t-2 border-slate-300 bg-slate-50">
+                <tr className="border-t-2 border-slate-300 bg-[#13132a]">
                   <td className="px-6 py-3 font-bold text-slate-700">Total</td>
                   <td className="px-6 py-3 text-right font-bold text-emerald-600">{formatCurrency(totalIncome)}</td>
                   <td className="px-6 py-3 text-right font-bold text-rose-600">{formatCurrency(totalExpenses)}</td>
@@ -298,7 +298,7 @@ const CashFlow = ({ transactions, user }) => {
       )}
 
       {/* Combined Chart */}
-      <div className="bg-white rounded-xl p-6 border border-slate-200">
+      <div className="bg-[#1a1a2e] rounded-xl p-6 border border-slate-200">
         <h3 className="text-sm font-semibold text-slate-700 mb-4">
           {hasBankAccount ? 'Ingresos, Gastos y Saldo Real' : 'Ingresos, Gastos y Acumulado'}
         </h3>

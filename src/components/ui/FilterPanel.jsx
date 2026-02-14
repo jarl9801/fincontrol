@@ -3,7 +3,7 @@ import { PROJECTS } from '../../constants/projects';
 import { CATEGORIES } from '../../constants/categories';
 
 const FilterPanel = ({ filters, setFilters, onApply }) => (
-  <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 space-y-4">
+  <div className="bg-[#1a1a2e] p-6 rounded-xl shadow-sm border border-slate-100 space-y-4">
     <div className="flex items-center justify-between">
       <h3 className="font-bold text-slate-800 flex items-center gap-2">
         <Filter size={18} /> Filtros
@@ -34,7 +34,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'month'
             ? 'bg-blue-50 border-blue-500 text-blue-700'
-            : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+            : 'border-slate-200 text-slate-600 hover:bg-[#13132a]'
         }`}
       >
         Este mes
@@ -44,7 +44,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'quarter'
             ? 'bg-blue-50 border-blue-500 text-blue-700'
-            : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+            : 'border-slate-200 text-slate-600 hover:bg-[#13132a]'
         }`}
       >
         Trimestre
@@ -54,7 +54,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'year'
             ? 'bg-blue-50 border-blue-500 text-blue-700'
-            : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+            : 'border-slate-200 text-slate-600 hover:bg-[#13132a]'
         }`}
       >
         Este año
@@ -64,7 +64,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'all'
             ? 'bg-blue-50 border-blue-500 text-blue-700'
-            : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+            : 'border-slate-200 text-slate-600 hover:bg-[#13132a]'
         }`}
       >
         Todo

@@ -53,7 +53,7 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
           relative flex items-center gap-3 w-full px-4 py-3.5 rounded-lg text-sm font-medium transition-all
           ${isActive
             ? 'bg-blue-500/20 text-white'
-            : 'text-slate-300 hover:bg-white/8 hover:text-white'}
+            : 'text-slate-300 hover:bg-[#1a1a2e]/8 hover:text-white'}
         `}
       >
         {isActive && (
@@ -176,7 +176,7 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
 export const MobileMenuButton = ({ onClick }) => (
   <button
     onClick={onClick}
-    className="md:hidden p-2.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all"
+    className="md:hidden p-2.5 text-slate-600 hover:text-slate-900 hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all"
   >
     <Menu size={24} />
   </button>

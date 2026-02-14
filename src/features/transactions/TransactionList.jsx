@@ -215,7 +215,7 @@ const TransactionList = ({
       )}
 
       {/* Header con búsqueda y acciones */}
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+      <div className="bg-[#1a1a2e] p-4 rounded-2xl shadow-sm border border-slate-100">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           {/* Search */}
           <div className="relative flex-1 w-full md:w-auto">
@@ -223,7 +223,7 @@ const TransactionList = ({
             <input
               type="text"
               placeholder="Buscar transacciones..."
-              className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              className="w-full pl-11 pr-4 py-2.5 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -340,10 +340,10 @@ const TransactionList = ({
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-slate-50/80 border-b border-slate-200">
+            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-slate-200">
               <tr>
                 <SortableHeader field="date" label="Fecha" />
                 <th className="px-4 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Descripción</th>

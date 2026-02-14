@@ -30,7 +30,7 @@ const CXC = ({
     <div className="space-y-6">
       {/* Métricas CXC */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Total por Cobrar</h3>
             <TrendingUp className="text-emerald-500" size={20} />
@@ -39,7 +39,7 @@ const CXC = ({
           <p className="text-xs text-slate-400 mt-1">{receivables.length} facturas pendientes</p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Vencido</h3>
             <AlertCircle className="text-rose-600" size={20} />
@@ -48,7 +48,7 @@ const CXC = ({
           <p className="text-xs text-slate-400 mt-1">{overdueReceivables.length} facturas vencidas</p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Vence Esta Semana</h3>
             <Clock className="text-amber-500" size={20} />

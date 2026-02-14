@@ -42,7 +42,7 @@ const Dashboard = ({ transactions, user }) => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-200 text-sm">
+        <div className="bg-[#1a1a2e] p-3 rounded-lg shadow-lg border border-slate-200 text-sm">
           <p className="font-medium text-slate-700 mb-1">{label}</p>
           {payload.map((entry, index) => (
             <p key={index} style={{ color: entry.color }}>
@@ -76,7 +76,7 @@ const Dashboard = ({ transactions, user }) => {
 
       {/* Alerts */}
       {Object.values(metrics.alerts).some(a => a) && (
-        <div className="border-l-4 border-l-rose-400 bg-white rounded-r-lg border border-slate-200 p-4">
+        <div className="border-l-4 border-l-rose-400 bg-[#1a1a2e] rounded-r-lg border border-slate-200 p-4">
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-rose-500 mt-0.5 shrink-0" />
             <div className="space-y-1">
@@ -159,7 +159,7 @@ const Dashboard = ({ transactions, user }) => {
         <SectionTitle>Tendencias</SectionTitle>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-3">
           {/* Tendencia Mensual */}
-          <div className="bg-white p-5 rounded-xl border border-slate-200">
+          <div className="bg-[#1a1a2e] p-5 rounded-xl border border-slate-200">
             <h4 className="text-sm font-semibold text-slate-700 mb-4">Tendencia Mensual</h4>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
@@ -203,7 +203,7 @@ const Dashboard = ({ transactions, user }) => {
           </div>
 
           {/* Distribución de Gastos */}
-          <div className="bg-white p-5 rounded-xl border border-slate-200">
+          <div className="bg-[#1a1a2e] p-5 rounded-xl border border-slate-200">
             <h4 className="text-sm font-semibold text-slate-700 mb-4">Distribución de Gastos</h4>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
@@ -245,11 +245,11 @@ const Dashboard = ({ transactions, user }) => {
       {/* Section 3: Projects Table */}
       <div>
         <SectionTitle>Métricas por Proyecto</SectionTitle>
-        <div className="mt-3 bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="mt-3 bg-[#1a1a2e] rounded-xl border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50">
+                <tr className="border-b border-slate-200 bg-[#13132a]">
                   <th className="px-4 py-3 text-left text-xs font-medium text-slate-500">Proyecto</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-slate-500">Ingresos</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-slate-500">Gastos</th>
@@ -266,7 +266,7 @@ const Dashboard = ({ transactions, user }) => {
                   const isHighRoi = roi >= 30;
 
                   return (
-                    <tr key={idx} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => setSelectedProject(project.name)}>
+                    <tr key={idx} className="border-b border-slate-100 last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors cursor-pointer" onClick={() => setSelectedProject(project.name)}>
                       <td className="px-4 py-3">
                         <span className="font-medium text-slate-700 hover:text-blue-600 transition-colors">{project.name}</span>
                       </td>
@@ -307,7 +307,7 @@ const Dashboard = ({ transactions, user }) => {
         <SectionTitle>Análisis detallado</SectionTitle>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-3">
           {/* Márgenes por Proyecto */}
-          <div className="bg-white p-5 rounded-xl border border-slate-200">
+          <div className="bg-[#1a1a2e] p-5 rounded-xl border border-slate-200">
             <h4 className="text-sm font-semibold text-slate-700 mb-4">Márgenes por Proyecto</h4>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
@@ -349,7 +349,7 @@ const Dashboard = ({ transactions, user }) => {
           </div>
 
           {/* CXC vs CXP */}
-          <div className="bg-white p-5 rounded-xl border border-slate-200">
+          <div className="bg-[#1a1a2e] p-5 rounded-xl border border-slate-200">
             <h4 className="text-sm font-semibold text-slate-700 mb-4">CXC vs CXP</h4>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
@@ -395,11 +395,11 @@ const Dashboard = ({ transactions, user }) => {
         <SectionTitle>Flujo de caja</SectionTitle>
 
         {/* Monthly Cash Flow Table */}
-        <div className="mt-3 bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="mt-3 bg-[#1a1a2e] rounded-xl border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50">
+                <tr className="border-b border-slate-200 bg-[#13132a]">
                   <th className="px-4 py-3 text-left text-xs font-medium text-slate-500">Mes</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-emerald-600">Ingresos</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-rose-600">Egresos</th>
@@ -414,7 +414,7 @@ const Dashboard = ({ transactions, user }) => {
                     const netFlow = m.ingresos - m.gastos;
                     accumulated += netFlow;
                     return (
-                      <tr key={idx} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+                      <tr key={idx} className="border-b border-slate-100 last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                         <td className="px-4 py-3 font-medium text-slate-700">{m.month}</td>
                         <td className="px-4 py-3 text-right text-emerald-600">{formatCurrency(m.ingresos)}</td>
                         <td className="px-4 py-3 text-right text-rose-600">{formatCurrency(m.gastos)}</td>
@@ -430,7 +430,7 @@ const Dashboard = ({ transactions, user }) => {
                 })()}
               </tbody>
               <tfoot>
-                <tr className="bg-slate-50 border-t-2 border-slate-300">
+                <tr className="bg-[#13132a] border-t-2 border-slate-300">
                   <td className="px-4 py-3 font-semibold text-slate-700">Total</td>
                   <td className="px-4 py-3 text-right font-semibold text-emerald-600">
                     {formatCurrency(metrics.monthlyTrend.reduce((s, m) => s + m.ingresos, 0))}
@@ -451,7 +451,7 @@ const Dashboard = ({ transactions, user }) => {
         </div>
 
         {/* Cash Flow Chart — Bars + Accumulated Line */}
-        <div className="mt-4 bg-white p-5 rounded-xl border border-slate-200">
+        <div className="mt-4 bg-[#1a1a2e] p-5 rounded-xl border border-slate-200">
           <h4 className="text-sm font-semibold text-slate-700 mb-4">Flujo mensual vs Acumulado</h4>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
@@ -534,11 +534,11 @@ const Dashboard = ({ transactions, user }) => {
       {/* Section 6: Recent Activity */}
       <div>
         <SectionTitle>Actividad reciente</SectionTitle>
-        <div className="mt-3 bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="mt-3 bg-[#1a1a2e] rounded-xl border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50">
+                <tr className="border-b border-slate-200 bg-[#13132a]">
                   <th className="py-2.5 px-4 text-left text-xs font-medium text-slate-500">Fecha</th>
                   <th className="py-2.5 px-4 text-left text-xs font-medium text-slate-500">Descripción</th>
                   <th className="py-2.5 px-4 text-left text-xs font-medium text-slate-500">Proyecto</th>
@@ -547,7 +547,7 @@ const Dashboard = ({ transactions, user }) => {
               </thead>
               <tbody>
                 {transactions.slice(0, 10).map((t, idx) => (
-                  <tr key={t.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+                  <tr key={t.id} className="border-b border-slate-100 last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                     <td className="py-3 px-4 text-slate-500">{formatDate(t.date)}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">

@@ -162,7 +162,7 @@ const CostCenters = ({ user }) => {
     const ytdPercent = ytdBudget > 0 ? (ytdExecuted / ytdBudget * 100) : 0;
 
     return (
-      <div className="bg-slate-50 p-4 rounded-xl mt-3 animate-fadeIn">
+      <div className="bg-[#13132a] p-4 rounded-xl mt-3 animate-fadeIn">
         {/* Year selector and YTD summary */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -170,7 +170,7 @@ const CostCenters = ({ user }) => {
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="text-sm font-medium bg-white border border-slate-200 rounded-lg px-3 py-1.5"
+              className="text-sm font-medium bg-[#1a1a2e] border border-slate-200 rounded-lg px-3 py-1.5"
             >
               {[2024, 2025, 2026].map(year => (
                 <option key={year} value={year}>{year}</option>
@@ -178,7 +178,7 @@ const CostCenters = ({ user }) => {
             </select>
           </div>
           <div className="flex items-center gap-4 text-sm">
-            <div className="bg-white rounded-lg px-3 py-2 border border-slate-200">
+            <div className="bg-[#1a1a2e] rounded-lg px-3 py-2 border border-slate-200">
               <span className="text-slate-500">Ppto. Mensual: </span>
               <span className="font-bold text-slate-700">{formatCurrency(monthlyBudget)}</span>
             </div>
@@ -207,7 +207,7 @@ const CostCenters = ({ user }) => {
                 className={`relative rounded-xl p-2 transition-all ${
                   isCurrentMonth ? 'ring-2 ring-blue-500 bg-blue-50' :
                   isFutureMonth ? 'bg-slate-100 opacity-50' :
-                  'bg-white border border-slate-200'
+                  'bg-[#1a1a2e] border border-slate-200'
                 }`}
               >
                 <div className="text-center mb-2">
@@ -276,7 +276,7 @@ const CostCenters = ({ user }) => {
 
     return (
       <>
-        <tr className={`border-b border-slate-100 hover:bg-slate-50 transition-colors ${isExpanded ? 'bg-slate-50' : ''}`}>
+        <tr className={`border-b border-slate-100 hover:bg-[#13132a] transition-colors ${isExpanded ? 'bg-[#13132a]' : ''}`}>
           <td className="px-4 py-4 text-sm font-medium text-slate-600">{center.code}</td>
           <td className="px-4 py-4 text-sm font-medium text-slate-800">{center.name}</td>
           <td className="px-4 py-4">
@@ -312,7 +312,7 @@ const CostCenters = ({ user }) => {
               <button
                 onClick={() => setExpandedCenter(isExpanded ? null : center.id)}
                 className={`p-1.5 rounded transition-colors ${
-                  isExpanded ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-blue-600 hover:bg-blue-50'
+                  isExpanded ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)]'
                 }`}
                 title="Ver detalle mensual"
               >
@@ -320,13 +320,13 @@ const CostCenters = ({ user }) => {
               </button>
               <button
                 onClick={() => onEdit(center)}
-                className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
               >
                 <Edit2 size={14} />
               </button>
               <button
                 onClick={() => onDelete(center.id)}
-                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
+                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
               >
                 <Trash2 size={14} />
               </button>
@@ -364,7 +364,7 @@ const CostCenters = ({ user }) => {
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-slate-100">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-rose-100 rounded-lg">
               <TrendingDown className="text-rose-600" size={20} />
@@ -375,7 +375,7 @@ const CostCenters = ({ user }) => {
           <p className="text-xs text-slate-500">activos</p>
         </div>
 
-        <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-slate-100">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-blue-100 rounded-lg">
               <BarChart3 className="text-blue-600" size={20} />
@@ -386,7 +386,7 @@ const CostCenters = ({ user }) => {
           <p className="text-xs text-slate-500">{formatCurrency(totalBudget / 12)}/mes</p>
         </div>
 
-        <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-slate-100">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-amber-100 rounded-lg">
               <TrendingUpDown className="text-amber-600" size={20} />
@@ -397,7 +397,7 @@ const CostCenters = ({ user }) => {
           <p className="text-xs text-slate-500">de {formatCurrency(ytdBudget)} presupuestado</p>
         </div>
 
-        <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-slate-100">
           <div className="flex items-center gap-3 mb-3">
             <div className={`p-2 rounded-lg ${getProgressBgColor(overallUtilization)}`}>
               <Calendar className={`${overallUtilization > 100 ? 'text-rose-600' : overallUtilization > 80 ? 'text-amber-600' : 'text-emerald-600'}`} size={20} />
@@ -450,9 +450,9 @@ const CostCenters = ({ user }) => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl overflow-hidden">
+        <div className="bg-[#1a1a2e] rounded-xl overflow-hidden">
           <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-[#13132a] border-b border-slate-200">
               <tr>
                 <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Código</th>
                 <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Nombre</th>
@@ -494,9 +494,9 @@ const CostCenters = ({ user }) => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl overflow-hidden">
+          <div className="bg-[#1a1a2e] rounded-xl overflow-hidden">
             <table className="w-full text-left">
-              <thead className="bg-slate-50 border-b border-slate-200">
+              <thead className="bg-[#13132a] border-b border-slate-200">
                 <tr>
                   <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Código</th>
                   <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Nombre</th>
@@ -522,7 +522,7 @@ const CostCenters = ({ user }) => {
       {/* Modal */}
       {showNewModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-scaleIn">
+          <div className="bg-[#1a1a2e] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-scaleIn">
             <div className="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
               <h3 className="font-bold text-lg text-slate-800">
                 {editingCenter ? 'Editar Centro de Costo' : 'Nuevo Centro de Costo'}
@@ -581,7 +581,7 @@ const CostCenters = ({ user }) => {
                 />
               </div>
             </div>
-            <div className="px-6 py-4 border-t border-slate-100 flex gap-3 justify-end bg-slate-50">
+            <div className="px-6 py-4 border-t border-slate-100 flex gap-3 justify-end bg-[#13132a]">
               <button
                 onClick={() => {
                   setShowNewModal(false);

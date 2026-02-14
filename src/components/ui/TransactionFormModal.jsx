@@ -185,7 +185,7 @@ const TransactionFormModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-scaleIn max-h-[90vh] overflow-y-auto">
+      <div className="bg-[#1a1a2e] rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-scaleIn max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-slate-50 to-white">
           <div>
@@ -198,7 +198,7 @@ const TransactionFormModal = ({
           </div>
           <button 
             onClick={onClose} 
-            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-all"
+            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all"
           >
             <X size={20} />
           </button>
@@ -213,7 +213,7 @@ const TransactionFormModal = ({
               className={`
                 flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
                 ${formData.type === 'income' 
-                  ? 'bg-white text-emerald-600 shadow-md' 
+                  ? 'bg-[#1a1a2e] text-emerald-600 shadow-md' 
                   : 'text-slate-500 hover:text-slate-700'}
               `}
             >
@@ -226,7 +226,7 @@ const TransactionFormModal = ({
               className={`
                 flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
                 ${formData.type === 'expense' 
-                  ? 'bg-white text-rose-600 shadow-md' 
+                  ? 'bg-[#1a1a2e] text-rose-600 shadow-md' 
                   : 'text-slate-500 hover:text-slate-700'}
               `}
             >
@@ -244,7 +244,7 @@ const TransactionFormModal = ({
               <input
                 type="date"
                 required
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all"
+                className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all"
                 value={formData.date}
                 onChange={e => setFormData({...formData, date: e.target.value})}
               />
@@ -261,7 +261,7 @@ const TransactionFormModal = ({
                   min="0.01"
                   required
                   placeholder="0.00"
-                  className="w-full pl-8 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all"
+                  className="w-full pl-8 pr-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all"
                   value={formData.amount}
                   onChange={e => setFormData({...formData, amount: e.target.value})}
                 />
@@ -281,7 +281,7 @@ const TransactionFormModal = ({
               placeholder={formData.type === 'income' 
                 ? "ej. Venta de servicios, Factura #123..." 
                 : "ej. Compra de materiales, Pago proveedor..."}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all"
+              className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all"
               value={formData.description}
               onChange={handleDescriptionChange}
               onKeyDown={handleDescriptionKeyDown}
@@ -292,7 +292,7 @@ const TransactionFormModal = ({
             {showSuggestions && suggestions.length > 0 && (
               <div
                 ref={suggestionsRef}
-                className="absolute z-10 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden"
+                className="absolute z-10 left-0 right-0 mt-1 bg-[#1a1a2e] border border-slate-200 rounded-xl shadow-lg overflow-hidden"
               >
                 {suggestions.map((s, idx) => (
                   <button
@@ -300,7 +300,7 @@ const TransactionFormModal = ({
                     type="button"
                     onClick={() => handleSelectSuggestion(s)}
                     className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
-                      idx === activeSuggestionIndex ? 'bg-slate-100' : 'hover:bg-slate-50'
+                      idx === activeSuggestionIndex ? 'bg-slate-100' : 'hover:bg-[#13132a]'
                     } ${idx > 0 ? 'border-t border-slate-100' : ''}`}
                   >
                     <span className="font-medium text-slate-800">{s.description}</span>
@@ -324,7 +324,7 @@ const TransactionFormModal = ({
                   onChange={(e) => setFormData({ ...formData, isRecurring: e.target.checked })}
                 />
                 <div className="w-10 h-5 bg-slate-200 rounded-full peer-checked:bg-emerald-500 transition-colors"></div>
-                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform peer-checked:translate-x-5"></div>
+                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-[#1a1a2e] rounded-full shadow-sm transition-transform peer-checked:translate-x-5"></div>
               </div>
               <div className="flex items-center gap-2">
                 <RefreshCw size={16} className="text-slate-500" />
@@ -337,7 +337,7 @@ const TransactionFormModal = ({
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1.5">Frecuencia</label>
                   <select
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all text-sm"
+                    className="w-full px-3 py-2.5 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm"
                     value={formData.recurringFrequency}
                     onChange={e => setFormData({ ...formData, recurringFrequency: e.target.value })}
                   >
@@ -350,7 +350,7 @@ const TransactionFormModal = ({
                   <label className="block text-xs font-medium text-slate-600 mb-1.5">Fecha fin (opcional)</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all text-sm"
+                    className="w-full px-3 py-2.5 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm"
                     value={formData.recurringEndDate}
                     onChange={e => setFormData({ ...formData, recurringEndDate: e.target.value })}
                   />
@@ -366,7 +366,7 @@ const TransactionFormModal = ({
             </label>
             <div className="relative">
               {projectsLoading ? (
-                <div className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2 text-slate-500">
+                <div className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl flex items-center gap-2 text-slate-500">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   Cargando proyectos...
                 </div>
@@ -377,7 +377,7 @@ const TransactionFormModal = ({
               ) : (
                 <select
                   required
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all text-sm"
+                  className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm"
                   value={formData.project}
                   onChange={e => setFormData({...formData, project: e.target.value})}
                 >
@@ -396,7 +396,7 @@ const TransactionFormModal = ({
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">Categoría</label>
             <select
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all text-sm"
+              className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm"
               value={formData.category}
               onChange={e => setFormData({...formData, category: e.target.value})}
             >
@@ -409,7 +409,7 @@ const TransactionFormModal = ({
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">Centro de Costo</label>
               <select
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all text-sm"
+                className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm"
                 value={formData.costCenter}
                 onChange={e => setFormData({...formData, costCenter: e.target.value})}
               >
@@ -462,7 +462,7 @@ const TransactionFormModal = ({
               placeholder={editingTransaction 
                 ? "Agregar comentario sobre esta modificación..." 
                 : "Agregar comentario inicial (opcional)..."}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all text-sm resize-none"
+              className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm resize-none"
               value={formData.comment}
               onChange={e => setFormData({...formData, comment: e.target.value})}
             />

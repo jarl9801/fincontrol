@@ -65,7 +65,7 @@ const BankAccount = ({ user, transactions }) => {
       </div>
 
       {/* Form */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+      <div className="bg-[#1a1a2e] rounded-2xl p-6 shadow-sm border border-slate-100">
         <h3 className="text-lg font-bold text-slate-800 mb-4">Datos de la Cuenta</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -132,7 +132,7 @@ const BankAccount = ({ user, transactions }) => {
       {/* Real Balance Cards */}
       {bankAccount && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+          <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-slate-100">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Saldo Inicial</h3>
               <Landmark className="text-blue-500" size={20} />
@@ -141,7 +141,7 @@ const BankAccount = ({ user, transactions }) => {
             <p className="text-xs text-slate-400 mt-1">Al {bankAccount.balanceDate}</p>
           </div>
 
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+          <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-slate-100">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Movimiento Neto</h3>
               {realBalance.netMovement >= 0
@@ -155,7 +155,7 @@ const BankAccount = ({ user, transactions }) => {
             <p className="text-xs text-slate-400 mt-1">{realBalance.transactionsCount} transacciones pagadas</p>
           </div>
 
-          <div className={`bg-white rounded-xl p-5 shadow-sm border ${realBalance.currentBalance < 0 ? 'border-rose-200' : 'border-slate-100'}`}>
+          <div className={`bg-[#1a1a2e] rounded-xl p-5 shadow-sm border ${realBalance.currentBalance < 0 ? 'border-rose-200' : 'border-slate-100'}`}>
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Saldo Actual</h3>
               <Landmark className={realBalance.currentBalance >= 0 ? 'text-emerald-500' : 'text-rose-500'} size={20} />
@@ -166,7 +166,7 @@ const BankAccount = ({ user, transactions }) => {
             <p className="text-xs text-slate-400 mt-1">Saldo proyectado hoy</p>
           </div>
 
-          <div className={`bg-white rounded-xl p-5 shadow-sm border ${parseFloat(creditUtilizationPct) > 80 ? 'border-rose-200' : 'border-slate-100'}`}>
+          <div className={`bg-[#1a1a2e] rounded-xl p-5 shadow-sm border ${parseFloat(creditUtilizationPct) > 80 ? 'border-rose-200' : 'border-slate-100'}`}>
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Credito Disponible</h3>
               <CreditCard className={parseFloat(creditUtilizationPct) > 80 ? 'text-rose-500' : 'text-blue-500'} size={20} />
@@ -183,7 +183,7 @@ const BankAccount = ({ user, transactions }) => {
 
       {/* Credit Line Visualization */}
       {bankAccount && creditLimit < 0 && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-2xl p-6 shadow-sm border border-slate-100">
           <h3 className="text-lg font-bold text-slate-800 mb-4">Utilizacion de Linea de Credito</h3>
 
           <div className="mb-4">

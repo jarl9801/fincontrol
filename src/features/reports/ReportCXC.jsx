@@ -63,7 +63,7 @@ const ReportCXC = ({ transactions }) => {
 
       {/* Métricas principales */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Total por Cobrar</h3>
             <TrendingUp className="text-emerald-500" size={20} />
@@ -72,7 +72,7 @@ const ReportCXC = ({ transactions }) => {
           <p className="text-xs text-slate-400 mt-1">{receivables.length} facturas</p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Monto Vencido</h3>
             <AlertCircle className="text-red-600" size={20} />
@@ -81,7 +81,7 @@ const ReportCXC = ({ transactions }) => {
           <p className="text-xs text-slate-400 mt-1">{agingAnalysis.over90.count} facturas</p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Critico (90+ dias)</h3>
             <Clock className="text-amber-500" size={20} />
@@ -90,7 +90,7 @@ const ReportCXC = ({ transactions }) => {
           <p className="text-xs text-slate-400 mt-1">{agingAnalysis.days60_90.count + agingAnalysis.over90.count} facturas</p>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Al Corriente</h3>
             <TrendingUp className="text-emerald-500" size={20} />
@@ -103,7 +103,7 @@ const ReportCXC = ({ transactions }) => {
       {/* Gráfico y tabla de antigüedad */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Gráfico de barras */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
           <h3 className="text-lg font-bold text-slate-800 mb-4">Analisis de Antiguedad</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={chartData}>
@@ -117,7 +117,7 @@ const ReportCXC = ({ transactions }) => {
         </div>
 
         {/* Tabla resumen */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
           <h3 className="text-lg font-bold text-slate-800 mb-4">Resumen por Antiguedad</h3>
           <table className="w-full">
             <thead>
@@ -135,7 +135,7 @@ const ReportCXC = ({ transactions }) => {
                   <td className="py-3 text-sm font-medium text-right text-emerald-600">{formatCurrency(item.amount)}</td>
                 </tr>
               ))}
-              <tr className="bg-slate-50">
+              <tr className="bg-[#13132a]">
                 <td className="py-3 text-sm font-bold text-slate-800">Total</td>
                 <td className="py-3 text-sm font-bold text-slate-800 text-center">{receivables.length}</td>
                 <td className="py-3 text-sm font-bold text-right text-emerald-600">{formatCurrency(totalReceivable)}</td>
@@ -146,13 +146,13 @@ const ReportCXC = ({ transactions }) => {
       </div>
 
       {/* Detalle de facturas */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-[#1a1a2e] rounded-xl shadow-sm border border-slate-100 overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h3 className="text-lg font-bold text-slate-800">Detalle de Cuentas por Cobrar</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-[#13132a] border-b border-slate-200">
               <tr>
                 <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Fecha</th>
                 <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Descripcion</th>
@@ -166,7 +166,7 @@ const ReportCXC = ({ transactions }) => {
               {receivables.map(t => {
                 const days = getDaysOverdue(t.date);
                 return (
-                  <tr key={t.id} className="hover:bg-slate-50">
+                  <tr key={t.id} className="hover:bg-[#13132a]">
                     <td className="px-4 py-3 text-sm text-slate-600">{formatDate(t.date)}</td>
                     <td className="px-4 py-3 text-sm font-medium text-slate-800">{t.description}</td>
                     <td className="px-4 py-3 text-sm text-slate-600">{t.project || '-'}</td>

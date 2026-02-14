@@ -292,7 +292,7 @@ const ExecutiveSummary = ({ transactions }) => {
     };
 
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <div className="p-5">
           <div className="flex items-start justify-between mb-3">
             <div className={`p-2.5 rounded-xl bg-gradient-to-br ${colorClasses[color]} text-white`}>
@@ -351,7 +351,7 @@ const ExecutiveSummary = ({ transactions }) => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 rounded-xl shadow-lg border border-slate-100">
+        <div className="bg-[#1a1a2e] p-3 rounded-xl shadow-lg border border-slate-100">
           <p className="text-sm font-semibold text-slate-700 mb-2">{label}</p>
           {payload.map((entry, index) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
@@ -367,7 +367,7 @@ const ExecutiveSummary = ({ transactions }) => {
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Period Selector */}
-      <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+      <div className="bg-[#1a1a2e] rounded-2xl p-5 shadow-sm border border-slate-100">
         <div className="flex flex-wrap items-center gap-2">
           {/* Month selector with dropdown */}
           <div className="relative" ref={dropdownRef}>
@@ -375,7 +375,7 @@ const ExecutiveSummary = ({ transactions }) => {
               <button
                 onClick={() => navigateMonth(-1)}
                 disabled={!canNavigatePrev}
-                className="p-2 rounded-l-xl border border-r-0 border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-l-xl border border-r-0 border-slate-200 bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronLeft size={16} className="text-slate-500" />
               </button>
@@ -385,7 +385,7 @@ const ExecutiveSummary = ({ transactions }) => {
                 className={`flex items-center gap-2 px-4 py-2 border text-sm font-medium transition-all ${
                   periodType === 'month'
                     ? 'bg-slate-800 text-white border-slate-800 shadow-sm'
-                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                    : 'bg-[#1a1a2e] text-slate-600 border-slate-200 hover:bg-[#13132a]'
                 }`}
               >
                 <Calendar size={15} />
@@ -396,17 +396,17 @@ const ExecutiveSummary = ({ transactions }) => {
               <button
                 onClick={() => navigateMonth(1)}
                 disabled={!canNavigateNext}
-                className="p-2 rounded-r-xl border border-l-0 border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-r-xl border border-l-0 border-slate-200 bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronRight size={16} className="text-slate-500" />
               </button>
             </div>
 
             {monthDropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 z-50 bg-white rounded-xl shadow-xl border border-slate-200 py-2 min-w-[220px] max-h-[320px] overflow-y-auto animate-[fadeIn_150ms_ease-out]">
+              <div className="absolute top-full left-0 mt-2 z-50 bg-[#1a1a2e] rounded-xl shadow-xl border border-slate-200 py-2 min-w-[220px] max-h-[320px] overflow-y-auto animate-[fadeIn_150ms_ease-out]">
                 {monthsByYear.map(([year, months]) => (
                   <div key={year}>
-                    <div className="px-4 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider sticky top-0 bg-white">
+                    <div className="px-4 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider sticky top-0 bg-[#1a1a2e]">
                       {year}
                     </div>
                     {months.map(key => {
@@ -421,7 +421,7 @@ const ExecutiveSummary = ({ transactions }) => {
                           className={`w-full text-left px-4 py-2 text-sm transition-colors ${
                             isSelected
                               ? 'bg-slate-100 text-slate-800 font-semibold'
-                              : 'text-slate-600 hover:bg-slate-50'
+                              : 'text-slate-600 hover:bg-[#13132a]'
                           }`}
                         >
                           {formatMonthKey(key)}
@@ -447,7 +447,7 @@ const ExecutiveSummary = ({ transactions }) => {
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                 periodType === period.key
                   ? 'bg-slate-800 text-white shadow-sm'
-                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'
+                  : 'bg-[#13132a] text-slate-600 hover:bg-[rgba(255,255,255,0.05)] border border-slate-200'
               }`}
             >
               {period.label}
@@ -526,7 +526,7 @@ const ExecutiveSummary = ({ transactions }) => {
       {/* Financial Indicators Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Ratios de Liquidez */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-blue-100 rounded-lg">
               <Activity className="text-blue-600" size={20} />
@@ -545,7 +545,7 @@ const ExecutiveSummary = ({ transactions }) => {
         </div>
 
         {/* Ratios de Rentabilidad */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-emerald-100 rounded-lg">
               <Percent className="text-emerald-600" size={20} />
@@ -577,7 +577,7 @@ const ExecutiveSummary = ({ transactions }) => {
       {/* Alerts and Recommendations */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Alerts */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-amber-100 rounded-lg">
               <AlertTriangle className="text-amber-600" size={20} />
@@ -621,7 +621,7 @@ const ExecutiveSummary = ({ transactions }) => {
         </div>
 
         {/* Recommendations */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-indigo-100 rounded-lg">
               <Lightbulb className="text-indigo-600" size={20} />
@@ -650,7 +650,7 @@ const ExecutiveSummary = ({ transactions }) => {
       </div>
 
       {/* 6-Month Trend Chart */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-blue-100 rounded-lg">
             <BarChart3 className="text-blue-600" size={20} />
@@ -686,7 +686,7 @@ const ExecutiveSummary = ({ transactions }) => {
 
       {/* Projects with Low Margin */}
       {projectsWithLowMargin.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 bg-amber-50">
             <div className="flex items-center gap-3">
               <AlertTriangle className="text-amber-600" size={20} />
@@ -699,7 +699,7 @@ const ExecutiveSummary = ({ transactions }) => {
           <div className="p-6">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-slate-50">
+                <thead className="bg-[#13132a]">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Proyecto</th>
                     <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase">Ingresos</th>
@@ -710,7 +710,7 @@ const ExecutiveSummary = ({ transactions }) => {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {projectsWithLowMargin.slice(0, 5).map((p, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50">
+                    <tr key={idx} className="hover:bg-[#13132a]">
                       <td className="px-4 py-3 font-medium text-slate-700">{p.name}</td>
                       <td className="px-4 py-3 text-right text-emerald-600">{formatCurrency(p.ingresos)}</td>
                       <td className="px-4 py-3 text-right text-rose-600">{formatCurrency(p.gastos)}</td>

@@ -90,7 +90,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-200 text-sm">
+        <div className="bg-[#1a1a2e] p-3 rounded-lg shadow-lg border border-slate-200 text-sm">
           <p className="font-medium text-slate-700 mb-1">{label}</p>
           {payload.map((entry, index) => (
             <p key={index} style={{ color: entry.color }}>
@@ -108,11 +108,11 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Header */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5">
+      <div className="bg-[#1a1a2e] rounded-xl border border-slate-200 p-5">
         <div className="flex items-center gap-4 mb-5">
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-all"
+            className="p-2 text-slate-400 hover:text-slate-700 hover:bg-[rgba(255,255,255,0.05)] rounded-lg transition-all"
           >
             <ArrowLeft size={20} />
           </button>
@@ -138,7 +138,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
               {margin >= 0 ? '+' : ''}{formatCurrency(margin)} €
             </p>
           </div>
-          <div className={`rounded-lg p-3 border ${roi >= 0 ? 'bg-slate-50 border-slate-200' : 'bg-rose-50 border-rose-100'}`}>
+          <div className={`rounded-lg p-3 border ${roi >= 0 ? 'bg-[#13132a] border-slate-200' : 'bg-rose-50 border-rose-100'}`}>
             <p className={`text-xs font-medium ${roi >= 0 ? 'text-slate-600' : 'text-rose-600'}`}>ROI</p>
             <p className={`text-lg font-bold ${roi >= 0 ? 'text-slate-700' : 'text-rose-700'}`}>
               {roi.toFixed(1)}%
@@ -150,7 +150,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Monthly Trend */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200">
+        <div className="bg-[#1a1a2e] p-5 rounded-xl border border-slate-200">
           <h4 className="text-sm font-semibold text-slate-700 mb-4">Tendencia mensual</h4>
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
@@ -168,7 +168,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
         </div>
 
         {/* Expense Category Distribution */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200">
+        <div className="bg-[#1a1a2e] p-5 rounded-xl border border-slate-200">
           <h4 className="text-sm font-semibold text-slate-700 mb-4">Distribución de gastos</h4>
           <div className="h-56">
             {categoryDistribution.length > 0 ? (
@@ -198,7 +198,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
         </div>
 
         {/* Margin Evolution */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200 lg:col-span-2">
+        <div className="bg-[#1a1a2e] p-5 rounded-xl border border-slate-200 lg:col-span-2">
           <h4 className="text-sm font-semibold text-slate-700 mb-4">Evolución del margen mensual</h4>
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
@@ -219,14 +219,14 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
       </div>
 
       {/* Transaction Tabs */}
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <div className="bg-[#1a1a2e] rounded-xl border border-slate-200 overflow-hidden">
         <div className="flex border-b border-slate-200">
           <button
             onClick={() => setActiveTab('income')}
             className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all ${
               activeTab === 'income'
                 ? 'text-emerald-700 border-b-2 border-emerald-500 bg-emerald-50/50'
-                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                : 'text-slate-500 hover:text-slate-700 hover:bg-[#13132a]'
             }`}
           >
             <ArrowUpCircle size={16} />
@@ -237,7 +237,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
             className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all ${
               activeTab === 'expense'
                 ? 'text-rose-700 border-b-2 border-rose-500 bg-rose-50/50'
-                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                : 'text-slate-500 hover:text-slate-700 hover:bg-[#13132a]'
             }`}
           >
             <ArrowDownCircle size={16} />
@@ -248,7 +248,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50">
+              <tr className="border-b border-slate-200 bg-[#13132a]">
                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500">Fecha</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500">Descripción</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 hidden md:table-cell">Categoría</th>
@@ -261,7 +261,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
               {currentTransactions
                 .sort((a, b) => b.date.localeCompare(a.date))
                 .map(t => (
-                <tr key={t.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors group">
+                <tr key={t.id} className="border-b border-slate-100 last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors group">
                   <td className="px-4 py-3 text-slate-600">{formatDate(t.date)}</td>
                   <td className="px-4 py-3">
                     <span className="font-medium text-slate-700">{t.description}</span>
@@ -293,7 +293,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
                   <td className="px-4 py-3 text-center">
                     <button
                       onClick={() => handleEdit(t)}
-                      className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all opacity-60 group-hover:opacity-100"
+                      className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all opacity-60 group-hover:opacity-100"
                       title="Editar"
                     >
                       <Edit2 size={15} />

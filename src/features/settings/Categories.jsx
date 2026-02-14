@@ -58,7 +58,7 @@ const Categories = ({ user }) => {
 
     if (isEditing) {
       return (
-        <div className="flex items-center gap-2 p-3 bg-white rounded-lg border border-slate-200">
+        <div className="flex items-center gap-2 p-3 bg-[#1a1a2e] rounded-lg border border-slate-200">
           <input
             type="text"
             className="flex-1 px-3 py-1 border border-blue-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm"
@@ -75,7 +75,7 @@ const Categories = ({ user }) => {
           </button>
           <button
             onClick={() => setEditingItem(null)}
-            className="p-1.5 text-slate-400 hover:bg-slate-100 rounded transition-colors"
+            className="p-1.5 text-slate-400 hover:bg-[rgba(255,255,255,0.05)] rounded transition-colors"
           >
             <X size={16} />
           </button>
@@ -84,18 +84,18 @@ const Categories = ({ user }) => {
     }
 
     return (
-      <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200 hover:border-slate-300 transition-colors">
+      <div className="flex items-center justify-between p-3 bg-[#1a1a2e] rounded-lg border border-slate-200 hover:border-slate-300 transition-colors">
         <span className="text-sm text-slate-700">{category}</span>
         <div className="flex items-center gap-1">
           <button
             onClick={() => handleEdit(type, index)}
-            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
           >
             <Edit2 size={14} />
           </button>
           <button
             onClick={() => handleDelete(type, index)}
-            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
+            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
           >
             <Trash2 size={14} />
           </button>
@@ -132,7 +132,7 @@ const Categories = ({ user }) => {
           <input
             type="text"
             placeholder="Nueva categoria de gasto..."
-            className="flex-1 px-3 py-2 text-sm border border-rose-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none bg-white"
+            className="flex-1 px-3 py-2 text-sm border border-rose-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none bg-[#1a1a2e]"
             value={newExpense}
             onChange={(e) => setNewExpense(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleAddExpense()}
@@ -169,7 +169,7 @@ const Categories = ({ user }) => {
           <input
             type="text"
             placeholder="Nueva categoria de ingreso..."
-            className="flex-1 px-3 py-2 text-sm border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none bg-white"
+            className="flex-1 px-3 py-2 text-sm border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none bg-[#1a1a2e]"
             value={newIncome}
             onChange={(e) => setNewIncome(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleAddIncome()}

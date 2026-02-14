@@ -132,7 +132,7 @@ const FinancialRatios = ({ transactions }) => {
     const gaugeData = [{ name: 'value', value: gaugePercent, fill: status === 'good' ? '#10b981' : status === 'warning' ? '#f59e0b' : '#ef4444' }];
 
     return (
-      <div className={`bg-white rounded-xl shadow-sm border ${colors.border} overflow-hidden`}>
+      <div className={`bg-[#1a1a2e] rounded-xl shadow-sm border ${colors.border} overflow-hidden`}>
         <div className="p-4">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -206,7 +206,7 @@ const FinancialRatios = ({ transactions }) => {
     };
 
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+      <div className="bg-[#1a1a2e] rounded-xl shadow-sm border border-slate-100 p-4">
         <p className="text-sm text-slate-500 mb-1">{label}</p>
         <p className={`text-2xl font-bold bg-gradient-to-r ${colorClasses[color]} bg-clip-text text-transparent`}>
           {value}
@@ -459,7 +459,7 @@ const FinancialRatios = ({ transactions }) => {
       </div>
 
       {/* Comparison Chart */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+      <div className="bg-[#1a1a2e] rounded-xl shadow-sm border border-slate-100 p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-purple-100 rounded-lg">
             <BarChart3 className="text-purple-600" size={20} />

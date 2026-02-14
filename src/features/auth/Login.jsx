@@ -19,7 +19,7 @@ const Login = () => {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-blue-50 to-indigo-100 items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
+      <div className="bg-[#1a1a2e] rounded-2xl shadow-2xl w-full max-w-md p-8">
         <div className="flex items-center justify-center gap-3 text-blue-600 mb-8">
           <Briefcase size={40} />
           <div>

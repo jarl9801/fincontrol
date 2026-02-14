@@ -279,8 +279,8 @@ const Reports = ({ transactions }) => {
       <tr className={`
         transition-colors duration-150
         ${isTotal ? 'bg-slate-800 text-white' : ''}
-        ${isSubtotal ? 'bg-slate-50/80 font-semibold' : ''}
-        ${!isTotal && !isSubtotal ? 'hover:bg-blue-50/40' : ''}
+        ${isSubtotal ? 'bg-[rgba(255,255,255,0.02)] font-semibold' : ''}
+        ${!isTotal && !isSubtotal ? 'hover:bg-[rgba(59,130,246,0.08)]/40' : ''}
         border-b border-slate-100
       `}>
         <td className={`px-5 py-3.5 ${indent > 0 ? 'pl-10' : ''} ${isTotal ? 'font-bold text-lg' : ''} ${indent > 0 && !isSubtotal ? 'text-slate-600' : ''}`}>
@@ -348,7 +348,7 @@ const Reports = ({ transactions }) => {
   return (
     <div className="space-y-6">
       {/* Controls */}
-      <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+      <div className="bg-[#1a1a2e] rounded-2xl p-5 shadow-sm border border-slate-100">
         <div className="flex flex-wrap items-center justify-between gap-4">
           {/* Period selector */}
           <div className="flex items-center gap-2 flex-wrap">
@@ -359,7 +359,7 @@ const Reports = ({ transactions }) => {
                 <button
                   onClick={() => navigateMonth(-1)}
                   disabled={!canNavigatePrev}
-                  className="p-2 rounded-l-xl border border-r-0 border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="p-2 rounded-l-xl border border-r-0 border-slate-200 bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft size={16} className="text-slate-500" />
                 </button>
@@ -370,7 +370,7 @@ const Reports = ({ transactions }) => {
                   className={`flex items-center gap-2 px-4 py-2 border text-sm font-medium transition-all ${
                     periodType === 'month'
                       ? 'bg-slate-800 text-white border-slate-800 shadow-sm'
-                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                      : 'bg-[#1a1a2e] text-slate-600 border-slate-200 hover:bg-[#13132a]'
                   }`}
                 >
                   <Calendar size={15} />
@@ -382,7 +382,7 @@ const Reports = ({ transactions }) => {
                 <button
                   onClick={() => navigateMonth(1)}
                   disabled={!canNavigateNext}
-                  className="p-2 rounded-r-xl border border-l-0 border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="p-2 rounded-r-xl border border-l-0 border-slate-200 bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronRight size={16} className="text-slate-500" />
                 </button>
@@ -390,10 +390,10 @@ const Reports = ({ transactions }) => {
 
               {/* Dropdown */}
               {monthDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 z-50 bg-white rounded-xl shadow-xl border border-slate-200 py-2 min-w-[220px] max-h-[320px] overflow-y-auto animate-[fadeIn_150ms_ease-out]">
+                <div className="absolute top-full left-0 mt-2 z-50 bg-[#1a1a2e] rounded-xl shadow-xl border border-slate-200 py-2 min-w-[220px] max-h-[320px] overflow-y-auto animate-[fadeIn_150ms_ease-out]">
                   {monthsByYear.map(([year, months]) => (
                     <div key={year}>
-                      <div className="px-4 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider sticky top-0 bg-white">
+                      <div className="px-4 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider sticky top-0 bg-[#1a1a2e]">
                         {year}
                       </div>
                       {months.map(key => {
@@ -408,7 +408,7 @@ const Reports = ({ transactions }) => {
                             className={`w-full text-left px-4 py-2 text-sm transition-colors ${
                               isSelected
                                 ? 'bg-blue-50 text-blue-700 font-semibold'
-                                : 'text-slate-600 hover:bg-slate-50'
+                                : 'text-slate-600 hover:bg-[#13132a]'
                             }`}
                           >
                             {formatMonthKey(key)}
@@ -436,7 +436,7 @@ const Reports = ({ transactions }) => {
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                   periodType === period.key
                     ? 'bg-slate-800 text-white shadow-sm'
-                    : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'
+                    : 'bg-[#13132a] text-slate-600 hover:bg-[rgba(255,255,255,0.05)] border border-slate-200'
                 }`}
               >
                 {period.label}
@@ -562,10 +562,10 @@ const Reports = ({ transactions }) => {
       </div>
 
       {/* Estado de Resultados Profesional */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-slate-800 via-slate-800 to-slate-900">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-white/10">
+            <div className="p-2 rounded-xl bg-[#1a1a2e]/10">
               <FileText className="text-white" size={22} />
             </div>
             <div>
@@ -574,7 +574,7 @@ const Reports = ({ transactions }) => {
             </div>
           </div>
           {compareMode && (
-            <div className="hidden sm:flex items-center gap-2 text-sm text-slate-400 bg-white/5 px-3 py-1.5 rounded-lg">
+            <div className="hidden sm:flex items-center gap-2 text-sm text-slate-400 bg-[#1a1a2e]/5 px-3 py-1.5 rounded-lg">
               <Calendar size={14} />
               vs {getPreviousPeriodLabel()}
             </div>
@@ -583,7 +583,7 @@ const Reports = ({ transactions }) => {
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50/80 border-b border-slate-200">
+            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-slate-200">
               <tr>
                 <th className="px-5 py-3.5 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">Concepto</th>
                 <th className="px-5 py-3.5 text-right text-xs font-semibold text-slate-400 uppercase tracking-wider">Monto</th>
@@ -794,7 +794,7 @@ const Reports = ({ transactions }) => {
                       {formatCurrency(previous.profit)}
                     </td>
                     <td className="px-5 py-5 text-right">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/20 text-white text-xs font-medium backdrop-blur-sm">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#1a1a2e]/20 text-white text-xs font-medium backdrop-blur-sm">
                         {calcVariation(netProfit, previous.profit) >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
                         {Math.abs(calcVariation(netProfit, previous.profit)).toFixed(1)}%
                       </span>
@@ -832,7 +832,7 @@ const Reports = ({ transactions }) => {
       {/* Gráficos */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Gastos por Categoría */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 transition-all duration-300 hover:shadow-md">
+        <div className="bg-[#1a1a2e] rounded-2xl p-6 shadow-sm border border-slate-100 transition-all duration-300 hover:shadow-md">
           <h3 className="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2.5">
             <div className="p-1.5 rounded-lg bg-blue-50">
               <BarChart3 size={18} className="text-blue-600" />
@@ -869,7 +869,7 @@ const Reports = ({ transactions }) => {
         </div>
 
         {/* Rentabilidad por Proyecto */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 transition-all duration-300 hover:shadow-md">
+        <div className="bg-[#1a1a2e] rounded-2xl p-6 shadow-sm border border-slate-100 transition-all duration-300 hover:shadow-md">
           <h3 className="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2.5">
             <div className="p-1.5 rounded-lg bg-indigo-50">
               <Target size={18} className="text-indigo-600" />
@@ -901,14 +901,14 @@ const Reports = ({ transactions }) => {
       </div>
 
       {/* Tabla Detallada de Proyectos */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <div className="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
           <h3 className="text-lg font-bold text-slate-800 tracking-tight">Análisis Detallado por Proyecto</h3>
           <p className="text-sm text-slate-400 mt-0.5">{getPeriodLabel()} · {projectChartData.length} proyectos</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50/80 border-b border-slate-200">
+            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-slate-200">
               <tr>
                 <th className="px-5 py-3.5 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">Proyecto</th>
                 <th className="px-5 py-3.5 text-right text-xs font-semibold text-slate-400 uppercase tracking-wider">Ingresos</th>
@@ -920,7 +920,7 @@ const Reports = ({ transactions }) => {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {projectChartData.map((project) => (
-                <tr key={project.name} className="hover:bg-blue-50/30 transition-colors duration-150">
+                <tr key={project.name} className="hover:bg-[rgba(59,130,246,0.08)]/30 transition-colors duration-150">
                   <td className="px-5 py-3.5 font-medium text-slate-700">{project.name}</td>
                   <td className="px-5 py-3.5 text-right text-emerald-600 font-medium tabular-nums">{formatCurrency(project.ingresos)}</td>
                   <td className="px-5 py-3.5 text-right text-rose-600 font-medium tabular-nums">{formatCurrency(project.gastos)}</td>
@@ -944,7 +944,7 @@ const Reports = ({ transactions }) => {
                 </tr>
               ))}
             </tbody>
-            <tfoot className="bg-slate-50/80 font-bold border-t-2 border-slate-200">
+            <tfoot className="bg-[rgba(255,255,255,0.02)] font-bold border-t-2 border-slate-200">
               <tr>
                 <td className="px-5 py-4 text-slate-800">TOTALES</td>
                 <td className="px-5 py-4 text-right text-emerald-700 tabular-nums">{formatCurrency(current.income)}</td>

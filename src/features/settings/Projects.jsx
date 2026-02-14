@@ -177,7 +177,7 @@ const Projects = ({ user }) => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] p-5 rounded-2xl shadow-sm border border-slate-100">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
               <Briefcase className="w-5 h-5 text-blue-600" />
@@ -188,7 +188,7 @@ const Projects = ({ user }) => {
             </div>
           </div>
         </div>
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] p-5 rounded-2xl shadow-sm border border-slate-100">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
               <CheckCircle2 className="w-5 h-5 text-emerald-600" />
@@ -199,7 +199,7 @@ const Projects = ({ user }) => {
             </div>
           </div>
         </div>
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] p-5 rounded-2xl shadow-sm border border-slate-100">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
               <AlertCircle className="w-5 h-5 text-slate-600" />
@@ -218,17 +218,17 @@ const Projects = ({ user }) => {
         <input
           type="text"
           placeholder="Buscar proyectos por código, nombre o cliente..."
-          className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+          className="w-full pl-12 pr-4 py-3 bg-[#1a1a2e] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
       {/* Projects Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50/80 border-b border-slate-200">
+            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-slate-200">
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Código</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Nombre</th>
@@ -240,7 +240,7 @@ const Projects = ({ user }) => {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {activeProjects.map((project) => (
-                <tr key={project.id} className="hover:bg-slate-50/80 transition-colors">
+                <tr key={project.id} className="hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                   <td className="px-6 py-4">
                     <span className="inline-flex items-center px-2.5 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-bold">
                       {project.code}
@@ -279,21 +279,21 @@ const Projects = ({ user }) => {
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => handleToggleStatus(project)}
-                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all"
+                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-[rgba(255,255,255,0.05)] rounded-lg transition-all"
                         title="Desactivar"
                       >
                         <Power className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(project)}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
                         title="Editar"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setProjectToDelete(project)}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
                         title="Eliminar"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -305,7 +305,7 @@ const Projects = ({ user }) => {
               
               {/* Inactive Projects */}
               {inactiveProjects.map((project) => (
-                <tr key={project.id} className="hover:bg-slate-50/80 transition-colors bg-slate-50/50">
+                <tr key={project.id} className="hover:bg-[rgba(255,255,255,0.02)] transition-colors bg-[rgba(255,255,255,0.02)]">
                   <td className="px-6 py-4">
                     <span className="inline-flex items-center px-2.5 py-1 bg-slate-200 text-slate-600 rounded-lg text-sm font-bold">
                       {project.code}
@@ -343,21 +343,21 @@ const Projects = ({ user }) => {
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => handleToggleStatus(project)}
-                        className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all"
+                        className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-[rgba(16,185,129,0.08)] rounded-lg transition-all"
                         title="Activar"
                       >
                         <Power className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(project)}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
                         title="Editar"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setProjectToDelete(project)}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
                         title="Eliminar"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -395,7 +395,7 @@ const Projects = ({ user }) => {
       {/* Add/Edit Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-scaleIn max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#1a1a2e] rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-scaleIn max-h-[90vh] overflow-y-auto">
             <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-slate-50 to-white">
               <div>
                 <h3 className="font-bold text-xl text-slate-800">
@@ -404,7 +404,7 @@ const Projects = ({ user }) => {
               </div>
               <button 
                 onClick={() => setShowAddModal(false)} 
-                className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-all"
+                className="p-2 text-slate-400 hover:text-slate-600 hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all"
               >
                 <X size={20} />
               </button>
@@ -421,7 +421,7 @@ const Projects = ({ user }) => {
                     type="text"
                     required
                     placeholder="PROY-001"
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all uppercase"
+                    className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all uppercase"
                     value={formData.code}
                     onChange={e => setFormData({...formData, code: e.target.value})}
                   />
@@ -434,7 +434,7 @@ const Projects = ({ user }) => {
                     type="text"
                     required
                     placeholder="Nombre del proyecto"
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all"
+                    className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all"
                     value={formData.name}
                     onChange={e => setFormData({...formData, name: e.target.value})}
                   />
@@ -449,7 +449,7 @@ const Projects = ({ user }) => {
                 <input
                   type="text"
                   placeholder="Nombre del cliente"
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all"
+                  className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all"
                   value={formData.client}
                   onChange={e => setFormData({...formData, client: e.target.value})}
                 />
@@ -463,7 +463,7 @@ const Projects = ({ user }) => {
                 <textarea
                   rows="2"
                   placeholder="Descripción breve del proyecto..."
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all resize-none"
+                  className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all resize-none"
                   value={formData.description}
                   onChange={e => setFormData({...formData, description: e.target.value})}
                 />
@@ -477,7 +477,7 @@ const Projects = ({ user }) => {
                   </label>
                   <input
                     type="date"
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all"
+                    className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all"
                     value={formData.startDate}
                     onChange={e => setFormData({...formData, startDate: e.target.value})}
                   />
@@ -488,7 +488,7 @@ const Projects = ({ user }) => {
                   </label>
                   <input
                     type="date"
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all"
+                    className="w-full px-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all"
                     value={formData.endDate}
                     onChange={e => setFormData({...formData, endDate: e.target.value})}
                   />
@@ -507,7 +507,7 @@ const Projects = ({ user }) => {
                     step="0.01"
                     min="0"
                     placeholder="0.00"
-                    className="w-full pl-8 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all"
+                    className="w-full pl-8 pr-4 py-3 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all"
                     value={formData.budget}
                     onChange={e => setFormData({...formData, budget: e.target.value})}
                   />

@@ -28,8 +28,8 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">
-        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+      <div className="bg-[#1a1a2e] rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">
+        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-[#13132a]">
           <div>
             <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
               <MessageSquare size={20} /> Notas y Comentarios
@@ -48,7 +48,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
               className={`flex-1 px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
                 activeTab === 'comments'
                   ? 'border-blue-500 text-blue-600 bg-blue-50'
-                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-[#13132a]'
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -65,8 +65,8 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
               onClick={() => setActiveTab('logs')}
               className={`flex-1 px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
                 activeTab === 'logs'
-                  ? 'border-slate-500 text-slate-700 bg-slate-50'
-                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                  ? 'border-slate-500 text-slate-700 bg-[#13132a]'
+                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-[#13132a]'
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -109,7 +109,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
           ) : (
             systemLogs.length > 0 ? (
               systemLogs.map((note, idx) => (
-                <div key={idx} className="p-4 rounded-lg border bg-slate-50 border-slate-200">
+                <div key={idx} className="p-4 rounded-lg border bg-[#13132a] border-slate-200">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <AlertCircle size={14} className="text-slate-400" />

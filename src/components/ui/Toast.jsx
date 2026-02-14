@@ -40,7 +40,7 @@ export const Toast = ({ message, type = 'info', onClose, duration = 3000 }) => {
         <p className="text-sm font-medium flex-1">{message}</p>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-white/50 rounded-lg transition-colors"
+          className="p-1 hover:bg-[#1a1a2e]/50 rounded-lg transition-colors"
         >
           <X className="w-4 h-4 opacity-60" />
         </button>
