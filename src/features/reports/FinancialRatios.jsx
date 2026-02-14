@@ -175,7 +175,7 @@ const FinancialRatios = ({ transactions }) => {
                 >
                   <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
                   <RadialBar
-                    background={{ fill: '#f1f5f9' }}
+                    background={{ fill: '#0f0f1a' }}
                     dataKey="value"
                     cornerRadius={10}
                     fill={gaugeData[0].fill}

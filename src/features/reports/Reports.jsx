@@ -321,7 +321,7 @@ const Reports = ({ transactions }) => {
     const colors = {
       emerald: 'bg-emerald-600/90 text-white',
       rose: 'bg-rose-600/90 text-white',
-      blue: 'bg-slate-700/90 text-white',
+      blue: 'bg-[#3a3a5a]/90 text-white',
       amber: 'bg-amber-500/90 text-white',
       slate: 'bg-slate-600/90 text-white'
     };
@@ -369,7 +369,7 @@ const Reports = ({ transactions }) => {
                   onClick={() => setMonthDropdownOpen(!monthDropdownOpen)}
                   className={`flex items-center gap-2 px-4 py-2 border text-sm font-medium transition-all ${
                     periodType === 'month'
-                      ? 'bg-slate-800 text-white border-slate-800 shadow-sm'
+                      ? 'bg-[rgba(0,200,83,0.15)] text-[#00C853] border-[rgba(0,200,83,0.3)] shadow-sm'
                       : 'bg-[#1a1a2e] text-[#9898b8] border-[#2a2a4a] hover:bg-[#13132a]'
                   }`}
                 >
@@ -407,7 +407,7 @@ const Reports = ({ transactions }) => {
                             }}
                             className={`w-full text-left px-4 py-2 text-sm transition-colors ${
                               isSelected
-                                ? 'bg-blue-50 text-blue-700 font-semibold'
+                                ? 'bg-[rgba(0,200,83,0.12)] text-[#00C853] font-semibold'
                                 : 'text-[#9898b8] hover:bg-[#13132a]'
                             }`}
                           >
@@ -435,7 +435,7 @@ const Reports = ({ transactions }) => {
                 onClick={() => setSelectedPeriod(period.key)}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                   periodType === period.key
-                    ? 'bg-slate-800 text-white shadow-sm'
+                    ? 'bg-[rgba(0,200,83,0.15)] text-[#00C853] shadow-sm'
                     : 'bg-[#13132a] text-[#9898b8] hover:bg-[rgba(255,255,255,0.05)] border border-[#2a2a4a]'
                 }`}
               >
@@ -457,7 +457,7 @@ const Reports = ({ transactions }) => {
             </label>
             <button
               onClick={() => exportReportToPDF(currentPeriodTx, 'general')}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-medium transition-all duration-200 text-sm shadow-sm hover:shadow-md active:scale-[0.98]"
+              className="flex items-center gap-2 px-4 py-2 bg-[#252540] hover:bg-[#2d2d4a] text-[#e8e8f0] rounded-xl font-medium transition-all duration-200 text-sm shadow-sm hover:shadow-md active:scale-[0.98]"
             >
               <Download size={16} />
               Exportar PDF
@@ -469,11 +469,11 @@ const Reports = ({ transactions }) => {
         {compareMode && periodType !== 'all' && (
           <div className="mt-3 pt-3 border-t border-[#2a2a4a] flex items-center gap-4 text-xs text-[#6868a0]">
             <span className="inline-flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-slate-700" />
+              <span className="w-2 h-2 rounded-full bg-[#3a3a5a]" />
               Actual: <span className="font-medium text-[#9898b8]">{getPeriodLabel()}</span>
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-slate-300" />
+              <span className="w-2 h-2 rounded-full bg-[#585890]" />
               Anterior: <span className="font-medium text-[#8888b0]">{getPreviousPeriodLabel()}</span>
             </span>
           </div>
@@ -483,7 +483,7 @@ const Reports = ({ transactions }) => {
       {/* KPI Summary */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Ingresos */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 to-white rounded-2xl p-5 shadow-sm border border-emerald-100/60 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+        <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(16,185,129,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(16,185,129,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
           <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-100/40 rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
             <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
@@ -505,7 +505,7 @@ const Reports = ({ transactions }) => {
         </div>
 
         {/* Gastos */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-rose-50 to-white rounded-2xl p-5 shadow-sm border border-rose-100/60 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+        <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(239,68,68,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(239,68,68,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
           <div className="absolute top-0 right-0 w-20 h-20 bg-rose-100/40 rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
             <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
@@ -527,7 +527,7 @@ const Reports = ({ transactions }) => {
         </div>
 
         {/* Utilidad Neta */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-white rounded-2xl p-5 shadow-sm border border-blue-100/60 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+        <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(59,130,246,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(59,130,246,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
           <div className="absolute top-0 right-0 w-20 h-20 bg-blue-100/40 rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
             <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
@@ -544,7 +544,7 @@ const Reports = ({ transactions }) => {
         </div>
 
         {/* Margen Operacional */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-indigo-50 to-white rounded-2xl p-5 shadow-sm border border-indigo-100/60 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+        <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(99,102,241,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(99,102,241,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
           <div className="absolute top-0 right-0 w-20 h-20 bg-indigo-100/40 rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
             <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
@@ -664,7 +664,7 @@ const Reports = ({ transactions }) => {
               )}
 
               {/* UTILIDAD BRUTA */}
-              <tr className="bg-gradient-to-r from-emerald-50 to-emerald-50/50 font-bold border-b-2 border-emerald-200">
+              <tr className="bg-[rgba(16,185,129,0.1)] font-bold border-b-2 border-[rgba(16,185,129,0.25)]">
                 <td className="px-5 py-4 text-emerald-800">UTILIDAD BRUTA</td>
                 <td className={`px-5 py-4 text-right text-lg tabular-nums ${grossProfit >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
                   {formatCurrency(grossProfit)}
@@ -713,7 +713,7 @@ const Reports = ({ transactions }) => {
               />
 
               {/* UTILIDAD OPERACIONAL */}
-              <tr className="bg-gradient-to-r from-blue-50 to-blue-50/50 font-bold border-b-2 border-blue-200">
+              <tr className="bg-[rgba(59,130,246,0.1)] font-bold border-b-2 border-[rgba(59,130,246,0.25)]">
                 <td className="px-5 py-4 text-blue-800">UTILIDAD OPERACIONAL (EBIT)</td>
                 <td className={`px-5 py-4 text-right text-lg tabular-nums ${operationalProfit >= 0 ? 'text-blue-700' : 'text-rose-700'}`}>
                   {formatCurrency(operationalProfit)}
@@ -755,7 +755,7 @@ const Reports = ({ transactions }) => {
               )}
 
               {/* UTILIDAD ANTES DE IMPUESTOS */}
-              <tr className="bg-gradient-to-r from-indigo-50 to-indigo-50/50 font-bold border-b border-indigo-200">
+              <tr className="bg-[rgba(99,102,241,0.1)] font-bold border-b border-[rgba(99,102,241,0.25)]">
                 <td className="px-5 py-4 text-indigo-800">UTILIDAD ANTES DE IMPUESTOS</td>
                 <td className={`px-5 py-4 text-right text-lg tabular-nums ${profitBeforeTax >= 0 ? 'text-indigo-700' : 'text-rose-700'}`}>
                   {formatCurrency(profitBeforeTax)}
@@ -809,7 +809,7 @@ const Reports = ({ transactions }) => {
 
       {/* Alertas */}
       {projectsWithLoss.length > 0 && (
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 p-5 rounded-2xl transition-all duration-300">
+        <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.2)] p-5 rounded-2xl transition-all duration-300">
           <div className="flex items-start gap-3">
             <div className="p-2 rounded-xl bg-amber-100">
               <AlertTriangle className="w-5 h-5 text-amber-600" />
@@ -854,7 +854,7 @@ const Reports = ({ transactions }) => {
               <Tooltip
                 formatter={(value) => [formatCurrency(value), 'Monto']}
                 contentStyle={customTooltipStyle}
-                cursor={{ fill: '#f1f5f9' }}
+                cursor={{ fill: 'rgba(255,255,255,0.04)' }}
               />
               <Bar dataKey="value" radius={[0, 6, 6, 0]}>
                 {Object.entries(currentExpensesByCategory)
@@ -888,7 +888,7 @@ const Reports = ({ transactions }) => {
               <Tooltip
                 formatter={(value, name) => [formatCurrency(value), name === 'ingresos' ? 'Ingresos' : name === 'gastos' ? 'Gastos' : 'Margen']}
                 contentStyle={customTooltipStyle}
-                cursor={{ fill: '#f1f5f9' }}
+                cursor={{ fill: 'rgba(255,255,255,0.04)' }}
               />
               <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
               <ReferenceLine x={0} stroke="#cbd5e1" strokeDasharray="3 3" />
@@ -902,7 +902,7 @@ const Reports = ({ transactions }) => {
 
       {/* Tabla Detallada de Proyectos */}
       <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] overflow-hidden">
-        <div className="px-6 py-5 border-b border-[#2a2a4a] bg-gradient-to-r from-slate-50 to-white">
+        <div className="px-6 py-5 border-b border-[#2a2a4a] bg-[#1a1a2e]">
           <h3 className="text-lg font-bold text-[#d0d0e0] tracking-tight">Análisis Detallado por Proyecto</h3>
           <p className="text-sm text-[#6868a0] mt-0.5">{getPeriodLabel()} · {projectChartData.length} proyectos</p>
         </div>
@@ -918,7 +918,7 @@ const Reports = ({ transactions }) => {
                 <th className="px-5 py-3.5 text-center text-xs font-semibold text-[#6868a0] uppercase tracking-wider">Estado</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-[#2a2a4a]">
               {projectChartData.map((project) => (
                 <tr key={project.name} className="hover:bg-[rgba(59,130,246,0.08)]/30 transition-colors duration-150">
                   <td className="px-5 py-3.5 font-medium text-[#b8b8d0]">{project.name}</td>
