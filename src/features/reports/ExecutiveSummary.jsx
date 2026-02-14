@@ -672,9 +672,9 @@ const ExecutiveSummary = ({ transactions }) => {
                 <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
-            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 11 }} tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2a2a4a" />
+            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6868a0', fontSize: 12 }} />
+            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6868a0', fontSize: 11 }} tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             <Area type="monotone" dataKey="ingresos" name="Ingresos" stroke="#10b981" strokeWidth={2} fill="url(#colorIngresos)" />

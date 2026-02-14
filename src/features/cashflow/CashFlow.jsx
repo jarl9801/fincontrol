@@ -314,17 +314,17 @@ const CashFlow = ({ transactions, user }) => {
                 <stop offset="100%" stopColor="#ef4444" stopOpacity={0.7} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#2a2a4a" vertical={false} />
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 12, fill: '#64748b' }}
-              axisLine={{ stroke: '#e2e8f0' }}
+              tick={{ fontSize: 12, fill: '#6868a0' }}
+              axisLine={{ stroke: "#2a2a4a" }}
               tickLine={false}
             />
             <YAxis
               yAxisId="left"
               tickFormatter={formatAxis}
-              tick={{ fontSize: 12, fill: '#64748b' }}
+              tick={{ fontSize: 12, fill: '#6868a0' }}
               axisLine={false}
               tickLine={false}
             />
@@ -332,7 +332,7 @@ const CashFlow = ({ transactions, user }) => {
               yAxisId="right"
               orientation="right"
               tickFormatter={formatAxis}
-              tick={{ fontSize: 12, fill: '#64748b' }}
+              tick={{ fontSize: 12, fill: '#6868a0' }}
               axisLine={false}
               tickLine={false}
             />
@@ -343,7 +343,7 @@ const CashFlow = ({ transactions, user }) => {
               iconSize={8}
               wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
             />
-            <ReferenceLine yAxisId="left" y={0} stroke="#94a3b8" strokeWidth={1} />
+            <ReferenceLine yAxisId="left" y={0} stroke="#3a3a5a" strokeWidth={1} />
             {creditLimit < 0 && (
               <ReferenceLine
                 yAxisId="right"
@@ -376,8 +376,8 @@ const CashFlow = ({ transactions, user }) => {
               name="Acumulado"
               stroke="#6366f1"
               strokeWidth={2.5}
-              dot={{ r: 4, fill: '#6366f1', stroke: '#fff', strokeWidth: 2 }}
-              activeDot={{ r: 6, fill: '#6366f1', stroke: '#fff', strokeWidth: 2 }}
+              dot={{ r: 4, fill: '#6366f1', stroke: '#1a1a2e', strokeWidth: 2 }}
+              activeDot={{ r: 6, fill: '#6366f1', stroke: '#1a1a2e', strokeWidth: 2 }}
             />
           </ComposedChart>
         </ResponsiveContainer>

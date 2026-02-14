@@ -22,7 +22,7 @@ import { useMetrics } from '../../hooks/useMetrics';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { COLORS, ALERT_THRESHOLDS } from '../../constants/config';
 
-const CHART_COLORS = ['#64748b', '#94a3b8', '#475569', '#cbd5e1', '#334155', '#e2e8f0'];
+const CHART_COLORS = ['#60a5fa', '#34d399', '#fbbf24', '#f87171', '#a78bfa', '#22d3ee'];
 
 const Dashboard = ({ transactions, user }) => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -164,17 +164,17 @@ const Dashboard = ({ transactions, user }) => {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                 <LineChart data={metrics.monthlyTrend}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2a2a4a" />
                   <XAxis
                     dataKey="month"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tick={{ fill: '#6868a0', fontSize: 11 }}
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tick={{ fill: '#6868a0', fontSize: 11 }}
                     tickFormatter={(value) => `€${(value/1000).toFixed(0)}k`}
                   />
                   <Tooltip content={<CustomTooltip />} />
@@ -227,7 +227,7 @@ const Dashboard = ({ transactions, user }) => {
                   </Pie>
                   <Tooltip
                     formatter={(value) => formatCurrency(value)}
-                    contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}
+                    contentStyle={{ borderRadius: '8px', border: '1px solid #2a2a4a', boxShadow: '0 1px 3px rgba(0,0,0,0.4)', backgroundColor: '#1a1a2e', color: '#e8e8f0' }}
                   />
                   <Legend
                     layout="vertical"
@@ -312,17 +312,17 @@ const Dashboard = ({ transactions, user }) => {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                 <BarChart data={metrics.projectMargins} barGap={4}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2a2a4a" />
                   <XAxis
                     dataKey="name"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tick={{ fill: '#6868a0', fontSize: 11 }}
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tick={{ fill: '#6868a0', fontSize: 11 }}
                     tickFormatter={(value) => `€${(value/1000).toFixed(0)}k`}
                   />
                   <Tooltip content={<CustomTooltip />} />
@@ -354,12 +354,12 @@ const Dashboard = ({ transactions, user }) => {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
                 <BarChart data={metrics.debtComparison} layout="vertical" barSize={32}>
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#2a2a4a" />
                   <XAxis
                     type="number"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#94a3b8', fontSize: 11 }}
+                    tick={{ fill: '#6868a0', fontSize: 11 }}
                     tickFormatter={(value) => `€${(value/1000).toFixed(0)}k`}
                   />
                   <YAxis
@@ -367,7 +367,7 @@ const Dashboard = ({ transactions, user }) => {
                     dataKey="name"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
+                    tick={{ fill: '#6868a0', fontSize: 12, fontWeight: 500 }}
                   />
                   <Tooltip content={<CustomTooltip />} />
                   <Bar
@@ -475,18 +475,18 @@ const Dashboard = ({ transactions, user }) => {
                     <stop offset="100%" stopColor="#f43f5e" stopOpacity={0.6}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2a2a4a" />
                 <XAxis
                   dataKey="month"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#94a3b8', fontSize: 11 }}
+                  tick={{ fill: '#6868a0', fontSize: 11 }}
                 />
                 <YAxis
                   yAxisId="bars"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#94a3b8', fontSize: 11 }}
+                  tick={{ fill: '#6868a0', fontSize: 11 }}
                   tickFormatter={(value) => `€${(value/1000).toFixed(0)}k`}
                 />
                 <YAxis

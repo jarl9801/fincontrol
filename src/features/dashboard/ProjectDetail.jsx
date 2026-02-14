@@ -155,9 +155,9 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={monthlyTrend}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={v => `€${(v/1000).toFixed(0)}k`} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2a2a4a" />
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#6868a0', fontSize: 11 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6868a0', fontSize: 11 }} tickFormatter={v => `€${(v/1000).toFixed(0)}k`} />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }} />
                 <Line type="monotone" dataKey="ingresos" stroke="#10b981" strokeWidth={2} dot={{ fill: '#10b981', r: 3 }} name="Ingresos" />
@@ -187,7 +187,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
                       <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} strokeWidth={0} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={v => `${formatCurrency(v)} €`} contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }} />
+                  <Tooltip formatter={v => `${formatCurrency(v)} €`} contentStyle={{ borderRadius: '8px', border: '1px solid #2a2a4a' }} />
                   <Legend layout="vertical" align="right" verticalAlign="middle" wrapperStyle={{ fontSize: '11px' }} />
                 </PieChart>
               </ResponsiveContainer>
@@ -203,9 +203,9 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={marginEvolution}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11 }} tickFormatter={v => `€${(v/1000).toFixed(0)}k`} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2a2a4a" />
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#6868a0', fontSize: 11 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6868a0', fontSize: 11 }} tickFormatter={v => `€${(v/1000).toFixed(0)}k`} />
                 <Tooltip content={<CustomTooltip />} />
                 <Bar dataKey="margen" name="Margen" radius={[4, 4, 0, 0]} maxBarSize={40}>
                   {marginEvolution.map((entry, i) => (

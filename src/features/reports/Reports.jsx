@@ -848,9 +848,9 @@ const Reports = ({ transactions }) => {
               layout="vertical"
               margin={{ top: 5, right: 50, left: 10, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" />
-              <XAxis type="number" tickFormatter={(value) => `${(value/1000).toFixed(0)}k`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-              <YAxis type="category" dataKey="name" width={110} tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#2a2a4a" />
+              <XAxis type="number" tickFormatter={(value) => `${(value/1000).toFixed(0)}k`} tick={{ fontSize: 11, fill: '#6868a0' }} axisLine={false} tickLine={false} />
+              <YAxis type="category" dataKey="name" width={110} tick={{ fontSize: 11, fill: '#6868a0' }} axisLine={false} tickLine={false} />
               <Tooltip
                 formatter={(value) => [formatCurrency(value), 'Monto']}
                 contentStyle={customTooltipStyle}
@@ -882,9 +882,9 @@ const Reports = ({ transactions }) => {
               layout="vertical"
               margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" />
-              <XAxis type="number" tickFormatter={(value) => `${(value/1000).toFixed(0)}k`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-              <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#2a2a4a" />
+              <XAxis type="number" tickFormatter={(value) => `${(value/1000).toFixed(0)}k`} tick={{ fontSize: 11, fill: '#6868a0' }} axisLine={false} tickLine={false} />
+              <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11, fill: '#6868a0' }} axisLine={false} tickLine={false} />
               <Tooltip
                 formatter={(value, name) => [formatCurrency(value), name === 'ingresos' ? 'Ingresos' : name === 'gastos' ? 'Gastos' : 'Margen']}
                 contentStyle={customTooltipStyle}
@@ -894,7 +894,7 @@ const Reports = ({ transactions }) => {
               <ReferenceLine x={0} stroke="#cbd5e1" strokeDasharray="3 3" />
               <Bar dataKey="ingresos" fill="#10b981" name="Ingresos" radius={[0, 6, 6, 0]} barSize={14} />
               <Bar dataKey="gastos" fill="#f43f5e" name="Gastos" radius={[0, 6, 6, 0]} barSize={14} />
-              <Line type="monotone" dataKey="margen" stroke="#6366f1" strokeWidth={2.5} dot={{ fill: '#6366f1', r: 4, strokeWidth: 2, stroke: '#fff' }} name="Margen" />
+              <Line type="monotone" dataKey="margen" stroke="#6366f1" strokeWidth={2.5} dot={{ fill: '#6366f1', r: 4, strokeWidth: 2, stroke: '#1a1a2e' }} name="Margen" />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
