@@ -53,20 +53,20 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
           relative flex items-center gap-3 w-full px-4 py-3.5 rounded-lg text-sm font-medium transition-all
           ${isActive
             ? 'bg-blue-500/20 text-white'
-            : 'text-slate-300 hover:bg-[#1a1a2e]/8 hover:text-white'}
+            : 'text-[#585890] hover:bg-[#1a1a2e]/8 hover:text-white'}
         `}
       >
         {isActive && (
           <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-blue-500 rounded-r-md" />
         )}
-        <Icon size={20} className={isActive ? 'text-blue-400' : 'text-slate-400'} />
+        <Icon size={20} className={isActive ? 'text-blue-400' : 'text-[#6868a0]'} />
         <span className="flex-1 text-left">{label}</span>
       </button>
     );
   };
 
   const SectionTitle = ({ children }) => (
-    <div className="pt-4 pb-2 px-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+    <div className="pt-4 pb-2 px-4 text-[11px] font-semibold text-[#8888b0] uppercase tracking-wider">
       {children}
     </div>
   );
@@ -93,12 +93,12 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
               </div>
               <div>
                 <h1 className="text-lg font-bold text-white">UMTELKOMD</h1>
-                <p className="text-[10px] text-slate-400 font-medium uppercase">Sistema Financiero</p>
+                <p className="text-[10px] text-[#6868a0] font-medium uppercase">Sistema Financiero</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-xl transition-all"
+              className="p-2 text-[#6868a0] hover:text-white hover:bg-slate-700/50 rounded-xl transition-all"
             >
               <X size={24} />
             </button>
@@ -156,7 +156,7 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
           </button>
           <button
             onClick={handleLogout}
-            className="flex items-center justify-center gap-2 w-full bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white px-4 py-3 rounded-xl font-medium transition-all"
+            className="flex items-center justify-center gap-2 w-full bg-slate-700/50 hover:bg-slate-700 text-[#585890] hover:text-white px-4 py-3 rounded-xl font-medium transition-all"
           >
             <LogOut size={20} /> Cerrar Sesion
           </button>
@@ -164,8 +164,8 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
 
         {/* Footer */}
         <div className="px-4 py-3 border-t border-slate-700/50 text-center">
-          <p className="text-[10px] text-slate-500">
-            Desarrollado por <span className="font-semibold text-slate-400">HMR NEXUS</span>
+          <p className="text-[10px] text-[#8888b0]">
+            Desarrollado por <span className="font-semibold text-[#6868a0]">HMR NEXUS</span>
           </p>
         </div>
       </div>
@@ -176,7 +176,7 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
 export const MobileMenuButton = ({ onClick }) => (
   <button
     onClick={onClick}
-    className="md:hidden p-2.5 text-slate-600 hover:text-slate-900 hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all"
+    className="md:hidden p-2.5 text-[#9898b8] hover:text-[#e8e8f0] hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all"
   >
     <Menu size={24} />
   </button>

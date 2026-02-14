@@ -24,17 +24,17 @@ const Login = () => {
           <Briefcase size={40} />
           <div>
             <h1 className="text-2xl font-bold tracking-tight">UMTELKOMD</h1>
-            <p className="text-sm text-slate-500">Sistema Financiero</p>
+            <p className="text-sm text-[#8888b0]">Sistema Financiero</p>
           </div>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">Email</label>
+            <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">Email</label>
             <input
               type="email"
               required
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               value={loginData.email}
               onChange={(e) => setLoginData({...loginData, email: e.target.value})}
               placeholder="usuario@umtelkomd.com"
@@ -42,11 +42,11 @@ const Login = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">Contraseña</label>
+            <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">Contraseña</label>
             <input
               type="password"
               required
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               value={loginData.password}
               onChange={(e) => setLoginData({...loginData, password: e.target.value})}
               placeholder="********"
@@ -67,7 +67,7 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="text-xs text-slate-400 text-center mt-6">
+        <p className="text-xs text-[#6868a0] text-center mt-6">
           Sistema de Gestión Financiera 2025
         </p>
       </div>

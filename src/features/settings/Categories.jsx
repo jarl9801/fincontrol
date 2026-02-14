@@ -58,7 +58,7 @@ const Categories = ({ user }) => {
 
     if (isEditing) {
       return (
-        <div className="flex items-center gap-2 p-3 bg-[#1a1a2e] rounded-lg border border-slate-200">
+        <div className="flex items-center gap-2 p-3 bg-[#1a1a2e] rounded-lg border border-[#2a2a4a]">
           <input
             type="text"
             className="flex-1 px-3 py-1 border border-blue-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm"
@@ -75,7 +75,7 @@ const Categories = ({ user }) => {
           </button>
           <button
             onClick={() => setEditingItem(null)}
-            className="p-1.5 text-slate-400 hover:bg-[rgba(255,255,255,0.05)] rounded transition-colors"
+            className="p-1.5 text-[#6868a0] hover:bg-[rgba(255,255,255,0.05)] rounded transition-colors"
           >
             <X size={16} />
           </button>
@@ -84,18 +84,18 @@ const Categories = ({ user }) => {
     }
 
     return (
-      <div className="flex items-center justify-between p-3 bg-[#1a1a2e] rounded-lg border border-slate-200 hover:border-slate-300 transition-colors">
-        <span className="text-sm text-slate-700">{category}</span>
+      <div className="flex items-center justify-between p-3 bg-[#1a1a2e] rounded-lg border border-[#2a2a4a] hover:border-[#3a3a5a] transition-colors">
+        <span className="text-sm text-[#b8b8d0]">{category}</span>
         <div className="flex items-center gap-1">
           <button
             onClick={() => handleEdit(type, index)}
-            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
+            className="p-1.5 text-[#6868a0] hover:text-blue-600 hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
           >
             <Edit2 size={14} />
           </button>
           <button
             onClick={() => handleDelete(type, index)}
-            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
+            className="p-1.5 text-[#6868a0] hover:text-rose-600 hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
           >
             <Trash2 size={14} />
           </button>
@@ -108,7 +108,7 @@ const Categories = ({ user }) => {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-        <span className="ml-3 text-slate-500">Cargando categorias...</span>
+        <span className="ml-3 text-[#8888b0]">Cargando categorias...</span>
       </div>
     );
   }

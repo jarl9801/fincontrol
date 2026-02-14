@@ -30,31 +30,31 @@ const CXP = ({
     <div className="space-y-6">
       {/* Métricas CXP */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-[#2a2a4a]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Total por Pagar</h3>
+            <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Total por Pagar</h3>
             <TrendingDown className="text-rose-500" size={20} />
           </div>
           <p className="text-3xl font-bold text-rose-600">{formatCurrency(totalPayable)}</p>
-          <p className="text-xs text-slate-400 mt-1">{payables.length} facturas pendientes</p>
+          <p className="text-xs text-[#6868a0] mt-1">{payables.length} facturas pendientes</p>
         </div>
 
-        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-[#2a2a4a]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Vencido</h3>
+            <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Vencido</h3>
             <AlertCircle className="text-rose-600" size={20} />
           </div>
           <p className="text-3xl font-bold text-rose-600">{formatCurrency(totalOverdue)}</p>
-          <p className="text-xs text-slate-400 mt-1">{overduePayables.length} facturas vencidas</p>
+          <p className="text-xs text-[#6868a0] mt-1">{overduePayables.length} facturas vencidas</p>
         </div>
 
-        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-[#2a2a4a]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Vence Esta Semana</h3>
+            <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Vence Esta Semana</h3>
             <Clock className="text-amber-500" size={20} />
           </div>
           <p className="text-3xl font-bold text-amber-600">{formatCurrency(totalDueThisWeek)}</p>
-          <p className="text-xs text-slate-400 mt-1">{dueThisWeek.length} facturas próximas</p>
+          <p className="text-xs text-[#6868a0] mt-1">{dueThisWeek.length} facturas próximas</p>
         </div>
       </div>
 

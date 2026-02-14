@@ -13,7 +13,7 @@ const Card = ({ title, amount, icon: Icon, colorClass, subtext, alert, trend }) 
   const getTrendColor = () => {
     if (trend === 'up') return 'text-emerald-500';
     if (trend === 'down') return 'text-rose-500';
-    return 'text-slate-400';
+    return 'text-[#6868a0]';
   };
 
   return (
@@ -21,14 +21,14 @@ const Card = ({ title, amount, icon: Icon, colorClass, subtext, alert, trend }) 
       relative bg-[#1a1a2e] p-5 rounded-xl border transition-all duration-200
       ${alert
         ? 'border-l-4 border-l-rose-400 border-t-slate-200 border-r-slate-200 border-b-slate-200 shadow-sm'
-        : 'border-slate-200 shadow-sm hover:shadow-md'
+        : 'border-[#2a2a4a] shadow-sm hover:shadow-md'
       }
     `}>
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">{title}</p>
+          <p className="text-xs font-medium text-[#8888b0] uppercase tracking-wide mb-2">{title}</p>
 
-          <h3 className={`text-2xl font-semibold tracking-tight ${isNegative ? 'text-rose-600' : 'text-slate-800'}`}>
+          <h3 className={`text-2xl font-semibold tracking-tight ${isNegative ? 'text-rose-600' : 'text-[#d0d0e0]'}`}>
             {formatCurrency(amount)}
           </h3>
 
@@ -39,18 +39,18 @@ const Card = ({ title, amount, icon: Icon, colorClass, subtext, alert, trend }) 
                   {getTrendIcon()}
                 </span>
               )}
-              {subtext && <p className="text-xs text-slate-400">{subtext}</p>}
+              {subtext && <p className="text-xs text-[#6868a0]">{subtext}</p>}
             </div>
           )}
         </div>
 
-        <div className="p-2.5 rounded-lg bg-slate-100">
-          <Icon className="w-5 h-5 text-slate-600" />
+        <div className="p-2.5 rounded-lg bg-[#1e1e38]">
+          <Icon className="w-5 h-5 text-[#9898b8]" />
         </div>
       </div>
 
       {alert && (
-        <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-slate-100">
+        <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-[#2a2a4a]">
           <AlertTriangle className="w-3.5 h-3.5 text-rose-500" />
           <span className="text-xs font-medium text-rose-500">Requiere atención</span>
         </div>

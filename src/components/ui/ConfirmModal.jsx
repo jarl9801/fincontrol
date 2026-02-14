@@ -26,9 +26,9 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, confirmText 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
       <div className="bg-[#1a1a2e] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-scaleIn">
-        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-          <h3 className="font-bold text-lg text-slate-800">{title}</h3>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
+        <div className="px-6 py-4 border-b border-[#2a2a4a] flex justify-between items-center">
+          <h3 className="font-bold text-lg text-[#d0d0e0]">{title}</h3>
+          <button onClick={onClose} className="text-[#6868a0] hover:text-[#9898b8] transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -39,14 +39,14 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, confirmText 
               <AlertTriangle className={style.icon} size={24} />
             </div>
             <div className="flex-1">
-              <p className="text-slate-700 text-sm leading-relaxed">{message}</p>
+              <p className="text-[#b8b8d0] text-sm leading-relaxed">{message}</p>
             </div>
           </div>
 
           <div className="flex gap-3 mt-6">
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors"
+              className="flex-1 px-4 py-2.5 bg-[#1e1e38] hover:bg-[#252540] text-[#b8b8d0] font-medium rounded-lg transition-colors"
             >
               {cancelText}
             </button>

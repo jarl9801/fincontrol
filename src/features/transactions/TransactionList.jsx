@@ -110,7 +110,7 @@ const TransactionList = ({
     const isActive = sortConfig.field === field;
     return (
       <th
-        className={`px-4 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-700 transition-colors select-none ${align === 'right' ? 'text-right' : ''}`}
+        className={`px-4 py-4 text-xs font-semibold text-[#8888b0] uppercase tracking-wider cursor-pointer hover:text-[#b8b8d0] transition-colors select-none ${align === 'right' ? 'text-right' : ''}`}
         onClick={() => handleSort(field)}
       >
         <span className={`inline-flex items-center gap-1 ${align === 'right' ? 'justify-end' : ''}`}>
@@ -215,22 +215,22 @@ const TransactionList = ({
       )}
 
       {/* Header con búsqueda y acciones */}
-      <div className="bg-[#1a1a2e] p-4 rounded-2xl shadow-sm border border-slate-100">
+      <div className="bg-[#1a1a2e] p-4 rounded-2xl shadow-sm border border-[#2a2a4a]">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           {/* Search */}
           <div className="relative flex-1 w-full md:w-auto">
-            <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
+            <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-[#6868a0]" size={18} />
             <input
               type="text"
               placeholder="Buscar transacciones..."
-              className="w-full pl-11 pr-4 py-2.5 bg-[#13132a] border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              className="w-full pl-11 pr-4 py-2.5 bg-[#13132a] border border-[#2a2a4a] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6868a0] hover:text-[#9898b8]"
               >
                 <X size={16} />
               </button>
@@ -245,7 +245,7 @@ const TransactionList = ({
                 flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all
                 ${showFilters || activeFiltersCount > 0
                   ? 'bg-blue-100 text-blue-700 border-2 border-blue-200'
-                  : 'bg-slate-100 text-slate-700 border-2 border-transparent hover:bg-slate-200'}
+                  : 'bg-[#1e1e38] text-[#b8b8d0] border-2 border-transparent hover:bg-[#252540]'}
               `}
             >
               <Filter size={18} />
@@ -269,7 +269,7 @@ const TransactionList = ({
 
         {/* Filter Panel */}
         {showFilters && (
-          <div className="mt-4 pt-4 border-t border-slate-100 animate-fadeIn">
+          <div className="mt-4 pt-4 border-t border-[#2a2a4a] animate-fadeIn">
             <FilterPanel
               filters={filters}
               setFilters={setFilters}
@@ -292,7 +292,7 @@ const TransactionList = ({
               inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200
               ${quickFilter === key
                 ? 'bg-slate-800 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}
+                : 'bg-[#1e1e38] text-[#9898b8] hover:bg-[#252540]'}
             `}
           >
             {Icon && <Icon size={14} />}
@@ -301,7 +301,7 @@ const TransactionList = ({
               text-xs px-1.5 py-0.5 rounded-full min-w-[20px] text-center
               ${quickFilter === key
                 ? 'bg-slate-600 text-slate-200'
-                : 'bg-slate-200 text-slate-500'}
+                : 'bg-[#252540] text-[#8888b0]'}
             `}>
               {count}
             </span>
@@ -311,10 +311,10 @@ const TransactionList = ({
 
       {/* Results Summary */}
       <div className="flex items-center justify-between px-2">
-        <p className="text-sm text-slate-500">
-          Mostrando <span className="font-semibold text-slate-700">{filteredByQuick.length}</span> transacciones
+        <p className="text-sm text-[#8888b0]">
+          Mostrando <span className="font-semibold text-[#b8b8d0]">{filteredByQuick.length}</span> transacciones
           {quickFilter !== 'all' && (
-            <span className="text-slate-400"> de {transactions.length}</span>
+            <span className="text-[#6868a0]"> de {transactions.length}</span>
           )}
         </p>
         {(activeFiltersCount > 0 || quickFilter !== 'all') && (
@@ -340,20 +340,20 @@ const TransactionList = ({
       </div>
 
       {/* Table */}
-      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-slate-200">
+            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-[#2a2a4a]">
               <tr>
                 <SortableHeader field="date" label="Fecha" />
-                <th className="px-4 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Descripción</th>
-                <th className="px-4 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Categoría</th>
+                <th className="px-4 py-4 text-xs font-semibold text-[#8888b0] uppercase tracking-wider">Descripción</th>
+                <th className="px-4 py-4 text-xs font-semibold text-[#8888b0] uppercase tracking-wider hidden md:table-cell">Categoría</th>
                 <SortableHeader field="amount" label="Monto" align="right" />
-                <th className="px-4 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Estado</th>
-                <th className="px-4 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Acciones</th>
+                <th className="px-4 py-4 text-xs font-semibold text-[#8888b0] uppercase tracking-wider text-center">Estado</th>
+                <th className="px-4 py-4 text-xs font-semibold text-[#8888b0] uppercase tracking-wider text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#2a2a4a]">
               {sortedTransactions.map((t, idx) => (
                 <TransactionRow
                   key={t.id}
@@ -369,9 +369,9 @@ const TransactionList = ({
               {filteredByQuick.length === 0 && (
                 <tr>
                   <td colSpan="6" className="px-4 py-16 text-center">
-                    <div className="flex flex-col items-center gap-3 text-slate-400">
-                      <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center">
-                        <FileText className="w-8 h-8 text-slate-300" />
+                    <div className="flex flex-col items-center gap-3 text-[#6868a0]">
+                      <div className="w-16 h-16 bg-[#1e1e38] rounded-full flex items-center justify-center">
+                        <FileText className="w-8 h-8 text-[#585890]" />
                       </div>
                       <p className="text-sm">No se encontraron transacciones</p>
                       {(searchTerm || activeFiltersCount > 0 || quickFilter !== 'all') && (

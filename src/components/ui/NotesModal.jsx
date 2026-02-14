@@ -29,26 +29,26 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
       <div className="bg-[#1a1a2e] rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">
-        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-[#13132a]">
+        <div className="px-6 py-4 border-b border-[#2a2a4a] flex justify-between items-center bg-[#13132a]">
           <div>
-            <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
+            <h3 className="font-bold text-lg text-[#d0d0e0] flex items-center gap-2">
               <MessageSquare size={20} /> Notas y Comentarios
             </h3>
-            <p className="text-sm text-slate-500 mt-1">{transaction.description}</p>
+            <p className="text-sm text-[#8888b0] mt-1">{transaction.description}</p>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
+          <button onClick={onClose} className="text-[#6868a0] hover:text-[#9898b8]">
             <X size={20} />
           </button>
         </div>
 
-        <div className="border-b border-slate-200">
+        <div className="border-b border-[#2a2a4a]">
           <div className="flex">
             <button
               onClick={() => setActiveTab('comments')}
               className={`flex-1 px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
                 activeTab === 'comments'
                   ? 'border-blue-500 text-blue-600 bg-blue-50'
-                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-[#13132a]'
+                  : 'border-transparent text-[#8888b0] hover:text-[#b8b8d0] hover:bg-[#13132a]'
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -65,8 +65,8 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
               onClick={() => setActiveTab('logs')}
               className={`flex-1 px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
                 activeTab === 'logs'
-                  ? 'border-slate-500 text-slate-700 bg-[#13132a]'
-                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-[#13132a]'
+                  ? 'border-slate-500 text-[#b8b8d0] bg-[#13132a]'
+                  : 'border-transparent text-[#8888b0] hover:text-[#b8b8d0] hover:bg-[#13132a]'
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -104,36 +104,36 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
                 </div>
               ))
             ) : (
-              <p className="text-center text-slate-400 py-8">No hay comentarios aún.</p>
+              <p className="text-center text-[#6868a0] py-8">No hay comentarios aún.</p>
             )
           ) : (
             systemLogs.length > 0 ? (
               systemLogs.map((note, idx) => (
-                <div key={idx} className="p-4 rounded-lg border bg-[#13132a] border-slate-200">
+                <div key={idx} className="p-4 rounded-lg border bg-[#13132a] border-[#2a2a4a]">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <AlertCircle size={14} className="text-slate-400" />
-                      <span className="text-xs font-semibold text-slate-500">
+                      <AlertCircle size={14} className="text-[#6868a0]" />
+                      <span className="text-xs font-semibold text-[#8888b0]">
                         Sistema
                       </span>
                     </div>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-[#6868a0]">
                       {new Date(note.timestamp).toLocaleString('es-ES')}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-600 italic">
+                  <p className="text-sm text-[#9898b8] italic">
                     {note.text}
                   </p>
                 </div>
               ))
             ) : (
-              <p className="text-center text-slate-400 py-8">No hay historial aún.</p>
+              <p className="text-center text-[#6868a0] py-8">No hay historial aún.</p>
             )
           )}
         </div>
 
         {activeTab === 'comments' && (
-          <div className="p-6 border-t border-slate-100 bg-blue-50">
+          <div className="p-6 border-t border-[#2a2a4a] bg-blue-50">
             <div className="flex gap-2">
               <input
                 type="text"

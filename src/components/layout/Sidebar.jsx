@@ -40,20 +40,20 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
           relative flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-150
           ${isActive
             ? 'bg-[rgba(0,200,83,0.15)] text-white'
-            : 'text-slate-300 hover:bg-[rgba(255,255,255,0.05)] hover:text-white'}
+            : 'text-[#585890] hover:bg-[rgba(255,255,255,0.05)] hover:text-white'}
         `}
       >
         {isActive && (
           <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-[#00C853] rounded-r-md" />
         )}
-        <Icon size={20} className={isActive ? 'text-[#00C853]' : 'text-slate-400'} />
+        <Icon size={20} className={isActive ? 'text-[#00C853]' : 'text-[#6868a0]'} />
         <span className="flex-1 text-left">{label}</span>
       </button>
     );
   };
 
   const SectionTitle = ({ children }) => (
-    <div className="pt-6 pb-2 px-4 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+    <div className="pt-6 pb-2 px-4 text-[11px] font-semibold text-[#8888b0] uppercase tracking-wider">
       {children}
     </div>
   );
@@ -68,7 +68,7 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
           </div>
           <div>
             <h1 className="text-lg font-bold text-white tracking-tight">UMTELKOMD</h1>
-            <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Sistema Financiero</p>
+            <p className="text-[10px] text-[#6868a0] font-medium uppercase tracking-wider">Sistema Financiero</p>
           </div>
         </div>
 
@@ -126,7 +126,7 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
         </button>
         <button
           onClick={handleLogout}
-          className="flex items-center justify-center gap-2 w-full bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white px-4 py-3 rounded-xl font-medium transition-all"
+          className="flex items-center justify-center gap-2 w-full bg-slate-700/50 hover:bg-slate-700 text-[#585890] hover:text-white px-4 py-3 rounded-xl font-medium transition-all"
         >
           <LogOut size={18} /> Cerrar Sesion
         </button>
@@ -134,8 +134,8 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
 
       {/* Footer */}
       <div className="px-4 py-3 border-t border-slate-700/50 text-center">
-        <p className="text-[10px] text-slate-500">
-          Desarrollado por <span className="font-semibold text-slate-400">HMR NEXUS</span>
+        <p className="text-[10px] text-[#8888b0]">
+          Desarrollado por <span className="font-semibold text-[#6868a0]">HMR NEXUS</span>
         </p>
       </div>
     </aside>

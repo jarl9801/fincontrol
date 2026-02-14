@@ -292,7 +292,7 @@ const ExecutiveSummary = ({ transactions }) => {
     };
 
     return (
-      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] overflow-hidden">
         <div className="p-5">
           <div className="flex items-start justify-between mb-3">
             <div className={`p-2.5 rounded-xl bg-gradient-to-br ${colorClasses[color]} text-white`}>
@@ -307,9 +307,9 @@ const ExecutiveSummary = ({ transactions }) => {
               </div>
             )}
           </div>
-          <h3 className="text-sm font-medium text-slate-500 mb-1">{title}</h3>
-          <p className="text-2xl font-bold text-slate-800">{value}</p>
-          {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
+          <h3 className="text-sm font-medium text-[#8888b0] mb-1">{title}</h3>
+          <p className="text-2xl font-bold text-[#d0d0e0]">{value}</p>
+          {subtitle && <p className="text-xs text-[#6868a0] mt-1">{subtitle}</p>}
         </div>
       </div>
     );
@@ -351,8 +351,8 @@ const ExecutiveSummary = ({ transactions }) => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#1a1a2e] p-3 rounded-xl shadow-lg border border-slate-100">
-          <p className="text-sm font-semibold text-slate-700 mb-2">{label}</p>
+        <div className="bg-[#1a1a2e] p-3 rounded-xl shadow-lg border border-[#2a2a4a]">
+          <p className="text-sm font-semibold text-[#b8b8d0] mb-2">{label}</p>
           {payload.map((entry, index) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
               {entry.name}: {formatCurrency(entry.value)}
@@ -367,7 +367,7 @@ const ExecutiveSummary = ({ transactions }) => {
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Period Selector */}
-      <div className="bg-[#1a1a2e] rounded-2xl p-5 shadow-sm border border-slate-100">
+      <div className="bg-[#1a1a2e] rounded-2xl p-5 shadow-sm border border-[#2a2a4a]">
         <div className="flex flex-wrap items-center gap-2">
           {/* Month selector with dropdown */}
           <div className="relative" ref={dropdownRef}>
@@ -375,9 +375,9 @@ const ExecutiveSummary = ({ transactions }) => {
               <button
                 onClick={() => navigateMonth(-1)}
                 disabled={!canNavigatePrev}
-                className="p-2 rounded-l-xl border border-r-0 border-slate-200 bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-l-xl border border-r-0 border-[#2a2a4a] bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
-                <ChevronLeft size={16} className="text-slate-500" />
+                <ChevronLeft size={16} className="text-[#8888b0]" />
               </button>
 
               <button
@@ -385,7 +385,7 @@ const ExecutiveSummary = ({ transactions }) => {
                 className={`flex items-center gap-2 px-4 py-2 border text-sm font-medium transition-all ${
                   periodType === 'month'
                     ? 'bg-slate-800 text-white border-slate-800 shadow-sm'
-                    : 'bg-[#1a1a2e] text-slate-600 border-slate-200 hover:bg-[#13132a]'
+                    : 'bg-[#1a1a2e] text-[#9898b8] border-[#2a2a4a] hover:bg-[#13132a]'
                 }`}
               >
                 <Calendar size={15} />
@@ -396,17 +396,17 @@ const ExecutiveSummary = ({ transactions }) => {
               <button
                 onClick={() => navigateMonth(1)}
                 disabled={!canNavigateNext}
-                className="p-2 rounded-r-xl border border-l-0 border-slate-200 bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-r-xl border border-l-0 border-[#2a2a4a] bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
-                <ChevronRight size={16} className="text-slate-500" />
+                <ChevronRight size={16} className="text-[#8888b0]" />
               </button>
             </div>
 
             {monthDropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 z-50 bg-[#1a1a2e] rounded-xl shadow-xl border border-slate-200 py-2 min-w-[220px] max-h-[320px] overflow-y-auto animate-[fadeIn_150ms_ease-out]">
+              <div className="absolute top-full left-0 mt-2 z-50 bg-[#1a1a2e] rounded-xl shadow-xl border border-[#2a2a4a] py-2 min-w-[220px] max-h-[320px] overflow-y-auto animate-[fadeIn_150ms_ease-out]">
                 {monthsByYear.map(([year, months]) => (
                   <div key={year}>
-                    <div className="px-4 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider sticky top-0 bg-[#1a1a2e]">
+                    <div className="px-4 py-1.5 text-xs font-bold text-[#6868a0] uppercase tracking-wider sticky top-0 bg-[#1a1a2e]">
                       {year}
                     </div>
                     {months.map(key => {
@@ -420,8 +420,8 @@ const ExecutiveSummary = ({ transactions }) => {
                           }}
                           className={`w-full text-left px-4 py-2 text-sm transition-colors ${
                             isSelected
-                              ? 'bg-slate-100 text-slate-800 font-semibold'
-                              : 'text-slate-600 hover:bg-[#13132a]'
+                              ? 'bg-[#1e1e38] text-[#d0d0e0] font-semibold'
+                              : 'text-[#9898b8] hover:bg-[#13132a]'
                           }`}
                         >
                           {formatMonthKey(key)}
@@ -434,7 +434,7 @@ const ExecutiveSummary = ({ transactions }) => {
             )}
           </div>
 
-          <div className="w-px h-8 bg-slate-200 mx-1 hidden sm:block" />
+          <div className="w-px h-8 bg-[#252540] mx-1 hidden sm:block" />
 
           {[
             { key: 'quarter', label: 'Trimestre' },
@@ -447,7 +447,7 @@ const ExecutiveSummary = ({ transactions }) => {
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                 periodType === period.key
                   ? 'bg-slate-800 text-white shadow-sm'
-                  : 'bg-[#13132a] text-slate-600 hover:bg-[rgba(255,255,255,0.05)] border border-slate-200'
+                  : 'bg-[#13132a] text-[#9898b8] hover:bg-[rgba(255,255,255,0.05)] border border-[#2a2a4a]'
               }`}
             >
               {period.label}
@@ -456,14 +456,14 @@ const ExecutiveSummary = ({ transactions }) => {
         </div>
 
         {periodType !== 'all' && (
-          <div className="mt-3 pt-3 border-t border-slate-100 flex items-center gap-4 text-xs text-slate-400">
+          <div className="mt-3 pt-3 border-t border-[#2a2a4a] flex items-center gap-4 text-xs text-[#6868a0]">
             <span className="inline-flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-slate-700" />
-              Actual: <span className="font-medium text-slate-600">{getPeriodLabel()}</span>
+              Actual: <span className="font-medium text-[#9898b8]">{getPeriodLabel()}</span>
             </span>
             <span className="inline-flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-slate-300" />
-              Anterior: <span className="font-medium text-slate-500">{getPreviousPeriodLabel()}</span>
+              Anterior: <span className="font-medium text-[#8888b0]">{getPreviousPeriodLabel()}</span>
             </span>
           </div>
         )}
@@ -474,10 +474,10 @@ const ExecutiveSummary = ({ transactions }) => {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">Resumen Ejecutivo</h2>
-            <p className="text-slate-300 mt-1">{getPeriodLabel()}</p>
+            <p className="text-[#585890] mt-1">{getPeriodLabel()}</p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-slate-400">Utilidad YTD</p>
+            <p className="text-sm text-[#6868a0]">Utilidad YTD</p>
             <p className={`text-3xl font-bold ${ytdProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
               {formatCurrency(ytdProfit)}
             </p>
@@ -526,14 +526,14 @@ const ExecutiveSummary = ({ transactions }) => {
       {/* Financial Indicators Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Ratios de Liquidez */}
-        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-blue-100 rounded-lg">
               <Activity className="text-blue-600" size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-slate-800">Indicadores de Liquidez</h3>
-              <p className="text-xs text-slate-500">Capacidad de pago a corto plazo</p>
+              <h3 className="font-bold text-[#d0d0e0]">Indicadores de Liquidez</h3>
+              <p className="text-xs text-[#8888b0]">Capacidad de pago a corto plazo</p>
             </div>
           </div>
           <div className="space-y-3">
@@ -545,14 +545,14 @@ const ExecutiveSummary = ({ transactions }) => {
         </div>
 
         {/* Ratios de Rentabilidad */}
-        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-emerald-100 rounded-lg">
               <Percent className="text-emerald-600" size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-slate-800">Indicadores de Rentabilidad</h3>
-              <p className="text-xs text-slate-500">Eficiencia en generación de utilidades</p>
+              <h3 className="font-bold text-[#d0d0e0]">Indicadores de Rentabilidad</h3>
+              <p className="text-xs text-[#8888b0]">Eficiencia en generación de utilidades</p>
             </div>
           </div>
           <div className="space-y-3">
@@ -577,14 +577,14 @@ const ExecutiveSummary = ({ transactions }) => {
       {/* Alerts and Recommendations */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Alerts */}
-        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-amber-100 rounded-lg">
               <AlertTriangle className="text-amber-600" size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-slate-800">Alertas Financieras</h3>
-              <p className="text-xs text-slate-500">Puntos de atención identificados</p>
+              <h3 className="font-bold text-[#d0d0e0]">Alertas Financieras</h3>
+              <p className="text-xs text-[#8888b0]">Puntos de atención identificados</p>
             </div>
           </div>
           <div className="space-y-2">
@@ -621,14 +621,14 @@ const ExecutiveSummary = ({ transactions }) => {
         </div>
 
         {/* Recommendations */}
-        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 p-6">
+        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-indigo-100 rounded-lg">
               <Lightbulb className="text-indigo-600" size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-slate-800">Recomendaciones</h3>
-              <p className="text-xs text-slate-500">Acciones sugeridas para mejorar</p>
+              <h3 className="font-bold text-[#d0d0e0]">Recomendaciones</h3>
+              <p className="text-xs text-[#8888b0]">Acciones sugeridas para mejorar</p>
             </div>
           </div>
           <div className="space-y-2">
@@ -650,14 +650,14 @@ const ExecutiveSummary = ({ transactions }) => {
       </div>
 
       {/* 6-Month Trend Chart */}
-      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-blue-100 rounded-lg">
             <BarChart3 className="text-blue-600" size={20} />
           </div>
           <div>
-            <h3 className="font-bold text-slate-800">Tendencia Últimos 6 Meses</h3>
-            <p className="text-xs text-slate-500">Evolución de ingresos, gastos y utilidad</p>
+            <h3 className="font-bold text-[#d0d0e0]">Tendencia Últimos 6 Meses</h3>
+            <p className="text-xs text-[#8888b0]">Evolución de ingresos, gastos y utilidad</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={300}>
@@ -686,8 +686,8 @@ const ExecutiveSummary = ({ transactions }) => {
 
       {/* Projects with Low Margin */}
       {projectsWithLowMargin.length > 0 && (
-        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-100 bg-amber-50">
+        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] overflow-hidden">
+          <div className="px-6 py-4 border-b border-[#2a2a4a] bg-amber-50">
             <div className="flex items-center gap-3">
               <AlertTriangle className="text-amber-600" size={20} />
               <div>
@@ -701,17 +701,17 @@ const ExecutiveSummary = ({ transactions }) => {
               <table className="w-full text-sm">
                 <thead className="bg-[#13132a]">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Proyecto</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase">Ingresos</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase">Gastos</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase">Margen</th>
-                    <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Estado</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#8888b0] uppercase">Proyecto</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-[#8888b0] uppercase">Ingresos</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-[#8888b0] uppercase">Gastos</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-[#8888b0] uppercase">Margen</th>
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-[#8888b0] uppercase">Estado</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-[#2a2a4a]">
                   {projectsWithLowMargin.slice(0, 5).map((p, idx) => (
                     <tr key={idx} className="hover:bg-[#13132a]">
-                      <td className="px-4 py-3 font-medium text-slate-700">{p.name}</td>
+                      <td className="px-4 py-3 font-medium text-[#b8b8d0]">{p.name}</td>
                       <td className="px-4 py-3 text-right text-emerald-600">{formatCurrency(p.ingresos)}</td>
                       <td className="px-4 py-3 text-right text-rose-600">{formatCurrency(p.gastos)}</td>
                       <td className={`px-4 py-3 text-right font-bold ${p.margin >= 0 ? 'text-amber-600' : 'text-rose-600'}`}>

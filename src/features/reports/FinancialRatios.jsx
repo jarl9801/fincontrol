@@ -140,8 +140,8 @@ const FinancialRatios = ({ transactions }) => {
                 <Icon className={colors.icon} size={18} />
               </div>
               <div>
-                <h4 className="font-semibold text-slate-800 text-sm">{title}</h4>
-                <p className="text-xs text-slate-500">{description}</p>
+                <h4 className="font-semibold text-[#d0d0e0] text-sm">{title}</h4>
+                <p className="text-xs text-[#8888b0]">{description}</p>
               </div>
             </div>
             {status === 'good' ? (
@@ -158,7 +158,7 @@ const FinancialRatios = ({ transactions }) => {
               <p className={`text-3xl font-bold ${colors.text}`}>
                 {displayValue}{unit}
               </p>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-[#6868a0] mt-1">
                 Referencia: {inverse ? '<' : '>'}{benchmark.good}{unit}
               </p>
             </div>
@@ -206,12 +206,12 @@ const FinancialRatios = ({ transactions }) => {
     };
 
     return (
-      <div className="bg-[#1a1a2e] rounded-xl shadow-sm border border-slate-100 p-4">
-        <p className="text-sm text-slate-500 mb-1">{label}</p>
+      <div className="bg-[#1a1a2e] rounded-xl shadow-sm border border-[#2a2a4a] p-4">
+        <p className="text-sm text-[#8888b0] mb-1">{label}</p>
         <p className={`text-2xl font-bold bg-gradient-to-r ${colorClasses[color]} bg-clip-text text-transparent`}>
           {value}
         </p>
-        {subvalue && <p className="text-xs text-slate-400 mt-1">{subvalue}</p>}
+        {subvalue && <p className="text-xs text-[#6868a0] mt-1">{subvalue}</p>}
       </div>
     );
   };
@@ -281,8 +281,8 @@ const FinancialRatios = ({ transactions }) => {
             <Wallet className="text-blue-600" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-800">Ratios de Liquidez</h3>
-            <p className="text-sm text-slate-500">Capacidad para cumplir obligaciones a corto plazo</p>
+            <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Liquidez</h3>
+            <p className="text-sm text-[#8888b0]">Capacidad para cumplir obligaciones a corto plazo</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -328,8 +328,8 @@ const FinancialRatios = ({ transactions }) => {
             <Clock className="text-amber-600" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-800">Ratios de Actividad</h3>
-            <p className="text-sm text-slate-500">Eficiencia en la gestión de cobros y pagos</p>
+            <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Actividad</h3>
+            <p className="text-sm text-[#8888b0]">Eficiencia en la gestión de cobros y pagos</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -378,8 +378,8 @@ const FinancialRatios = ({ transactions }) => {
             <Percent className="text-emerald-600" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-800">Ratios de Rentabilidad</h3>
-            <p className="text-sm text-slate-500">Capacidad para generar utilidades</p>
+            <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Rentabilidad</h3>
+            <p className="text-sm text-[#8888b0]">Capacidad para generar utilidades</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -425,8 +425,8 @@ const FinancialRatios = ({ transactions }) => {
             <Target className="text-indigo-600" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-800">Ratios de Eficiencia</h3>
-            <p className="text-sm text-slate-500">Optimización de recursos operativos</p>
+            <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Eficiencia</h3>
+            <p className="text-sm text-[#8888b0]">Optimización de recursos operativos</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -459,14 +459,14 @@ const FinancialRatios = ({ transactions }) => {
       </div>
 
       {/* Comparison Chart */}
-      <div className="bg-[#1a1a2e] rounded-xl shadow-sm border border-slate-100 p-6">
+      <div className="bg-[#1a1a2e] rounded-xl shadow-sm border border-[#2a2a4a] p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-purple-100 rounded-lg">
             <BarChart3 className="text-purple-600" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-slate-800">Comparativa vs Benchmark</h3>
-            <p className="text-sm text-slate-500">Indicadores principales vs valores de referencia</p>
+            <h3 className="text-lg font-bold text-[#d0d0e0]">Comparativa vs Benchmark</h3>
+            <p className="text-sm text-[#8888b0]">Indicadores principales vs valores de referencia</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={300}>
