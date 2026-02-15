@@ -45,7 +45,7 @@ const VIEW_TITLES = {
 
 // Skeleton Loading Component
 const SkeletonCard = () => (
-  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+  <div className="bg-[#1a1a2e] p-6 rounded-2xl shadow-sm border border-[#2a2a4a]">
     <div className="flex items-center justify-between">
       <div className="flex-1">
         <div className="skeleton h-4 w-24 mb-2"></div>
@@ -61,10 +61,10 @@ const LoadingState = () => (
     <div className="flex items-center justify-center py-12">
       <div className="flex flex-col items-center gap-4">
         <div className="relative">
-          <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
-          <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full"></div>
+          <Loader2 className="w-10 h-10 text-[#00C853] animate-spin" />
+          <div className="absolute inset-0 bg-[#00C853]/20 blur-xl rounded-full"></div>
         </div>
-        <p className="text-slate-500 font-medium">Cargando datos financieros...</p>
+        <p className="text-[#9898b8] font-medium">Cargando datos financieros...</p>
       </div>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -73,7 +73,7 @@ const LoadingState = () => (
       <SkeletonCard />
       <SkeletonCard />
     </div>
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+    <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
       <div className="skeleton h-6 w-48 mb-6"></div>
       <div className="space-y-3">
         <div className="skeleton h-12 w-full rounded-lg"></div>

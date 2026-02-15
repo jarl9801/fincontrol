@@ -187,7 +187,7 @@ const TransactionFormModal = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
       <div className="bg-[#1a1a2e] rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-scaleIn max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="px-6 py-5 border-b border-[#2a2a4a] flex justify-between items-center bg-gradient-to-r from-slate-50 to-white">
+        <div className="px-6 py-5 border-b border-[#2a2a4a] flex justify-between items-center bg-[#1e1e38]">
           <div>
             <h3 className="font-bold text-xl text-[#d0d0e0]">
               {editingTransaction ? 'Editar Transacción' : 'Nueva Transacción'}

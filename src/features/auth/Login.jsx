@@ -34,7 +34,7 @@ const Login = () => {
             <input
               type="email"
               required
-              className="w-full px-4 py-3 border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 bg-[#252540] text-[#e8e8f0] border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-[#00C853] focus:border-transparent outline-none placeholder-[#6868a0]"
               value={loginData.email}
               onChange={(e) => setLoginData({...loginData, email: e.target.value})}
               placeholder="usuario@umtelkomd.com"
@@ -46,7 +46,7 @@ const Login = () => {
             <input
               type="password"
               required
-              className="w-full px-4 py-3 border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 bg-[#252540] text-[#e8e8f0] border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-[#00C853] focus:border-transparent outline-none placeholder-[#6868a0]"
               value={loginData.password}
               onChange={(e) => setLoginData({...loginData, password: e.target.value})}
               placeholder="********"
@@ -61,7 +61,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors shadow-md"
+            className="w-full bg-[#00C853] hover:bg-[#00b348] text-white font-bold py-3 rounded-lg transition-colors shadow-md"
           >
             Iniciar Sesión
           </button>
