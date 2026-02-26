@@ -160,7 +160,7 @@ function App() {
       case 'report-cxc':
         return <ReportCXC transactions={filteredTransactions} />;
       case 'cashflow':
-        return <CashFlow transactions={filteredTransactions} user={user} />;
+        return <CashFlow user={user} />;
       case 'categories':
         return <Categories user={user} />;
       case 'cost-centers':
