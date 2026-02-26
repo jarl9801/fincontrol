@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from './hooks/useAuth';
 import { useTransactions } from './hooks/useTransactions';
+import { useAllTransactions } from './hooks/useAllTransactions';
 import { useTransactionActions } from './hooks/useTransactionActions';
 import { useFilters } from './hooks/useFilters';
 import { useCategories } from './hooks/useCategories';
@@ -86,6 +87,7 @@ const LoadingState = () => (
 function App() {
   const { user, userRole, loading: authLoading } = useAuth();
   const { transactions, loading: transactionsLoading } = useTransactions(user);
+  const { allTransactions, loading: allTxLoading } = useAllTransactions(user);
   const { createTransaction } = useTransactionActions(user);
   const { expenseCategories, incomeCategories } = useCategories(user);
   const { costCenters } = useCostCenters(user);
@@ -142,7 +144,7 @@ function App() {
 
     switch (view) {
       case 'dashboard':
-        return userRole === 'admin' ? <Dashboard transactions={filteredTransactions} user={user} /> : null;
+        return userRole === 'admin' ? <Dashboard transactions={filteredTransactions} allTransactions={allTransactions} user={user} /> : null;
       case 'transactions':
         return <TransactionList {...commonProps} />;
       case 'cxp':
@@ -150,11 +152,11 @@ function App() {
       case 'cxc':
         return <CXC {...commonProps} />;
       case 'executive-summary':
-        return <ExecutiveSummary transactions={filteredTransactions} />;
+        return <ExecutiveSummary transactions={filteredTransactions} allTransactions={allTransactions} />;
       case 'reports':
-        return <Reports transactions={filteredTransactions} />;
+        return <Reports transactions={filteredTransactions} allTransactions={allTransactions} />;
       case 'financial-ratios':
-        return <FinancialRatios transactions={filteredTransactions} />;
+        return <FinancialRatios transactions={filteredTransactions} allTransactions={allTransactions} />;
       case 'report-cxp':
         return <ReportCXP transactions={filteredTransactions} />;
       case 'report-cxc':

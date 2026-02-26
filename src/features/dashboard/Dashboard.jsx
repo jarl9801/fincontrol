@@ -18,15 +18,21 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell
 } from 'recharts';
 import Card from '../../components/ui/Card';
+import PeriodSelector, { usePeriodSelector } from '../../components/ui/PeriodSelector';
 import { useMetrics } from '../../hooks/useMetrics';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { COLORS, ALERT_THRESHOLDS } from '../../constants/config';
 
 const CHART_COLORS = ['#0a84ff', '#30d158', '#ff9f0a', '#ff453a', '#bf5af2', '#64d2ff'];
 
-const Dashboard = ({ transactions, user }) => {
+const Dashboard = ({ transactions, allTransactions, user }) => {
   const [selectedProject, setSelectedProject] = useState(null);
-  const metrics = useMetrics(transactions);
+  const period = usePeriodSelector(2026);
+  
+  // Use allTransactions if available, otherwise fall back to transactions
+  const sourceData = allTransactions && allTransactions.length > 0 ? allTransactions : transactions;
+  const filteredByPeriod = period.filterTransactions(sourceData);
+  const metrics = useMetrics(filteredByPeriod);
 
   if (selectedProject) {
     return (
@@ -61,17 +67,18 @@ const Dashboard = ({ transactions, user }) => {
 
   return (
     <div className="space-y-8 animate-fadeIn">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div>
-          <h2 className="text-xl font-semibold text-[#e5e5ea]">Dashboard Financiero</h2>
-          <p className="text-sm text-[#636366] mt-0.5">
-            {new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
+      {/* Header + Period Selector */}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-semibold text-[#e5e5ea]">Dashboard Financiero</h2>
+            <p className="text-sm text-[#636366] mt-0.5">{period.periodLabel}</p>
+          </div>
+          <span className="text-xs font-medium text-[#8e8e93] bg-[#2c2c2e] px-3 py-1.5 rounded-full">
+            {filteredByPeriod.length} transacciones
+          </span>
         </div>
-        <span className="text-xs font-medium text-[#8e8e93] bg-[#2c2c2e] px-3 py-1.5 rounded-full">
-          {transactions.length} transacciones
-        </span>
+        <PeriodSelector {...period} />
       </div>
 
       {/* Alerts */}
@@ -546,7 +553,7 @@ const Dashboard = ({ transactions, user }) => {
                 </tr>
               </thead>
               <tbody>
-                {transactions.slice(0, 10).map((t, idx) => (
+                {filteredByPeriod.slice(0, 10).map((t, idx) => (
                   <tr key={t.id} className="border-b border-[rgba(255,255,255,0.08)] last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                     <td className="py-3 px-4 text-[#8e8e93]">{formatDate(t.date)}</td>
                     <td className="py-3 px-4">
@@ -565,7 +572,7 @@ const Dashboard = ({ transactions, user }) => {
                     </td>
                   </tr>
                 ))}
-                {transactions.length === 0 && (
+                {filteredByPeriod.length === 0 && (
                   <tr>
                     <td colSpan="4" className="text-center py-10 text-[#636366] text-sm">
                       No hay transacciones registradas
