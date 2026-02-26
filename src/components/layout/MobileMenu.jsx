@@ -59,7 +59,7 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
         {isActive && (
           <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-[rgba(10,132,255,0.12)] rounded-r-md" />
         )}
-        <Icon size={20} className={isActive ? 'text-blue-400' : 'text-[#636366]'} />
+        <Icon size={20} className={isActive ? 'text-[#0a84ff]' : 'text-[#636366]'} />
         <span className="flex-1 text-left">{label}</span>
       </button>
     );
@@ -75,7 +75,7 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
     <div className="fixed inset-0 z-50 md:hidden">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-fadeIn"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fadeIn"
         onClick={onClose}
       />
 
@@ -88,7 +88,7 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
         <div className="p-5 border-b border-[rgba(255,255,255,0.06)]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 bg-[#0a84ff] rounded-xl flex items-center justify-center shadow-lg">
                 <Briefcase className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -106,10 +106,10 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
 
           {/* User Info */}
           <div className="mt-4 p-3 bg-[rgba(255,255,255,0.04)] rounded-xl border border-[rgba(255,255,255,0.06)]">
-            <p className="text-sm font-medium text-slate-200 truncate">{user?.email}</p>
+            <p className="text-sm font-medium text-white/80 truncate">{user?.email}</p>
             <span className={`
               inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase
-              ${userRole === 'admin' ? 'bg-[rgba(191,90,242,0.12)] text-purple-300' : 'bg-[rgba(10,132,255,0.12)] text-blue-300'}
+              ${userRole === 'admin' ? 'bg-[rgba(191,90,242,0.12)] text-[#bf5af2]' : 'bg-[rgba(10,132,255,0.12)] text-[#0a84ff]'}
             `}>
               {userRole === 'admin' ? 'Administrador' : 'Editor'}
             </span>
@@ -150,7 +150,7 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, view, setView, onNewTrans
         <div className="p-4 border-t border-[rgba(255,255,255,0.06)] space-y-3">
           <button
             onClick={handleNewTransactionClick}
-            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3.5 rounded-xl font-semibold shadow-lg transition-all"
+            className="flex items-center justify-center gap-2 w-full bg-[#0a84ff] hover:bg-[#0070e0] text-white px-4 py-3.5 rounded-xl font-semibold shadow-lg transition-all"
           >
             <Plus size={20} /> Nueva Transaccion
           </button>

@@ -45,13 +45,13 @@ const VIEW_TITLES = {
 
 // Skeleton Loading Component
 const SkeletonCard = () => (
-  <div className="bg-[#1c1c1e] p-6 rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)]">
+  <div className="bg-[rgba(28,28,30,0.8)] p-5 rounded-2xl border border-[rgba(255,255,255,0.06)]" style={{ backdropFilter: 'blur(40px)' }}>
     <div className="flex items-center justify-between">
       <div className="flex-1">
-        <div className="skeleton h-4 w-24 mb-2"></div>
-        <div className="skeleton h-8 w-32"></div>
+        <div className="skeleton h-3 w-20 mb-2"></div>
+        <div className="skeleton h-7 w-28"></div>
       </div>
-      <div className="skeleton w-12 h-12 rounded-xl"></div>
+      <div className="skeleton w-10 h-10 rounded-xl"></div>
     </div>
   </div>
 );
@@ -61,10 +61,9 @@ const LoadingState = () => (
     <div className="flex items-center justify-center py-12">
       <div className="flex flex-col items-center gap-4">
         <div className="relative">
-          <Loader2 className="w-10 h-10 text-[#00C853] animate-spin" />
-          <div className="absolute inset-0 bg-[#00C853]/20 blur-xl rounded-full"></div>
+          <Loader2 className="w-8 h-8 text-[#30d158] animate-spin" />
         </div>
-        <p className="text-[#98989d] font-medium">Cargando datos financieros...</p>
+        <p className="text-[#8e8e93] text-sm">Cargando datos financieros...</p>
       </div>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -192,10 +191,10 @@ function App() {
             <div className="flex items-center gap-3">
               <MobileMenuButton onClick={() => setIsMobileMenuOpen(true)} />
               <div>
-                <h2 className="text-xl md:text-2xl font-bold text-[#ffffff]">
+                <h2 className="text-[17px] md:text-[20px] font-semibold text-white tracking-tight">
                   {VIEW_TITLES[view] || 'Dashboard'}
                 </h2>
-                <p className="text-xs text-[#636366] hidden md:block">
+                <p className="text-[11px] text-[#8e8e93] hidden md:block mt-0.5">
                   {new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                 </p>
               </div>
@@ -203,9 +202,9 @@ function App() {
 
             {!loading && (
               <div className="hidden md:flex items-center gap-4">
-                <div className="flex items-center gap-2 px-4 py-2 bg-[#2c2c2e] rounded-xl border border-[rgba(255,255,255,0.08)] shadow-sm">
-                  <div className="w-2 h-2 bg-[#00C853] rounded-full animate-pulse"></div>
-                  <span className="text-sm text-[#98989d]">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-[rgba(255,255,255,0.06)] rounded-lg">
+                  <div className="w-1.5 h-1.5 bg-[#30d158] rounded-full animate-pulse"></div>
+                  <span className="text-[12px] text-[#8e8e93]">
                     {filteredTransactions.length} transacciones
                   </span>
                 </div>

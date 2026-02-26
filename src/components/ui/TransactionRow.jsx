@@ -13,7 +13,7 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
     const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'));
     return parts.map((part, i) =>
       part.toLowerCase() === searchTerm.toLowerCase() ?
-        <mark key={i} className="bg-[rgba(245,158,11,0.2)] text-[#fbbf24] rounded px-0.5">{part}</mark> : part
+        <mark key={i} className="bg-[rgba(245,158,11,0.2)] text-[#ff9f0a] rounded px-0.5">{part}</mark> : part
     );
   };
 
@@ -33,20 +33,20 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
       return {
         icon: CheckCircle2,
         text: 'Pagado',
-        class: 'bg-[rgba(16,185,129,0.12)] text-[#34d399] border-[rgba(16,185,129,0.25)]'
+        class: 'bg-[rgba(16,185,129,0.12)] text-[#30d158] border-[rgba(16,185,129,0.25)]'
       };
     }
     if (isOverdue) {
       return {
         icon: Circle,
         text: `Vencido (${daysOverdue}d)`,
-        class: 'bg-[rgba(239,68,68,0.12)] text-[#f87171] border-[rgba(239,68,68,0.25)] ring-1 ring-[rgba(239,68,68,0.2)]'
+        class: 'bg-[rgba(239,68,68,0.12)] text-[#ff453a] border-[rgba(239,68,68,0.25)] ring-1 ring-[rgba(239,68,68,0.2)]'
       };
     }
     return {
       icon: Circle,
       text: 'Pendiente',
-      class: 'bg-[rgba(245,158,11,0.12)] text-[#fbbf24] border-[rgba(245,158,11,0.25)]'
+      class: 'bg-[rgba(245,158,11,0.12)] text-[#ff9f0a] border-[rgba(245,158,11,0.25)]'
     };
   };
 
@@ -64,7 +64,7 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
         <div className="flex flex-col">
           <span className="text-sm font-medium text-[#c7c7cc]">{formatDate(t.date)}</span>
           {isOverdue && (
-            <span className="text-[10px] text-[#f87171] font-medium">Vencido</span>
+            <span className="text-[10px] text-[#ff453a] font-medium">Vencido</span>
           )}
         </div>
       </td>
@@ -77,9 +77,9 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
             ${isIncome ? 'bg-[rgba(16,185,129,0.12)]' : 'bg-[rgba(239,68,68,0.12)]'}
           `}>
             {isIncome ? (
-              <ArrowUpCircle className="w-5 h-5 text-[#34d399]" />
+              <ArrowUpCircle className="w-5 h-5 text-[#30d158]" />
             ) : (
-              <ArrowDownCircle className="w-5 h-5 text-[#f87171]" />
+              <ArrowDownCircle className="w-5 h-5 text-[#ff453a]" />
             )}
           </div>
           
@@ -108,7 +108,7 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
               )}
               
               {commentCount > 0 && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(245,158,11,0.12)] text-[#fbbf24]">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(245,158,11,0.12)] text-[#ff9f0a]">
                   <MessageSquare size={10} />
                   {commentCount}
                 </span>
@@ -130,8 +130,8 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
         <span className={`
           inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium
           ${isIncome 
-            ? 'bg-[rgba(16,185,129,0.1)] text-[#34d399] border border-[rgba(16,185,129,0.2)]' 
-            : 'bg-[rgba(239,68,68,0.1)] text-[#f87171] border border-[rgba(239,68,68,0.2)]'}
+            ? 'bg-[rgba(16,185,129,0.1)] text-[#30d158] border border-[rgba(16,185,129,0.2)]' 
+            : 'bg-[rgba(239,68,68,0.1)] text-[#ff453a] border border-[rgba(239,68,68,0.2)]'}
         `}>
           {t.category}
         </span>
@@ -139,7 +139,7 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
 
       {/* Monto */}
       <td className="px-4 py-4 text-right whitespace-nowrap">
-        <span className={`text-sm font-bold ${isIncome ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
+        <span className={`text-sm font-bold ${isIncome ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
           {isIncome ? '+' : '-'}{formatCurrency(t.amount)}
         </span>
       </td>
@@ -191,7 +191,7 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
           {userRole === 'admin' && (
             <button
               onClick={() => onDelete(t)}
-              className="p-2 text-[#636366] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all duration-200"
+              className="p-2 text-[#636366] hover:text-[#ff453a] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all duration-200"
               title="Eliminar"
             >
               <Trash2 size={16} />

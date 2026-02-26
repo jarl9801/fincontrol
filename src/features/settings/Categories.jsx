@@ -69,7 +69,7 @@ const Categories = ({ user }) => {
           />
           <button
             onClick={handleSaveEdit}
-            className="p-1.5 text-[#34d399] hover:bg-[rgba(16,185,129,0.12)] rounded transition-colors"
+            className="p-1.5 text-[#30d158] hover:bg-[rgba(16,185,129,0.12)] rounded transition-colors"
           >
             <Check size={16} />
           </button>
@@ -89,13 +89,13 @@ const Categories = ({ user }) => {
         <div className="flex items-center gap-1">
           <button
             onClick={() => handleEdit(type, index)}
-            className="p-1.5 text-[#636366] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
+            className="p-1.5 text-[#636366] hover:text-[#0a84ff] hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
           >
             <Edit2 size={14} />
           </button>
           <button
             onClick={() => handleDelete(type, index)}
-            className="p-1.5 text-[#636366] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
+            className="p-1.5 text-[#636366] hover:text-[#ff453a] hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
           >
             <Trash2 size={14} />
           </button>
@@ -107,7 +107,7 @@ const Categories = ({ user }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 text-[#60a5fa] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#0a84ff] animate-spin" />
         <span className="ml-3 text-[#8e8e93]">Cargando categorias...</span>
       </div>
     );
@@ -119,11 +119,11 @@ const Categories = ({ user }) => {
       <div className="bg-[rgba(239,68,68,0.08)] rounded-2xl p-6 border border-[rgba(239,68,68,0.2)]">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-[rgba(239,68,68,0.12)] rounded-lg">
-            <TrendingDown className="text-[#f87171]" size={20} />
+            <TrendingDown className="text-[#ff453a]" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-rose-800">Categorias de Gastos</h3>
-            <p className="text-sm text-[#f87171]">{expenseCategories.length} categorias</p>
+            <h3 className="text-lg font-bold text-[#ff453a]">Categorias de Gastos</h3>
+            <p className="text-sm text-[#ff453a]">{expenseCategories.length} categorias</p>
           </div>
         </div>
 
@@ -156,11 +156,11 @@ const Categories = ({ user }) => {
       <div className="bg-[rgba(16,185,129,0.08)] rounded-2xl p-6 border border-[rgba(16,185,129,0.2)]">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-[rgba(16,185,129,0.12)] rounded-lg">
-            <TrendingUp className="text-[#34d399]" size={20} />
+            <TrendingUp className="text-[#30d158]" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-emerald-800">Categorias de Ingresos</h3>
-            <p className="text-sm text-[#34d399]">{incomeCategories.length} categorias</p>
+            <h3 className="text-lg font-bold text-[#30d158]">Categorias de Ingresos</h3>
+            <p className="text-sm text-[#30d158]">{incomeCategories.length} categorias</p>
           </div>
         </div>
 

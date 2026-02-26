@@ -284,11 +284,11 @@ const ExecutiveSummary = ({ transactions }) => {
 
   const KPICard = ({ title, value, subtitle, icon: Icon, trend, trendValue, color = 'blue' }) => {
     const colorClasses = {
-      blue: 'from-blue-500 to-blue-600',
-      emerald: 'from-emerald-500 to-emerald-600',
-      rose: 'from-rose-500 to-rose-600',
-      amber: 'from-amber-500 to-amber-600',
-      indigo: 'from-indigo-500 to-indigo-600'
+      blue: 'from-[#0a84ff] to-[#0070e0]',
+      emerald: 'from-[#30d158] to-[#28c74e]',
+      rose: 'from-[#ff453a] to-[#e63b31]',
+      amber: 'from-[#ff9f0a] to-[#e68f09]',
+      indigo: 'from-[#5e5ce6] to-[#4f4dd4]'
     };
 
     return (
@@ -300,7 +300,7 @@ const ExecutiveSummary = ({ transactions }) => {
             </div>
             {trend && (
               <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold ${
-                trend === 'up' ? 'bg-[rgba(16,185,129,0.12)] text-[#34d399]' : 'bg-[rgba(239,68,68,0.12)] text-[#f87171]'
+                trend === 'up' ? 'bg-[rgba(16,185,129,0.12)] text-[#30d158]' : 'bg-[rgba(239,68,68,0.12)] text-[#ff453a]'
               }`}>
                 {trend === 'up' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
                 {Math.abs(trendValue).toFixed(1)}%
@@ -326,15 +326,15 @@ const ExecutiveSummary = ({ transactions }) => {
     }
 
     const statusColors = {
-      good: 'bg-[rgba(16,185,129,0.12)] text-[#34d399] border-[rgba(16,185,129,0.25)]',
-      warning: 'bg-[rgba(245,158,11,0.12)] text-[#fbbf24] border-[rgba(245,158,11,0.25)]',
-      bad: 'bg-[rgba(239,68,68,0.12)] text-[#f87171] border-[rgba(239,68,68,0.25)]'
+      good: 'bg-[rgba(16,185,129,0.12)] text-[#30d158] border-[rgba(16,185,129,0.25)]',
+      warning: 'bg-[rgba(245,158,11,0.12)] text-[#ff9f0a] border-[rgba(245,158,11,0.25)]',
+      bad: 'bg-[rgba(239,68,68,0.12)] text-[#ff453a] border-[rgba(239,68,68,0.25)]'
     };
 
     const dotColors = {
-      good: 'bg-[#34d399]',
-      warning: 'bg-[#fbbf24]',
-      bad: 'bg-[#f87171]'
+      good: 'bg-[#30d158]',
+      warning: 'bg-[#ff9f0a]',
+      bad: 'bg-[#ff453a]'
     };
 
     return (
@@ -384,7 +384,7 @@ const ExecutiveSummary = ({ transactions }) => {
                 onClick={() => setMonthDropdownOpen(!monthDropdownOpen)}
                 className={`flex items-center gap-2 px-4 py-2 border text-sm font-medium transition-all ${
                   periodType === 'month'
-                    ? 'bg-slate-800 text-white border-slate-800 shadow-sm'
+                    ? 'bg-[#2c2c2e] text-white border-[rgba(255,255,255,0.08)] shadow-sm'
                     : 'bg-[#1c1c1e] text-[#98989d] border-[rgba(255,255,255,0.08)] hover:bg-[#111111]'
                 }`}
               >
@@ -446,7 +446,7 @@ const ExecutiveSummary = ({ transactions }) => {
               onClick={() => setSelectedPeriod(period.key)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                 periodType === period.key
-                  ? 'bg-slate-800 text-white shadow-sm'
+                  ? 'bg-[#2c2c2e] text-white shadow-sm'
                   : 'bg-[#111111] text-[#98989d] hover:bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)]'
               }`}
             >
@@ -470,7 +470,7 @@ const ExecutiveSummary = ({ transactions }) => {
       </div>
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-6 text-white">
+      <div className="bg-gradient-to-r from-[#2c2c2e] to-[#1c1c1e] rounded-2xl p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">Resumen Ejecutivo</h2>
@@ -478,7 +478,7 @@ const ExecutiveSummary = ({ transactions }) => {
           </div>
           <div className="text-right">
             <p className="text-sm text-[#636366]">Utilidad YTD</p>
-            <p className={`text-3xl font-bold ${ytdProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+            <p className={`text-3xl font-bold ${ytdProfit >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
               {formatCurrency(ytdProfit)}
             </p>
           </div>
@@ -529,7 +529,7 @@ const ExecutiveSummary = ({ transactions }) => {
         <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-[rgba(59,130,246,0.12)] rounded-lg">
-              <Activity className="text-[#60a5fa]" size={20} />
+              <Activity className="text-[#0a84ff]" size={20} />
             </div>
             <div>
               <h3 className="font-bold text-[#e5e5ea]">Indicadores de Liquidez</h3>
@@ -548,7 +548,7 @@ const ExecutiveSummary = ({ transactions }) => {
         <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-[rgba(16,185,129,0.12)] rounded-lg">
-              <Percent className="text-[#34d399]" size={20} />
+              <Percent className="text-[#30d158]" size={20} />
             </div>
             <div>
               <h3 className="font-bold text-[#e5e5ea]">Indicadores de Rentabilidad</h3>
@@ -580,7 +580,7 @@ const ExecutiveSummary = ({ transactions }) => {
         <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-[rgba(245,158,11,0.12)] rounded-lg">
-              <AlertTriangle className="text-[#fbbf24]" size={20} />
+              <AlertTriangle className="text-[#ff9f0a]" size={20} />
             </div>
             <div>
               <h3 className="font-bold text-[#e5e5ea]">Alertas Financieras</h3>
@@ -599,19 +599,19 @@ const ExecutiveSummary = ({ transactions }) => {
                 }`}
               >
                 {alert.type === 'success' ? (
-                  <CheckCircle2 className="text-[#34d399] flex-shrink-0 mt-0.5" size={16} />
+                  <CheckCircle2 className="text-[#30d158] flex-shrink-0 mt-0.5" size={16} />
                 ) : (
                   <AlertTriangle className={`flex-shrink-0 mt-0.5 ${
-                    alert.type === 'danger' ? 'text-[#f87171]' :
-                    alert.type === 'warning' ? 'text-[#fbbf24]' :
-                    'text-[#60a5fa]'
+                    alert.type === 'danger' ? 'text-[#ff453a]' :
+                    alert.type === 'warning' ? 'text-[#ff9f0a]' :
+                    'text-[#0a84ff]'
                   }`} size={16} />
                 )}
                 <span className={`text-sm ${
-                  alert.type === 'danger' ? 'text-[#f87171]' :
-                  alert.type === 'warning' ? 'text-[#fbbf24]' :
-                  alert.type === 'success' ? 'text-[#34d399]' :
-                  'text-[#60a5fa]'
+                  alert.type === 'danger' ? 'text-[#ff453a]' :
+                  alert.type === 'warning' ? 'text-[#ff9f0a]' :
+                  alert.type === 'success' ? 'text-[#30d158]' :
+                  'text-[#0a84ff]'
                 }`}>
                   {alert.text}
                 </span>
@@ -624,7 +624,7 @@ const ExecutiveSummary = ({ transactions }) => {
         <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-[rgba(99,102,241,0.12)] rounded-lg">
-              <Lightbulb className="text-[#818cf8]" size={20} />
+              <Lightbulb className="text-[#5e5ce6]" size={20} />
             </div>
             <div>
               <h3 className="font-bold text-[#e5e5ea]">Recomendaciones</h3>
@@ -634,13 +634,13 @@ const ExecutiveSummary = ({ transactions }) => {
           <div className="space-y-2">
             {recommendations.length > 0 ? recommendations.map((rec, idx) => (
               <div key={idx} className="flex items-start gap-3 p-3 rounded-xl bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.25)]">
-                <Target className="text-[#818cf8] flex-shrink-0 mt-0.5" size={16} />
-                <span className="text-sm text-[#818cf8]">{rec}</span>
+                <Target className="text-[#5e5ce6] flex-shrink-0 mt-0.5" size={16} />
+                <span className="text-sm text-[#5e5ce6]">{rec}</span>
               </div>
             )) : (
               <div className="flex items-start gap-3 p-3 rounded-xl bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.25)]">
-                <CheckCircle2 className="text-[#34d399] flex-shrink-0 mt-0.5" size={16} />
-                <span className="text-sm text-[#34d399]">
+                <CheckCircle2 className="text-[#30d158] flex-shrink-0 mt-0.5" size={16} />
+                <span className="text-sm text-[#30d158]">
                   No hay recomendaciones urgentes. Mantener buenas prácticas financieras.
                 </span>
               </div>
@@ -653,7 +653,7 @@ const ExecutiveSummary = ({ transactions }) => {
       <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-[rgba(59,130,246,0.12)] rounded-lg">
-            <BarChart3 className="text-[#60a5fa]" size={20} />
+            <BarChart3 className="text-[#0a84ff]" size={20} />
           </div>
           <div>
             <h3 className="font-bold text-[#e5e5ea]">Tendencia Últimos 6 Meses</h3>
@@ -664,12 +664,12 @@ const ExecutiveSummary = ({ transactions }) => {
           <AreaChart data={last6Months}>
             <defs>
               <linearGradient id="colorIngresos" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#30d158" stopOpacity={0.2}/>
+                <stop offset="95%" stopColor="#30d158" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="colorGastos" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.2}/>
-                <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#ff453a" stopOpacity={0.2}/>
+                <stop offset="95%" stopColor="#ff453a" stopOpacity={0}/>
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.08)" />
@@ -677,9 +677,9 @@ const ExecutiveSummary = ({ transactions }) => {
             <YAxis axisLine={false} tickLine={false} tick={{ fill: '#636366', fontSize: 11 }} tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Area type="monotone" dataKey="ingresos" name="Ingresos" stroke="#10b981" strokeWidth={2} fill="url(#colorIngresos)" />
-            <Area type="monotone" dataKey="gastos" name="Gastos" stroke="#f43f5e" strokeWidth={2} fill="url(#colorGastos)" />
-            <Line type="monotone" dataKey="utilidad" name="Utilidad" stroke="#3b82f6" strokeWidth={3} dot={{ fill: '#3b82f6', r: 4 }} />
+            <Area type="monotone" dataKey="ingresos" name="Ingresos" stroke="#30d158" strokeWidth={2} fill="url(#colorIngresos)" />
+            <Area type="monotone" dataKey="gastos" name="Gastos" stroke="#ff453a" strokeWidth={2} fill="url(#colorGastos)" />
+            <Line type="monotone" dataKey="utilidad" name="Utilidad" stroke="#0a84ff" strokeWidth={3} dot={{ fill: '#0a84ff', r: 4 }} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
@@ -689,10 +689,10 @@ const ExecutiveSummary = ({ transactions }) => {
         <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] overflow-hidden">
           <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] bg-[rgba(245,158,11,0.08)]">
             <div className="flex items-center gap-3">
-              <AlertTriangle className="text-[#fbbf24]" size={20} />
+              <AlertTriangle className="text-[#ff9f0a]" size={20} />
               <div>
-                <h3 className="font-bold text-amber-800">Proyectos con Margen Bajo (&lt;20%)</h3>
-                <p className="text-xs text-[#fbbf24]">Requieren atención para mejorar rentabilidad</p>
+                <h3 className="font-bold text-[#ff9f0a]">Proyectos con Margen Bajo (&lt;20%)</h3>
+                <p className="text-xs text-[#ff9f0a]">Requieren atención para mejorar rentabilidad</p>
               </div>
             </div>
           </div>
@@ -712,14 +712,14 @@ const ExecutiveSummary = ({ transactions }) => {
                   {projectsWithLowMargin.slice(0, 5).map((p, idx) => (
                     <tr key={idx} className="hover:bg-[#111111]">
                       <td className="px-4 py-3 font-medium text-[#c7c7cc]">{p.name}</td>
-                      <td className="px-4 py-3 text-right text-[#34d399]">{formatCurrency(p.ingresos)}</td>
-                      <td className="px-4 py-3 text-right text-[#f87171]">{formatCurrency(p.gastos)}</td>
-                      <td className={`px-4 py-3 text-right font-bold ${p.margin >= 0 ? 'text-[#fbbf24]' : 'text-[#f87171]'}`}>
+                      <td className="px-4 py-3 text-right text-[#30d158]">{formatCurrency(p.ingresos)}</td>
+                      <td className="px-4 py-3 text-right text-[#ff453a]">{formatCurrency(p.gastos)}</td>
+                      <td className={`px-4 py-3 text-right font-bold ${p.margin >= 0 ? 'text-[#ff9f0a]' : 'text-[#ff453a]'}`}>
                         {p.margin.toFixed(1)}%
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          p.margin < 0 ? 'bg-[rgba(239,68,68,0.12)] text-[#f87171]' : 'bg-[rgba(245,158,11,0.12)] text-[#fbbf24]'
+                          p.margin < 0 ? 'bg-[rgba(239,68,68,0.12)] text-[#ff453a]' : 'bg-[rgba(245,158,11,0.12)] text-[#ff9f0a]'
                         }`}>
                           {p.margin < 0 ? 'Pérdida' : 'Bajo Margen'}
                         </span>

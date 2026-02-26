@@ -184,10 +184,10 @@ const CostCenters = ({ user }) => {
             </div>
             <div className={`rounded-lg px-3 py-2 ${getProgressBgColor(ytdPercent)}`}>
               <span className="text-[#8e8e93]">YTD: </span>
-              <span className={`font-bold ${ytdPercent > 100 ? 'text-[#f87171]' : ytdPercent > 80 ? 'text-[#fbbf24]' : 'text-[#34d399]'}`}>
+              <span className={`font-bold ${ytdPercent > 100 ? 'text-[#ff453a]' : ytdPercent > 80 ? 'text-[#ff9f0a]' : 'text-[#30d158]'}`}>
                 {formatCurrency(ytdExecuted)} / {formatCurrency(ytdBudget)}
               </span>
-              <span className={`ml-2 text-xs font-medium ${ytdPercent > 100 ? 'text-[#f87171]' : ytdPercent > 80 ? 'text-[#fbbf24]' : 'text-[#34d399]'}`}>
+              <span className={`ml-2 text-xs font-medium ${ytdPercent > 100 ? 'text-[#ff453a]' : ytdPercent > 80 ? 'text-[#ff9f0a]' : 'text-[#30d158]'}`}>
                 ({ytdPercent.toFixed(0)}%)
               </span>
             </div>
@@ -211,7 +211,7 @@ const CostCenters = ({ user }) => {
                 }`}
               >
                 <div className="text-center mb-2">
-                  <p className={`text-xs font-bold ${isCurrentMonth ? 'text-[#60a5fa]' : 'text-[#98989d]'}`}>
+                  <p className={`text-xs font-bold ${isCurrentMonth ? 'text-[#0a84ff]' : 'text-[#98989d]'}`}>
                     {data.month}
                   </p>
                 </div>
@@ -232,9 +232,9 @@ const CostCenters = ({ user }) => {
 
                 <div className="mt-2 text-center">
                   <p className={`text-xs font-bold ${
-                    percent > 100 ? 'text-[#f87171]' :
-                    percent > 80 ? 'text-[#fbbf24]' :
-                    percent > 0 ? 'text-[#34d399]' :
+                    percent > 100 ? 'text-[#ff453a]' :
+                    percent > 80 ? 'text-[#ff9f0a]' :
+                    percent > 0 ? 'text-[#30d158]' :
                     'text-[#636366]'
                   }`}>
                     {percent > 0 ? `${percent.toFixed(0)}%` : '-'}
@@ -281,14 +281,14 @@ const CostCenters = ({ user }) => {
           <td className="px-4 py-4 text-sm font-medium text-[#e5e5ea]">{center.name}</td>
           <td className="px-4 py-4">
             <span className={`px-2 py-1 text-xs font-medium rounded ${
-              center.type === 'Costos' ? 'bg-[rgba(239,68,68,0.12)] text-[#f87171]' : 'bg-[rgba(16,185,129,0.12)] text-[#34d399]'
+              center.type === 'Costos' ? 'bg-[rgba(239,68,68,0.12)] text-[#ff453a]' : 'bg-[rgba(16,185,129,0.12)] text-[#30d158]'
             }`}>
               {center.type}
             </span>
           </td>
           <td className="px-4 py-4 text-sm text-[#98989d]">{formatCurrency(center.budget)}</td>
           <td className="px-4 py-4 text-sm text-[#8e8e93]">{formatCurrency(center.budget / 12)}/mes</td>
-          <td className="px-4 py-4 text-sm font-medium text-[#f87171]">{formatCurrency(ytdExecuted)}</td>
+          <td className="px-4 py-4 text-sm font-medium text-[#ff453a]">{formatCurrency(ytdExecuted)}</td>
           <td className="px-4 py-4">
             <div className="flex items-center gap-2">
               <div className="w-20 h-2.5 bg-[#2c2c2e] rounded-full overflow-hidden">
@@ -298,9 +298,9 @@ const CostCenters = ({ user }) => {
                 />
               </div>
               <span className={`text-xs font-bold ${
-                utilization > 100 ? 'text-[#f87171]' :
-                utilization > 80 ? 'text-[#fbbf24]' :
-                'text-[#34d399]'
+                utilization > 100 ? 'text-[#ff453a]' :
+                utilization > 80 ? 'text-[#ff9f0a]' :
+                'text-[#30d158]'
               }`}>
                 {utilization.toFixed(0)}%
               </span>
@@ -312,7 +312,7 @@ const CostCenters = ({ user }) => {
               <button
                 onClick={() => setExpandedCenter(isExpanded ? null : center.id)}
                 className={`p-1.5 rounded transition-colors ${
-                  isExpanded ? 'text-[#60a5fa] bg-[rgba(59,130,246,0.08)]' : 'text-[#636366] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)]'
+                  isExpanded ? 'text-[#0a84ff] bg-[rgba(59,130,246,0.08)]' : 'text-[#636366] hover:text-[#0a84ff] hover:bg-[rgba(59,130,246,0.08)]'
                 }`}
                 title="Ver detalle mensual"
               >
@@ -320,13 +320,13 @@ const CostCenters = ({ user }) => {
               </button>
               <button
                 onClick={() => onEdit(center)}
-                className="p-1.5 text-[#636366] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
+                className="p-1.5 text-[#636366] hover:text-[#0a84ff] hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
               >
                 <Edit2 size={14} />
               </button>
               <button
                 onClick={() => onDelete(center.id)}
-                className="p-1.5 text-[#636366] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
+                className="p-1.5 text-[#636366] hover:text-[#ff453a] hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
               >
                 <Trash2 size={14} />
               </button>
@@ -347,7 +347,7 @@ const CostCenters = ({ user }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 text-[#60a5fa] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#0a84ff] animate-spin" />
         <span className="ml-3 text-[#8e8e93]">Cargando centros de costo...</span>
       </div>
     );
@@ -367,46 +367,46 @@ const CostCenters = ({ user }) => {
         <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-[rgba(239,68,68,0.12)] rounded-lg">
-              <TrendingDown className="text-[#f87171]" size={20} />
+              <TrendingDown className="text-[#ff453a]" size={20} />
             </div>
-            <h3 className="font-bold text-rose-800">Centros de Costos</h3>
+            <h3 className="font-bold text-[#ff453a]">Centros de Costos</h3>
           </div>
-          <p className="text-2xl font-bold text-[#f87171]">{costCenters.length}</p>
+          <p className="text-2xl font-bold text-[#ff453a]">{costCenters.length}</p>
           <p className="text-xs text-[#8e8e93]">activos</p>
         </div>
 
         <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-[rgba(59,130,246,0.12)] rounded-lg">
-              <BarChart3 className="text-[#60a5fa]" size={20} />
+              <BarChart3 className="text-[#0a84ff]" size={20} />
             </div>
-            <h3 className="font-bold text-blue-800">Presupuesto Anual</h3>
+            <h3 className="font-bold text-[#0a84ff]">Presupuesto Anual</h3>
           </div>
-          <p className="text-2xl font-bold text-[#60a5fa]">{formatCurrency(totalBudget)}</p>
+          <p className="text-2xl font-bold text-[#0a84ff]">{formatCurrency(totalBudget)}</p>
           <p className="text-xs text-[#8e8e93]">{formatCurrency(totalBudget / 12)}/mes</p>
         </div>
 
         <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-[rgba(245,158,11,0.12)] rounded-lg">
-              <TrendingUpDown className="text-[#fbbf24]" size={20} />
+              <TrendingUpDown className="text-[#ff9f0a]" size={20} />
             </div>
-            <h3 className="font-bold text-amber-800">Ejecutado YTD</h3>
+            <h3 className="font-bold text-[#ff9f0a]">Ejecutado YTD</h3>
           </div>
-          <p className="text-2xl font-bold text-[#fbbf24]">{formatCurrency(totalExecuted)}</p>
+          <p className="text-2xl font-bold text-[#ff9f0a]">{formatCurrency(totalExecuted)}</p>
           <p className="text-xs text-[#8e8e93]">de {formatCurrency(ytdBudget)} presupuestado</p>
         </div>
 
         <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center gap-3 mb-3">
             <div className={`p-2 rounded-lg ${getProgressBgColor(overallUtilization)}`}>
-              <Calendar className={`${overallUtilization > 100 ? 'text-[#f87171]' : overallUtilization > 80 ? 'text-[#fbbf24]' : 'text-[#34d399]'}`} size={20} />
+              <Calendar className={`${overallUtilization > 100 ? 'text-[#ff453a]' : overallUtilization > 80 ? 'text-[#ff9f0a]' : 'text-[#30d158]'}`} size={20} />
             </div>
-            <h3 className={`font-bold ${overallUtilization > 100 ? 'text-rose-800' : overallUtilization > 80 ? 'text-amber-800' : 'text-emerald-800'}`}>
+            <h3 className={`font-bold ${overallUtilization > 100 ? 'text-[#ff453a]' : overallUtilization > 80 ? 'text-[#ff9f0a]' : 'text-[#30d158]'}`}>
               Utilización YTD
             </h3>
           </div>
-          <p className={`text-2xl font-bold ${overallUtilization > 100 ? 'text-[#f87171]' : overallUtilization > 80 ? 'text-[#fbbf24]' : 'text-[#34d399]'}`}>
+          <p className={`text-2xl font-bold ${overallUtilization > 100 ? 'text-[#ff453a]' : overallUtilization > 80 ? 'text-[#ff9f0a]' : 'text-[#30d158]'}`}>
             {overallUtilization.toFixed(1)}%
           </p>
           <div className="w-full h-2 bg-[#2c2c2e] rounded-full overflow-hidden mt-2">
@@ -432,7 +432,7 @@ const CostCenters = ({ user }) => {
             setNewCenter({ name: '', type: 'Costos', budget: 0, responsible: '' });
             setShowNewModal(true);
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#2c2c2e] hover:bg-[#1c1c1e] text-white rounded-lg font-medium transition-colors"
         >
           <Plus size={18} /> Nuevo Centro
         </button>
@@ -442,11 +442,11 @@ const CostCenters = ({ user }) => {
       <div className="bg-[rgba(239,68,68,0.08)] rounded-2xl p-6 border border-[rgba(239,68,68,0.2)]">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-[rgba(239,68,68,0.12)] rounded-lg">
-            <TrendingDown className="text-[#f87171]" size={20} />
+            <TrendingDown className="text-[#ff453a]" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-rose-800">Centros de Costos</h3>
-            <p className="text-sm text-[#f87171]">Click en la flecha para ver detalle mensual</p>
+            <h3 className="text-lg font-bold text-[#ff453a]">Centros de Costos</h3>
+            <p className="text-sm text-[#ff453a]">Click en la flecha para ver detalle mensual</p>
           </div>
         </div>
 
@@ -486,11 +486,11 @@ const CostCenters = ({ user }) => {
         <div className="bg-[rgba(16,185,129,0.08)] rounded-2xl p-6 border border-[rgba(16,185,129,0.2)]">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-[rgba(16,185,129,0.12)] rounded-lg">
-              <TrendingUp className="text-[#34d399]" size={20} />
+              <TrendingUp className="text-[#30d158]" size={20} />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-emerald-800">Centros de Ingresos</h3>
-              <p className="text-sm text-[#34d399]">Solo registra VENTAS</p>
+              <h3 className="text-lg font-bold text-[#30d158]">Centros de Ingresos</h3>
+              <p className="text-sm text-[#30d158]">Solo registra VENTAS</p>
             </div>
           </div>
 
@@ -521,7 +521,7 @@ const CostCenters = ({ user }) => {
 
       {/* Modal */}
       {showNewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="bg-[#1c1c1e] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-scaleIn">
             <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] bg-gradient-to-r from-slate-50 to-white">
               <h3 className="font-bold text-lg text-[#e5e5ea]">

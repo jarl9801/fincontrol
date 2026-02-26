@@ -21,7 +21,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
           });
           onApply();
         }}
-        className="text-sm text-[#60a5fa] hover:text-[#60a5fa]"
+        className="text-sm text-[#0a84ff] hover:text-[#0a84ff]"
       >
         Limpiar filtros
       </button>
@@ -33,7 +33,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         onClick={() => setFilters(prev => ({ ...prev, quickFilter: 'month' }))}
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'month'
-            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#60a5fa]'
+            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#0a84ff]'
             : 'border-[rgba(255,255,255,0.08)] text-[#98989d] hover:bg-[#111111]'
         }`}
       >
@@ -43,7 +43,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         onClick={() => setFilters(prev => ({ ...prev, quickFilter: 'quarter' }))}
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'quarter'
-            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#60a5fa]'
+            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#0a84ff]'
             : 'border-[rgba(255,255,255,0.08)] text-[#98989d] hover:bg-[#111111]'
         }`}
       >
@@ -53,7 +53,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         onClick={() => setFilters(prev => ({ ...prev, quickFilter: 'year' }))}
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'year'
-            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#60a5fa]'
+            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#0a84ff]'
             : 'border-[rgba(255,255,255,0.08)] text-[#98989d] hover:bg-[#111111]'
         }`}
       >
@@ -63,7 +63,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
         onClick={() => setFilters(prev => ({ ...prev, quickFilter: 'all' }))}
         className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
           filters.quickFilter === 'all'
-            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#60a5fa]'
+            ? 'bg-[rgba(59,130,246,0.08)] border-blue-500 text-[#0a84ff]'
             : 'border-[rgba(255,255,255,0.08)] text-[#98989d] hover:bg-[#111111]'
         }`}
       >

@@ -18,13 +18,15 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#000000] items-center justify-center p-4">
-      <div className="bg-[#1c1c1e] rounded-2xl shadow-2xl w-full max-w-md p-8">
-        <div className="flex items-center justify-center gap-3 text-[#60a5fa] mb-8">
-          <Briefcase size={40} />
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">UMTELKOMD</h1>
-            <p className="text-sm text-[#8e8e93]">Sistema Financiero</p>
+    <div className="flex h-screen bg-black items-center justify-center p-4">
+      <div className="bg-[rgba(28,28,30,0.8)] backdrop-blur-xl rounded-2xl w-full max-w-sm p-8 border border-[rgba(255,255,255,0.08)]" style={{ boxShadow: '0 16px 48px rgba(0,0,0,0.6)' }}>
+        <div className="flex flex-col items-center gap-3 mb-8">
+          <div className="w-14 h-14 bg-gradient-to-br from-[#30d158] to-[#0a84ff] rounded-2xl flex items-center justify-center" style={{ boxShadow: '0 4px 16px rgba(48, 209, 88, 0.3)' }}>
+            <Briefcase size={28} className="text-white" />
+          </div>
+          <div className="text-center">
+            <h1 className="text-xl font-bold tracking-tight text-white">UMTELKOMD</h1>
+            <p className="text-[12px] text-[#8e8e93] mt-0.5">Sistema Financiero</p>
           </div>
         </div>
 
@@ -54,14 +56,14 @@ const Login = () => {
           </div>
 
           {loginError && (
-            <div className="bg-[rgba(239,68,68,0.08)] border border-[rgba(239,68,68,0.25)] text-[#f87171] px-4 py-3 rounded-lg text-sm">
+            <div className="bg-[rgba(239,68,68,0.08)] border border-[rgba(239,68,68,0.25)] text-[#ff453a] px-4 py-3 rounded-lg text-sm">
               {loginError}
             </div>
           )}
 
           <button
             type="submit"
-            className="w-full bg-[#00C853] hover:bg-[#00b348] text-white font-bold py-3 rounded-lg transition-colors shadow-md"
+            className="w-full bg-[#30d158] hover:bg-[#28c74e] text-white font-semibold py-3 rounded-xl text-[14px] transition-all"
           >
             Iniciar Sesión
           </button>

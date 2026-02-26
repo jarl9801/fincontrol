@@ -37,23 +37,23 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
       <button
         onClick={() => setView(id)}
         className={`
-          relative flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-150
+          relative flex items-center gap-[10px] w-full px-3 py-[7px] rounded-lg text-[13px] font-medium transition-all duration-150
           ${isActive
-            ? 'bg-[rgba(0,200,83,0.15)] text-white'
-            : 'text-[#636366] hover:bg-[rgba(255,255,255,0.05)] hover:text-white'}
+            ? 'bg-[rgba(255,255,255,0.08)] text-white'
+            : 'text-[#8e8e93] hover:bg-[rgba(255,255,255,0.06)] hover:text-white'}
         `}
       >
         {isActive && (
-          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-[#00C853] rounded-r-md" />
+          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-[#30d158] rounded-r" />
         )}
-        <Icon size={20} className={isActive ? 'text-[#00C853]' : 'text-[#636366]'} />
+        <Icon size={18} className={isActive ? 'text-[#30d158]' : 'text-[#636366]'} />
         <span className="flex-1 text-left">{label}</span>
       </button>
     );
   };
 
   const SectionTitle = ({ children }) => (
-    <div className="pt-6 pb-2 px-4 text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">
+    <div className="pt-5 pb-1.5 px-3 text-[11px] font-semibold text-[#48484a] uppercase tracking-wider">
       {children}
     </div>
   );
@@ -63,23 +63,23 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
       {/* Logo */}
       <div className="p-6 border-b border-[rgba(255,255,255,0.06)]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-            <Briefcase className="w-5 h-5 text-white" />
+          <div className="w-9 h-9 bg-gradient-to-br from-[#30d158] to-[#0a84ff] rounded-[10px] flex items-center justify-center" style={{ boxShadow: '0 2px 8px rgba(48, 209, 88, 0.25)' }}>
+            <Briefcase className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-white tracking-tight">UMTELKOMD</h1>
-            <p className="text-[10px] text-[#636366] font-medium uppercase tracking-wider">Sistema Financiero</p>
+            <h1 className="text-[15px] font-bold text-white tracking-tight">UMTELKOMD</h1>
+            <p className="text-[11px] text-[#8e8e93] font-medium">Sistema Financiero</p>
           </div>
         </div>
 
         {/* User Info Card */}
         <div className="mt-4 p-3 bg-[rgba(255,255,255,0.04)] rounded-xl border border-[rgba(255,255,255,0.06)]">
-          <p className="text-sm font-medium text-slate-200 truncate">{user?.email}</p>
+          <p className="text-sm font-medium text-white/80 truncate">{user?.email}</p>
           <span className={`
             inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase
             ${userRole === 'admin'
-              ? 'bg-[rgba(191,90,242,0.12)] text-purple-300'
-              : 'bg-[rgba(10,132,255,0.12)] text-blue-300'}
+              ? 'bg-[rgba(191,90,242,0.12)] text-[#bf5af2]'
+              : 'bg-[rgba(10,132,255,0.12)] text-[#0a84ff]'}
           `}>
             {userRole === 'admin' ? 'Administrador' : 'Editor'}
           </span>
@@ -117,24 +117,24 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
       </nav>
 
       {/* Actions */}
-      <div className="p-4 border-t border-[rgba(255,255,255,0.06)] space-y-3">
+      <div className="p-3 border-t border-[rgba(255,255,255,0.06)] space-y-2">
         <button
           onClick={onNewTransaction}
-          className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3.5 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+          className="flex items-center justify-center gap-2 w-full bg-[#30d158] hover:bg-[#28c74e] text-white px-4 py-2.5 rounded-xl text-[13px] font-semibold transition-all"
         >
-          <Plus size={18} /> Nueva Transaccion
+          <Plus size={16} /> Nueva Transacción
         </button>
         <button
           onClick={handleLogout}
-          className="flex items-center justify-center gap-2 w-full bg-[rgba(255,255,255,0.14)]/50 hover:bg-[rgba(255,255,255,0.14)] text-[#636366] hover:text-white px-4 py-3 rounded-xl font-medium transition-all"
+          className="flex items-center justify-center gap-2 w-full hover:bg-[rgba(255,255,255,0.06)] text-[#8e8e93] hover:text-white px-4 py-2 rounded-lg text-[13px] font-medium transition-all"
         >
-          <LogOut size={18} /> Cerrar Sesion
+          <LogOut size={16} /> Cerrar Sesión
         </button>
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-3 border-t border-[rgba(255,255,255,0.06)] text-center">
-        <p className="text-[10px] text-[#8e8e93]">
+      <div className="px-3 py-2.5 border-t border-[rgba(255,255,255,0.06)] text-center">
+        <p className="text-[10px] text-[#48484a]">
           Desarrollado por <span className="font-semibold text-[#636366]">HMR NEXUS</span>
         </p>
       </div>

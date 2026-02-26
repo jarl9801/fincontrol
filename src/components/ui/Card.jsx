@@ -11,16 +11,16 @@ const Card = ({ title, amount, icon: Icon, colorClass, subtext, alert, trend }) 
   };
 
   const getTrendColor = () => {
-    if (trend === 'up') return 'text-[#34d399]';
-    if (trend === 'down') return 'text-[#f87171]';
+    if (trend === 'up') return 'text-[#30d158]';
+    if (trend === 'down') return 'text-[#ff453a]';
     return 'text-[#636366]';
   };
 
   return (
     <div className={`
-      relative bg-[#1c1c1e] p-5 rounded-xl border transition-all duration-200
+      relative p-5 rounded-2xl border transition-all duration-200
       ${alert
-        ? 'border-l-4 border-l-rose-400 border-t-slate-200 border-r-slate-200 border-b-slate-200 shadow-sm'
+        ? 'border-l-4 border-l-[#ff453a] border-[rgba(255,255,255,0.08)] shadow-sm'
         : 'border-[rgba(255,255,255,0.08)] shadow-sm hover:shadow-md'
       }
     `}>
@@ -28,7 +28,7 @@ const Card = ({ title, amount, icon: Icon, colorClass, subtext, alert, trend }) 
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-[#8e8e93] uppercase tracking-wide mb-2">{title}</p>
 
-          <h3 className={`text-2xl font-semibold tracking-tight ${isNegative ? 'text-[#f87171]' : 'text-[#e5e5ea]'}`}>
+          <h3 className={`text-2xl font-semibold tracking-tight ${isNegative ? 'text-[#ff453a]' : 'text-[#e5e5ea]'}`}>
             {formatCurrency(amount)}
           </h3>
 
@@ -51,8 +51,8 @@ const Card = ({ title, amount, icon: Icon, colorClass, subtext, alert, trend }) 
 
       {alert && (
         <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-[rgba(255,255,255,0.08)]">
-          <AlertTriangle className="w-3.5 h-3.5 text-[#f87171]" />
-          <span className="text-xs font-medium text-[#f87171]">Requiere atención</span>
+          <AlertTriangle className="w-3.5 h-3.5 text-[#ff453a]" />
+          <span className="text-xs font-medium text-[#ff453a]">Requiere atención</span>
         </div>
       )}
     </div>

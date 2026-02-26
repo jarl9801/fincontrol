@@ -173,7 +173,7 @@ const CashFlow = ({ transactions, user }) => {
             </div>
             <div className="bg-[#1c1c1e] rounded-lg p-3 border border-[rgba(255,255,255,0.08)]">
               <p className="text-xs text-[#8e8e93] mb-1">Saldo Actual</p>
-              <p className={`text-lg font-bold ${realBalance.currentBalance >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
+              <p className={`text-lg font-bold ${realBalance.currentBalance >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
                 {formatCurrency(realBalance.currentBalance)}
               </p>
             </div>
@@ -183,7 +183,7 @@ const CashFlow = ({ transactions, user }) => {
             </div>
             <div className="bg-[#1c1c1e] rounded-lg p-3 border border-[rgba(255,255,255,0.08)]">
               <p className="text-xs text-[#8e8e93] mb-1">Disponible Total</p>
-              <p className={`text-lg font-bold ${realBalance.availableCredit > 10000 ? 'text-[#34d399]' : realBalance.availableCredit > 0 ? 'text-[#fbbf24]' : 'text-[#f87171]'}`}>
+              <p className={`text-lg font-bold ${realBalance.availableCredit > 10000 ? 'text-[#30d158]' : realBalance.availableCredit > 0 ? 'text-[#ff9f0a]' : 'text-[#ff453a]'}`}>
                 {formatCurrency(realBalance.availableCredit)}
               </p>
             </div>
@@ -193,10 +193,10 @@ const CashFlow = ({ transactions, user }) => {
 
       {!hasBankAccount && (
         <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.25)] rounded-xl p-4 flex items-center gap-3">
-          <AlertTriangle className="text-[#fbbf24]" size={20} />
+          <AlertTriangle className="text-[#ff9f0a]" size={20} />
           <div>
-            <p className="text-sm font-medium text-amber-800">Sin cuenta bancaria configurada</p>
-            <p className="text-xs text-[#fbbf24]">Ve a Configuración &gt; Cuenta Bancaria para ingresar tu saldo y línea de crédito</p>
+            <p className="text-sm font-medium text-[#ff9f0a]">Sin cuenta bancaria configurada</p>
+            <p className="text-xs text-[#ff9f0a]">Ve a Configuración &gt; Cuenta Bancaria para ingresar tu saldo y línea de crédito</p>
           </div>
         </div>
       )}
@@ -206,25 +206,25 @@ const CashFlow = ({ transactions, user }) => {
         <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#c7c7cc]">Total Entradas</h3>
-            <TrendingUp className="text-[#34d399]" size={18} />
+            <TrendingUp className="text-[#30d158]" size={18} />
           </div>
-          <p className="text-2xl font-bold text-[#34d399]">{formatCurrency(totalIncome)}</p>
+          <p className="text-2xl font-bold text-[#30d158]">{formatCurrency(totalIncome)}</p>
         </div>
 
         <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#c7c7cc]">Total Salidas</h3>
-            <TrendingDown className="text-[#f87171]" size={18} />
+            <TrendingDown className="text-[#ff453a]" size={18} />
           </div>
-          <p className="text-2xl font-bold text-[#f87171]">{formatCurrency(totalExpenses)}</p>
+          <p className="text-2xl font-bold text-[#ff453a]">{formatCurrency(totalExpenses)}</p>
         </div>
 
         <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#c7c7cc]">Flujo Neto</h3>
-            <DollarSign className={netCashFlow >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'} size={18} />
+            <DollarSign className={netCashFlow >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'} size={18} />
           </div>
-          <p className={`text-2xl font-bold ${netCashFlow >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
+          <p className={`text-2xl font-bold ${netCashFlow >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
             {netCashFlow >= 0 ? '+' : ''}{formatCurrency(netCashFlow)}
           </p>
         </div>
@@ -235,12 +235,12 @@ const CashFlow = ({ transactions, user }) => {
               {hasBankAccount ? 'Saldo Banco' : 'Saldo Acumulado'}
             </h3>
             {hasBankAccount
-              ? <Landmark className={realBalance.currentBalance >= 0 ? 'text-[#8e8e93]' : 'text-[#f87171]'} size={18} />
-              : <DollarSign className={lastPeriod.acumulado >= 0 ? 'text-[#8e8e93]' : 'text-[#f87171]'} size={18} />
+              ? <Landmark className={realBalance.currentBalance >= 0 ? 'text-[#8e8e93]' : 'text-[#ff453a]'} size={18} />
+              : <DollarSign className={lastPeriod.acumulado >= 0 ? 'text-[#8e8e93]' : 'text-[#ff453a]'} size={18} />
             }
           </div>
           <p className={`text-2xl font-bold ${
-            (hasBankAccount ? realBalance.currentBalance : lastPeriod.acumulado) >= 0 ? 'text-[#c7c7cc]' : 'text-[#f87171]'
+            (hasBankAccount ? realBalance.currentBalance : lastPeriod.acumulado) >= 0 ? 'text-[#c7c7cc]' : 'text-[#ff453a]'
           }`}>
             {formatCurrency(hasBankAccount ? realBalance.currentBalance : Math.abs(lastPeriod.acumulado))}
           </p>
@@ -270,12 +270,12 @@ const CashFlow = ({ transactions, user }) => {
                 {cashFlowData.map((row, i) => (
                   <tr key={i} className="hover:bg-[#111111] transition-colors">
                     <td className="px-6 py-3 font-medium text-[#c7c7cc]">{row.label}</td>
-                    <td className="px-6 py-3 text-right text-[#34d399]">{formatCurrency(row.ingresos)}</td>
-                    <td className="px-6 py-3 text-right text-[#f87171]">{formatCurrency(row.gastos)}</td>
-                    <td className={`px-6 py-3 text-right font-medium ${row.neto >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
+                    <td className="px-6 py-3 text-right text-[#30d158]">{formatCurrency(row.ingresos)}</td>
+                    <td className="px-6 py-3 text-right text-[#ff453a]">{formatCurrency(row.gastos)}</td>
+                    <td className={`px-6 py-3 text-right font-medium ${row.neto >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
                       {row.neto >= 0 ? '+' : ''}{formatCurrency(row.neto)}
                     </td>
-                    <td className={`px-6 py-3 text-right font-bold ${row.acumulado < 0 ? 'text-[#f87171]' : 'text-[#c7c7cc]'}`}>
+                    <td className={`px-6 py-3 text-right font-bold ${row.acumulado < 0 ? 'text-[#ff453a]' : 'text-[#c7c7cc]'}`}>
                       {formatCurrency(row.acumulado)}
                     </td>
                   </tr>
@@ -284,9 +284,9 @@ const CashFlow = ({ transactions, user }) => {
               <tfoot>
                 <tr className="border-t-2 border-[rgba(255,255,255,0.14)] bg-[#111111]">
                   <td className="px-6 py-3 font-bold text-[#c7c7cc]">Total</td>
-                  <td className="px-6 py-3 text-right font-bold text-[#34d399]">{formatCurrency(totalIncome)}</td>
-                  <td className="px-6 py-3 text-right font-bold text-[#f87171]">{formatCurrency(totalExpenses)}</td>
-                  <td className={`px-6 py-3 text-right font-bold ${netCashFlow >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
+                  <td className="px-6 py-3 text-right font-bold text-[#30d158]">{formatCurrency(totalIncome)}</td>
+                  <td className="px-6 py-3 text-right font-bold text-[#ff453a]">{formatCurrency(totalExpenses)}</td>
+                  <td className={`px-6 py-3 text-right font-bold ${netCashFlow >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
                     {netCashFlow >= 0 ? '+' : ''}{formatCurrency(netCashFlow)}
                   </td>
                   <td className="px-6 py-3 text-right font-bold text-[#c7c7cc]">—</td>
@@ -306,12 +306,12 @@ const CashFlow = ({ transactions, user }) => {
           <ComposedChart data={cashFlowData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="gradIngresos" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#10b981" stopOpacity={0.9} />
-                <stop offset="100%" stopColor="#10b981" stopOpacity={0.7} />
+                <stop offset="0%" stopColor="#30d158" stopOpacity={0.9} />
+                <stop offset="100%" stopColor="#30d158" stopOpacity={0.7} />
               </linearGradient>
               <linearGradient id="gradGastos" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#ef4444" stopOpacity={0.9} />
-                <stop offset="100%" stopColor="#ef4444" stopOpacity={0.7} />
+                <stop offset="0%" stopColor="#ff453a" stopOpacity={0.9} />
+                <stop offset="100%" stopColor="#ff453a" stopOpacity={0.7} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" vertical={false} />
@@ -348,9 +348,9 @@ const CashFlow = ({ transactions, user }) => {
               <ReferenceLine
                 yAxisId="right"
                 y={creditLimit}
-                stroke="#ef4444"
+                stroke="#ff453a"
                 strokeDasharray="5 5"
-                label={{ value: `Límite: ${formatCurrency(Math.abs(creditLimit))}`, fill: '#ef4444', fontSize: 11 }}
+                label={{ value: `Límite: ${formatCurrency(Math.abs(creditLimit))}`, fill: '#ff453a', fontSize: 11 }}
               />
             )}
             <Bar
@@ -374,10 +374,10 @@ const CashFlow = ({ transactions, user }) => {
               type="monotone"
               dataKey="acumulado"
               name="Acumulado"
-              stroke="#6366f1"
+              stroke="#5e5ce6"
               strokeWidth={2.5}
-              dot={{ r: 4, fill: '#6366f1', stroke: '#1c1c1e', strokeWidth: 2 }}
-              activeDot={{ r: 6, fill: '#6366f1', stroke: '#1c1c1e', strokeWidth: 2 }}
+              dot={{ r: 4, fill: '#5e5ce6', stroke: '#1c1c1e', strokeWidth: 2 }}
+              activeDot={{ r: 6, fill: '#5e5ce6', stroke: '#1c1c1e', strokeWidth: 2 }}
             />
           </ComposedChart>
         </ResponsiveContainer>

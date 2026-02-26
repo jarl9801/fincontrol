@@ -27,7 +27,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
   const systemLogs = transaction.notes?.filter(n => n.type === 'system') || [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-[#1c1c1e] rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">
         <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#111111]">
           <div>
@@ -47,7 +47,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
               onClick={() => setActiveTab('comments')}
               className={`flex-1 px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
                 activeTab === 'comments'
-                  ? 'border-blue-500 text-[#60a5fa] bg-[rgba(59,130,246,0.08)]'
+                  ? 'border-blue-500 text-[#0a84ff] bg-[rgba(59,130,246,0.08)]'
                   : 'border-transparent text-[#8e8e93] hover:text-[#c7c7cc] hover:bg-[#111111]'
               }`}
             >
@@ -89,12 +89,12 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
                 <div key={idx} className="p-4 rounded-lg border bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)]">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <MessageSquare size={14} className="text-[#60a5fa]" />
-                      <span className="text-xs font-semibold text-[#60a5fa]">
+                      <MessageSquare size={14} className="text-[#0a84ff]" />
+                      <span className="text-xs font-semibold text-[#0a84ff]">
                         {note.user}
                       </span>
                     </div>
-                    <span className="text-xs text-[#60a5fa]">
+                    <span className="text-xs text-[#0a84ff]">
                       {new Date(note.timestamp).toLocaleString('es-ES')}
                     </span>
                   </div>

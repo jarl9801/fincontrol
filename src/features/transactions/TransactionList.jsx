@@ -244,7 +244,7 @@ const TransactionList = ({
               className={`
                 flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all
                 ${showFilters || activeFiltersCount > 0
-                  ? 'bg-[rgba(59,130,246,0.12)] text-[#60a5fa] border-2 border-[rgba(59,130,246,0.25)]'
+                  ? 'bg-[rgba(59,130,246,0.12)] text-[#0a84ff] border-2 border-[rgba(59,130,246,0.25)]'
                   : 'bg-[#2c2c2e] text-[#c7c7cc] border-2 border-transparent hover:bg-[#2c2c2e]'}
               `}
             >
@@ -259,7 +259,7 @@ const TransactionList = ({
             {userRole === 'admin' && (
               <button
                 onClick={exportToPDF}
-                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-medium transition-all shadow-sm hover:shadow-md"
+                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-[#2c2c2e] hover:bg-[#1c1c1e] text-white rounded-xl font-medium transition-all shadow-sm hover:shadow-md"
               >
                 <Download size={18} /> Exportar
               </button>
@@ -291,7 +291,7 @@ const TransactionList = ({
             className={`
               inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200
               ${quickFilter === key
-                ? 'bg-slate-800 text-white shadow-sm'
+                ? 'bg-[#2c2c2e] text-white shadow-sm'
                 : 'bg-[#2c2c2e] text-[#98989d] hover:bg-[#2c2c2e]'}
             `}
           >
@@ -300,7 +300,7 @@ const TransactionList = ({
             <span className={`
               text-xs px-1.5 py-0.5 rounded-full min-w-[20px] text-center
               ${quickFilter === key
-                ? 'bg-slate-600 text-slate-200'
+                ? 'bg-[rgba(255,255,255,0.08)] text-white/80'
                 : 'bg-[#2c2c2e] text-[#8e8e93]'}
             `}>
               {count}
@@ -332,7 +332,7 @@ const TransactionList = ({
               });
               applyFilters();
             }}
-            className="text-sm text-[#60a5fa] hover:text-[#60a5fa] font-medium"
+            className="text-sm text-[#0a84ff] hover:text-[#0a84ff] font-medium"
           >
             Limpiar filtros
           </button>
@@ -390,7 +390,7 @@ const TransactionList = ({
                             });
                             applyFilters();
                           }}
-                          className="text-sm text-[#60a5fa] hover:text-[#60a5fa] font-medium"
+                          className="text-sm text-[#0a84ff] hover:text-[#0a84ff] font-medium"
                         >
                           Limpiar búsqueda y filtros
                         </button>

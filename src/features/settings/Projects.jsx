@@ -169,7 +169,7 @@ const Projects = ({ user }) => {
         </div>
         <button
           onClick={handleOpenAdd}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl font-semibold transition-all shadow-lg shadow-blue-200 hover:shadow-xl hover:-translate-y-0.5"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[#0a84ff] hover:bg-[#0070e0] text-white rounded-xl font-semibold transition-all shadow-lg  hover:shadow-xl hover:-translate-y-0.5"
         >
           <Plus size={18} /> Nuevo Proyecto
         </button>
@@ -180,7 +180,7 @@ const Projects = ({ user }) => {
         <div className="bg-[#1c1c1e] p-5 rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[rgba(59,130,246,0.12)] rounded-xl flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-[#60a5fa]" />
+              <Briefcase className="w-5 h-5 text-[#0a84ff]" />
             </div>
             <div>
               <p className="text-sm text-[#8e8e93]">Total Proyectos</p>
@@ -191,11 +191,11 @@ const Projects = ({ user }) => {
         <div className="bg-[#1c1c1e] p-5 rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[rgba(16,185,129,0.12)] rounded-xl flex items-center justify-center">
-              <CheckCircle2 className="w-5 h-5 text-[#34d399]" />
+              <CheckCircle2 className="w-5 h-5 text-[#30d158]" />
             </div>
             <div>
               <p className="text-sm text-[#8e8e93]">Activos</p>
-              <p className="text-2xl font-bold text-[#34d399]">{activeProjects.length}</p>
+              <p className="text-2xl font-bold text-[#30d158]">{activeProjects.length}</p>
             </div>
           </div>
         </div>
@@ -242,7 +242,7 @@ const Projects = ({ user }) => {
               {activeProjects.map((project) => (
                 <tr key={project.id} className="hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                   <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-1 bg-[rgba(59,130,246,0.12)] text-[#60a5fa] rounded-lg text-sm font-bold">
+                    <span className="inline-flex items-center px-2.5 py-1 bg-[rgba(59,130,246,0.12)] text-[#0a84ff] rounded-lg text-sm font-bold">
                       {project.code}
                     </span>
                   </td>
@@ -270,7 +270,7 @@ const Projects = ({ user }) => {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-[rgba(16,185,129,0.12)] text-[#34d399] rounded-full text-xs font-medium">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-[rgba(16,185,129,0.12)] text-[#30d158] rounded-full text-xs font-medium">
                       <CheckCircle2 className="w-3 h-3" />
                       Activo
                     </span>
@@ -286,14 +286,14 @@ const Projects = ({ user }) => {
                       </button>
                       <button
                         onClick={() => handleOpenEdit(project)}
-                        className="p-2 text-[#636366] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
+                        className="p-2 text-[#636366] hover:text-[#0a84ff] hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
                         title="Editar"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setProjectToDelete(project)}
-                        className="p-2 text-[#636366] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
+                        className="p-2 text-[#636366] hover:text-[#ff453a] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
                         title="Eliminar"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -343,21 +343,21 @@ const Projects = ({ user }) => {
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => handleToggleStatus(project)}
-                        className="p-2 text-[#636366] hover:text-[#34d399] hover:bg-[rgba(16,185,129,0.08)] rounded-lg transition-all"
+                        className="p-2 text-[#636366] hover:text-[#30d158] hover:bg-[rgba(16,185,129,0.08)] rounded-lg transition-all"
                         title="Activar"
                       >
                         <Power className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(project)}
-                        className="p-2 text-[#636366] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
+                        className="p-2 text-[#636366] hover:text-[#0a84ff] hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
                         title="Editar"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setProjectToDelete(project)}
-                        className="p-2 text-[#636366] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
+                        className="p-2 text-[#636366] hover:text-[#ff453a] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
                         title="Eliminar"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -378,7 +378,7 @@ const Projects = ({ user }) => {
                       {searchTerm && (
                         <button
                           onClick={() => setSearchTerm('')}
-                          className="text-sm text-[#60a5fa] hover:text-[#60a5fa]"
+                          className="text-sm text-[#0a84ff] hover:text-[#0a84ff]"
                         >
                           Limpiar búsqueda
                         </button>
@@ -394,7 +394,7 @@ const Projects = ({ user }) => {
 
       {/* Add/Edit Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn">
           <div className="bg-[#1c1c1e] rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-scaleIn max-h-[90vh] overflow-y-auto">
             <div className="px-6 py-5 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-gradient-to-r from-slate-50 to-white">
               <div>
@@ -415,7 +415,7 @@ const Projects = ({ user }) => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
-                    Código <span className="text-[#f87171]">*</span>
+                    Código <span className="text-[#ff453a]">*</span>
                   </label>
                   <input
                     type="text"
@@ -428,7 +428,7 @@ const Projects = ({ user }) => {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
-                    Nombre <span className="text-[#f87171]">*</span>
+                    Nombre <span className="text-[#ff453a]">*</span>
                   </label>
                   <input
                     type="text"
@@ -524,7 +524,7 @@ const Projects = ({ user }) => {
                     className={`
                       flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
                       ${formData.status === 'active'
-                        ? 'border-emerald-400 bg-[rgba(16,185,129,0.08)] text-[#34d399]'
+                        ? 'border-emerald-400 bg-[rgba(16,185,129,0.08)] text-[#30d158]'
                         : 'border-[rgba(255,255,255,0.08)] text-[#98989d] hover:border-[rgba(16,185,129,0.25)]'}
                     `}
                   >
@@ -548,7 +548,7 @@ const Projects = ({ user }) => {
               {/* Submit */}
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-white bg-[#0a84ff] hover:bg-[#0070e0] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               >
                 <Check size={18} />
                 {editingProject ? 'Guardar Cambios' : 'Crear Proyecto'}

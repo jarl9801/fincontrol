@@ -33,27 +33,27 @@ const CXP = ({
         <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Total por Pagar</h3>
-            <TrendingDown className="text-[#f87171]" size={20} />
+            <TrendingDown className="text-[#ff453a]" size={20} />
           </div>
-          <p className="text-3xl font-bold text-[#f87171]">{formatCurrency(totalPayable)}</p>
+          <p className="text-3xl font-bold text-[#ff453a]">{formatCurrency(totalPayable)}</p>
           <p className="text-xs text-[#636366] mt-1">{payables.length} facturas pendientes</p>
         </div>
 
         <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Vencido</h3>
-            <AlertCircle className="text-[#f87171]" size={20} />
+            <AlertCircle className="text-[#ff453a]" size={20} />
           </div>
-          <p className="text-3xl font-bold text-[#f87171]">{formatCurrency(totalOverdue)}</p>
+          <p className="text-3xl font-bold text-[#ff453a]">{formatCurrency(totalOverdue)}</p>
           <p className="text-xs text-[#636366] mt-1">{overduePayables.length} facturas vencidas</p>
         </div>
 
         <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Vence Esta Semana</h3>
-            <Clock className="text-[#fbbf24]" size={20} />
+            <Clock className="text-[#ff9f0a]" size={20} />
           </div>
-          <p className="text-3xl font-bold text-[#fbbf24]">{formatCurrency(totalDueThisWeek)}</p>
+          <p className="text-3xl font-bold text-[#ff9f0a]">{formatCurrency(totalDueThisWeek)}</p>
           <p className="text-xs text-[#636366] mt-1">{dueThisWeek.length} facturas próximas</p>
         </div>
       </div>

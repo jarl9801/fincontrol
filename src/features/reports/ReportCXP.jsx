@@ -66,36 +66,36 @@ const ReportCXP = ({ transactions }) => {
         <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Total por Pagar</h3>
-            <TrendingDown className="text-[#f87171]" size={20} />
+            <TrendingDown className="text-[#ff453a]" size={20} />
           </div>
-          <p className="text-2xl font-bold text-[#f87171]">{formatCurrency(totalPayable)}</p>
+          <p className="text-2xl font-bold text-[#ff453a]">{formatCurrency(totalPayable)}</p>
           <p className="text-xs text-[#636366] mt-1">{payables.length} facturas</p>
         </div>
 
         <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Monto Vencido</h3>
-            <AlertCircle className="text-[#f87171]" size={20} />
+            <AlertCircle className="text-[#ff453a]" size={20} />
           </div>
-          <p className="text-2xl font-bold text-[#f87171]">{formatCurrency(overdueAmount)}</p>
+          <p className="text-2xl font-bold text-[#ff453a]">{formatCurrency(overdueAmount)}</p>
           <p className="text-xs text-[#636366] mt-1">{agingAnalysis.over90.count} facturas</p>
         </div>
 
         <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Critico (90+ dias)</h3>
-            <Clock className="text-[#fbbf24]" size={20} />
+            <Clock className="text-[#ff9f0a]" size={20} />
           </div>
-          <p className="text-2xl font-bold text-[#fbbf24]">{formatCurrency(criticalAmount)}</p>
+          <p className="text-2xl font-bold text-[#ff9f0a]">{formatCurrency(criticalAmount)}</p>
           <p className="text-xs text-[#636366] mt-1">{agingAnalysis.days60_90.count + agingAnalysis.over90.count} facturas</p>
         </div>
 
         <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Al Corriente</h3>
-            <TrendingDown className="text-[#34d399]" size={20} />
+            <TrendingDown className="text-[#30d158]" size={20} />
           </div>
-          <p className="text-2xl font-bold text-[#34d399]">{formatCurrency(currentAmount)}</p>
+          <p className="text-2xl font-bold text-[#30d158]">{formatCurrency(currentAmount)}</p>
           <p className="text-xs text-[#636366] mt-1">{agingAnalysis.current.count} facturas</p>
         </div>
       </div>
@@ -111,7 +111,7 @@ const ReportCXP = ({ transactions }) => {
               <XAxis dataKey="name" />
               <YAxis tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`} />
               <Tooltip formatter={(value) => formatCurrency(value)} />
-              <Bar dataKey="monto" fill="#f43f5e" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="monto" fill="#ff453a" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -132,13 +132,13 @@ const ReportCXP = ({ transactions }) => {
                 <tr key={idx} className="border-b border-[rgba(255,255,255,0.08)]">
                   <td className="py-3 text-sm text-[#c7c7cc]">{item.label}</td>
                   <td className="py-3 text-sm text-[#c7c7cc] text-center">{item.count}</td>
-                  <td className="py-3 text-sm font-medium text-right text-[#f87171]">{formatCurrency(item.amount)}</td>
+                  <td className="py-3 text-sm font-medium text-right text-[#ff453a]">{formatCurrency(item.amount)}</td>
                 </tr>
               ))}
               <tr className="bg-[#111111]">
                 <td className="py-3 text-sm font-bold text-[#e5e5ea]">Total</td>
                 <td className="py-3 text-sm font-bold text-[#e5e5ea] text-center">{payables.length}</td>
-                <td className="py-3 text-sm font-bold text-right text-[#f87171]">{formatCurrency(totalPayable)}</td>
+                <td className="py-3 text-sm font-bold text-right text-[#ff453a]">{formatCurrency(totalPayable)}</td>
               </tr>
             </tbody>
           </table>
@@ -171,13 +171,13 @@ const ReportCXP = ({ transactions }) => {
                     <td className="px-4 py-3 text-sm font-medium text-[#e5e5ea]">{t.description}</td>
                     <td className="px-4 py-3 text-sm text-[#98989d]">{t.project || '-'}</td>
                     <td className="px-4 py-3 text-sm text-[#98989d]">{t.category || '-'}</td>
-                    <td className="px-4 py-3 text-sm font-medium text-[#f87171] text-right">{formatCurrency(t.amount)}</td>
+                    <td className="px-4 py-3 text-sm font-medium text-[#ff453a] text-right">{formatCurrency(t.amount)}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        days > 90 ? 'bg-[rgba(239,68,68,0.12)] text-[#f87171]' :
-                        days > 60 ? 'bg-[rgba(245,158,11,0.12)] text-[#fbbf24]' :
-                        days > 30 ? 'bg-[rgba(234,179,8,0.12)] text-[#fbbf24]' :
-                        'bg-[rgba(16,185,129,0.12)] text-[#34d399]'
+                        days > 90 ? 'bg-[rgba(239,68,68,0.12)] text-[#ff453a]' :
+                        days > 60 ? 'bg-[rgba(245,158,11,0.12)] text-[#ff9f0a]' :
+                        days > 30 ? 'bg-[rgba(234,179,8,0.12)] text-[#ff9f0a]' :
+                        'bg-[rgba(16,185,129,0.12)] text-[#30d158]'
                       }`}>
                         {days} dias
                       </span>

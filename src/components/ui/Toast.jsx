@@ -9,17 +9,17 @@ const icons = {
 };
 
 const styles = {
-  success: 'bg-[rgba(16,185,129,0.08)] border-[rgba(16,185,129,0.25)] text-[#34d399]',
-  error: 'bg-[rgba(239,68,68,0.08)] border-[rgba(239,68,68,0.25)] text-[#f87171]',
-  warning: 'bg-[rgba(245,158,11,0.08)] border-[rgba(245,158,11,0.25)] text-[#fbbf24]',
-  info: 'bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-[#60a5fa]'
+  success: 'bg-[rgba(16,185,129,0.08)] border-[rgba(16,185,129,0.25)] text-[#30d158]',
+  error: 'bg-[rgba(239,68,68,0.08)] border-[rgba(239,68,68,0.25)] text-[#ff453a]',
+  warning: 'bg-[rgba(245,158,11,0.08)] border-[rgba(245,158,11,0.25)] text-[#ff9f0a]',
+  info: 'bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-[#0a84ff]'
 };
 
 const iconColors = {
-  success: 'text-[#34d399]',
-  error: 'text-[#f87171]',
-  warning: 'text-[#fbbf24]',
-  info: 'text-[#60a5fa]'
+  success: 'text-[#30d158]',
+  error: 'text-[#ff453a]',
+  warning: 'text-[#ff9f0a]',
+  info: 'text-[#0a84ff]'
 };
 
 export const Toast = ({ message, type = 'info', onClose, duration = 3000 }) => {

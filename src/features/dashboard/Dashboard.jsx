@@ -22,7 +22,7 @@ import { useMetrics } from '../../hooks/useMetrics';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { COLORS, ALERT_THRESHOLDS } from '../../constants/config';
 
-const CHART_COLORS = ['#60a5fa', '#34d399', '#fbbf24', '#f87171', '#a78bfa', '#22d3ee'];
+const CHART_COLORS = ['#0a84ff', '#30d158', '#ff9f0a', '#ff453a', '#bf5af2', '#64d2ff'];
 
 const Dashboard = ({ transactions, user }) => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -78,24 +78,24 @@ const Dashboard = ({ transactions, user }) => {
       {Object.values(metrics.alerts).some(a => a) && (
         <div className="border-l-4 border-l-rose-400 bg-[#1c1c1e] rounded-r-lg border border-[rgba(255,255,255,0.08)] p-4">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-[#f87171] mt-0.5 shrink-0" />
+            <AlertTriangle className="w-5 h-5 text-[#ff453a] mt-0.5 shrink-0" />
             <div className="space-y-1">
               <p className="text-sm font-medium text-[#c7c7cc]">Alertas activas</p>
               <div className="flex flex-wrap gap-x-4 gap-y-1">
                 {metrics.alerts.negativeBalance && (
-                  <span className="text-xs text-[#f87171]">• Balance negativo</span>
+                  <span className="text-xs text-[#ff453a]">• Balance negativo</span>
                 )}
                 {metrics.alerts.highCXP && (
-                  <span className="text-xs text-[#f87171]">• CXP supera {formatCurrency(ALERT_THRESHOLDS.cxpLimit)}</span>
+                  <span className="text-xs text-[#ff453a]">• CXP supera {formatCurrency(ALERT_THRESHOLDS.cxpLimit)}</span>
                 )}
                 {metrics.alerts.highCXC && (
-                  <span className="text-xs text-[#f87171]">• CXC supera {formatCurrency(ALERT_THRESHOLDS.cxcLimit)}</span>
+                  <span className="text-xs text-[#ff453a]">• CXC supera {formatCurrency(ALERT_THRESHOLDS.cxcLimit)}</span>
                 )}
                 {metrics.alerts.hasOverdue && (
-                  <span className="text-xs text-[#f87171]">• {metrics.overdueTransactions.length} factura(s) vencida(s)</span>
+                  <span className="text-xs text-[#ff453a]">• {metrics.overdueTransactions.length} factura(s) vencida(s)</span>
                 )}
                 {metrics.alerts.hasNegativeProjects && (
-                  <span className="text-xs text-[#f87171]">• {metrics.negativeProjects.length} proyecto(s) con pérdida</span>
+                  <span className="text-xs text-[#ff453a]">• {metrics.negativeProjects.length} proyecto(s) con pérdida</span>
                 )}
               </div>
             </div>
@@ -182,18 +182,18 @@ const Dashboard = ({ transactions, user }) => {
                   <Line
                     type="monotone"
                     dataKey="ingresos"
-                    stroke="#10b981"
+                    stroke="#30d158"
                     strokeWidth={2}
-                    dot={{ fill: '#10b981', r: 3 }}
+                    dot={{ fill: '#30d158', r: 3 }}
                     activeDot={{ r: 5 }}
                     name="Ingresos"
                   />
                   <Line
                     type="monotone"
                     dataKey="gastos"
-                    stroke="#f43f5e"
+                    stroke="#ff453a"
                     strokeWidth={2}
-                    dot={{ fill: '#f43f5e', r: 3 }}
+                    dot={{ fill: '#ff453a', r: 3 }}
                     activeDot={{ r: 5 }}
                     name="Gastos"
                   />
@@ -268,7 +268,7 @@ const Dashboard = ({ transactions, user }) => {
                   return (
                     <tr key={idx} className="border-b border-[rgba(255,255,255,0.08)] last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors cursor-pointer" onClick={() => setSelectedProject(project.name)}>
                       <td className="px-4 py-3">
-                        <span className="font-medium text-[#c7c7cc] hover:text-[#60a5fa] transition-colors">{project.name}</span>
+                        <span className="font-medium text-[#c7c7cc] hover:text-[#0a84ff] transition-colors">{project.name}</span>
                       </td>
                       <td className="px-4 py-3 text-right text-[#98989d]">
                         {formatCurrency(project.ingresos)}
@@ -276,19 +276,19 @@ const Dashboard = ({ transactions, user }) => {
                       <td className="px-4 py-3 text-right text-[#98989d]">
                         {formatCurrency(project.gastos)}
                       </td>
-                      <td className={`px-4 py-3 text-right font-medium ${isPositive ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
+                      <td className={`px-4 py-3 text-right font-medium ${isPositive ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
                         {isPositive ? '+' : ''}{formatCurrency(margin)}
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <span className={`text-xs font-medium ${isPositive ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
+                        <span className={`text-xs font-medium ${isPositive ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
                           {roi.toFixed(1)}%
                         </span>
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${
-                          isHighRoi ? 'bg-[rgba(16,185,129,0.08)] text-[#34d399]' :
+                          isHighRoi ? 'bg-[rgba(16,185,129,0.08)] text-[#30d158]' :
                           isPositive ? 'bg-[#2c2c2e] text-[#98989d]' :
-                          'bg-[rgba(239,68,68,0.08)] text-[#f87171]'
+                          'bg-[rgba(239,68,68,0.08)] text-[#ff453a]'
                         }`}>
                           {isHighRoi ? 'Excelente' : isPositive ? 'Bueno' : 'Crítico'}
                         </span>
@@ -329,7 +329,7 @@ const Dashboard = ({ transactions, user }) => {
                   <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
                   <Bar
                     dataKey="ingresos"
-                    fill="#10b981"
+                    fill="#30d158"
                     name="Ingresos"
                     radius={[4, 4, 0, 0]}
                     maxBarSize={32}
@@ -337,7 +337,7 @@ const Dashboard = ({ transactions, user }) => {
                   />
                   <Bar
                     dataKey="gastos"
-                    fill="#f43f5e"
+                    fill="#ff453a"
                     name="Gastos"
                     radius={[4, 4, 0, 0]}
                     maxBarSize={32}
@@ -378,7 +378,7 @@ const Dashboard = ({ transactions, user }) => {
                     {metrics.debtComparison.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={entry.name === 'CXC' ? '#64748b' : '#f43f5e'}
+                        fill={entry.name === 'CXC' ? '#64748b' : '#ff453a'}
                         fillOpacity={0.8}
                       />
                     ))}
@@ -401,8 +401,8 @@ const Dashboard = ({ transactions, user }) => {
               <thead>
                 <tr className="border-b border-[rgba(255,255,255,0.08)] bg-[#111111]">
                   <th className="px-4 py-3 text-left text-xs font-medium text-[#8e8e93]">Mes</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-[#34d399]">Ingresos</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-[#f87171]">Egresos</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-[#30d158]">Ingresos</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-[#ff453a]">Egresos</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-[#8e8e93]">Flujo Neto</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-[#8e8e93]">Acumulado</th>
                 </tr>
@@ -416,12 +416,12 @@ const Dashboard = ({ transactions, user }) => {
                     return (
                       <tr key={idx} className="border-b border-[rgba(255,255,255,0.08)] last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                         <td className="px-4 py-3 font-medium text-[#c7c7cc]">{m.month}</td>
-                        <td className="px-4 py-3 text-right text-[#34d399]">{formatCurrency(m.ingresos)}</td>
-                        <td className="px-4 py-3 text-right text-[#f87171]">{formatCurrency(m.gastos)}</td>
-                        <td className={`px-4 py-3 text-right font-medium ${netFlow >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
+                        <td className="px-4 py-3 text-right text-[#30d158]">{formatCurrency(m.ingresos)}</td>
+                        <td className="px-4 py-3 text-right text-[#ff453a]">{formatCurrency(m.gastos)}</td>
+                        <td className={`px-4 py-3 text-right font-medium ${netFlow >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
                           {netFlow >= 0 ? '+' : ''}{formatCurrency(netFlow)}
                         </td>
-                        <td className={`px-4 py-3 text-right font-semibold ${accumulated >= 0 ? 'text-[#c7c7cc]' : 'text-[#f87171]'}`}>
+                        <td className={`px-4 py-3 text-right font-semibold ${accumulated >= 0 ? 'text-[#c7c7cc]' : 'text-[#ff453a]'}`}>
                           {formatCurrency(accumulated)}
                         </td>
                       </tr>
@@ -432,14 +432,14 @@ const Dashboard = ({ transactions, user }) => {
               <tfoot>
                 <tr className="bg-[#111111] border-t-2 border-[rgba(255,255,255,0.14)]">
                   <td className="px-4 py-3 font-semibold text-[#c7c7cc]">Total</td>
-                  <td className="px-4 py-3 text-right font-semibold text-[#34d399]">
+                  <td className="px-4 py-3 text-right font-semibold text-[#30d158]">
                     {formatCurrency(metrics.monthlyTrend.reduce((s, m) => s + m.ingresos, 0))}
                   </td>
-                  <td className="px-4 py-3 text-right font-semibold text-[#f87171]">
+                  <td className="px-4 py-3 text-right font-semibold text-[#ff453a]">
                     {formatCurrency(metrics.monthlyTrend.reduce((s, m) => s + m.gastos, 0))}
                   </td>
                   <td className={`px-4 py-3 text-right font-semibold ${
-                    metrics.monthlyTrend.reduce((s, m) => s + m.ingresos - m.gastos, 0) >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'
+                    metrics.monthlyTrend.reduce((s, m) => s + m.ingresos - m.gastos, 0) >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'
                   }`}>
                     {formatCurrency(metrics.monthlyTrend.reduce((s, m) => s + m.ingresos - m.gastos, 0))}
                   </td>
@@ -467,12 +467,12 @@ const Dashboard = ({ transactions, user }) => {
               >
                 <defs>
                   <linearGradient id="colorIngresos" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.9}/>
-                    <stop offset="100%" stopColor="#10b981" stopOpacity={0.6}/>
+                    <stop offset="0%" stopColor="#30d158" stopOpacity={0.9}/>
+                    <stop offset="100%" stopColor="#30d158" stopOpacity={0.6}/>
                   </linearGradient>
                   <linearGradient id="colorEgresos" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#f43f5e" stopOpacity={0.9}/>
-                    <stop offset="100%" stopColor="#f43f5e" stopOpacity={0.6}/>
+                    <stop offset="0%" stopColor="#ff453a" stopOpacity={0.9}/>
+                    <stop offset="100%" stopColor="#ff453a" stopOpacity={0.6}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.08)" />
@@ -494,7 +494,7 @@ const Dashboard = ({ transactions, user }) => {
                   orientation="right"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#6366f1', fontSize: 11 }}
+                  tick={{ fill: '#5e5ce6', fontSize: 11 }}
                   tickFormatter={(value) => `€${(value/1000).toFixed(0)}k`}
                 />
                 <Tooltip content={<CustomTooltip />} />
@@ -519,9 +519,9 @@ const Dashboard = ({ transactions, user }) => {
                   yAxisId="line"
                   type="monotone"
                   dataKey="acumulado"
-                  stroke="#6366f1"
+                  stroke="#5e5ce6"
                   strokeWidth={2.5}
-                  dot={{ fill: '#6366f1', r: 4, strokeWidth: 2, stroke: '#fff' }}
+                  dot={{ fill: '#5e5ce6', r: 4, strokeWidth: 2, stroke: '#fff' }}
                   activeDot={{ r: 6 }}
                   name="Acumulado"
                 />
@@ -559,7 +559,7 @@ const Dashboard = ({ transactions, user }) => {
                     </td>
                     <td className="py-3 px-4 text-[#8e8e93]">{t.project.split(' ')[0]}</td>
                     <td className={`py-3 px-4 text-right font-medium ${
-                      t.type === 'income' ? 'text-[#34d399]' : 'text-[#f87171]'
+                      t.type === 'income' ? 'text-[#30d158]' : 'text-[#ff453a]'
                     }`}>
                       {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
                     </td>
