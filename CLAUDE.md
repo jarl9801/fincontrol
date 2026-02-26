@@ -8,7 +8,7 @@ FinControl is a financial management application for tracking transactions, paya
 
 - **React 19** with JSX (no TypeScript)
 - **Vite 7** for build tooling
-- **Tailwind CSS v4** via `@tailwindcss/vite` plugin
+- **Tailwind CSS v4** via `@tailwindcss/vite` plugin (no tailwind.config.js — tokens in index.css)
 - **Firebase** (Firestore for data, Auth for authentication)
 - **Recharts** for chart visualizations
 - **Lucide React** for icons
@@ -25,26 +25,76 @@ FinControl is a financial management application for tracking transactions, paya
 
 ```
 src/
+├── App.jsx                # Root component with view-based routing
+├── App.css                # Minimal CSS (delegates to index.css)
+├── main.jsx               # Entry point
+├── index.css              # Tailwind import + Apple design system tokens
+├── assets/
+│   └── react.svg
 ├── components/
-│   ├── charts/        # Recharts-based chart components
-│   ├── layout/        # Sidebar, MobileMenu
-│   └── ui/            # Card, Toast, Modal, FilterPanel, etc.
-├── constants/         # categories.js, projects.js, costCenters.js, config.js
-├── context/           # (empty — state lives in hooks)
-├── features/          # Page-level feature modules
-│   ├── auth/          # Login
-│   ├── cashflow/      # Cash flow analysis
-│   ├── cxc/           # Cuentas por cobrar (receivables)
-│   ├── cxp/           # Cuentas por pagar (payables)
-│   ├── dashboard/     # Admin dashboard
-│   ├── reports/       # Financial reports (executive, P&L, ratios, etc.)
-│   ├── settings/      # Projects, categories, cost centers, bank account
-│   └── transactions/  # Transaction list and management
-├── hooks/             # Custom hooks (useAuth, useTransactions, useMetrics, etc.)
-├── services/          # firebase.js — Firebase init, exports auth/db/appId
-├── utils/             # formatters.js, pdfExport.js
-├── App.jsx            # Root component with view-based routing
-└── main.jsx           # Entry point
+│   ├── layout/
+│   │   ├── MobileMenu.jsx
+│   │   └── Sidebar.jsx
+│   └── ui/
+│       ├── Card.jsx
+│       ├── ConfirmModal.jsx
+│       ├── FilterPanel.jsx
+│       ├── NotesModal.jsx
+│       ├── PeriodSelector.jsx
+│       ├── Toast.jsx
+│       ├── TransactionFormModal.jsx
+│       └── TransactionRow.jsx
+├── constants/
+│   ├── categories.js      # 21 expense + 6 income categories
+│   ├── config.js           # COLORS, ADMIN/EDITOR emails, ALERT_THRESHOLDS
+│   ├── costCenters.js      # 5 predefined cost centers
+│   └── projects.js         # PROY-001 through PROY-005 + General
+├── context/                # (empty — state lives in hooks)
+├── data/
+│   └── transactions2025.js # Static 2025 transaction data (bundled)
+├── features/
+│   ├── auth/
+│   │   └── Login.jsx
+│   ├── cashflow/
+│   │   └── CashFlow.jsx
+│   ├── cxc/
+│   │   └── CXC.jsx           # Cuentas por cobrar (receivables)
+│   ├── cxp/
+│   │   └── CXP.jsx           # Cuentas por pagar (payables)
+│   ├── dashboard/
+│   │   ├── Dashboard.jsx
+│   │   └── ProjectDetail.jsx
+│   ├── reports/
+│   │   ├── ExecutiveSummary.jsx
+│   │   ├── FinancialRatios.jsx
+│   │   ├── ReportCXC.jsx
+│   │   ├── ReportCXP.jsx
+│   │   └── Reports.jsx        # P&L report
+│   ├── settings/
+│   │   ├── BankAccount.jsx
+│   │   ├── Categories.jsx
+│   │   ├── CostCenters.jsx
+│   │   └── Projects.jsx
+│   └── transactions/
+│       └── TransactionList.jsx
+├── hooks/
+│   ├── useAllTransactions.js   # Merges 2025 static + 2026 Firebase data
+│   ├── useAuth.js              # Firebase Auth + role determination
+│   ├── useBankAccount.js       # Bank balance & credit line
+│   ├── useCashFlow.js          # Cash flow analysis + CSV parsing
+│   ├── useCategories.js        # Expense/income category CRUD
+│   ├── useCostCenters.js       # Cost center management
+│   ├── useFilters.js           # Transaction filtering logic
+│   ├── useHistoricalData.js    # 2025 CSV from Google Sheets
+│   ├── useMetrics.js           # Financial KPIs & calculations
+│   ├── useProjects.js          # Project management
+│   ├── useTransactionActions.js # CRUD + notes + status toggle
+│   └── useTransactions.js      # Real-time Firestore listener
+├── services/
+│   └── firebase.js             # Firebase init, exports auth/db/appId
+└── utils/
+    ├── formatters.js           # Currency (de-DE), date (es-ES), overdue calc
+    └── pdfExport.js            # PDF export (transactions, CXP, CXC, reports)
 ```
 
 ## Key Architecture Decisions
@@ -54,6 +104,8 @@ src/
 - **Props drilling** — App.jsx passes a `commonProps` object to feature components
 - **Firestore path convention** — All collections at `artifacts/{appId}/public/data/{collection}`
 - **Role-based access** — Admin/editor roles determined by email in `constants/config.js`
+- **Historical data** — 2025 data from static JS file + Google Sheets CSV; 2026+ from Firestore
+- **Data merging** — `useAllTransactions` combines 2025 + 2026 data for unified views
 
 ## Conventions
 
@@ -61,14 +113,19 @@ src/
 - Functional components only, no class components
 - camelCase for files containing functions/hooks, PascalCase for React component files
 - Custom hooks prefixed with `use` and exported as named exports
-- ESLint configured: unused vars error (except capitalized/underscore-prefixed)
+- ESLint 9 flat config: unused vars error (except capitalized/underscore-prefixed)
 
-### UI / Styling
+### UI / Styling (Apple Dark Mode Design System)
 - Tailwind utility classes directly in JSX — no CSS modules or styled-components
-- Color palette: Blue (primary), Emerald (success), Amber (warning), Red (danger), Slate (neutral)
-- Rounded corners: `rounded-xl` / `rounded-2xl` / `rounded-3xl`
-- Sidebar: dark gradient (slate-900 to slate-700)
-- Custom animations: `animate-fadeIn`, `animate-slideInRight`, `animate-scaleIn`
+- **Color palette** (Apple system colors):
+  - Green `#30d158` (primary/success), Blue `#0a84ff` (info), Red `#ff453a` (danger/error)
+  - Orange `#ff9f0a` (warning), Purple `#bf5af2`, Yellow `#ffd60a`
+  - Backgrounds: `#000000` (primary), `#1c1c1e` (secondary), `#2c2c2e` (tertiary)
+  - Text: `#ffffff` (primary), `#8e8e93` (secondary), `#48484a` (tertiary)
+  - Borders: `rgba(255,255,255,0.08)` (subtle), `rgba(255,255,255,0.14)` (strong)
+- **Frosted glass cards** with `backdrop-blur` and semi-transparent backgrounds
+- Custom animations: `fadeIn`, `fadeInUp`, `scaleIn`, `slideIn`, `slideInRight`, `shimmer`
+- Typography: Inter / SF Pro Display, monospace: JetBrains Mono / Fira Code
 
 ### Data Patterns
 - Currency: EUR, German locale formatting (`de-DE`)
@@ -98,6 +155,12 @@ src/
 - `services/firebase.js` exports `auth`, `db` (Firestore instance), and `appId`
 - All data reads use real-time `onSnapshot` listeners
 - Writes use `addDoc`, `updateDoc`, `deleteDoc` with `serverTimestamp()`
+- **Collections** (all under `artifacts/{appId}/public/data/`):
+  - `transactions` — Main transaction ledger
+  - `settings/categories` — Expense & income categories
+  - `settings/bankAccount` — Bank balance & credit line
+  - `projects` — Project definitions
+  - `costCenters` — Cost center definitions
 
 ## Sensitive Files
 

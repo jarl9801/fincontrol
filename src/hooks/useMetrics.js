@@ -1,9 +1,22 @@
 import { useMemo } from 'react';
 import { getDaysOverdue } from '../utils/formatters';
 import { ALERT_THRESHOLDS } from '../constants/config';
+import { balances2025 } from '../data/balances2025';
+
+// Known real balances at end of 2025
+const BANK_DEC2025 = balances2025.bancoDic2025;   // €28,450
+const IVA_DEC2025 = balances2025.ivaDic2025;       // €7,332.94
+const CXC_2025 = balances2025.totalCxC;             // €2,223.08
+const CXP_2025 = balances2025.totalCxP;             // €17,016.01
 
 export const useMetrics = (filteredTransactions) => {
   return useMemo(() => {
+    // Separate 2025 and 2026 transactions
+    const txn2025 = filteredTransactions.filter(t => t.source === '2025-sheet' || t.year === 2025);
+    const txn2026 = filteredTransactions.filter(t => t.source === '2026-firebase' || t.year === 2026);
+    const has2025 = txn2025.length > 0;
+    const has2026 = txn2026.length > 0;
+
     // ALL income/expenses (for charts and totals)
     const totalIncome = filteredTransactions
       .filter(t => t.type === 'income')
@@ -23,16 +36,37 @@ export const useMetrics = (filteredTransactions) => {
       .filter(t => t.type === 'expense' && t.status !== 'pending')
       .reduce((sum, t) => sum + t.amount, 0);
 
-    // Actual cash balance
-    const cashBalance = collectedIncome - paidExpenses;
+    // 2026-only income/expenses (to calculate current real balance)
+    const income2026 = txn2026.filter(t => t.type === 'income' && t.status !== 'pending')
+      .reduce((sum, t) => sum + t.amount, 0);
+    const expenses2026 = txn2026.filter(t => t.type === 'expense' && t.status !== 'pending')
+      .reduce((sum, t) => sum + t.amount, 0);
 
-    const pendingPayables = filteredTransactions
+    // Cash balance calculation:
+    // If viewing only 2025: show known bank + IVA balances
+    // If viewing only 2026 or all: start from bank+IVA and add 2026 net
+    let cashBalance;
+    if (has2025 && !has2026) {
+      // Pure 2025 view: show actual closing balances
+      cashBalance = BANK_DEC2025 + IVA_DEC2025; // €35,782.94
+    } else if (has2026) {
+      // 2026 or mixed: bank+IVA + 2026 net flows
+      cashBalance = BANK_DEC2025 + IVA_DEC2025 + income2026 - expenses2026;
+    } else {
+      cashBalance = collectedIncome - paidExpenses;
+    }
+
+    // Pending from Firebase 2026 transactions
+    const pendingPayables2026 = txn2026
       .filter(t => t.type === 'expense' && t.status === 'pending')
       .reduce((sum, t) => sum + t.amount, 0);
-
-    const pendingReceivables = filteredTransactions
+    const pendingReceivables2026 = txn2026
       .filter(t => t.type === 'income' && t.status === 'pending')
       .reduce((sum, t) => sum + t.amount, 0);
+
+    // Include 2025 CxC/CxP when showing 2025 or all
+    const pendingPayables = pendingPayables2026 + (has2025 ? CXP_2025 : 0);
+    const pendingReceivables = pendingReceivables2026 + (has2025 ? CXC_2025 : 0);
 
     // Projected liquidity = cash + what we'll collect - what we owe
     const projectedLiquidity = cashBalance + pendingReceivables - pendingPayables;
