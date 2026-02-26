@@ -185,20 +185,20 @@ const TransactionFormModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
-      <div className="bg-[#1a1a2e] rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-scaleIn max-h-[90vh] overflow-y-auto">
+      <div className="bg-[#1c1c1e] rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-scaleIn max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="px-6 py-5 border-b border-[#2a2a4a] flex justify-between items-center bg-[#1e1e38]">
+        <div className="px-6 py-5 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#2c2c2e]">
           <div>
-            <h3 className="font-bold text-xl text-[#d0d0e0]">
+            <h3 className="font-bold text-xl text-[#e5e5ea]">
               {editingTransaction ? 'Editar Transacción' : 'Nueva Transacción'}
             </h3>
-            <p className="text-sm text-[#8888b0] mt-0.5">
+            <p className="text-sm text-[#8e8e93] mt-0.5">
               {editingTransaction ? 'Modifica los detalles de la transacción' : 'Ingresa los datos de la nueva transacción'}
             </p>
           </div>
           <button 
             onClick={onClose} 
-            className="p-2 text-[#6868a0] hover:text-[#9898b8] hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all"
+            className="p-2 text-[#636366] hover:text-[#98989d] hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all"
           >
             <X size={20} />
           </button>
@@ -206,15 +206,15 @@ const TransactionFormModal = ({
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {/* Type Selector */}
-          <div className="grid grid-cols-2 gap-3 p-1.5 bg-[#1e1e38] rounded-2xl">
+          <div className="grid grid-cols-2 gap-3 p-1.5 bg-[#2c2c2e] rounded-2xl">
             <button
               type="button"
               onClick={() => handleTypeChange('income')}
               className={`
                 flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
                 ${formData.type === 'income' 
-                  ? 'bg-[#1a1a2e] text-[#34d399] shadow-md' 
-                  : 'text-[#8888b0] hover:text-[#b8b8d0]'}
+                  ? 'bg-[#1c1c1e] text-[#34d399] shadow-md' 
+                  : 'text-[#8e8e93] hover:text-[#c7c7cc]'}
               `}
             >
               <ArrowUpCircle size={18} />
@@ -226,8 +226,8 @@ const TransactionFormModal = ({
               className={`
                 flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
                 ${formData.type === 'expense' 
-                  ? 'bg-[#1a1a2e] text-[#f87171] shadow-md' 
-                  : 'text-[#8888b0] hover:text-[#b8b8d0]'}
+                  ? 'bg-[#1c1c1e] text-[#f87171] shadow-md' 
+                  : 'text-[#8e8e93] hover:text-[#c7c7cc]'}
               `}
             >
               <ArrowDownCircle size={18} />
@@ -238,30 +238,30 @@ const TransactionFormModal = ({
           {/* Date & Amount */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">
+              <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
                 Fecha <span className="text-[#f87171]">*</span>
               </label>
               <input
                 type="date"
                 required
-                className="w-full px-4 py-3 bg-[#13132a] border border-[#2a2a4a] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all"
+                className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
                 value={formData.date}
                 onChange={e => setFormData({...formData, date: e.target.value})}
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">
+              <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
                 Monto (EUR) <span className="text-[#f87171]">*</span>
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6868a0] font-medium">€</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#636366] font-medium">€</span>
                 <input
                   type="number"
                   step="0.01"
                   min="0.01"
                   required
                   placeholder="0.00"
-                  className="w-full pl-8 pr-4 py-3 bg-[#13132a] border border-[#2a2a4a] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all"
+                  className="w-full pl-8 pr-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
                   value={formData.amount}
                   onChange={e => setFormData({...formData, amount: e.target.value})}
                 />
@@ -271,7 +271,7 @@ const TransactionFormModal = ({
 
           {/* Description with Autocomplete */}
           <div className="relative">
-            <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">
+            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
               Descripción <span className="text-[#f87171]">*</span>
             </label>
             <input
@@ -281,7 +281,7 @@ const TransactionFormModal = ({
               placeholder={formData.type === 'income' 
                 ? "ej. Venta de servicios, Factura #123..." 
                 : "ej. Compra de materiales, Pago proveedor..."}
-              className="w-full px-4 py-3 bg-[#13132a] border border-[#2a2a4a] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all"
+              className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
               value={formData.description}
               onChange={handleDescriptionChange}
               onKeyDown={handleDescriptionKeyDown}
@@ -292,7 +292,7 @@ const TransactionFormModal = ({
             {showSuggestions && suggestions.length > 0 && (
               <div
                 ref={suggestionsRef}
-                className="absolute z-10 left-0 right-0 mt-1 bg-[#1a1a2e] border border-[#2a2a4a] rounded-xl shadow-lg overflow-hidden"
+                className="absolute z-10 left-0 right-0 mt-1 bg-[#1c1c1e] border border-[rgba(255,255,255,0.08)] rounded-xl shadow-lg overflow-hidden"
               >
                 {suggestions.map((s, idx) => (
                   <button
@@ -300,11 +300,11 @@ const TransactionFormModal = ({
                     type="button"
                     onClick={() => handleSelectSuggestion(s)}
                     className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
-                      idx === activeSuggestionIndex ? 'bg-[#1e1e38]' : 'hover:bg-[#13132a]'
-                    } ${idx > 0 ? 'border-t border-[#2a2a4a]' : ''}`}
+                      idx === activeSuggestionIndex ? 'bg-[#2c2c2e]' : 'hover:bg-[#111111]'
+                    } ${idx > 0 ? 'border-t border-[rgba(255,255,255,0.08)]' : ''}`}
                   >
-                    <span className="font-medium text-[#d0d0e0]">{s.description}</span>
-                    <span className="text-xs text-[#6868a0] ml-2">
+                    <span className="font-medium text-[#e5e5ea]">{s.description}</span>
+                    <span className="text-xs text-[#636366] ml-2">
                       {s.category} · €{Number(s.amount).toFixed(2)}
                     </span>
                   </button>
@@ -323,21 +323,21 @@ const TransactionFormModal = ({
                   checked={formData.isRecurring}
                   onChange={(e) => setFormData({ ...formData, isRecurring: e.target.checked })}
                 />
-                <div className="w-10 h-5 bg-[#252540] rounded-full peer-checked:bg-[rgba(16,185,129,0.08)]0 transition-colors"></div>
-                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-[#1a1a2e] rounded-full shadow-sm transition-transform peer-checked:translate-x-5"></div>
+                <div className="w-10 h-5 bg-[#2c2c2e] rounded-full peer-checked:bg-[rgba(48,209,88,0.12)] transition-colors"></div>
+                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-[#1c1c1e] rounded-full shadow-sm transition-transform peer-checked:translate-x-5"></div>
               </div>
               <div className="flex items-center gap-2">
-                <RefreshCw size={16} className="text-[#8888b0]" />
-                <span className="text-sm font-semibold text-[#b8b8d0]">Transacción recurrente</span>
+                <RefreshCw size={16} className="text-[#8e8e93]" />
+                <span className="text-sm font-semibold text-[#c7c7cc]">Transacción recurrente</span>
               </div>
             </label>
 
             {formData.isRecurring && (
               <div className="grid grid-cols-2 gap-4 pl-1 animate-fadeIn">
                 <div>
-                  <label className="block text-xs font-medium text-[#9898b8] mb-1.5">Frecuencia</label>
+                  <label className="block text-xs font-medium text-[#98989d] mb-1.5">Frecuencia</label>
                   <select
-                    className="w-full px-3 py-2.5 bg-[#13132a] border border-[#2a2a4a] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm"
+                    className="w-full px-3 py-2.5 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
                     value={formData.recurringFrequency}
                     onChange={e => setFormData({ ...formData, recurringFrequency: e.target.value })}
                   >
@@ -347,10 +347,10 @@ const TransactionFormModal = ({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[#9898b8] mb-1.5">Fecha fin (opcional)</label>
+                  <label className="block text-xs font-medium text-[#98989d] mb-1.5">Fecha fin (opcional)</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2.5 bg-[#13132a] border border-[#2a2a4a] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm"
+                    className="w-full px-3 py-2.5 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
                     value={formData.recurringEndDate}
                     onChange={e => setFormData({ ...formData, recurringEndDate: e.target.value })}
                   />
@@ -361,12 +361,12 @@ const TransactionFormModal = ({
 
           {/* Project */}
           <div>
-            <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">
+            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
               Proyecto <span className="text-[#f87171]">*</span>
             </label>
             <div className="relative">
               {projectsLoading ? (
-                <div className="w-full px-4 py-3 bg-[#13132a] border border-[#2a2a4a] rounded-xl flex items-center gap-2 text-[#8888b0]">
+                <div className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl flex items-center gap-2 text-[#8e8e93]">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   Cargando proyectos...
                 </div>
@@ -377,7 +377,7 @@ const TransactionFormModal = ({
               ) : (
                 <select
                   required
-                  className="w-full px-4 py-3 bg-[#13132a] border border-[#2a2a4a] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm"
+                  className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
                   value={formData.project}
                   onChange={e => setFormData({...formData, project: e.target.value})}
                 >
@@ -394,9 +394,9 @@ const TransactionFormModal = ({
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">Categoría</label>
+            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Categoría</label>
             <select
-              className="w-full px-4 py-3 bg-[#13132a] border border-[#2a2a4a] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm"
+              className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
               value={formData.category}
               onChange={e => setFormData({...formData, category: e.target.value})}
             >
@@ -407,9 +407,9 @@ const TransactionFormModal = ({
           {/* Cost Center - Solo para gastos */}
           {formData.type === 'expense' && (
             <div>
-              <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">Centro de Costo</label>
+              <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Centro de Costo</label>
               <select
-                className="w-full px-4 py-3 bg-[#13132a] border border-[#2a2a4a] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm"
+                className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
                 value={formData.costCenter}
                 onChange={e => setFormData({...formData, costCenter: e.target.value})}
               >
@@ -423,7 +423,7 @@ const TransactionFormModal = ({
 
           {/* Status */}
           <div>
-            <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">Estado de Pago</label>
+            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Estado de Pago</label>
             <div className="flex gap-3">
               <button
                 type="button"
@@ -432,7 +432,7 @@ const TransactionFormModal = ({
                   flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
                   ${formData.status === 'pending'
                     ? 'border-amber-400 bg-[rgba(245,158,11,0.08)] text-[#fbbf24]'
-                    : 'border-[#2a2a4a] text-[#9898b8] hover:border-[rgba(245,158,11,0.25)]'}
+                    : 'border-[rgba(255,255,255,0.08)] text-[#98989d] hover:border-[rgba(245,158,11,0.25)]'}
                 `}
               >
                 Pendiente
@@ -444,7 +444,7 @@ const TransactionFormModal = ({
                   flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
                   ${formData.status === 'paid'
                     ? 'border-emerald-400 bg-[rgba(16,185,129,0.08)] text-[#34d399]'
-                    : 'border-[#2a2a4a] text-[#9898b8] hover:border-[rgba(16,185,129,0.25)]'}
+                    : 'border-[rgba(255,255,255,0.08)] text-[#98989d] hover:border-[rgba(16,185,129,0.25)]'}
                 `}
               >
                 Pagado
@@ -454,7 +454,7 @@ const TransactionFormModal = ({
 
           {/* Comment */}
           <div>
-            <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">
+            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
               Comentario {editingTransaction ? '(agregar nota)' : '(opcional)'}
             </label>
             <textarea
@@ -462,7 +462,7 @@ const TransactionFormModal = ({
               placeholder={editingTransaction 
                 ? "Agregar comentario sobre esta modificación..." 
                 : "Agregar comentario inicial (opcional)..."}
-              className="w-full px-4 py-3 bg-[#13132a] border border-[#2a2a4a] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1a1a2e] outline-none transition-all text-sm resize-none"
+              className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm resize-none"
               value={formData.comment}
               onChange={e => setFormData({...formData, comment: e.target.value})}
             />

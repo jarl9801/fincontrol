@@ -58,7 +58,7 @@ const Categories = ({ user }) => {
 
     if (isEditing) {
       return (
-        <div className="flex items-center gap-2 p-3 bg-[#1a1a2e] rounded-lg border border-[#2a2a4a]">
+        <div className="flex items-center gap-2 p-3 bg-[#1c1c1e] rounded-lg border border-[rgba(255,255,255,0.08)]">
           <input
             type="text"
             className="flex-1 px-3 py-1 border border-blue-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm"
@@ -75,7 +75,7 @@ const Categories = ({ user }) => {
           </button>
           <button
             onClick={() => setEditingItem(null)}
-            className="p-1.5 text-[#6868a0] hover:bg-[rgba(255,255,255,0.05)] rounded transition-colors"
+            className="p-1.5 text-[#636366] hover:bg-[rgba(255,255,255,0.05)] rounded transition-colors"
           >
             <X size={16} />
           </button>
@@ -84,18 +84,18 @@ const Categories = ({ user }) => {
     }
 
     return (
-      <div className="flex items-center justify-between p-3 bg-[#1a1a2e] rounded-lg border border-[#2a2a4a] hover:border-[#3a3a5a] transition-colors">
-        <span className="text-sm text-[#b8b8d0]">{category}</span>
+      <div className="flex items-center justify-between p-3 bg-[#1c1c1e] rounded-lg border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.14)] transition-colors">
+        <span className="text-sm text-[#c7c7cc]">{category}</span>
         <div className="flex items-center gap-1">
           <button
             onClick={() => handleEdit(type, index)}
-            className="p-1.5 text-[#6868a0] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
+            className="p-1.5 text-[#636366] hover:text-[#60a5fa] hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
           >
             <Edit2 size={14} />
           </button>
           <button
             onClick={() => handleDelete(type, index)}
-            className="p-1.5 text-[#6868a0] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
+            className="p-1.5 text-[#636366] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
           >
             <Trash2 size={14} />
           </button>
@@ -108,7 +108,7 @@ const Categories = ({ user }) => {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 text-[#60a5fa] animate-spin" />
-        <span className="ml-3 text-[#8888b0]">Cargando categorias...</span>
+        <span className="ml-3 text-[#8e8e93]">Cargando categorias...</span>
       </div>
     );
   }
@@ -132,7 +132,7 @@ const Categories = ({ user }) => {
           <input
             type="text"
             placeholder="Nueva categoria de gasto..."
-            className="flex-1 px-3 py-2 text-sm border border-[rgba(239,68,68,0.25)] rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none bg-[#1a1a2e]"
+            className="flex-1 px-3 py-2 text-sm border border-[rgba(239,68,68,0.25)] rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none bg-[#1c1c1e]"
             value={newExpense}
             onChange={(e) => setNewExpense(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleAddExpense()}
@@ -169,7 +169,7 @@ const Categories = ({ user }) => {
           <input
             type="text"
             placeholder="Nueva categoria de ingreso..."
-            className="flex-1 px-3 py-2 text-sm border border-[rgba(16,185,129,0.25)] rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none bg-[#1a1a2e]"
+            className="flex-1 px-3 py-2 text-sm border border-[rgba(16,185,129,0.25)] rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none bg-[#1c1c1e]"
             value={newIncome}
             onChange={(e) => setNewIncome(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleAddIncome()}

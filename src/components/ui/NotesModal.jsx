@@ -28,34 +28,34 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-      <div className="bg-[#1a1a2e] rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">
-        <div className="px-6 py-4 border-b border-[#2a2a4a] flex justify-between items-center bg-[#13132a]">
+      <div className="bg-[#1c1c1e] rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">
+        <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#111111]">
           <div>
-            <h3 className="font-bold text-lg text-[#d0d0e0] flex items-center gap-2">
+            <h3 className="font-bold text-lg text-[#e5e5ea] flex items-center gap-2">
               <MessageSquare size={20} /> Notas y Comentarios
             </h3>
-            <p className="text-sm text-[#8888b0] mt-1">{transaction.description}</p>
+            <p className="text-sm text-[#8e8e93] mt-1">{transaction.description}</p>
           </div>
-          <button onClick={onClose} className="text-[#6868a0] hover:text-[#9898b8]">
+          <button onClick={onClose} className="text-[#636366] hover:text-[#98989d]">
             <X size={20} />
           </button>
         </div>
 
-        <div className="border-b border-[#2a2a4a]">
+        <div className="border-b border-[rgba(255,255,255,0.08)]">
           <div className="flex">
             <button
               onClick={() => setActiveTab('comments')}
               className={`flex-1 px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
                 activeTab === 'comments'
                   ? 'border-blue-500 text-[#60a5fa] bg-[rgba(59,130,246,0.08)]'
-                  : 'border-transparent text-[#8888b0] hover:text-[#b8b8d0] hover:bg-[#13132a]'
+                  : 'border-transparent text-[#8e8e93] hover:text-[#c7c7cc] hover:bg-[#111111]'
               }`}
             >
               <div className="flex items-center justify-center gap-2">
                 <MessageSquare size={16} />
                 <span>Comentarios</span>
                 {comments.length > 0 && (
-                  <span className="bg-[rgba(59,130,246,0.08)]0 text-white text-xs px-2 py-0.5 rounded-full">
+                  <span className="bg-[rgba(10,132,255,0.12)] text-white text-xs px-2 py-0.5 rounded-full">
                     {comments.length}
                   </span>
                 )}
@@ -65,8 +65,8 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
               onClick={() => setActiveTab('logs')}
               className={`flex-1 px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
                 activeTab === 'logs'
-                  ? 'border-slate-500 text-[#b8b8d0] bg-[#13132a]'
-                  : 'border-transparent text-[#8888b0] hover:text-[#b8b8d0] hover:bg-[#13132a]'
+                  ? 'border-slate-500 text-[#c7c7cc] bg-[#111111]'
+                  : 'border-transparent text-[#8e8e93] hover:text-[#c7c7cc] hover:bg-[#111111]'
               }`}
             >
               <div className="flex items-center justify-center gap-2">
@@ -104,36 +104,36 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
                 </div>
               ))
             ) : (
-              <p className="text-center text-[#6868a0] py-8">No hay comentarios aún.</p>
+              <p className="text-center text-[#636366] py-8">No hay comentarios aún.</p>
             )
           ) : (
             systemLogs.length > 0 ? (
               systemLogs.map((note, idx) => (
-                <div key={idx} className="p-4 rounded-lg border bg-[#13132a] border-[#2a2a4a]">
+                <div key={idx} className="p-4 rounded-lg border bg-[#111111] border-[rgba(255,255,255,0.08)]">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <AlertCircle size={14} className="text-[#6868a0]" />
-                      <span className="text-xs font-semibold text-[#8888b0]">
+                      <AlertCircle size={14} className="text-[#636366]" />
+                      <span className="text-xs font-semibold text-[#8e8e93]">
                         Sistema
                       </span>
                     </div>
-                    <span className="text-xs text-[#6868a0]">
+                    <span className="text-xs text-[#636366]">
                       {new Date(note.timestamp).toLocaleString('es-ES')}
                     </span>
                   </div>
-                  <p className="text-sm text-[#9898b8] italic">
+                  <p className="text-sm text-[#98989d] italic">
                     {note.text}
                   </p>
                 </div>
               ))
             ) : (
-              <p className="text-center text-[#6868a0] py-8">No hay historial aún.</p>
+              <p className="text-center text-[#636366] py-8">No hay historial aún.</p>
             )
           )}
         </div>
 
         {activeTab === 'comments' && (
-          <div className="p-6 border-t border-[#2a2a4a] bg-[rgba(59,130,246,0.08)]">
+          <div className="p-6 border-t border-[rgba(255,255,255,0.08)] bg-[rgba(59,130,246,0.08)]">
             <div className="flex gap-2">
               <input
                 type="text"

@@ -110,8 +110,8 @@ const CashFlow = ({ transactions, user }) => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#1a1a2e] p-3 rounded-xl shadow-lg border border-[#2a2a4a]">
-          <p className="text-sm font-semibold text-[#b8b8d0] mb-2">{label}</p>
+        <div className="bg-[#1c1c1e] p-3 rounded-xl shadow-lg border border-[rgba(255,255,255,0.08)]">
+          <p className="text-sm font-semibold text-[#c7c7cc] mb-2">{label}</p>
           {payload.map((entry, index) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
               {entry.name}: {formatCurrency(entry.value)}
@@ -133,12 +133,12 @@ const CashFlow = ({ transactions, user }) => {
   return (
     <div className="space-y-6">
       {/* Controls */}
-      <div className="bg-[#1a1a2e] rounded-xl p-4 border border-[#2a2a4a]">
+      <div className="bg-[#1c1c1e] rounded-xl p-4 border border-[rgba(255,255,255,0.08)]">
         <div className="flex gap-2">
           <button
             onClick={() => setView('monthly')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              view === 'monthly' ? 'bg-[#3a3a5a] text-white' : 'bg-[#1e1e38] text-[#9898b8] hover:bg-[#252540]'
+              view === 'monthly' ? 'bg-[rgba(255,255,255,0.14)] text-white' : 'bg-[#2c2c2e] text-[#98989d] hover:bg-[#2c2c2e]'
             }`}
           >
             Vista Mensual
@@ -146,7 +146,7 @@ const CashFlow = ({ transactions, user }) => {
           <button
             onClick={() => setView('weekly')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              view === 'weekly' ? 'bg-[#3a3a5a] text-white' : 'bg-[#1e1e38] text-[#9898b8] hover:bg-[#252540]'
+              view === 'weekly' ? 'bg-[rgba(255,255,255,0.14)] text-white' : 'bg-[#2c2c2e] text-[#98989d] hover:bg-[#2c2c2e]'
             }`}
           >
             Vista Semanal
@@ -156,33 +156,33 @@ const CashFlow = ({ transactions, user }) => {
 
       {/* Bank Balance Banner */}
       {hasBankAccount && (
-        <div className="bg-[#13132a] border border-[#2a2a4a] rounded-xl p-5">
+        <div className="bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl p-5">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-[#252540] rounded-lg">
-              <Landmark className="text-[#9898b8]" size={20} />
+            <div className="p-2 bg-[#2c2c2e] rounded-lg">
+              <Landmark className="text-[#98989d]" size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-[#d0d0e0]">Flujo de Caja Real — {bankAccount.bankName || 'Cuenta Bancaria'}</h3>
-              <p className="text-xs text-[#8888b0]">Basado en saldo bancario del {bankAccount.balanceDate}</p>
+              <h3 className="font-bold text-[#e5e5ea]">Flujo de Caja Real — {bankAccount.bankName || 'Cuenta Bancaria'}</h3>
+              <p className="text-xs text-[#8e8e93]">Basado en saldo bancario del {bankAccount.balanceDate}</p>
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-[#1a1a2e] rounded-lg p-3 border border-[#2a2a4a]">
-              <p className="text-xs text-[#8888b0] mb-1">Saldo Inicial</p>
-              <p className="text-lg font-bold text-[#b8b8d0]">{formatCurrency(bankAccount.balance)}</p>
+            <div className="bg-[#1c1c1e] rounded-lg p-3 border border-[rgba(255,255,255,0.08)]">
+              <p className="text-xs text-[#8e8e93] mb-1">Saldo Inicial</p>
+              <p className="text-lg font-bold text-[#c7c7cc]">{formatCurrency(bankAccount.balance)}</p>
             </div>
-            <div className="bg-[#1a1a2e] rounded-lg p-3 border border-[#2a2a4a]">
-              <p className="text-xs text-[#8888b0] mb-1">Saldo Actual</p>
+            <div className="bg-[#1c1c1e] rounded-lg p-3 border border-[rgba(255,255,255,0.08)]">
+              <p className="text-xs text-[#8e8e93] mb-1">Saldo Actual</p>
               <p className={`text-lg font-bold ${realBalance.currentBalance >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                 {formatCurrency(realBalance.currentBalance)}
               </p>
             </div>
-            <div className="bg-[#1a1a2e] rounded-lg p-3 border border-[#2a2a4a]">
-              <p className="text-xs text-[#8888b0] mb-1">Línea de Crédito</p>
-              <p className="text-lg font-bold text-[#9898b8]">{formatCurrency(Math.abs(creditLimit))}</p>
+            <div className="bg-[#1c1c1e] rounded-lg p-3 border border-[rgba(255,255,255,0.08)]">
+              <p className="text-xs text-[#8e8e93] mb-1">Línea de Crédito</p>
+              <p className="text-lg font-bold text-[#98989d]">{formatCurrency(Math.abs(creditLimit))}</p>
             </div>
-            <div className="bg-[#1a1a2e] rounded-lg p-3 border border-[#2a2a4a]">
-              <p className="text-xs text-[#8888b0] mb-1">Disponible Total</p>
+            <div className="bg-[#1c1c1e] rounded-lg p-3 border border-[rgba(255,255,255,0.08)]">
+              <p className="text-xs text-[#8e8e93] mb-1">Disponible Total</p>
               <p className={`text-lg font-bold ${realBalance.availableCredit > 10000 ? 'text-[#34d399]' : realBalance.availableCredit > 0 ? 'text-[#fbbf24]' : 'text-[#f87171]'}`}>
                 {formatCurrency(realBalance.availableCredit)}
               </p>
@@ -203,25 +203,25 @@ const CashFlow = ({ transactions, user }) => {
 
       {/* Summary metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-[#1a1a2e] rounded-xl p-5 border border-[#2a2a4a]">
+        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#b8b8d0]">Total Entradas</h3>
+            <h3 className="text-sm font-semibold text-[#c7c7cc]">Total Entradas</h3>
             <TrendingUp className="text-[#34d399]" size={18} />
           </div>
           <p className="text-2xl font-bold text-[#34d399]">{formatCurrency(totalIncome)}</p>
         </div>
 
-        <div className="bg-[#1a1a2e] rounded-xl p-5 border border-[#2a2a4a]">
+        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#b8b8d0]">Total Salidas</h3>
+            <h3 className="text-sm font-semibold text-[#c7c7cc]">Total Salidas</h3>
             <TrendingDown className="text-[#f87171]" size={18} />
           </div>
           <p className="text-2xl font-bold text-[#f87171]">{formatCurrency(totalExpenses)}</p>
         </div>
 
-        <div className="bg-[#1a1a2e] rounded-xl p-5 border border-[#2a2a4a]">
+        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#b8b8d0]">Flujo Neto</h3>
+            <h3 className="text-sm font-semibold text-[#c7c7cc]">Flujo Neto</h3>
             <DollarSign className={netCashFlow >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'} size={18} />
           </div>
           <p className={`text-2xl font-bold ${netCashFlow >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
@@ -229,18 +229,18 @@ const CashFlow = ({ transactions, user }) => {
           </p>
         </div>
 
-        <div className="bg-[#1a1a2e] rounded-xl p-5 border border-[#2a2a4a]">
+        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#b8b8d0]">
+            <h3 className="text-sm font-semibold text-[#c7c7cc]">
               {hasBankAccount ? 'Saldo Banco' : 'Saldo Acumulado'}
             </h3>
             {hasBankAccount
-              ? <Landmark className={realBalance.currentBalance >= 0 ? 'text-[#8888b0]' : 'text-[#f87171]'} size={18} />
-              : <DollarSign className={lastPeriod.acumulado >= 0 ? 'text-[#8888b0]' : 'text-[#f87171]'} size={18} />
+              ? <Landmark className={realBalance.currentBalance >= 0 ? 'text-[#8e8e93]' : 'text-[#f87171]'} size={18} />
+              : <DollarSign className={lastPeriod.acumulado >= 0 ? 'text-[#8e8e93]' : 'text-[#f87171]'} size={18} />
             }
           </div>
           <p className={`text-2xl font-bold ${
-            (hasBankAccount ? realBalance.currentBalance : lastPeriod.acumulado) >= 0 ? 'text-[#b8b8d0]' : 'text-[#f87171]'
+            (hasBankAccount ? realBalance.currentBalance : lastPeriod.acumulado) >= 0 ? 'text-[#c7c7cc]' : 'text-[#f87171]'
           }`}>
             {formatCurrency(hasBankAccount ? realBalance.currentBalance : Math.abs(lastPeriod.acumulado))}
           </p>
@@ -249,16 +249,16 @@ const CashFlow = ({ transactions, user }) => {
 
       {/* Monthly Table */}
       {cashFlowData.length > 0 && (
-        <div className="bg-[#1a1a2e] rounded-xl border border-[#2a2a4a] overflow-hidden">
-          <div className="px-6 py-4 border-b border-[#2a2a4a]">
-            <h3 className="text-sm font-semibold text-[#b8b8d0]">
+        <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.08)] overflow-hidden">
+          <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)]">
+            <h3 className="text-sm font-semibold text-[#c7c7cc]">
               Detalle por {view === 'monthly' ? 'Mes' : 'Semana'}
             </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#13132a] text-[#8888b0] text-xs uppercase tracking-wider">
+                <tr className="bg-[#111111] text-[#8e8e93] text-xs uppercase tracking-wider">
                   <th className="text-left px-6 py-3 font-semibold">{view === 'monthly' ? 'Mes' : 'Semana'}</th>
                   <th className="text-right px-6 py-3 font-semibold">Ingresos</th>
                   <th className="text-right px-6 py-3 font-semibold">Egresos</th>
@@ -266,30 +266,30 @@ const CashFlow = ({ transactions, user }) => {
                   <th className="text-right px-6 py-3 font-semibold">Acumulado</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#2a2a4a]">
+              <tbody className="divide-y divide-[rgba(255,255,255,0.08)]">
                 {cashFlowData.map((row, i) => (
-                  <tr key={i} className="hover:bg-[#13132a] transition-colors">
-                    <td className="px-6 py-3 font-medium text-[#b8b8d0]">{row.label}</td>
+                  <tr key={i} className="hover:bg-[#111111] transition-colors">
+                    <td className="px-6 py-3 font-medium text-[#c7c7cc]">{row.label}</td>
                     <td className="px-6 py-3 text-right text-[#34d399]">{formatCurrency(row.ingresos)}</td>
                     <td className="px-6 py-3 text-right text-[#f87171]">{formatCurrency(row.gastos)}</td>
                     <td className={`px-6 py-3 text-right font-medium ${row.neto >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                       {row.neto >= 0 ? '+' : ''}{formatCurrency(row.neto)}
                     </td>
-                    <td className={`px-6 py-3 text-right font-bold ${row.acumulado < 0 ? 'text-[#f87171]' : 'text-[#b8b8d0]'}`}>
+                    <td className={`px-6 py-3 text-right font-bold ${row.acumulado < 0 ? 'text-[#f87171]' : 'text-[#c7c7cc]'}`}>
                       {formatCurrency(row.acumulado)}
                     </td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
-                <tr className="border-t-2 border-[#3a3a5a] bg-[#13132a]">
-                  <td className="px-6 py-3 font-bold text-[#b8b8d0]">Total</td>
+                <tr className="border-t-2 border-[rgba(255,255,255,0.14)] bg-[#111111]">
+                  <td className="px-6 py-3 font-bold text-[#c7c7cc]">Total</td>
                   <td className="px-6 py-3 text-right font-bold text-[#34d399]">{formatCurrency(totalIncome)}</td>
                   <td className="px-6 py-3 text-right font-bold text-[#f87171]">{formatCurrency(totalExpenses)}</td>
                   <td className={`px-6 py-3 text-right font-bold ${netCashFlow >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
                     {netCashFlow >= 0 ? '+' : ''}{formatCurrency(netCashFlow)}
                   </td>
-                  <td className="px-6 py-3 text-right font-bold text-[#b8b8d0]">—</td>
+                  <td className="px-6 py-3 text-right font-bold text-[#c7c7cc]">—</td>
                 </tr>
               </tfoot>
             </table>
@@ -298,8 +298,8 @@ const CashFlow = ({ transactions, user }) => {
       )}
 
       {/* Combined Chart */}
-      <div className="bg-[#1a1a2e] rounded-xl p-6 border border-[#2a2a4a]">
-        <h3 className="text-sm font-semibold text-[#b8b8d0] mb-4">
+      <div className="bg-[#1c1c1e] rounded-xl p-6 border border-[rgba(255,255,255,0.08)]">
+        <h3 className="text-sm font-semibold text-[#c7c7cc] mb-4">
           {hasBankAccount ? 'Ingresos, Gastos y Saldo Real' : 'Ingresos, Gastos y Acumulado'}
         </h3>
         <ResponsiveContainer width="100%" height={360}>
@@ -314,17 +314,17 @@ const CashFlow = ({ transactions, user }) => {
                 <stop offset="100%" stopColor="#ef4444" stopOpacity={0.7} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#2a2a4a" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" vertical={false} />
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 12, fill: '#6868a0' }}
-              axisLine={{ stroke: "#2a2a4a" }}
+              tick={{ fontSize: 12, fill: '#636366' }}
+              axisLine={{ stroke: "rgba(255,255,255,0.08)" }}
               tickLine={false}
             />
             <YAxis
               yAxisId="left"
               tickFormatter={formatAxis}
-              tick={{ fontSize: 12, fill: '#6868a0' }}
+              tick={{ fontSize: 12, fill: '#636366' }}
               axisLine={false}
               tickLine={false}
             />
@@ -332,7 +332,7 @@ const CashFlow = ({ transactions, user }) => {
               yAxisId="right"
               orientation="right"
               tickFormatter={formatAxis}
-              tick={{ fontSize: 12, fill: '#6868a0' }}
+              tick={{ fontSize: 12, fill: '#636366' }}
               axisLine={false}
               tickLine={false}
             />
@@ -343,7 +343,7 @@ const CashFlow = ({ transactions, user }) => {
               iconSize={8}
               wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
             />
-            <ReferenceLine yAxisId="left" y={0} stroke="#3a3a5a" strokeWidth={1} />
+            <ReferenceLine yAxisId="left" y={0} stroke="rgba(255,255,255,0.14)" strokeWidth={1} />
             {creditLimit < 0 && (
               <ReferenceLine
                 yAxisId="right"
@@ -376,8 +376,8 @@ const CashFlow = ({ transactions, user }) => {
               name="Acumulado"
               stroke="#6366f1"
               strokeWidth={2.5}
-              dot={{ r: 4, fill: '#6366f1', stroke: '#1a1a2e', strokeWidth: 2 }}
-              activeDot={{ r: 6, fill: '#6366f1', stroke: '#1a1a2e', strokeWidth: 2 }}
+              dot={{ r: 4, fill: '#6366f1', stroke: '#1c1c1e', strokeWidth: 2 }}
+              activeDot={{ r: 6, fill: '#6366f1', stroke: '#1c1c1e', strokeWidth: 2 }}
             />
           </ComposedChart>
         </ResponsiveContainer>

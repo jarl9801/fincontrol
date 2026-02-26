@@ -52,7 +52,7 @@ const ReportCXC = ({ transactions }) => {
     <div className="space-y-6">
       {/* Header con exportar */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-[#d0d0e0]">Reporte de Cuentas por Cobrar</h2>
+        <h2 className="text-xl font-bold text-[#e5e5ea]">Reporte de Cuentas por Cobrar</h2>
         <button
           onClick={() => exportCXCToPDF(transactions)}
           className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
@@ -63,48 +63,48 @@ const ReportCXC = ({ transactions }) => {
 
       {/* Métricas principales */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-[#2a2a4a]">
+        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Total por Cobrar</h3>
+            <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Total por Cobrar</h3>
             <TrendingUp className="text-[#34d399]" size={20} />
           </div>
           <p className="text-2xl font-bold text-[#34d399]">{formatCurrency(totalReceivable)}</p>
-          <p className="text-xs text-[#6868a0] mt-1">{receivables.length} facturas</p>
+          <p className="text-xs text-[#636366] mt-1">{receivables.length} facturas</p>
         </div>
 
-        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-[#2a2a4a]">
+        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Monto Vencido</h3>
+            <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Monto Vencido</h3>
             <AlertCircle className="text-[#f87171]" size={20} />
           </div>
           <p className="text-2xl font-bold text-[#f87171]">{formatCurrency(overdueAmount)}</p>
-          <p className="text-xs text-[#6868a0] mt-1">{agingAnalysis.over90.count} facturas</p>
+          <p className="text-xs text-[#636366] mt-1">{agingAnalysis.over90.count} facturas</p>
         </div>
 
-        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-[#2a2a4a]">
+        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Critico (90+ dias)</h3>
+            <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Critico (90+ dias)</h3>
             <Clock className="text-[#fbbf24]" size={20} />
           </div>
           <p className="text-2xl font-bold text-[#fbbf24]">{formatCurrency(criticalAmount)}</p>
-          <p className="text-xs text-[#6868a0] mt-1">{agingAnalysis.days60_90.count + agingAnalysis.over90.count} facturas</p>
+          <p className="text-xs text-[#636366] mt-1">{agingAnalysis.days60_90.count + agingAnalysis.over90.count} facturas</p>
         </div>
 
-        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-[#2a2a4a]">
+        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Al Corriente</h3>
+            <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Al Corriente</h3>
             <TrendingUp className="text-[#34d399]" size={20} />
           </div>
           <p className="text-2xl font-bold text-[#34d399]">{formatCurrency(currentAmount)}</p>
-          <p className="text-xs text-[#6868a0] mt-1">{agingAnalysis.current.count} facturas</p>
+          <p className="text-xs text-[#636366] mt-1">{agingAnalysis.current.count} facturas</p>
         </div>
       </div>
 
       {/* Gráfico y tabla de antigüedad */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Gráfico de barras */}
-        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-[#2a2a4a]">
-          <h3 className="text-lg font-bold text-[#d0d0e0] mb-4">Analisis de Antiguedad</h3>
+        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
+          <h3 className="text-lg font-bold text-[#e5e5ea] mb-4">Analisis de Antiguedad</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -117,27 +117,27 @@ const ReportCXC = ({ transactions }) => {
         </div>
 
         {/* Tabla resumen */}
-        <div className="bg-[#1a1a2e] rounded-xl p-6 shadow-sm border border-[#2a2a4a]">
-          <h3 className="text-lg font-bold text-[#d0d0e0] mb-4">Resumen por Antiguedad</h3>
+        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
+          <h3 className="text-lg font-bold text-[#e5e5ea] mb-4">Resumen por Antiguedad</h3>
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#2a2a4a]">
-                <th className="text-left py-2 text-sm font-semibold text-[#8888b0]">Periodo</th>
-                <th className="text-center py-2 text-sm font-semibold text-[#8888b0]">Facturas</th>
-                <th className="text-right py-2 text-sm font-semibold text-[#8888b0]">Monto</th>
+              <tr className="border-b border-[rgba(255,255,255,0.08)]">
+                <th className="text-left py-2 text-sm font-semibold text-[#8e8e93]">Periodo</th>
+                <th className="text-center py-2 text-sm font-semibold text-[#8e8e93]">Facturas</th>
+                <th className="text-right py-2 text-sm font-semibold text-[#8e8e93]">Monto</th>
               </tr>
             </thead>
             <tbody>
               {Object.values(agingAnalysis).map((item, idx) => (
-                <tr key={idx} className="border-b border-[#2a2a4a]">
-                  <td className="py-3 text-sm text-[#b8b8d0]">{item.label}</td>
-                  <td className="py-3 text-sm text-[#b8b8d0] text-center">{item.count}</td>
+                <tr key={idx} className="border-b border-[rgba(255,255,255,0.08)]">
+                  <td className="py-3 text-sm text-[#c7c7cc]">{item.label}</td>
+                  <td className="py-3 text-sm text-[#c7c7cc] text-center">{item.count}</td>
                   <td className="py-3 text-sm font-medium text-right text-[#34d399]">{formatCurrency(item.amount)}</td>
                 </tr>
               ))}
-              <tr className="bg-[#13132a]">
-                <td className="py-3 text-sm font-bold text-[#d0d0e0]">Total</td>
-                <td className="py-3 text-sm font-bold text-[#d0d0e0] text-center">{receivables.length}</td>
+              <tr className="bg-[#111111]">
+                <td className="py-3 text-sm font-bold text-[#e5e5ea]">Total</td>
+                <td className="py-3 text-sm font-bold text-[#e5e5ea] text-center">{receivables.length}</td>
                 <td className="py-3 text-sm font-bold text-right text-[#34d399]">{formatCurrency(totalReceivable)}</td>
               </tr>
             </tbody>
@@ -146,31 +146,31 @@ const ReportCXC = ({ transactions }) => {
       </div>
 
       {/* Detalle de facturas */}
-      <div className="bg-[#1a1a2e] rounded-xl shadow-sm border border-[#2a2a4a] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#2a2a4a]">
-          <h3 className="text-lg font-bold text-[#d0d0e0]">Detalle de Cuentas por Cobrar</h3>
+      <div className="bg-[#1c1c1e] rounded-xl shadow-sm border border-[rgba(255,255,255,0.08)] overflow-hidden">
+        <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)]">
+          <h3 className="text-lg font-bold text-[#e5e5ea]">Detalle de Cuentas por Cobrar</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-[#13132a] border-b border-[#2a2a4a]">
+            <thead className="bg-[#111111] border-b border-[rgba(255,255,255,0.08)]">
               <tr>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8888b0] uppercase">Fecha</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8888b0] uppercase">Descripcion</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8888b0] uppercase">Proyecto</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8888b0] uppercase">Categoria</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8888b0] uppercase text-right">Monto</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8888b0] uppercase text-center">Dias</th>
+                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Fecha</th>
+                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Descripcion</th>
+                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Proyecto</th>
+                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Categoria</th>
+                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase text-right">Monto</th>
+                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase text-center">Dias</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2a2a4a]">
+            <tbody className="divide-y divide-[rgba(255,255,255,0.08)]">
               {receivables.map(t => {
                 const days = getDaysOverdue(t.date);
                 return (
-                  <tr key={t.id} className="hover:bg-[#13132a]">
-                    <td className="px-4 py-3 text-sm text-[#9898b8]">{formatDate(t.date)}</td>
-                    <td className="px-4 py-3 text-sm font-medium text-[#d0d0e0]">{t.description}</td>
-                    <td className="px-4 py-3 text-sm text-[#9898b8]">{t.project || '-'}</td>
-                    <td className="px-4 py-3 text-sm text-[#9898b8]">{t.category || '-'}</td>
+                  <tr key={t.id} className="hover:bg-[#111111]">
+                    <td className="px-4 py-3 text-sm text-[#98989d]">{formatDate(t.date)}</td>
+                    <td className="px-4 py-3 text-sm font-medium text-[#e5e5ea]">{t.description}</td>
+                    <td className="px-4 py-3 text-sm text-[#98989d]">{t.project || '-'}</td>
+                    <td className="px-4 py-3 text-sm text-[#98989d]">{t.category || '-'}</td>
                     <td className="px-4 py-3 text-sm font-medium text-[#34d399] text-right">{formatCurrency(t.amount)}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -187,7 +187,7 @@ const ReportCXC = ({ transactions }) => {
               })}
               {receivables.length === 0 && (
                 <tr>
-                  <td colSpan="6" className="px-4 py-8 text-center text-[#6868a0]">
+                  <td colSpan="6" className="px-4 py-8 text-center text-[#636366]">
                     No hay cuentas por cobrar pendientes
                   </td>
                 </tr>

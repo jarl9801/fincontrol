@@ -41,7 +41,7 @@ const BankAccount = ({ user, transactions }) => {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 text-[#60a5fa] animate-spin" />
-        <span className="ml-3 text-[#8888b0]">Cargando datos bancarios...</span>
+        <span className="ml-3 text-[#8e8e93]">Cargando datos bancarios...</span>
       </div>
     );
   }
@@ -59,58 +59,58 @@ const BankAccount = ({ user, transactions }) => {
           <Landmark className="text-[#60a5fa]" size={24} />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-[#d0d0e0]">Cuenta Bancaria</h2>
-          <p className="text-sm text-[#8888b0]">Configura el saldo inicial y linea de credito para calcular el flujo de caja real</p>
+          <h2 className="text-xl font-bold text-[#e5e5ea]">Cuenta Bancaria</h2>
+          <p className="text-sm text-[#8e8e93]">Configura el saldo inicial y linea de credito para calcular el flujo de caja real</p>
         </div>
       </div>
 
       {/* Form */}
-      <div className="bg-[#1a1a2e] rounded-2xl p-6 shadow-sm border border-[#2a2a4a]">
-        <h3 className="text-lg font-bold text-[#d0d0e0] mb-4">Datos de la Cuenta</h3>
+      <div className="bg-[#1c1c1e] rounded-2xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
+        <h3 className="text-lg font-bold text-[#e5e5ea] mb-4">Datos de la Cuenta</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[#b8b8d0] mb-1">Nombre del Banco</label>
+            <label className="block text-sm font-medium text-[#c7c7cc] mb-1">Nombre del Banco</label>
             <input
               type="text"
-              className="w-full px-4 py-2.5 border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={form.bankName}
               onChange={(e) => setForm({ ...form, bankName: e.target.value })}
               placeholder="Ej: CaixaBank, Santander..."
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#b8b8d0] mb-1">Fecha del Saldo</label>
+            <label className="block text-sm font-medium text-[#c7c7cc] mb-1">Fecha del Saldo</label>
             <input
               type="date"
-              className="w-full px-4 py-2.5 border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={form.balanceDate}
               onChange={(e) => setForm({ ...form, balanceDate: e.target.value })}
             />
-            <p className="text-xs text-[#6868a0] mt-1">Las transacciones pagadas despues de esta fecha se suman/restan al saldo</p>
+            <p className="text-xs text-[#636366] mt-1">Las transacciones pagadas despues de esta fecha se suman/restan al saldo</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#b8b8d0] mb-1">Saldo Bancario (EUR)</label>
+            <label className="block text-sm font-medium text-[#c7c7cc] mb-1">Saldo Bancario (EUR)</label>
             <input
               type="number"
               step="0.01"
-              className="w-full px-4 py-2.5 border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={form.balance}
               onChange={(e) => setForm({ ...form, balance: e.target.value })}
               placeholder="Ej: 15000.00"
             />
-            <p className="text-xs text-[#6868a0] mt-1">El saldo real de tu cuenta a la fecha indicada</p>
+            <p className="text-xs text-[#636366] mt-1">El saldo real de tu cuenta a la fecha indicada</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#b8b8d0] mb-1">Limite Linea de Credito (EUR)</label>
+            <label className="block text-sm font-medium text-[#c7c7cc] mb-1">Limite Linea de Credito (EUR)</label>
             <input
               type="number"
               step="0.01"
-              className="w-full px-4 py-2.5 border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={form.creditLineLimit}
               onChange={(e) => setForm({ ...form, creditLineLimit: e.target.value })}
               placeholder="-40000"
             />
-            <p className="text-xs text-[#6868a0] mt-1">Valor negativo. Ej: -40000 significa que puedes deber hasta 40.000 EUR</p>
+            <p className="text-xs text-[#636366] mt-1">Valor negativo. Ej: -40000 significa que puedes deber hasta 40.000 EUR</p>
           </div>
         </div>
 
@@ -132,18 +132,18 @@ const BankAccount = ({ user, transactions }) => {
       {/* Real Balance Cards */}
       {bankAccount && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-[#2a2a4a]">
+          <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Saldo Inicial</h3>
+              <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Saldo Inicial</h3>
               <Landmark className="text-[#60a5fa]" size={20} />
             </div>
             <p className="text-2xl font-bold text-[#60a5fa]">{formatCurrency(realBalance.startingBalance)}</p>
-            <p className="text-xs text-[#6868a0] mt-1">Al {bankAccount.balanceDate}</p>
+            <p className="text-xs text-[#636366] mt-1">Al {bankAccount.balanceDate}</p>
           </div>
 
-          <div className="bg-[#1a1a2e] rounded-xl p-5 shadow-sm border border-[#2a2a4a]">
+          <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Movimiento Neto</h3>
+              <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Movimiento Neto</h3>
               {realBalance.netMovement >= 0
                 ? <TrendingUp className="text-[#34d399]" size={20} />
                 : <TrendingDown className="text-[#f87171]" size={20} />
@@ -152,29 +152,29 @@ const BankAccount = ({ user, transactions }) => {
             <p className={`text-2xl font-bold ${realBalance.netMovement >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
               {realBalance.netMovement >= 0 ? '+' : ''}{formatCurrency(realBalance.netMovement)}
             </p>
-            <p className="text-xs text-[#6868a0] mt-1">{realBalance.transactionsCount} transacciones pagadas</p>
+            <p className="text-xs text-[#636366] mt-1">{realBalance.transactionsCount} transacciones pagadas</p>
           </div>
 
-          <div className={`bg-[#1a1a2e] rounded-xl p-5 shadow-sm border ${realBalance.currentBalance < 0 ? 'border-[rgba(239,68,68,0.25)]' : 'border-[#2a2a4a]'}`}>
+          <div className={`bg-[#1c1c1e] rounded-xl p-5 shadow-sm border ${realBalance.currentBalance < 0 ? 'border-[rgba(239,68,68,0.25)]' : 'border-[rgba(255,255,255,0.08)]'}`}>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Saldo Actual</h3>
+              <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Saldo Actual</h3>
               <Landmark className={realBalance.currentBalance >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'} size={20} />
             </div>
             <p className={`text-2xl font-bold ${realBalance.currentBalance >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
               {formatCurrency(realBalance.currentBalance)}
             </p>
-            <p className="text-xs text-[#6868a0] mt-1">Saldo proyectado hoy</p>
+            <p className="text-xs text-[#636366] mt-1">Saldo proyectado hoy</p>
           </div>
 
-          <div className={`bg-[#1a1a2e] rounded-xl p-5 shadow-sm border ${parseFloat(creditUtilizationPct) > 80 ? 'border-[rgba(239,68,68,0.25)]' : 'border-[#2a2a4a]'}`}>
+          <div className={`bg-[#1c1c1e] rounded-xl p-5 shadow-sm border ${parseFloat(creditUtilizationPct) > 80 ? 'border-[rgba(239,68,68,0.25)]' : 'border-[rgba(255,255,255,0.08)]'}`}>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-[#8888b0] uppercase tracking-wide">Credito Disponible</h3>
+              <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Credito Disponible</h3>
               <CreditCard className={parseFloat(creditUtilizationPct) > 80 ? 'text-[#f87171]' : 'text-[#60a5fa]'} size={20} />
             </div>
             <p className={`text-2xl font-bold ${parseFloat(creditUtilizationPct) > 80 ? 'text-[#f87171]' : 'text-[#60a5fa]'}`}>
               {formatCurrency(realBalance.availableCredit)}
             </p>
-            <p className="text-xs text-[#6868a0] mt-1">
+            <p className="text-xs text-[#636366] mt-1">
               Limite: {formatCurrency(Math.abs(creditLimit))} | Usado: {creditUtilizationPct}%
             </p>
           </div>
@@ -183,21 +183,21 @@ const BankAccount = ({ user, transactions }) => {
 
       {/* Credit Line Visualization */}
       {bankAccount && creditLimit < 0 && (
-        <div className="bg-[#1a1a2e] rounded-2xl p-6 shadow-sm border border-[#2a2a4a]">
-          <h3 className="text-lg font-bold text-[#d0d0e0] mb-4">Utilizacion de Linea de Credito</h3>
+        <div className="bg-[#1c1c1e] rounded-2xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
+          <h3 className="text-lg font-bold text-[#e5e5ea] mb-4">Utilizacion de Linea de Credito</h3>
 
           <div className="mb-4">
             <div className="flex justify-between text-sm mb-2">
-              <span className="text-[#9898b8]">Limite: {formatCurrency(Math.abs(creditLimit))}</span>
+              <span className="text-[#98989d]">Limite: {formatCurrency(Math.abs(creditLimit))}</span>
               <span className={`font-medium ${parseFloat(creditUtilizationPct) > 80 ? 'text-[#f87171]' : 'text-[#60a5fa]'}`}>
                 {creditUtilizationPct}% utilizado
               </span>
             </div>
-            <div className="w-full h-4 bg-[#252540] rounded-full overflow-hidden">
+            <div className="w-full h-4 bg-[#2c2c2e] rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${
-                  parseFloat(creditUtilizationPct) > 80 ? 'bg-[rgba(239,68,68,0.08)]0' :
-                  parseFloat(creditUtilizationPct) > 50 ? 'bg-[rgba(245,158,11,0.08)]0' : 'bg-[rgba(59,130,246,0.08)]0'
+                  parseFloat(creditUtilizationPct) > 80 ? 'bg-[rgba(255,69,58,0.12)]' :
+                  parseFloat(creditUtilizationPct) > 50 ? 'bg-[rgba(255,159,10,0.12)]' : 'bg-[rgba(10,132,255,0.12)]'
                 }`}
                 style={{ width: `${Math.min(parseFloat(creditUtilizationPct), 100)}%` }}
               />
@@ -205,7 +205,7 @@ const BankAccount = ({ user, transactions }) => {
           </div>
 
           {/* Scale markers */}
-          <div className="flex justify-between text-xs text-[#6868a0]">
+          <div className="flex justify-between text-xs text-[#636366]">
             <span>0 EUR</span>
             <span>{formatCurrency(Math.abs(creditLimit) * 0.5)}</span>
             <span>{formatCurrency(Math.abs(creditLimit))}</span>

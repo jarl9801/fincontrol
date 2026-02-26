@@ -13,22 +13,22 @@ const Card = ({ title, amount, icon: Icon, colorClass, subtext, alert, trend }) 
   const getTrendColor = () => {
     if (trend === 'up') return 'text-[#34d399]';
     if (trend === 'down') return 'text-[#f87171]';
-    return 'text-[#6868a0]';
+    return 'text-[#636366]';
   };
 
   return (
     <div className={`
-      relative bg-[#1a1a2e] p-5 rounded-xl border transition-all duration-200
+      relative bg-[#1c1c1e] p-5 rounded-xl border transition-all duration-200
       ${alert
         ? 'border-l-4 border-l-rose-400 border-t-slate-200 border-r-slate-200 border-b-slate-200 shadow-sm'
-        : 'border-[#2a2a4a] shadow-sm hover:shadow-md'
+        : 'border-[rgba(255,255,255,0.08)] shadow-sm hover:shadow-md'
       }
     `}>
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-[#8888b0] uppercase tracking-wide mb-2">{title}</p>
+          <p className="text-xs font-medium text-[#8e8e93] uppercase tracking-wide mb-2">{title}</p>
 
-          <h3 className={`text-2xl font-semibold tracking-tight ${isNegative ? 'text-[#f87171]' : 'text-[#d0d0e0]'}`}>
+          <h3 className={`text-2xl font-semibold tracking-tight ${isNegative ? 'text-[#f87171]' : 'text-[#e5e5ea]'}`}>
             {formatCurrency(amount)}
           </h3>
 
@@ -39,18 +39,18 @@ const Card = ({ title, amount, icon: Icon, colorClass, subtext, alert, trend }) 
                   {getTrendIcon()}
                 </span>
               )}
-              {subtext && <p className="text-xs text-[#6868a0]">{subtext}</p>}
+              {subtext && <p className="text-xs text-[#636366]">{subtext}</p>}
             </div>
           )}
         </div>
 
-        <div className="p-2.5 rounded-lg bg-[#1e1e38]">
-          <Icon className="w-5 h-5 text-[#9898b8]" />
+        <div className="p-2.5 rounded-lg bg-[#2c2c2e]">
+          <Icon className="w-5 h-5 text-[#98989d]" />
         </div>
       </div>
 
       {alert && (
-        <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-[#2a2a4a]">
+        <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-[rgba(255,255,255,0.08)]">
           <AlertTriangle className="w-3.5 h-3.5 text-[#f87171]" />
           <span className="text-xs font-medium text-[#f87171]">Requiere atención</span>
         </div>

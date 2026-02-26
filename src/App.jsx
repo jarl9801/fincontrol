@@ -45,7 +45,7 @@ const VIEW_TITLES = {
 
 // Skeleton Loading Component
 const SkeletonCard = () => (
-  <div className="bg-[#1a1a2e] p-6 rounded-2xl shadow-sm border border-[#2a2a4a]">
+  <div className="bg-[#1c1c1e] p-6 rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)]">
     <div className="flex items-center justify-between">
       <div className="flex-1">
         <div className="skeleton h-4 w-24 mb-2"></div>
@@ -64,7 +64,7 @@ const LoadingState = () => (
           <Loader2 className="w-10 h-10 text-[#00C853] animate-spin" />
           <div className="absolute inset-0 bg-[#00C853]/20 blur-xl rounded-full"></div>
         </div>
-        <p className="text-[#9898b8] font-medium">Cargando datos financieros...</p>
+        <p className="text-[#98989d] font-medium">Cargando datos financieros...</p>
       </div>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -73,7 +73,7 @@ const LoadingState = () => (
       <SkeletonCard />
       <SkeletonCard />
     </div>
-    <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
+    <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
       <div className="skeleton h-6 w-48 mb-6"></div>
       <div className="space-y-3">
         <div className="skeleton h-12 w-full rounded-lg"></div>
@@ -176,7 +176,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-full bg-[#0f0f1a] font-sans text-[#e8e8f0] overflow-hidden">
+    <div className="flex h-full bg-black font-sans text-white overflow-hidden">
       <Sidebar
         user={user}
         userRole={userRole}
@@ -187,15 +187,15 @@ function App() {
 
       <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
         {/* Top Header */}
-        <div className="flex-shrink-0 bg-[#1a1a2e]/95 backdrop-blur-sm border-b border-[#2a2a4a] px-4 md:px-8 py-4 z-30">
+        <div className="flex-shrink-0 bg-[rgba(28,28,30,0.85)] backdrop-blur-xl border-b border-[rgba(255,255,255,0.06)] px-4 md:px-8 py-3 z-30">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <MobileMenuButton onClick={() => setIsMobileMenuOpen(true)} />
               <div>
-                <h2 className="text-xl md:text-2xl font-bold text-[#e8e8f0]">
+                <h2 className="text-xl md:text-2xl font-bold text-[#ffffff]">
                   {VIEW_TITLES[view] || 'Dashboard'}
                 </h2>
-                <p className="text-xs text-[#6868a0] hidden md:block">
+                <p className="text-xs text-[#636366] hidden md:block">
                   {new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                 </p>
               </div>
@@ -203,9 +203,9 @@ function App() {
 
             {!loading && (
               <div className="hidden md:flex items-center gap-4">
-                <div className="flex items-center gap-2 px-4 py-2 bg-[#252540] rounded-xl border border-[#2a2a4a] shadow-sm">
+                <div className="flex items-center gap-2 px-4 py-2 bg-[#2c2c2e] rounded-xl border border-[rgba(255,255,255,0.08)] shadow-sm">
                   <div className="w-2 h-2 bg-[#00C853] rounded-full animate-pulse"></div>
-                  <span className="text-sm text-[#9898b8]">
+                  <span className="text-sm text-[#98989d]">
                     {filteredTransactions.length} transacciones
                   </span>
                 </div>

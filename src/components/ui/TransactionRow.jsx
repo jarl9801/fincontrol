@@ -55,14 +55,14 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
 
   return (
     <tr className={`
-      group transition-all duration-200 border-b border-[#2a2a4a] last:border-0
+      group transition-all duration-200 border-b border-[rgba(255,255,255,0.08)] last:border-0
       ${isOverdue ? 'bg-[rgba(239,68,68,0.04)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}
       ${isNew ? 'animate-pulse-glow' : ''}
     `}>
       {/* Fecha */}
       <td className="px-4 py-4 whitespace-nowrap">
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-[#b8b8d0]">{formatDate(t.date)}</span>
+          <span className="text-sm font-medium text-[#c7c7cc]">{formatDate(t.date)}</span>
           {isOverdue && (
             <span className="text-[10px] text-[#f87171] font-medium">Vencido</span>
           )}
@@ -89,19 +89,19 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
                 <span className="w-2 h-2 rounded-full bg-[#00C853] flex-shrink-0" />
               )}
 
-              <span className="text-sm font-semibold text-[#e8e8f0]">
+              <span className="text-sm font-semibold text-[#ffffff]">
                 {highlightText(t.description)}
               </span>
               
               {isNew && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#00C853] text-[#0f0f1a] shadow-sm">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#00C853] text-[#000000] shadow-sm">
                   <Sparkles size={10} />
                   Nueva
                 </span>
               )}
 
               {t.isRecurring && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(255,255,255,0.06)] text-[#9898b8] border border-[#2a2a4a]">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(255,255,255,0.06)] text-[#98989d] border border-[rgba(255,255,255,0.08)]">
                   <RefreshCw size={10} />
                   Recurrente
                 </span>
@@ -115,12 +115,12 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
               )}
 
               {hasRecentComments && (
-                <span className="text-[#6868a0]" title="Comentario reciente">
-                  <MessageSquare size={12} className="fill-[#3a3a5a]" />
+                <span className="text-[#636366]" title="Comentario reciente">
+                  <MessageSquare size={12} className="fill-[rgba(255,255,255,0.14)]" />
                 </span>
               )}
             </div>
-            <span className="text-xs text-[#6868a0] block mt-0.5">{t.project}</span>
+            <span className="text-xs text-[#636366] block mt-0.5">{t.project}</span>
           </div>
         </div>
       </td>
@@ -170,7 +170,7 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
               p-2 rounded-lg transition-all duration-200
               ${isNew 
                 ? 'text-[#00C853] hover:bg-[rgba(0,200,83,0.08)]' 
-                : 'text-[#6868a0] hover:text-[#00C853] hover:bg-[rgba(255,255,255,0.04)]'}
+                : 'text-[#636366] hover:text-[#00C853] hover:bg-[rgba(255,255,255,0.04)]'}
             `}
             title="Ver notas"
           >
@@ -182,7 +182,7 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
               p-2 rounded-lg transition-all duration-200
               ${isNew 
                 ? 'text-[#00C853] hover:bg-[rgba(0,200,83,0.08)]' 
-                : 'text-[#6868a0] hover:text-[#00C853] hover:bg-[rgba(255,255,255,0.04)]'}
+                : 'text-[#636366] hover:text-[#00C853] hover:bg-[rgba(255,255,255,0.04)]'}
             `}
             title="Editar"
           >
@@ -191,7 +191,7 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
           {userRole === 'admin' && (
             <button
               onClick={() => onDelete(t)}
-              className="p-2 text-[#6868a0] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all duration-200"
+              className="p-2 text-[#636366] hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all duration-200"
               title="Eliminar"
             >
               <Trash2 size={16} />

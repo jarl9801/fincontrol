@@ -281,22 +281,22 @@ const Reports = ({ transactions }) => {
         ${isTotal ? 'bg-slate-800 text-white' : ''}
         ${isSubtotal ? 'bg-[rgba(255,255,255,0.02)] font-semibold' : ''}
         ${!isTotal && !isSubtotal ? 'hover:bg-[rgba(59,130,246,0.08)]/40' : ''}
-        border-b border-[#2a2a4a]
+        border-b border-[rgba(255,255,255,0.08)]
       `}>
-        <td className={`px-5 py-3.5 ${indent > 0 ? 'pl-10' : ''} ${isTotal ? 'font-bold text-lg' : ''} ${indent > 0 && !isSubtotal ? 'text-[#9898b8]' : ''}`}>
+        <td className={`px-5 py-3.5 ${indent > 0 ? 'pl-10' : ''} ${isTotal ? 'font-bold text-lg' : ''} ${indent > 0 && !isSubtotal ? 'text-[#98989d]' : ''}`}>
           {label}
         </td>
         <td className={`px-5 py-3.5 text-right tabular-nums ${isTotal ? 'text-lg' : 'text-sm'} ${
-          isNegative ? (isTotal ? 'text-white' : 'text-[#9898b8]') : ''
+          isNegative ? (isTotal ? 'text-white' : 'text-[#98989d]') : ''
         }`}>
           {isNegative && !isTotal ? '(' : ''}{formatCurrency(Math.abs(amount))}{isNegative && !isTotal ? ')' : ''}
         </td>
-        <td className={`px-5 py-3.5 text-right text-sm tabular-nums ${isTotal ? 'text-[#585890]' : 'text-[#6868a0]'}`}>
+        <td className={`px-5 py-3.5 text-right text-sm tabular-nums ${isTotal ? 'text-[#636366]' : 'text-[#636366]'}`}>
           {percentOfIncome.toFixed(1)}%
         </td>
         {compareMode && (
           <>
-            <td className={`px-5 py-3.5 text-right text-sm tabular-nums ${isTotal ? 'text-[#585890]' : 'text-[#6868a0]'}`}>
+            <td className={`px-5 py-3.5 text-right text-sm tabular-nums ${isTotal ? 'text-[#636366]' : 'text-[#636366]'}`}>
               {prevAmount !== undefined ? formatCurrency(prevAmount) : '-'}
             </td>
             <td className="px-5 py-3.5 text-right">
@@ -321,8 +321,8 @@ const Reports = ({ transactions }) => {
     const colors = {
       emerald: 'bg-emerald-600/90 text-white',
       rose: 'bg-rose-600/90 text-white',
-      blue: 'bg-[#3a3a5a]/90 text-white',
-      amber: 'bg-[rgba(245,158,11,0.08)]0/90 text-white',
+      blue: 'bg-[rgba(255,255,255,0.14)]/90 text-white',
+      amber: 'bg-[rgba(255,159,10,0.15)] text-white',
       slate: 'bg-slate-600/90 text-white'
     };
 
@@ -341,14 +341,14 @@ const Reports = ({ transactions }) => {
     borderRadius: '12px',
     padding: '10px 14px',
     boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)',
-    color: '#0f0f1a',
+    color: '#000000',
     fontSize: '13px'
   };
 
   return (
     <div className="space-y-6">
       {/* Controls */}
-      <div className="bg-[#1a1a2e] rounded-2xl p-5 shadow-sm border border-[#2a2a4a]">
+      <div className="bg-[#1c1c1e] rounded-2xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
         <div className="flex flex-wrap items-center justify-between gap-4">
           {/* Period selector */}
           <div className="flex items-center gap-2 flex-wrap">
@@ -359,9 +359,9 @@ const Reports = ({ transactions }) => {
                 <button
                   onClick={() => navigateMonth(-1)}
                   disabled={!canNavigatePrev}
-                  className="p-2 rounded-l-xl border border-r-0 border-[#2a2a4a] bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="p-2 rounded-l-xl border border-r-0 border-[rgba(255,255,255,0.08)] bg-[#1c1c1e] hover:bg-[#111111] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
-                  <ChevronLeft size={16} className="text-[#8888b0]" />
+                  <ChevronLeft size={16} className="text-[#8e8e93]" />
                 </button>
 
                 {/* Month button */}
@@ -370,7 +370,7 @@ const Reports = ({ transactions }) => {
                   className={`flex items-center gap-2 px-4 py-2 border text-sm font-medium transition-all ${
                     periodType === 'month'
                       ? 'bg-[rgba(0,200,83,0.15)] text-[#00C853] border-[rgba(0,200,83,0.3)] shadow-sm'
-                      : 'bg-[#1a1a2e] text-[#9898b8] border-[#2a2a4a] hover:bg-[#13132a]'
+                      : 'bg-[#1c1c1e] text-[#98989d] border-[rgba(255,255,255,0.08)] hover:bg-[#111111]'
                   }`}
                 >
                   <Calendar size={15} />
@@ -382,18 +382,18 @@ const Reports = ({ transactions }) => {
                 <button
                   onClick={() => navigateMonth(1)}
                   disabled={!canNavigateNext}
-                  className="p-2 rounded-r-xl border border-l-0 border-[#2a2a4a] bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="p-2 rounded-r-xl border border-l-0 border-[rgba(255,255,255,0.08)] bg-[#1c1c1e] hover:bg-[#111111] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
-                  <ChevronRight size={16} className="text-[#8888b0]" />
+                  <ChevronRight size={16} className="text-[#8e8e93]" />
                 </button>
               </div>
 
               {/* Dropdown */}
               {monthDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 z-50 bg-[#1a1a2e] rounded-xl shadow-xl border border-[#2a2a4a] py-2 min-w-[220px] max-h-[320px] overflow-y-auto animate-[fadeIn_150ms_ease-out]">
+                <div className="absolute top-full left-0 mt-2 z-50 bg-[#1c1c1e] rounded-xl shadow-xl border border-[rgba(255,255,255,0.08)] py-2 min-w-[220px] max-h-[320px] overflow-y-auto animate-[fadeIn_150ms_ease-out]">
                   {monthsByYear.map(([year, months]) => (
                     <div key={year}>
-                      <div className="px-4 py-1.5 text-xs font-bold text-[#6868a0] uppercase tracking-wider sticky top-0 bg-[#1a1a2e]">
+                      <div className="px-4 py-1.5 text-xs font-bold text-[#636366] uppercase tracking-wider sticky top-0 bg-[#1c1c1e]">
                         {year}
                       </div>
                       {months.map(key => {
@@ -408,7 +408,7 @@ const Reports = ({ transactions }) => {
                             className={`w-full text-left px-4 py-2 text-sm transition-colors ${
                               isSelected
                                 ? 'bg-[rgba(0,200,83,0.12)] text-[#00C853] font-semibold'
-                                : 'text-[#9898b8] hover:bg-[#13132a]'
+                                : 'text-[#98989d] hover:bg-[#111111]'
                             }`}
                           >
                             {formatMonthKey(key)}
@@ -422,7 +422,7 @@ const Reports = ({ transactions }) => {
             </div>
 
             {/* Separator */}
-            <div className="w-px h-8 bg-[#252540] mx-1 hidden sm:block" />
+            <div className="w-px h-8 bg-[#2c2c2e] mx-1 hidden sm:block" />
 
             {/* Other period buttons */}
             {[
@@ -436,7 +436,7 @@ const Reports = ({ transactions }) => {
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                   periodType === period.key
                     ? 'bg-[rgba(0,200,83,0.15)] text-[#00C853] shadow-sm'
-                    : 'bg-[#13132a] text-[#9898b8] hover:bg-[rgba(255,255,255,0.05)] border border-[#2a2a4a]'
+                    : 'bg-[#111111] text-[#98989d] hover:bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)]'
                 }`}
               >
                 {period.label}
@@ -446,18 +446,18 @@ const Reports = ({ transactions }) => {
 
           {/* Right side controls */}
           <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 text-sm text-[#9898b8] cursor-pointer select-none">
+            <label className="flex items-center gap-2 text-sm text-[#98989d] cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={compareMode}
                 onChange={(e) => setCompareMode(e.target.checked)}
-                className="w-4 h-4 rounded border-[#3a3a5a] text-[#60a5fa] focus:ring-blue-500"
+                className="w-4 h-4 rounded border-[rgba(255,255,255,0.14)] text-[#60a5fa] focus:ring-blue-500"
               />
               Comparar con {periodType === 'month' ? 'mes' : 'período'} anterior
             </label>
             <button
               onClick={() => exportReportToPDF(currentPeriodTx, 'general')}
-              className="flex items-center gap-2 px-4 py-2 bg-[#252540] hover:bg-[#2d2d4a] text-[#e8e8f0] rounded-xl font-medium transition-all duration-200 text-sm shadow-sm hover:shadow-md active:scale-[0.98]"
+              className="flex items-center gap-2 px-4 py-2 bg-[#2c2c2e] hover:bg-[#2d2d4a] text-[#ffffff] rounded-xl font-medium transition-all duration-200 text-sm shadow-sm hover:shadow-md active:scale-[0.98]"
             >
               <Download size={16} />
               Exportar PDF
@@ -467,14 +467,14 @@ const Reports = ({ transactions }) => {
 
         {/* Period info bar */}
         {compareMode && periodType !== 'all' && (
-          <div className="mt-3 pt-3 border-t border-[#2a2a4a] flex items-center gap-4 text-xs text-[#6868a0]">
+          <div className="mt-3 pt-3 border-t border-[rgba(255,255,255,0.08)] flex items-center gap-4 text-xs text-[#636366]">
             <span className="inline-flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#3a3a5a]" />
-              Actual: <span className="font-medium text-[#9898b8]">{getPeriodLabel()}</span>
+              <span className="w-2 h-2 rounded-full bg-[rgba(255,255,255,0.14)]" />
+              Actual: <span className="font-medium text-[#98989d]">{getPeriodLabel()}</span>
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#585890]" />
-              Anterior: <span className="font-medium text-[#8888b0]">{getPreviousPeriodLabel()}</span>
+              <span className="w-2 h-2 rounded-full bg-[#636366]" />
+              Anterior: <span className="font-medium text-[#8e8e93]">{getPreviousPeriodLabel()}</span>
             </span>
           </div>
         )}
@@ -483,10 +483,10 @@ const Reports = ({ transactions }) => {
       {/* KPI Summary */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Ingresos */}
-        <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(16,185,129,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(16,185,129,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+        <div className="relative overflow-hidden bg-[#1c1c1e] border-[rgba(16,185,129,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(16,185,129,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
           <div className="absolute top-0 right-0 w-20 h-20 bg-[rgba(16,185,129,0.06)] rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
-            <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
+            <div className="flex items-center gap-2 text-[#8e8e93] text-sm mb-2">
               <div className="p-1.5 rounded-lg bg-[rgba(16,185,129,0.12)]">
                 <TrendingUp size={14} className="text-[#34d399]" />
               </div>
@@ -505,10 +505,10 @@ const Reports = ({ transactions }) => {
         </div>
 
         {/* Gastos */}
-        <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(239,68,68,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(239,68,68,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+        <div className="relative overflow-hidden bg-[#1c1c1e] border-[rgba(239,68,68,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(239,68,68,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
           <div className="absolute top-0 right-0 w-20 h-20 bg-[rgba(239,68,68,0.06)] rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
-            <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
+            <div className="flex items-center gap-2 text-[#8e8e93] text-sm mb-2">
               <div className="p-1.5 rounded-lg bg-[rgba(239,68,68,0.12)]">
                 <TrendingDown size={14} className="text-[#f87171]" />
               </div>
@@ -527,10 +527,10 @@ const Reports = ({ transactions }) => {
         </div>
 
         {/* Utilidad Neta */}
-        <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(59,130,246,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(59,130,246,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+        <div className="relative overflow-hidden bg-[#1c1c1e] border-[rgba(59,130,246,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(59,130,246,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
           <div className="absolute top-0 right-0 w-20 h-20 bg-[rgba(59,130,246,0.06)] rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
-            <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
+            <div className="flex items-center gap-2 text-[#8e8e93] text-sm mb-2">
               <div className="p-1.5 rounded-lg bg-[rgba(59,130,246,0.12)]">
                 <DollarSign size={14} className="text-[#60a5fa]" />
               </div>
@@ -539,15 +539,15 @@ const Reports = ({ transactions }) => {
             <div className={`text-2xl font-bold tracking-tight ${netProfit >= 0 ? 'text-[#60a5fa]' : 'text-[#f87171]'}`}>
               {formatCurrency(netProfit)}
             </div>
-            <div className="text-xs text-[#6868a0] mt-2 font-medium">Margen: {netMargin.toFixed(1)}%</div>
+            <div className="text-xs text-[#636366] mt-2 font-medium">Margen: {netMargin.toFixed(1)}%</div>
           </div>
         </div>
 
         {/* Margen Operacional */}
-        <div className="relative overflow-hidden bg-[#1a1a2e] border-[rgba(99,102,241,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(99,102,241,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+        <div className="relative overflow-hidden bg-[#1c1c1e] border-[rgba(99,102,241,0.15)] rounded-2xl p-5 shadow-sm border border-[rgba(99,102,241,0.15)] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
           <div className="absolute top-0 right-0 w-20 h-20 bg-[rgba(99,102,241,0.06)] rounded-full -translate-y-6 translate-x-6" />
           <div className="relative">
-            <div className="flex items-center gap-2 text-[#8888b0] text-sm mb-2">
+            <div className="flex items-center gap-2 text-[#8e8e93] text-sm mb-2">
               <div className="p-1.5 rounded-lg bg-[rgba(99,102,241,0.12)]">
                 <Percent size={14} className="text-[#818cf8]" />
               </div>
@@ -556,25 +556,25 @@ const Reports = ({ transactions }) => {
             <div className={`text-2xl font-bold tracking-tight ${operationalMargin >= 0 ? 'text-[#818cf8]' : 'text-[#f87171]'}`}>
               {operationalMargin.toFixed(1)}%
             </div>
-            <div className="text-xs text-[#6868a0] mt-2 font-medium">EBIT: {formatCurrency(operationalProfit)}</div>
+            <div className="text-xs text-[#636366] mt-2 font-medium">EBIT: {formatCurrency(operationalProfit)}</div>
           </div>
         </div>
       </div>
 
       {/* Estado de Resultados Profesional */}
-      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#2a2a4a] bg-gradient-to-r from-slate-800 via-slate-800 to-slate-900">
+      <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[rgba(255,255,255,0.08)] bg-gradient-to-r from-slate-800 via-slate-800 to-slate-900">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-[#1a1a2e]/10">
+            <div className="p-2 rounded-xl bg-[#1c1c1e]/10">
               <FileText className="text-white" size={22} />
             </div>
             <div>
               <h3 className="text-lg font-bold text-white tracking-tight">Estado de Resultados</h3>
-              <p className="text-sm text-[#6868a0] mt-0.5">{getPeriodLabel()}</p>
+              <p className="text-sm text-[#636366] mt-0.5">{getPeriodLabel()}</p>
             </div>
           </div>
           {compareMode && (
-            <div className="hidden sm:flex items-center gap-2 text-sm text-[#6868a0] bg-[#1a1a2e]/5 px-3 py-1.5 rounded-lg">
+            <div className="hidden sm:flex items-center gap-2 text-sm text-[#636366] bg-[#1c1c1e]/5 px-3 py-1.5 rounded-lg">
               <Calendar size={14} />
               vs {getPreviousPeriodLabel()}
             </div>
@@ -583,15 +583,15 @@ const Reports = ({ transactions }) => {
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-[#2a2a4a]">
+            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-[rgba(255,255,255,0.08)]">
               <tr>
-                <th className="px-5 py-3.5 text-left text-xs font-semibold text-[#6868a0] uppercase tracking-wider">Concepto</th>
-                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#6868a0] uppercase tracking-wider">Monto</th>
-                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#6868a0] uppercase tracking-wider">% Ing.</th>
+                <th className="px-5 py-3.5 text-left text-xs font-semibold text-[#636366] uppercase tracking-wider">Concepto</th>
+                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#636366] uppercase tracking-wider">Monto</th>
+                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#636366] uppercase tracking-wider">% Ing.</th>
                 {compareMode && (
                   <>
-                    <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#6868a0] uppercase tracking-wider">Anterior</th>
-                    <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#6868a0] uppercase tracking-wider">Var.</th>
+                    <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#636366] uppercase tracking-wider">Anterior</th>
+                    <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#636366] uppercase tracking-wider">Var.</th>
                   </>
                 )}
               </tr>
@@ -672,7 +672,7 @@ const Reports = ({ transactions }) => {
                 <td className="px-5 py-4 text-right text-[#34d399] tabular-nums">{grossMargin.toFixed(1)}%</td>
                 {compareMode && (
                   <>
-                    <td className="px-5 py-4 text-right text-[#8888b0] tabular-nums">
+                    <td className="px-5 py-4 text-right text-[#8e8e93] tabular-nums">
                       {formatCurrency(previous.income - (Object.entries(prevExpensesByCategory)
                         .filter(([cat]) => expenseGroups['Costos Directos']?.details.some(d => d.name === cat))
                         .reduce((s, [, a]) => s + a, 0)))}
@@ -721,7 +721,7 @@ const Reports = ({ transactions }) => {
                 <td className="px-5 py-4 text-right text-[#60a5fa] tabular-nums">{operationalMargin.toFixed(1)}%</td>
                 {compareMode && (
                   <>
-                    <td className="px-5 py-4 text-right text-[#8888b0]">-</td>
+                    <td className="px-5 py-4 text-right text-[#8e8e93]">-</td>
                     <td className="px-5 py-4 text-right">-</td>
                   </>
                 )}
@@ -765,7 +765,7 @@ const Reports = ({ transactions }) => {
                 </td>
                 {compareMode && (
                   <>
-                    <td className="px-5 py-4 text-right text-[#8888b0]">-</td>
+                    <td className="px-5 py-4 text-right text-[#8e8e93]">-</td>
                     <td className="px-5 py-4 text-right">-</td>
                   </>
                 )}
@@ -794,7 +794,7 @@ const Reports = ({ transactions }) => {
                       {formatCurrency(previous.profit)}
                     </td>
                     <td className="px-5 py-5 text-right">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#1a1a2e]/20 text-white text-xs font-medium backdrop-blur-sm">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#1c1c1e]/20 text-white text-xs font-medium backdrop-blur-sm">
                         {calcVariation(netProfit, previous.profit) >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
                         {Math.abs(calcVariation(netProfit, previous.profit)).toFixed(1)}%
                       </span>
@@ -832,8 +832,8 @@ const Reports = ({ transactions }) => {
       {/* Gráficos */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Gastos por Categoría */}
-        <div className="bg-[#1a1a2e] rounded-2xl p-6 shadow-sm border border-[#2a2a4a] transition-all duration-300 hover:shadow-md">
-          <h3 className="text-lg font-bold text-[#d0d0e0] mb-5 flex items-center gap-2.5">
+        <div className="bg-[#1c1c1e] rounded-2xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)] transition-all duration-300 hover:shadow-md">
+          <h3 className="text-lg font-bold text-[#e5e5ea] mb-5 flex items-center gap-2.5">
             <div className="p-1.5 rounded-lg bg-[rgba(59,130,246,0.08)]">
               <BarChart3 size={18} className="text-[#60a5fa]" />
             </div>
@@ -848,9 +848,9 @@ const Reports = ({ transactions }) => {
               layout="vertical"
               margin={{ top: 5, right: 50, left: 10, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#2a2a4a" />
-              <XAxis type="number" tickFormatter={(value) => `${(value/1000).toFixed(0)}k`} tick={{ fontSize: 11, fill: '#6868a0' }} axisLine={false} tickLine={false} />
-              <YAxis type="category" dataKey="name" width={110} tick={{ fontSize: 11, fill: '#6868a0' }} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="rgba(255,255,255,0.08)" />
+              <XAxis type="number" tickFormatter={(value) => `${(value/1000).toFixed(0)}k`} tick={{ fontSize: 11, fill: '#636366' }} axisLine={false} tickLine={false} />
+              <YAxis type="category" dataKey="name" width={110} tick={{ fontSize: 11, fill: '#636366' }} axisLine={false} tickLine={false} />
               <Tooltip
                 formatter={(value) => [formatCurrency(value), 'Monto']}
                 contentStyle={customTooltipStyle}
@@ -869,8 +869,8 @@ const Reports = ({ transactions }) => {
         </div>
 
         {/* Rentabilidad por Proyecto */}
-        <div className="bg-[#1a1a2e] rounded-2xl p-6 shadow-sm border border-[#2a2a4a] transition-all duration-300 hover:shadow-md">
-          <h3 className="text-lg font-bold text-[#d0d0e0] mb-5 flex items-center gap-2.5">
+        <div className="bg-[#1c1c1e] rounded-2xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)] transition-all duration-300 hover:shadow-md">
+          <h3 className="text-lg font-bold text-[#e5e5ea] mb-5 flex items-center gap-2.5">
             <div className="p-1.5 rounded-lg bg-[rgba(99,102,241,0.08)]">
               <Target size={18} className="text-[#818cf8]" />
             </div>
@@ -882,9 +882,9 @@ const Reports = ({ transactions }) => {
               layout="vertical"
               margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#2a2a4a" />
-              <XAxis type="number" tickFormatter={(value) => `${(value/1000).toFixed(0)}k`} tick={{ fontSize: 11, fill: '#6868a0' }} axisLine={false} tickLine={false} />
-              <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11, fill: '#6868a0' }} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="rgba(255,255,255,0.08)" />
+              <XAxis type="number" tickFormatter={(value) => `${(value/1000).toFixed(0)}k`} tick={{ fontSize: 11, fill: '#636366' }} axisLine={false} tickLine={false} />
+              <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11, fill: '#636366' }} axisLine={false} tickLine={false} />
               <Tooltip
                 formatter={(value, name) => [formatCurrency(value), name === 'ingresos' ? 'Ingresos' : name === 'gastos' ? 'Gastos' : 'Margen']}
                 contentStyle={customTooltipStyle}
@@ -894,34 +894,34 @@ const Reports = ({ transactions }) => {
               <ReferenceLine x={0} stroke="#cbd5e1" strokeDasharray="3 3" />
               <Bar dataKey="ingresos" fill="#10b981" name="Ingresos" radius={[0, 6, 6, 0]} barSize={14} />
               <Bar dataKey="gastos" fill="#f43f5e" name="Gastos" radius={[0, 6, 6, 0]} barSize={14} />
-              <Line type="monotone" dataKey="margen" stroke="#6366f1" strokeWidth={2.5} dot={{ fill: '#6366f1', r: 4, strokeWidth: 2, stroke: '#1a1a2e' }} name="Margen" />
+              <Line type="monotone" dataKey="margen" stroke="#6366f1" strokeWidth={2.5} dot={{ fill: '#6366f1', r: 4, strokeWidth: 2, stroke: '#1c1c1e' }} name="Margen" />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Tabla Detallada de Proyectos */}
-      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] overflow-hidden">
-        <div className="px-6 py-5 border-b border-[#2a2a4a] bg-[#1a1a2e]">
-          <h3 className="text-lg font-bold text-[#d0d0e0] tracking-tight">Análisis Detallado por Proyecto</h3>
-          <p className="text-sm text-[#6868a0] mt-0.5">{getPeriodLabel()} · {projectChartData.length} proyectos</p>
+      <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] overflow-hidden">
+        <div className="px-6 py-5 border-b border-[rgba(255,255,255,0.08)] bg-[#1c1c1e]">
+          <h3 className="text-lg font-bold text-[#e5e5ea] tracking-tight">Análisis Detallado por Proyecto</h3>
+          <p className="text-sm text-[#636366] mt-0.5">{getPeriodLabel()} · {projectChartData.length} proyectos</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-[#2a2a4a]">
+            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-[rgba(255,255,255,0.08)]">
               <tr>
-                <th className="px-5 py-3.5 text-left text-xs font-semibold text-[#6868a0] uppercase tracking-wider">Proyecto</th>
-                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#6868a0] uppercase tracking-wider">Ingresos</th>
-                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#6868a0] uppercase tracking-wider">Gastos</th>
-                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#6868a0] uppercase tracking-wider">Margen</th>
-                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#6868a0] uppercase tracking-wider">% Margen</th>
-                <th className="px-5 py-3.5 text-center text-xs font-semibold text-[#6868a0] uppercase tracking-wider">Estado</th>
+                <th className="px-5 py-3.5 text-left text-xs font-semibold text-[#636366] uppercase tracking-wider">Proyecto</th>
+                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#636366] uppercase tracking-wider">Ingresos</th>
+                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#636366] uppercase tracking-wider">Gastos</th>
+                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#636366] uppercase tracking-wider">Margen</th>
+                <th className="px-5 py-3.5 text-right text-xs font-semibold text-[#636366] uppercase tracking-wider">% Margen</th>
+                <th className="px-5 py-3.5 text-center text-xs font-semibold text-[#636366] uppercase tracking-wider">Estado</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2a2a4a]">
+            <tbody className="divide-y divide-[rgba(255,255,255,0.08)]">
               {projectChartData.map((project) => (
                 <tr key={project.name} className="hover:bg-[rgba(59,130,246,0.08)]/30 transition-colors duration-150">
-                  <td className="px-5 py-3.5 font-medium text-[#b8b8d0]">{project.name}</td>
+                  <td className="px-5 py-3.5 font-medium text-[#c7c7cc]">{project.name}</td>
                   <td className="px-5 py-3.5 text-right text-[#34d399] font-medium tabular-nums">{formatCurrency(project.ingresos)}</td>
                   <td className="px-5 py-3.5 text-right text-[#f87171] font-medium tabular-nums">{formatCurrency(project.gastos)}</td>
                   <td className={`px-5 py-3.5 text-right font-bold tabular-nums ${project.margen >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
@@ -944,9 +944,9 @@ const Reports = ({ transactions }) => {
                 </tr>
               ))}
             </tbody>
-            <tfoot className="bg-[rgba(255,255,255,0.02)] font-bold border-t-2 border-[#2a2a4a]">
+            <tfoot className="bg-[rgba(255,255,255,0.02)] font-bold border-t-2 border-[rgba(255,255,255,0.08)]">
               <tr>
-                <td className="px-5 py-4 text-[#d0d0e0]">TOTALES</td>
+                <td className="px-5 py-4 text-[#e5e5ea]">TOTALES</td>
                 <td className="px-5 py-4 text-right text-[#34d399] tabular-nums">{formatCurrency(current.income)}</td>
                 <td className="px-5 py-4 text-right text-[#f87171] tabular-nums">{formatCurrency(current.expenses)}</td>
                 <td className={`px-5 py-4 text-right tabular-nums ${current.profit >= 0 ? 'text-[#34d399]' : 'text-[#f87171]'}`}>

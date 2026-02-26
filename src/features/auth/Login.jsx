@@ -18,23 +18,23 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#0f0f1a] items-center justify-center p-4">
-      <div className="bg-[#1a1a2e] rounded-2xl shadow-2xl w-full max-w-md p-8">
+    <div className="flex h-screen bg-[#000000] items-center justify-center p-4">
+      <div className="bg-[#1c1c1e] rounded-2xl shadow-2xl w-full max-w-md p-8">
         <div className="flex items-center justify-center gap-3 text-[#60a5fa] mb-8">
           <Briefcase size={40} />
           <div>
             <h1 className="text-2xl font-bold tracking-tight">UMTELKOMD</h1>
-            <p className="text-sm text-[#8888b0]">Sistema Financiero</p>
+            <p className="text-sm text-[#8e8e93]">Sistema Financiero</p>
           </div>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">Email</label>
+            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Email</label>
             <input
               type="email"
               required
-              className="w-full px-4 py-3 bg-[#252540] text-[#e8e8f0] border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-[#00C853] focus:border-transparent outline-none placeholder-[#6868a0]"
+              className="w-full px-4 py-3 bg-[#2c2c2e] text-[#ffffff] border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-[#00C853] focus:border-transparent outline-none placeholder-[#636366]"
               value={loginData.email}
               onChange={(e) => setLoginData({...loginData, email: e.target.value})}
               placeholder="usuario@umtelkomd.com"
@@ -42,11 +42,11 @@ const Login = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-[#b8b8d0] mb-2">Contraseña</label>
+            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Contraseña</label>
             <input
               type="password"
               required
-              className="w-full px-4 py-3 bg-[#252540] text-[#e8e8f0] border border-[#3a3a5a] rounded-lg focus:ring-2 focus:ring-[#00C853] focus:border-transparent outline-none placeholder-[#6868a0]"
+              className="w-full px-4 py-3 bg-[#2c2c2e] text-[#ffffff] border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-[#00C853] focus:border-transparent outline-none placeholder-[#636366]"
               value={loginData.password}
               onChange={(e) => setLoginData({...loginData, password: e.target.value})}
               placeholder="********"
@@ -67,7 +67,7 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="text-xs text-[#6868a0] text-center mt-6">
+        <p className="text-xs text-[#636366] text-center mt-6">
           Sistema de Gestión Financiera 2025
         </p>
       </div>

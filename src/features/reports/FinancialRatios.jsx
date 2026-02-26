@@ -132,7 +132,7 @@ const FinancialRatios = ({ transactions }) => {
     const gaugeData = [{ name: 'value', value: gaugePercent, fill: status === 'good' ? '#10b981' : status === 'warning' ? '#f59e0b' : '#ef4444' }];
 
     return (
-      <div className={`bg-[#1a1a2e] rounded-xl shadow-sm border ${colors.border} overflow-hidden`}>
+      <div className={`bg-[#1c1c1e] rounded-xl shadow-sm border ${colors.border} overflow-hidden`}>
         <div className="p-4">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -140,8 +140,8 @@ const FinancialRatios = ({ transactions }) => {
                 <Icon className={colors.icon} size={18} />
               </div>
               <div>
-                <h4 className="font-semibold text-[#d0d0e0] text-sm">{title}</h4>
-                <p className="text-xs text-[#8888b0]">{description}</p>
+                <h4 className="font-semibold text-[#e5e5ea] text-sm">{title}</h4>
+                <p className="text-xs text-[#8e8e93]">{description}</p>
               </div>
             </div>
             {status === 'good' ? (
@@ -158,7 +158,7 @@ const FinancialRatios = ({ transactions }) => {
               <p className={`text-3xl font-bold ${colors.text}`}>
                 {displayValue}{unit}
               </p>
-              <p className="text-xs text-[#6868a0] mt-1">
+              <p className="text-xs text-[#636366] mt-1">
                 Referencia: {inverse ? '<' : '>'}{benchmark.good}{unit}
               </p>
             </div>
@@ -175,7 +175,7 @@ const FinancialRatios = ({ transactions }) => {
                 >
                   <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
                   <RadialBar
-                    background={{ fill: '#0f0f1a' }}
+                    background={{ fill: '#000000' }}
                     dataKey="value"
                     cornerRadius={10}
                     fill={gaugeData[0].fill}
@@ -206,12 +206,12 @@ const FinancialRatios = ({ transactions }) => {
     };
 
     return (
-      <div className="bg-[#1a1a2e] rounded-xl shadow-sm border border-[#2a2a4a] p-4">
-        <p className="text-sm text-[#8888b0] mb-1">{label}</p>
+      <div className="bg-[#1c1c1e] rounded-xl shadow-sm border border-[rgba(255,255,255,0.08)] p-4">
+        <p className="text-sm text-[#8e8e93] mb-1">{label}</p>
         <p className={`text-2xl font-bold bg-gradient-to-r ${colorClasses[color]} bg-clip-text text-transparent`}>
           {value}
         </p>
-        {subvalue && <p className="text-xs text-[#6868a0] mt-1">{subvalue}</p>}
+        {subvalue && <p className="text-xs text-[#636366] mt-1">{subvalue}</p>}
       </div>
     );
   };
@@ -281,8 +281,8 @@ const FinancialRatios = ({ transactions }) => {
             <Wallet className="text-[#60a5fa]" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Liquidez</h3>
-            <p className="text-sm text-[#8888b0]">Capacidad para cumplir obligaciones a corto plazo</p>
+            <h3 className="text-lg font-bold text-[#e5e5ea]">Ratios de Liquidez</h3>
+            <p className="text-sm text-[#8e8e93]">Capacidad para cumplir obligaciones a corto plazo</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -328,8 +328,8 @@ const FinancialRatios = ({ transactions }) => {
             <Clock className="text-[#fbbf24]" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Actividad</h3>
-            <p className="text-sm text-[#8888b0]">Eficiencia en la gestión de cobros y pagos</p>
+            <h3 className="text-lg font-bold text-[#e5e5ea]">Ratios de Actividad</h3>
+            <p className="text-sm text-[#8e8e93]">Eficiencia en la gestión de cobros y pagos</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -378,8 +378,8 @@ const FinancialRatios = ({ transactions }) => {
             <Percent className="text-[#34d399]" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Rentabilidad</h3>
-            <p className="text-sm text-[#8888b0]">Capacidad para generar utilidades</p>
+            <h3 className="text-lg font-bold text-[#e5e5ea]">Ratios de Rentabilidad</h3>
+            <p className="text-sm text-[#8e8e93]">Capacidad para generar utilidades</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -425,8 +425,8 @@ const FinancialRatios = ({ transactions }) => {
             <Target className="text-[#818cf8]" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#d0d0e0]">Ratios de Eficiencia</h3>
-            <p className="text-sm text-[#8888b0]">Optimización de recursos operativos</p>
+            <h3 className="text-lg font-bold text-[#e5e5ea]">Ratios de Eficiencia</h3>
+            <p className="text-sm text-[#8e8e93]">Optimización de recursos operativos</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -459,14 +459,14 @@ const FinancialRatios = ({ transactions }) => {
       </div>
 
       {/* Comparison Chart */}
-      <div className="bg-[#1a1a2e] rounded-xl shadow-sm border border-[#2a2a4a] p-6">
+      <div className="bg-[#1c1c1e] rounded-xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-[rgba(168,85,247,0.12)] rounded-lg">
             <BarChart3 className="text-purple-600" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#d0d0e0]">Comparativa vs Benchmark</h3>
-            <p className="text-sm text-[#8888b0]">Indicadores principales vs valores de referencia</p>
+            <h3 className="text-lg font-bold text-[#e5e5ea]">Comparativa vs Benchmark</h3>
+            <p className="text-sm text-[#8e8e93]">Indicadores principales vs valores de referencia</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={300}>

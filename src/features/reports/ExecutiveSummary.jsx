@@ -292,7 +292,7 @@ const ExecutiveSummary = ({ transactions }) => {
     };
 
     return (
-      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] overflow-hidden">
+      <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] overflow-hidden">
         <div className="p-5">
           <div className="flex items-start justify-between mb-3">
             <div className={`p-2.5 rounded-xl bg-gradient-to-br ${colorClasses[color]} text-white`}>
@@ -307,9 +307,9 @@ const ExecutiveSummary = ({ transactions }) => {
               </div>
             )}
           </div>
-          <h3 className="text-sm font-medium text-[#8888b0] mb-1">{title}</h3>
-          <p className="text-2xl font-bold text-[#d0d0e0]">{value}</p>
-          {subtitle && <p className="text-xs text-[#6868a0] mt-1">{subtitle}</p>}
+          <h3 className="text-sm font-medium text-[#8e8e93] mb-1">{title}</h3>
+          <p className="text-2xl font-bold text-[#e5e5ea]">{value}</p>
+          {subtitle && <p className="text-xs text-[#636366] mt-1">{subtitle}</p>}
         </div>
       </div>
     );
@@ -351,8 +351,8 @@ const ExecutiveSummary = ({ transactions }) => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#1a1a2e] p-3 rounded-xl shadow-lg border border-[#2a2a4a]">
-          <p className="text-sm font-semibold text-[#b8b8d0] mb-2">{label}</p>
+        <div className="bg-[#1c1c1e] p-3 rounded-xl shadow-lg border border-[rgba(255,255,255,0.08)]">
+          <p className="text-sm font-semibold text-[#c7c7cc] mb-2">{label}</p>
           {payload.map((entry, index) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
               {entry.name}: {formatCurrency(entry.value)}
@@ -367,7 +367,7 @@ const ExecutiveSummary = ({ transactions }) => {
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Period Selector */}
-      <div className="bg-[#1a1a2e] rounded-2xl p-5 shadow-sm border border-[#2a2a4a]">
+      <div className="bg-[#1c1c1e] rounded-2xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
         <div className="flex flex-wrap items-center gap-2">
           {/* Month selector with dropdown */}
           <div className="relative" ref={dropdownRef}>
@@ -375,9 +375,9 @@ const ExecutiveSummary = ({ transactions }) => {
               <button
                 onClick={() => navigateMonth(-1)}
                 disabled={!canNavigatePrev}
-                className="p-2 rounded-l-xl border border-r-0 border-[#2a2a4a] bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-l-xl border border-r-0 border-[rgba(255,255,255,0.08)] bg-[#1c1c1e] hover:bg-[#111111] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
-                <ChevronLeft size={16} className="text-[#8888b0]" />
+                <ChevronLeft size={16} className="text-[#8e8e93]" />
               </button>
 
               <button
@@ -385,7 +385,7 @@ const ExecutiveSummary = ({ transactions }) => {
                 className={`flex items-center gap-2 px-4 py-2 border text-sm font-medium transition-all ${
                   periodType === 'month'
                     ? 'bg-slate-800 text-white border-slate-800 shadow-sm'
-                    : 'bg-[#1a1a2e] text-[#9898b8] border-[#2a2a4a] hover:bg-[#13132a]'
+                    : 'bg-[#1c1c1e] text-[#98989d] border-[rgba(255,255,255,0.08)] hover:bg-[#111111]'
                 }`}
               >
                 <Calendar size={15} />
@@ -396,17 +396,17 @@ const ExecutiveSummary = ({ transactions }) => {
               <button
                 onClick={() => navigateMonth(1)}
                 disabled={!canNavigateNext}
-                className="p-2 rounded-r-xl border border-l-0 border-[#2a2a4a] bg-[#1a1a2e] hover:bg-[#13132a] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-r-xl border border-l-0 border-[rgba(255,255,255,0.08)] bg-[#1c1c1e] hover:bg-[#111111] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
-                <ChevronRight size={16} className="text-[#8888b0]" />
+                <ChevronRight size={16} className="text-[#8e8e93]" />
               </button>
             </div>
 
             {monthDropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 z-50 bg-[#1a1a2e] rounded-xl shadow-xl border border-[#2a2a4a] py-2 min-w-[220px] max-h-[320px] overflow-y-auto animate-[fadeIn_150ms_ease-out]">
+              <div className="absolute top-full left-0 mt-2 z-50 bg-[#1c1c1e] rounded-xl shadow-xl border border-[rgba(255,255,255,0.08)] py-2 min-w-[220px] max-h-[320px] overflow-y-auto animate-[fadeIn_150ms_ease-out]">
                 {monthsByYear.map(([year, months]) => (
                   <div key={year}>
-                    <div className="px-4 py-1.5 text-xs font-bold text-[#6868a0] uppercase tracking-wider sticky top-0 bg-[#1a1a2e]">
+                    <div className="px-4 py-1.5 text-xs font-bold text-[#636366] uppercase tracking-wider sticky top-0 bg-[#1c1c1e]">
                       {year}
                     </div>
                     {months.map(key => {
@@ -420,8 +420,8 @@ const ExecutiveSummary = ({ transactions }) => {
                           }}
                           className={`w-full text-left px-4 py-2 text-sm transition-colors ${
                             isSelected
-                              ? 'bg-[#1e1e38] text-[#d0d0e0] font-semibold'
-                              : 'text-[#9898b8] hover:bg-[#13132a]'
+                              ? 'bg-[#2c2c2e] text-[#e5e5ea] font-semibold'
+                              : 'text-[#98989d] hover:bg-[#111111]'
                           }`}
                         >
                           {formatMonthKey(key)}
@@ -434,7 +434,7 @@ const ExecutiveSummary = ({ transactions }) => {
             )}
           </div>
 
-          <div className="w-px h-8 bg-[#252540] mx-1 hidden sm:block" />
+          <div className="w-px h-8 bg-[#2c2c2e] mx-1 hidden sm:block" />
 
           {[
             { key: 'quarter', label: 'Trimestre' },
@@ -447,7 +447,7 @@ const ExecutiveSummary = ({ transactions }) => {
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                 periodType === period.key
                   ? 'bg-slate-800 text-white shadow-sm'
-                  : 'bg-[#13132a] text-[#9898b8] hover:bg-[rgba(255,255,255,0.05)] border border-[#2a2a4a]'
+                  : 'bg-[#111111] text-[#98989d] hover:bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)]'
               }`}
             >
               {period.label}
@@ -456,14 +456,14 @@ const ExecutiveSummary = ({ transactions }) => {
         </div>
 
         {periodType !== 'all' && (
-          <div className="mt-3 pt-3 border-t border-[#2a2a4a] flex items-center gap-4 text-xs text-[#6868a0]">
+          <div className="mt-3 pt-3 border-t border-[rgba(255,255,255,0.08)] flex items-center gap-4 text-xs text-[#636366]">
             <span className="inline-flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#3a3a5a]" />
-              Actual: <span className="font-medium text-[#9898b8]">{getPeriodLabel()}</span>
+              <span className="w-2 h-2 rounded-full bg-[rgba(255,255,255,0.14)]" />
+              Actual: <span className="font-medium text-[#98989d]">{getPeriodLabel()}</span>
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#585890]" />
-              Anterior: <span className="font-medium text-[#8888b0]">{getPreviousPeriodLabel()}</span>
+              <span className="w-2 h-2 rounded-full bg-[#636366]" />
+              Anterior: <span className="font-medium text-[#8e8e93]">{getPreviousPeriodLabel()}</span>
             </span>
           </div>
         )}
@@ -474,10 +474,10 @@ const ExecutiveSummary = ({ transactions }) => {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">Resumen Ejecutivo</h2>
-            <p className="text-[#585890] mt-1">{getPeriodLabel()}</p>
+            <p className="text-[#636366] mt-1">{getPeriodLabel()}</p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-[#6868a0]">Utilidad YTD</p>
+            <p className="text-sm text-[#636366]">Utilidad YTD</p>
             <p className={`text-3xl font-bold ${ytdProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
               {formatCurrency(ytdProfit)}
             </p>
@@ -526,14 +526,14 @@ const ExecutiveSummary = ({ transactions }) => {
       {/* Financial Indicators Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Ratios de Liquidez */}
-        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
+        <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-[rgba(59,130,246,0.12)] rounded-lg">
               <Activity className="text-[#60a5fa]" size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-[#d0d0e0]">Indicadores de Liquidez</h3>
-              <p className="text-xs text-[#8888b0]">Capacidad de pago a corto plazo</p>
+              <h3 className="font-bold text-[#e5e5ea]">Indicadores de Liquidez</h3>
+              <p className="text-xs text-[#8e8e93]">Capacidad de pago a corto plazo</p>
             </div>
           </div>
           <div className="space-y-3">
@@ -545,14 +545,14 @@ const ExecutiveSummary = ({ transactions }) => {
         </div>
 
         {/* Ratios de Rentabilidad */}
-        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
+        <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-[rgba(16,185,129,0.12)] rounded-lg">
               <Percent className="text-[#34d399]" size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-[#d0d0e0]">Indicadores de Rentabilidad</h3>
-              <p className="text-xs text-[#8888b0]">Eficiencia en generación de utilidades</p>
+              <h3 className="font-bold text-[#e5e5ea]">Indicadores de Rentabilidad</h3>
+              <p className="text-xs text-[#8e8e93]">Eficiencia en generación de utilidades</p>
             </div>
           </div>
           <div className="space-y-3">
@@ -577,14 +577,14 @@ const ExecutiveSummary = ({ transactions }) => {
       {/* Alerts and Recommendations */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Alerts */}
-        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
+        <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-[rgba(245,158,11,0.12)] rounded-lg">
               <AlertTriangle className="text-[#fbbf24]" size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-[#d0d0e0]">Alertas Financieras</h3>
-              <p className="text-xs text-[#8888b0]">Puntos de atención identificados</p>
+              <h3 className="font-bold text-[#e5e5ea]">Alertas Financieras</h3>
+              <p className="text-xs text-[#8e8e93]">Puntos de atención identificados</p>
             </div>
           </div>
           <div className="space-y-2">
@@ -621,14 +621,14 @@ const ExecutiveSummary = ({ transactions }) => {
         </div>
 
         {/* Recommendations */}
-        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
+        <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-[rgba(99,102,241,0.12)] rounded-lg">
               <Lightbulb className="text-[#818cf8]" size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-[#d0d0e0]">Recomendaciones</h3>
-              <p className="text-xs text-[#8888b0]">Acciones sugeridas para mejorar</p>
+              <h3 className="font-bold text-[#e5e5ea]">Recomendaciones</h3>
+              <p className="text-xs text-[#8e8e93]">Acciones sugeridas para mejorar</p>
             </div>
           </div>
           <div className="space-y-2">
@@ -650,14 +650,14 @@ const ExecutiveSummary = ({ transactions }) => {
       </div>
 
       {/* 6-Month Trend Chart */}
-      <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] p-6">
+      <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-[rgba(59,130,246,0.12)] rounded-lg">
             <BarChart3 className="text-[#60a5fa]" size={20} />
           </div>
           <div>
-            <h3 className="font-bold text-[#d0d0e0]">Tendencia Últimos 6 Meses</h3>
-            <p className="text-xs text-[#8888b0]">Evolución de ingresos, gastos y utilidad</p>
+            <h3 className="font-bold text-[#e5e5ea]">Tendencia Últimos 6 Meses</h3>
+            <p className="text-xs text-[#8e8e93]">Evolución de ingresos, gastos y utilidad</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={300}>
@@ -672,9 +672,9 @@ const ExecutiveSummary = ({ transactions }) => {
                 <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2a2a4a" />
-            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6868a0', fontSize: 12 }} />
-            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6868a0', fontSize: 11 }} tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.08)" />
+            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#636366', fontSize: 12 }} />
+            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#636366', fontSize: 11 }} tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             <Area type="monotone" dataKey="ingresos" name="Ingresos" stroke="#10b981" strokeWidth={2} fill="url(#colorIngresos)" />
@@ -686,8 +686,8 @@ const ExecutiveSummary = ({ transactions }) => {
 
       {/* Projects with Low Margin */}
       {projectsWithLowMargin.length > 0 && (
-        <div className="bg-[#1a1a2e] rounded-2xl shadow-sm border border-[#2a2a4a] overflow-hidden">
-          <div className="px-6 py-4 border-b border-[#2a2a4a] bg-[rgba(245,158,11,0.08)]">
+        <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] overflow-hidden">
+          <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] bg-[rgba(245,158,11,0.08)]">
             <div className="flex items-center gap-3">
               <AlertTriangle className="text-[#fbbf24]" size={20} />
               <div>
@@ -699,19 +699,19 @@ const ExecutiveSummary = ({ transactions }) => {
           <div className="p-6">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-[#13132a]">
+                <thead className="bg-[#111111]">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#8888b0] uppercase">Proyecto</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-[#8888b0] uppercase">Ingresos</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-[#8888b0] uppercase">Gastos</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold text-[#8888b0] uppercase">Margen</th>
-                    <th className="px-4 py-3 text-center text-xs font-semibold text-[#8888b0] uppercase">Estado</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#8e8e93] uppercase">Proyecto</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-[#8e8e93] uppercase">Ingresos</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-[#8e8e93] uppercase">Gastos</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-[#8e8e93] uppercase">Margen</th>
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-[#8e8e93] uppercase">Estado</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#2a2a4a]">
+                <tbody className="divide-y divide-[rgba(255,255,255,0.08)]">
                   {projectsWithLowMargin.slice(0, 5).map((p, idx) => (
-                    <tr key={idx} className="hover:bg-[#13132a]">
-                      <td className="px-4 py-3 font-medium text-[#b8b8d0]">{p.name}</td>
+                    <tr key={idx} className="hover:bg-[#111111]">
+                      <td className="px-4 py-3 font-medium text-[#c7c7cc]">{p.name}</td>
                       <td className="px-4 py-3 text-right text-[#34d399]">{formatCurrency(p.ingresos)}</td>
                       <td className="px-4 py-3 text-right text-[#f87171]">{formatCurrency(p.gastos)}</td>
                       <td className={`px-4 py-3 text-right font-bold ${p.margin >= 0 ? 'text-[#fbbf24]' : 'text-[#f87171]'}`}>
