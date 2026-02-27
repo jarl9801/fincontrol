@@ -18,11 +18,17 @@ export const useTransactions = (user) => {
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
-        const data = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          notes: doc.data().notes || []
-        }));
+        const data = snapshot.docs.map(doc => {
+          const raw = doc.data();
+          return {
+            id: doc.id,
+            ...raw,
+            notes: raw.notes || [],
+            // Convert Firestore Timestamps to ISO strings to prevent React render errors
+            createdAt: raw.createdAt?.toDate ? raw.createdAt.toDate().toISOString() : (raw.createdAt || null),
+            lastModifiedAt: raw.lastModifiedAt?.toDate ? raw.lastModifiedAt.toDate().toISOString() : (raw.lastModifiedAt || null),
+          };
+        });
         data.sort((a, b) => new Date(b.date) - new Date(a.date));
         setTransactions(data);
         setLoading(false);
