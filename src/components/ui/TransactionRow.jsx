@@ -2,6 +2,9 @@ import { CheckCircle2, Circle, MessageSquare, Edit2, Trash2, Sparkles, ArrowUpCi
 import { formatDate, formatCurrency, getDaysOverdue } from '../../utils/formatters';
 import { ALERT_THRESHOLDS } from '../../constants/config';
 
+// Safely convert any value to a renderable string
+const safe = (v) => (v == null ? '' : typeof v === 'object' ? JSON.stringify(v) : String(v));
+
 const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, onRegisterPayment, userRole, searchTerm }) => {
   const isOverdue = t.status === 'pending' && getDaysOverdue(t.date) > ALERT_THRESHOLDS.overdueDays;
   const isNew = t.hasUnreadUpdates === true;
@@ -9,9 +12,10 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, onRe
   const daysOverdue = getDaysOverdue(t.date);
 
   const highlightText = (text) => {
-    if (!searchTerm) return text;
+    const str = safe(text);
+    if (!searchTerm) return str;
     const escaped = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const parts = text.split(new RegExp(`(${escaped})`, 'gi'));
+    const parts = str.split(new RegExp(`(${escaped})`, 'gi'));
     return parts.map((part, i) =>
       part.toLowerCase() === searchTerm.toLowerCase() ?
         <mark key={i} className="bg-[rgba(245,158,11,0.2)] text-[#ff9f0a] rounded px-0.5">{part}</mark> : part
@@ -133,7 +137,7 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, onRe
                 </span>
               )}
             </div>
-            <span className="text-xs text-[#636366] block mt-0.5">{t.project}</span>
+            <span className="text-xs text-[#636366] block mt-0.5">{safe(t.project)}</span>
             {isPartial && (
               <div className="mt-1.5">
                 <div className="w-full max-w-[160px] h-1.5 bg-[#2c2c2e] rounded-full overflow-hidden">
@@ -156,7 +160,7 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, onRe
             ? 'bg-[rgba(16,185,129,0.1)] text-[#30d158] border border-[rgba(16,185,129,0.2)]' 
             : 'bg-[rgba(239,68,68,0.1)] text-[#ff453a] border border-[rgba(239,68,68,0.2)]'}
         `}>
-          {t.category}
+          {safe(t.category)}
         </span>
       </td>
 

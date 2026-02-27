@@ -264,7 +264,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
                 <tr key={t.id} className="border-b border-[rgba(255,255,255,0.08)] last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors group">
                   <td className="px-4 py-3 text-[#98989d]">{formatDate(t.date)}</td>
                   <td className="px-4 py-3">
-                    <span className="font-medium text-[#c7c7cc]">{t.description}</span>
+                    <span className="font-medium text-[#c7c7cc]">{String(t.description || '')}</span>
                   </td>
                   <td className="px-4 py-3 hidden md:table-cell">
                     <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${
@@ -272,7 +272,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
                         ? 'bg-[rgba(16,185,129,0.08)] text-[#30d158] border border-[rgba(16,185,129,0.2)]'
                         : 'bg-[rgba(239,68,68,0.08)] text-[#ff453a] border border-[rgba(239,68,68,0.2)]'
                     }`}>
-                      {t.category}
+                      {String(t.category || '')}
                     </span>
                   </td>
                   <td className={`px-4 py-3 text-right font-medium ${

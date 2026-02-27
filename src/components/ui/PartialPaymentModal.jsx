@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { X, Loader2, DollarSign } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 
+const safe = (v) => (v == null ? '' : typeof v === 'object' ? JSON.stringify(v) : String(v));
+
 const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
   const [submitting, setSubmitting] = useState(false);
   const paidAmount = transaction.paidAmount || 0;
@@ -59,7 +61,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
         <div className="px-6 py-5 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#2c2c2e]">
           <div>
             <h3 className="font-bold text-xl text-[#e5e5ea]">Registrar Pago</h3>
-            <p className="text-sm text-[#8e8e93] mt-0.5 truncate max-w-[280px]">{transaction.description}</p>
+            <p className="text-sm text-[#8e8e93] mt-0.5 truncate max-w-[280px]">{safe(transaction.description)}</p>
           </div>
           <button onClick={onClose} className="p-2 text-[#636366] hover:text-[#98989d] hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all">
             <X size={20} />

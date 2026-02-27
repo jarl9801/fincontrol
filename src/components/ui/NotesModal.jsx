@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { X, MessageSquare, FileText, AlertCircle } from 'lucide-react';
 
+const safe = (v) => (v == null ? '' : typeof v === 'object' ? JSON.stringify(v) : String(v));
+
 const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
   const [newNote, setNewNote] = useState('');
   const [activeTab, setActiveTab] = useState('comments');
@@ -91,7 +93,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
                     <div className="flex items-center gap-2">
                       <MessageSquare size={14} className="text-[#0a84ff]" />
                       <span className="text-xs font-semibold text-[#0a84ff]">
-                        {note.user}
+                        {safe(note.user)}
                       </span>
                     </div>
                     <span className="text-xs text-[#0a84ff]">
@@ -99,7 +101,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
                     </span>
                   </div>
                   <p className="text-sm text-blue-900 font-medium">
-                    {note.text}
+                    {safe(note.text)}
                   </p>
                 </div>
               ))
@@ -122,7 +124,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
                     </span>
                   </div>
                   <p className="text-sm text-[#98989d] italic">
-                    {note.text}
+                    {safe(note.text)}
                   </p>
                 </div>
               ))

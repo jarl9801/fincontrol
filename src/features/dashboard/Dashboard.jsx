@@ -561,7 +561,7 @@ const Dashboard = ({ transactions, allTransactions, user }) => {
                         <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
                           t.type === 'income' ? 'bg-[rgba(48,209,88,0.12)]' : 'bg-[rgba(255,69,58,0.12)]'
                         }`} />
-                        <span className="text-[#c7c7cc]">{t.description}</span>
+                        <span className="text-[#c7c7cc]">{String(t.description || '')}</span>
                       </div>
                     </td>
                     <td className="py-3 px-4 text-[#8e8e93]">{(t.project || '').split(' ')[0]}</td>
