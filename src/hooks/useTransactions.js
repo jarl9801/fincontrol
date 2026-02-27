@@ -20,14 +20,23 @@ export const useTransactions = (user) => {
       (snapshot) => {
         const data = snapshot.docs.map(doc => {
           const raw = doc.data();
-          return {
-            id: doc.id,
-            ...raw,
-            notes: raw.notes || [],
-            // Convert Firestore Timestamps to ISO strings to prevent React render errors
-            createdAt: raw.createdAt?.toDate ? raw.createdAt.toDate().toISOString() : (raw.createdAt || null),
-            lastModifiedAt: raw.lastModifiedAt?.toDate ? raw.lastModifiedAt.toDate().toISOString() : (raw.lastModifiedAt || null),
-          };
+          // Sanitize: convert Timestamps, remove non-serializable objects (viewedBy, etc.)
+          const sanitized = { id: doc.id };
+          for (const [k, v] of Object.entries(raw)) {
+            if (v && typeof v === 'object' && typeof v.toDate === 'function') {
+              sanitized[k] = v.toDate().toISOString();
+            } else if (Array.isArray(v)) {
+              sanitized[k] = v;
+            } else if (v && typeof v === 'object' && !(v instanceof Date)) {
+              // Skip plain objects like viewedBy — they crash React if rendered
+              continue;
+            } else {
+              sanitized[k] = v;
+            }
+          }
+          sanitized.notes = raw.notes || [];
+          sanitized.payments = raw.payments || [];
+          return sanitized;
         });
         data.sort((a, b) => new Date(b.date) - new Date(a.date));
         setTransactions(data);
