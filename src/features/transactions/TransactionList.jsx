@@ -5,6 +5,7 @@ import FilterPanel from '../../components/ui/FilterPanel';
 import TransactionFormModal from '../../components/ui/TransactionFormModal';
 import NotesModal from '../../components/ui/NotesModal';
 import ConfirmModal from '../../components/ui/ConfirmModal';
+import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import { useCategories } from '../../hooks/useCategories';
 import { useCostCenters } from '../../hooks/useCostCenters';
@@ -49,6 +50,8 @@ const TransactionList = ({
   const [sortConfig, setSortConfig] = useState({ field: 'date', direction: 'desc' });
   const [toast, setToast] = useState(null);
   const [quickFilter, setQuickFilter] = useState('all');
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [paymentTransaction, setPaymentTransaction] = useState(null);
 
   const {
     createTransaction,
@@ -56,7 +59,8 @@ const TransactionList = ({
     deleteTransaction,
     toggleStatus,
     addNote,
-    markAsRead
+    markAsRead,
+    registerPayment
   } = useTransactionActions(user);
 
   const { expenseCategories, incomeCategories } = useCategories(user);
@@ -186,6 +190,18 @@ const TransactionList = ({
         ]
       };
       setSelectedTransaction(updatedTransaction);
+    }
+  };
+
+  const handleRegisterPayment = (transaction) => {
+    setPaymentTransaction(transaction);
+    setIsPaymentModalOpen(true);
+  };
+
+  const handlePaymentSubmit = async (transaction, paymentData) => {
+    const result = await registerPayment(transaction, paymentData);
+    if (result?.success) {
+      showToast('Pago registrado correctamente');
     }
   };
 
@@ -363,6 +379,7 @@ const TransactionList = ({
                   onDelete={handleDelete}
                   onEdit={handleEdit}
                   onViewNotes={handleViewNotes}
+                  onRegisterPayment={handleRegisterPayment}
                   userRole={userRole}
                   searchTerm={searchTerm}
                 />
@@ -443,6 +460,16 @@ const TransactionList = ({
         confirmText="Eliminar"
         cancelText="Cancelar"
         variant="danger"
+      />
+
+      <PartialPaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => {
+          setIsPaymentModalOpen(false);
+          setPaymentTransaction(null);
+        }}
+        transaction={paymentTransaction}
+        onSubmit={handlePaymentSubmit}
       />
     </div>
   );

@@ -56,13 +56,21 @@ export const useMetrics = (filteredTransactions) => {
       cashBalance = collectedIncome - paidExpenses;
     }
 
-    // Pending from Firebase 2026 transactions
+    // Pending from Firebase 2026 transactions (include partial, use remaining amount)
     const pendingPayables2026 = txn2026
-      .filter(t => t.type === 'expense' && t.status === 'pending')
-      .reduce((sum, t) => sum + t.amount, 0);
+      .filter(t => t.type === 'expense' && (t.status === 'pending' || t.status === 'partial'))
+      .reduce((sum, t) => sum + (t.amount - (t.paidAmount || 0)), 0);
     const pendingReceivables2026 = txn2026
-      .filter(t => t.type === 'income' && t.status === 'pending')
-      .reduce((sum, t) => sum + t.amount, 0);
+      .filter(t => t.type === 'income' && (t.status === 'pending' || t.status === 'partial'))
+      .reduce((sum, t) => sum + (t.amount - (t.paidAmount || 0)), 0);
+
+    // Partial payment metrics
+    const partialPayables = txn2026
+      .filter(t => t.type === 'expense' && t.status === 'partial')
+      .reduce((sum, t) => sum + (t.paidAmount || 0), 0);
+    const partialReceivables = txn2026
+      .filter(t => t.type === 'income' && t.status === 'partial')
+      .reduce((sum, t) => sum + (t.paidAmount || 0), 0);
 
     // Include 2025 CxC/CxP when showing 2025 or all
     const pendingPayables = pendingPayables2026 + (has2025 ? CXP_2025 : 0);
@@ -153,6 +161,8 @@ export const useMetrics = (filteredTransactions) => {
       netBalance: totalIncome - totalExpenses,
       pendingPayables,
       pendingReceivables,
+      partialPayables,
+      partialReceivables,
       monthlyTrend,
       categoryDistribution,
       projectMargins,

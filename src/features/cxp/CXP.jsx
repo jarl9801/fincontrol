@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingDown, Clock, AlertCircle } from 'lucide-react';
+import { TrendingDown, Clock, AlertCircle, DollarSign } from 'lucide-react';
 import TransactionList from '../transactions/TransactionList';
 import { formatCurrency, getDaysOverdue } from '../../utils/formatters';
 
@@ -13,23 +13,27 @@ const CXP = ({
   applyFilters,
   user
 }) => {
-  // Filtrar solo gastos pendientes
-  const payables = transactions.filter(t => t.type === 'expense' && t.status === 'pending');
+  // Filtrar gastos pendientes Y parciales
+  const payables = transactions.filter(t => t.type === 'expense' && (t.status === 'pending' || t.status === 'partial'));
   
-  // Calcular métricas
-  const totalPayable = payables.reduce((sum, t) => sum + t.amount, 0);
+  // Calcular métricas usando remaining amount
+  const totalPayable = payables.reduce((sum, t) => sum + (t.amount - (t.paidAmount || 0)), 0);
   const overduePayables = payables.filter(t => getDaysOverdue(t.date) > 0);
-  const totalOverdue = overduePayables.reduce((sum, t) => sum + t.amount, 0);
+  const totalOverdue = overduePayables.reduce((sum, t) => sum + (t.amount - (t.paidAmount || 0)), 0);
   const dueThisWeek = payables.filter(t => {
     const daysUntilDue = -getDaysOverdue(t.date);
     return daysUntilDue >= 0 && daysUntilDue <= 7;
   });
-  const totalDueThisWeek = dueThisWeek.reduce((sum, t) => sum + t.amount, 0);
+  const totalDueThisWeek = dueThisWeek.reduce((sum, t) => sum + (t.amount - (t.paidAmount || 0)), 0);
+
+  // Partial payments
+  const partialPayables = payables.filter(t => t.status === 'partial');
+  const totalPartial = partialPayables.reduce((sum, t) => sum + (t.paidAmount || 0), 0);
 
   return (
     <div className="space-y-6">
       {/* Métricas CXP */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Total por Pagar</h3>
@@ -37,6 +41,15 @@ const CXP = ({
           </div>
           <p className="text-3xl font-bold text-[#ff453a]">{formatCurrency(totalPayable)}</p>
           <p className="text-xs text-[#636366] mt-1">{payables.length} facturas pendientes</p>
+        </div>
+
+        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Pagado Parcialmente</h3>
+            <DollarSign className="text-[#ff9f0a]" size={20} />
+          </div>
+          <p className="text-3xl font-bold text-[#ff9f0a]">{formatCurrency(totalPartial)}</p>
+          <p className="text-xs text-[#636366] mt-1">{partialPayables.length} facturas con abono</p>
         </div>
 
         <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">

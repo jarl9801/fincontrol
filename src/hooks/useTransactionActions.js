@@ -185,12 +185,53 @@ export const useTransactionActions = (user) => {
     }
   };
 
+  const registerPayment = async (transaction, paymentData) => {
+    if (!user) return { success: false };
+
+    try {
+      const transactionDoc = doc(db, 'artifacts', appId, 'public', 'data', 'transactions', transaction.id);
+      const currentPaid = transaction.paidAmount || 0;
+      const newPaidAmount = currentPaid + paymentData.amount;
+      const newStatus = newPaidAmount >= transaction.amount ? 'paid' : 'partial';
+
+      const payment = {
+        amount: paymentData.amount,
+        date: paymentData.date,
+        method: paymentData.method,
+        note: paymentData.note || '',
+        user: user.email,
+        timestamp: new Date().toISOString()
+      };
+
+      await updateDoc(transactionDoc, {
+        paidAmount: newPaidAmount,
+        payments: arrayUnion(payment),
+        status: newStatus,
+        notes: arrayUnion({
+          text: `Pago registrado: €${paymentData.amount.toFixed(2)} vía ${paymentData.method} por ${user.email}${paymentData.note ? ` — ${paymentData.note}` : ''}`,
+          timestamp: new Date().toISOString(),
+          user: user.email,
+          type: 'system'
+        }),
+        hasUnreadUpdates: true,
+        lastModifiedBy: user.email,
+        lastModifiedAt: serverTimestamp()
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error registering payment:", error);
+      return { success: false, error };
+    }
+  };
+
   return {
     createTransaction,
     updateTransaction,
     deleteTransaction,
     toggleStatus,
     addNote,
-    markAsRead
+    markAsRead,
+    registerPayment
   };
 };

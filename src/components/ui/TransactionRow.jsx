@@ -2,7 +2,7 @@ import { CheckCircle2, Circle, MessageSquare, Edit2, Trash2, Sparkles, ArrowUpCi
 import { formatDate, formatCurrency, getDaysOverdue } from '../../utils/formatters';
 import { ALERT_THRESHOLDS } from '../../constants/config';
 
-const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, userRole, searchTerm }) => {
+const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, onRegisterPayment, userRole, searchTerm }) => {
   const isOverdue = t.status === 'pending' && getDaysOverdue(t.date) > ALERT_THRESHOLDS.overdueDays;
   const isNew = t.hasUnreadUpdates === true;
   const isIncome = t.type === 'income';
@@ -29,12 +29,24 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
   }) || false;
 
   // Status badge config — dark theme
+  const isPartial = t.status === 'partial';
+  const paidAmount = t.paidAmount || 0;
+  const remaining = t.amount - paidAmount;
+  const paidPct = t.amount > 0 ? (paidAmount / t.amount) * 100 : 0;
+
   const getStatusConfig = () => {
     if (t.status === 'paid') {
       return {
         icon: CheckCircle2,
         text: 'Pagado',
         class: 'bg-[rgba(16,185,129,0.12)] text-[#30d158] border-[rgba(16,185,129,0.25)]'
+      };
+    }
+    if (t.status === 'partial') {
+      return {
+        icon: Circle,
+        text: 'Pago Parcial',
+        class: 'bg-[rgba(255,159,10,0.12)] text-[#ff9f0a] border-[rgba(255,159,10,0.25)]'
       };
     }
     if (isOverdue) {
@@ -122,6 +134,16 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
               )}
             </div>
             <span className="text-xs text-[#636366] block mt-0.5">{t.project}</span>
+            {isPartial && (
+              <div className="mt-1.5">
+                <div className="w-full max-w-[160px] h-1.5 bg-[#2c2c2e] rounded-full overflow-hidden">
+                  <div className="h-full bg-[#30d158] rounded-full transition-all" style={{ width: `${paidPct}%` }} />
+                </div>
+                <span className="text-[10px] text-[#8e8e93] mt-0.5 block">
+                  Pagado: {formatCurrency(paidAmount)} / {formatCurrency(t.amount)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </td>
@@ -165,6 +187,15 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
       {/* Acciones */}
       <td className="px-4 py-4 text-center">
         <div className="flex items-center justify-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
+          {(t.status === 'pending' || t.status === 'partial') && (userRole === 'admin' || userRole === 'manager') && onRegisterPayment && (
+            <button
+              onClick={() => onRegisterPayment(t)}
+              className="p-2 text-[#30d158] hover:bg-[rgba(48,209,88,0.08)] rounded-lg transition-all duration-200"
+              title="Registrar Pago"
+            >
+              <span className="text-sm">💰</span>
+            </button>
+          )}
           <button
             onClick={() => onViewNotes(t)}
             className={`
