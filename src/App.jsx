@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ErrorBoundary from './components/ui/ErrorBoundary';
 import { useAuth } from './hooks/useAuth';
 import { useTransactions } from './hooks/useTransactions';
 import { useAllTransactions } from './hooks/useAllTransactions';
@@ -176,6 +177,7 @@ function App() {
   };
 
   return (
+    <ErrorBoundary>
     <div className="flex h-full bg-black font-sans text-white overflow-hidden">
       <Sidebar
         user={user}
@@ -256,6 +258,7 @@ function App() {
         />
       )}
     </div>
+    </ErrorBoundary>
   );
 }
 
