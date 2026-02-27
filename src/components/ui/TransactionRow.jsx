@@ -10,7 +10,8 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, user
 
   const highlightText = (text) => {
     if (!searchTerm) return text;
-    const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'));
+    const escaped = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const parts = text.split(new RegExp(`(${escaped})`, 'gi'));
     return parts.map((part, i) =>
       part.toLowerCase() === searchTerm.toLowerCase() ?
         <mark key={i} className="bg-[rgba(245,158,11,0.2)] text-[#ff9f0a] rounded px-0.5">{part}</mark> : part

@@ -1,4 +1,4 @@
-import { addDoc, updateDoc, deleteDoc, doc, collection, serverTimestamp } from 'firebase/firestore';
+import { addDoc, updateDoc, deleteDoc, doc, collection, serverTimestamp, arrayUnion } from 'firebase/firestore';
 import { db, appId } from '../services/firebase';
 
 export const useTransactionActions = (user) => {
@@ -42,7 +42,7 @@ export const useTransactionActions = (user) => {
         recurringEndDate: formData.isRecurring && formData.recurringEndDate ? formData.recurringEndDate : null,
         hasUnreadUpdates: formData.comment ? true : false,
         lastModifiedBy: user.email,
-        lastModifiedAt: new Date().toISOString(),
+        lastModifiedAt: serverTimestamp(),
         createdAt: serverTimestamp()
       };
 
@@ -95,9 +95,9 @@ export const useTransactionActions = (user) => {
         recurringEndDate: formData.isRecurring && formData.recurringEndDate ? formData.recurringEndDate : null,
         hasUnreadUpdates: true,
         lastModifiedBy: user.email,
-        lastModifiedAt: new Date().toISOString()
+        lastModifiedAt: serverTimestamp()
       });
-      
+
       return { success: true };
     } catch (error) {
       console.error("Error updating transaction:", error);
@@ -127,18 +127,15 @@ export const useTransactionActions = (user) => {
       
       await updateDoc(transactionDoc, {
         status: newStatus,
-        notes: [
-          ...(transaction.notes || []),
-          {
-            text: `Estado cambiado a ${newStatus === 'paid' ? 'Pagado' : 'Pendiente'} por ${user.email}`,
-            timestamp: new Date().toISOString(),
-            user: user.email,
-            type: 'system'
-          }
-        ],
+        notes: arrayUnion({
+          text: `Estado cambiado a ${newStatus === 'paid' ? 'Pagado' : 'Pendiente'} por ${user.email}`,
+          timestamp: new Date().toISOString(),
+          user: user.email,
+          type: 'system'
+        }),
         hasUnreadUpdates: true,
         lastModifiedBy: user.email,
-        lastModifiedAt: new Date().toISOString()
+        lastModifiedAt: serverTimestamp()
       });
       
       return { success: true };
@@ -153,21 +150,17 @@ export const useTransactionActions = (user) => {
 
     try {
       const transactionDoc = doc(db, 'artifacts', appId, 'public', 'data', 'transactions', transaction.id);
-      const updatedNotes = [
-        ...(transaction.notes || []),
-        {
+
+      await updateDoc(transactionDoc, {
+        notes: arrayUnion({
           text: noteText.trim(),
           timestamp: new Date().toISOString(),
           user: user.email,
           type: 'comment'
-        }
-      ];
-
-      await updateDoc(transactionDoc, {
-        notes: updatedNotes,
+        }),
         hasUnreadUpdates: true,
         lastModifiedBy: user.email,
-        lastModifiedAt: new Date().toISOString()
+        lastModifiedAt: serverTimestamp()
       });
       
       return { success: true };

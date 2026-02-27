@@ -21,7 +21,7 @@ import {
   Activity
 } from 'lucide-react';
 
-const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
+const Sidebar = ({ user, userRole, hasPermission, view, setView, onNewTransaction }) => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -81,24 +81,30 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
               ? 'bg-[rgba(191,90,242,0.12)] text-[#bf5af2]'
               : 'bg-[rgba(10,132,255,0.12)] text-[#0a84ff]'}
           `}>
-            {userRole === 'admin' ? 'Administrador' : 'Editor'}
+            {userRole === 'admin' ? 'Administrador' : userRole === 'manager' ? 'Manager' : 'Editor'}
           </span>
         </div>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {userRole === 'admin' && (
+        {hasPermission('dashboard') && (
           <NavItem id="dashboard" label="Dashboard" icon={LayoutDashboard} />
         )}
         <NavItem id="transactions" label="Todas las Transacciones" icon={Filter} />
 
-        {userRole === 'admin' && (
-          <>
-            <SectionTitle>Gestion de Deudas</SectionTitle>
-            <NavItem id="cxp" label="Cuentas por Pagar" icon={ArrowDownCircle} />
-            <NavItem id="cxc" label="Cuentas por Cobrar" icon={ArrowUpCircle} />
+        {(hasPermission('cxp') || hasPermission('cxc')) && (
+          <SectionTitle>Gestion de Deudas</SectionTitle>
+        )}
+        {hasPermission('cxp') && (
+          <NavItem id="cxp" label="Cuentas por Pagar" icon={ArrowDownCircle} />
+        )}
+        {hasPermission('cxc') && (
+          <NavItem id="cxc" label="Cuentas por Cobrar" icon={ArrowUpCircle} />
+        )}
 
+        {hasPermission('reports') && (
+          <>
             <SectionTitle>Reportes</SectionTitle>
             <NavItem id="executive-summary" label="Resumen Ejecutivo" icon={FileText} />
             <NavItem id="reports" label="Estado de Resultados" icon={TrendingUp} />
@@ -106,7 +112,11 @@ const Sidebar = ({ user, userRole, view, setView, onNewTransaction }) => {
             <NavItem id="report-cxp" label="Reporte CXP" icon={Clock} />
             <NavItem id="report-cxc" label="Reporte CXC" icon={BarChart3} />
             <NavItem id="cashflow" label="Flujo de Caja" icon={DollarSign} />
+          </>
+        )}
 
+        {hasPermission('settings') && (
+          <>
             <SectionTitle>Configuracion</SectionTitle>
             <NavItem id="projects" label="Proyectos" icon={FolderOpen} />
             <NavItem id="categories" label="Categorias" icon={Tag} />

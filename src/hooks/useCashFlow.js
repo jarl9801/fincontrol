@@ -1,15 +1,13 @@
 import { useMemo } from 'react';
 import { useAllTransactions } from './useAllTransactions';
+import { FINANCIAL_CONSTANTS } from '../constants/config';
 
 // Categories excluded from Operating CF
 const FINANCING_CATEGORIES = ['EGR-FIN', 'Intereses', 'Financiero'];
 const ARREARS_CATEGORIES = ['EGR-ARR', 'Alquiler vehiculo', 'Cuotas vehiculos'];
 const CAPEX_CATEGORIES = ['EGR-EQP', 'Equipos'];
 
-// Known balances at end of Dec 2025 (from Google Sheet dashboard)
-const BANK_BALANCE_DEC2025 = 28450.00;
-const IVA_BALANCE_DEC2025 = 7332.94;
-const TOTAL_CASH_DEC2025 = BANK_BALANCE_DEC2025 + IVA_BALANCE_DEC2025; // €35,782.94
+const TOTAL_CASH_DEC2025 = FINANCIAL_CONSTANTS.INITIAL_BANK_BALANCE + FINANCIAL_CONSTANTS.IVA_BALANCE_DEC2025;
 
 const MONTH_NAMES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 const toLabel = (ym) => {
@@ -114,8 +112,8 @@ export const useCashFlow = (user) => {
       fcf: totalFCF,
       burnRate,
       runway,
-      bankDec2025: BANK_BALANCE_DEC2025,
-      ivaDec2025: IVA_BALANCE_DEC2025,
+      bankDec2025: FINANCIAL_CONSTANTS.INITIAL_BANK_BALANCE,
+      ivaDec2025: FINANCIAL_CONSTANTS.IVA_BALANCE_DEC2025,
       startingBalance,
     };
 

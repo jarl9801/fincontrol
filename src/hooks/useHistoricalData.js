@@ -74,7 +74,7 @@ function convertRow(row) {
   if (isNaN(amount) || amount === 0) return null;
 
   return {
-    id: `hist-${id || dateStr}-${Math.random().toString(36).slice(2, 6)}`,
+    id: `hist-${id || dateStr}-${crypto.randomUUID().slice(0, 8)}`,
     date: dateStr,
     type: tipo.toUpperCase() === 'INGRESO' ? 'income' : 'expense',
     category: categoria || 'Otros',

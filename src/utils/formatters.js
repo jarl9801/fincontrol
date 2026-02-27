@@ -8,9 +8,9 @@ export const formatDate = (dateString) => {
 };
 
 export const getDaysOverdue = (dateString) => {
-  const transactionDate = new Date(dateString);
-  const today = new Date();
-  const diffTime = today - transactionDate;
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
+  const [y, m, d] = dateString.split('-').map(Number);
+  const transactionDate = Date.UTC(y, m - 1, d);
+  const now = new Date();
+  const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.floor((todayUTC - transactionDate) / (1000 * 60 * 60 * 24));
 };

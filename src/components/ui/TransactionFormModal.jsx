@@ -16,6 +16,8 @@ const TransactionFormModal = ({
 }) => {
   const { projects, loading: projectsLoading } = useProjects(user);
 
+  const [submitting, setSubmitting] = useState(false);
+
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
     description: '',
@@ -161,14 +163,31 @@ const TransactionFormModal = ({
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.amount || !formData.description) return;
+    if (submitting) return;
+
+    const amount = parseFloat(formData.amount);
+    if (!formData.description?.trim()) return;
+    if (!amount || amount <= 0 || amount > 999999999) {
+      alert('El monto debe ser mayor a 0 y menor a 999.999.999');
+      return;
+    }
+    if (formData.description.trim().length > 200) {
+      alert('La descripción no puede exceder 200 caracteres');
+      return;
+    }
     if (!formData.project) {
       alert('Por favor selecciona un proyecto');
       return;
     }
-    onSubmit(formData);
+
+    setSubmitting(true);
+    try {
+      await onSubmit(formData);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -471,18 +490,18 @@ const TransactionFormModal = ({
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={projectsLoading || activeProjects.length === 0}
+            disabled={submitting || projectsLoading || activeProjects.length === 0}
             className={`
               w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-white
               transition-all duration-200 shadow-lg
               ${formData.type === 'income'
                 ? 'bg-[#30d158] hover:bg-[#28c74e]'
                 : 'bg-[#0a84ff] hover:bg-[#0070e0]'}
-              ${(projectsLoading || activeProjects.length === 0) ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl transform hover:-translate-y-0.5'}
+              ${(submitting || projectsLoading || activeProjects.length === 0) ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl transform hover:-translate-y-0.5'}
             `}
           >
-            <Save size={18} />
-            {editingTransaction ? 'Guardar Cambios' : 'Crear Transacción'}
+            {submitting ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+            {submitting ? 'Guardando...' : editingTransaction ? 'Guardar Cambios' : 'Crear Transacción'}
           </button>
         </form>
       </div>

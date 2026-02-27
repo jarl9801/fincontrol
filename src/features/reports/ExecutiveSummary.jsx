@@ -6,6 +6,7 @@ import {
   ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
+import { FINANCIAL_CONSTANTS } from '../../constants/config';
 import {
   AreaChart, Area, LineChart, Line, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
@@ -17,6 +18,86 @@ const MONTH_NAMES_FULL = [
 ];
 
 const MONTH_NAMES_SHORT = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+const KPI_COLOR_CLASSES = {
+  blue: 'from-[#0a84ff] to-[#0070e0]',
+  emerald: 'from-[#30d158] to-[#28c74e]',
+  rose: 'from-[#ff453a] to-[#e63b31]',
+  amber: 'from-[#ff9f0a] to-[#e68f09]',
+  indigo: 'from-[#5e5ce6] to-[#4f4dd4]'
+};
+
+const KPICard = ({ title, value, subtitle, icon: Icon, trend, trendValue, color = 'blue' }) => (
+  <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] overflow-hidden">
+    <div className="p-5">
+      <div className="flex items-start justify-between mb-3">
+        <div className={`p-2.5 rounded-xl bg-gradient-to-br ${KPI_COLOR_CLASSES[color]} text-white`}>
+          <Icon size={20} />
+        </div>
+        {trend && (
+          <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold ${
+            trend === 'up' ? 'bg-[rgba(16,185,129,0.12)] text-[#30d158]' : 'bg-[rgba(239,68,68,0.12)] text-[#ff453a]'
+          }`}>
+            {trend === 'up' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+            {Math.abs(trendValue).toFixed(1)}%
+          </div>
+        )}
+      </div>
+      <h3 className="text-sm font-medium text-[#8e8e93] mb-1">{title}</h3>
+      <p className="text-2xl font-bold text-[#e5e5ea]">{value}</p>
+      {subtitle && <p className="text-xs text-[#636366] mt-1">{subtitle}</p>}
+    </div>
+  </div>
+);
+
+const RATIO_STATUS_COLORS = {
+  good: 'bg-[rgba(16,185,129,0.12)] text-[#30d158] border-[rgba(16,185,129,0.25)]',
+  warning: 'bg-[rgba(245,158,11,0.12)] text-[#ff9f0a] border-[rgba(245,158,11,0.25)]',
+  bad: 'bg-[rgba(239,68,68,0.12)] text-[#ff453a] border-[rgba(239,68,68,0.25)]'
+};
+
+const RATIO_DOT_COLORS = {
+  good: 'bg-[#30d158]',
+  warning: 'bg-[#ff9f0a]',
+  bad: 'bg-[#ff453a]'
+};
+
+const RatioIndicator = ({ label, value, benchmark, unit = '', inverse = false }) => {
+  let status = 'good';
+  if (inverse) {
+    if (value > benchmark * 1.2) status = 'bad';
+    else if (value > benchmark) status = 'warning';
+  } else {
+    if (value < benchmark * 0.8) status = 'bad';
+    else if (value < benchmark) status = 'warning';
+  }
+
+  return (
+    <div className={`flex items-center justify-between p-3 rounded-xl border ${RATIO_STATUS_COLORS[status]}`}>
+      <div className="flex items-center gap-2">
+        <div className={`w-2 h-2 rounded-full ${RATIO_DOT_COLORS[status]}`} />
+        <span className="text-sm font-medium">{label}</span>
+      </div>
+      <span className="font-bold">{typeof value === 'number' ? value.toFixed(1) : value}{unit}</span>
+    </div>
+  );
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-[#1c1c1e] p-3 rounded-xl shadow-lg border border-[rgba(255,255,255,0.08)]">
+        <p className="text-sm font-semibold text-[#c7c7cc] mb-2">{label}</p>
+        {payload.map((entry, index) => (
+          <p key={index} className="text-sm" style={{ color: entry.color }}>
+            {entry.name}: {formatCurrency(entry.value)}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
 
 const ExecutiveSummary = ({ transactions }) => {
   const now = new Date();
@@ -185,8 +266,8 @@ const ExecutiveSummary = ({ transactions }) => {
   const workingCapital = cxc - cxp;
 
   // Days calculation (simplified)
-  const avgDaysReceivable = cxc > 0 && currentIncome > 0 ? Math.round((cxc / (currentIncome / 30))) : 0;
-  const avgDaysPayable = cxp > 0 && currentExpenses > 0 ? Math.round((cxp / (currentExpenses / 30))) : 0;
+  const avgDaysReceivable = cxc > 0 && currentIncome > 0 ? Math.round((cxc / (currentIncome / FINANCIAL_CONSTANTS.DAYS_PER_MONTH))) : 0;
+  const avgDaysPayable = cxp > 0 && currentExpenses > 0 ? Math.round((cxp / (currentExpenses / FINANCIAL_CONSTANTS.DAYS_PER_MONTH))) : 0;
   const cashCycle = avgDaysReceivable - avgDaysPayable;
 
   // Last 6 months trend (relative to selected month)
@@ -219,14 +300,14 @@ const ExecutiveSummary = ({ transactions }) => {
 
   const projectsWithLowMargin = Object.values(projectData)
     .map(p => ({ ...p, margin: p.ingresos > 0 ? ((p.ingresos - p.gastos) / p.ingresos * 100) : -100 }))
-    .filter(p => p.margin < 20)
+    .filter(p => p.margin < FINANCIAL_CONSTANTS.MARGIN_WARNING_PERCENT)
     .sort((a, b) => a.margin - b.margin);
 
   // Overdue transactions
   const overdueTransactions = transactions.filter(t => {
     if (t.status !== 'pending') return false;
     const daysOverdue = Math.floor((now - new Date(t.date)) / (1000 * 60 * 60 * 24));
-    return daysOverdue > 30;
+    return daysOverdue > FINANCIAL_CONSTANTS.DAYS_PER_MONTH;
   });
 
   // Alerts and recommendations
@@ -237,12 +318,12 @@ const ExecutiveSummary = ({ transactions }) => {
     alerts.push({ type: 'danger', text: 'Ratio de liquidez bajo: CXP supera CXC' });
     recommendations.push('Acelerar cobro de facturas pendientes o negociar plazos con proveedores');
   }
-  if (grossMargin < 20) {
+  if (grossMargin < FINANCIAL_CONSTANTS.MARGIN_WARNING_PERCENT) {
     alerts.push({ type: 'warning', text: `Margen bruto bajo: ${grossMargin.toFixed(1)}%` });
     recommendations.push('Revisar estructura de costos y evaluar ajuste de precios');
   }
   if (projectsWithLowMargin.length > 0) {
-    alerts.push({ type: 'warning', text: `${projectsWithLowMargin.length} proyectos con margen < 20%` });
+    alerts.push({ type: 'warning', text: `${projectsWithLowMargin.length} proyectos con margen < ${FINANCIAL_CONSTANTS.MARGIN_WARNING_PERCENT}%` });
     recommendations.push('Analizar rentabilidad de proyectos y renegociar contratos');
   }
   if (overdueTransactions.length > 0) {
@@ -254,7 +335,7 @@ const ExecutiveSummary = ({ transactions }) => {
     alerts.push({ type: 'warning', text: `Gastos aumentaron ${expenseVariation.toFixed(1)}% vs período anterior` });
     recommendations.push('Revisar gastos extraordinarios y evaluar medidas de control');
   }
-  if (cashCycle > 45) {
+  if (cashCycle > FINANCIAL_CONSTANTS.CASH_CYCLE_WARNING_DAYS) {
     alerts.push({ type: 'info', text: `Ciclo de caja de ${cashCycle} días` });
     recommendations.push('Optimizar ciclo de conversión de efectivo');
   }
@@ -280,88 +361,6 @@ const ExecutiveSummary = ({ transactions }) => {
     if (periodType === 'quarter') return `Q${Math.floor(selectedMonth.month / 3)} ${selectedMonth.year}`;
     if (periodType === 'year') return `Año ${selectedMonth.year - 1}`;
     return '';
-  };
-
-  const KPICard = ({ title, value, subtitle, icon: Icon, trend, trendValue, color = 'blue' }) => {
-    const colorClasses = {
-      blue: 'from-[#0a84ff] to-[#0070e0]',
-      emerald: 'from-[#30d158] to-[#28c74e]',
-      rose: 'from-[#ff453a] to-[#e63b31]',
-      amber: 'from-[#ff9f0a] to-[#e68f09]',
-      indigo: 'from-[#5e5ce6] to-[#4f4dd4]'
-    };
-
-    return (
-      <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] overflow-hidden">
-        <div className="p-5">
-          <div className="flex items-start justify-between mb-3">
-            <div className={`p-2.5 rounded-xl bg-gradient-to-br ${colorClasses[color]} text-white`}>
-              <Icon size={20} />
-            </div>
-            {trend && (
-              <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold ${
-                trend === 'up' ? 'bg-[rgba(16,185,129,0.12)] text-[#30d158]' : 'bg-[rgba(239,68,68,0.12)] text-[#ff453a]'
-              }`}>
-                {trend === 'up' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-                {Math.abs(trendValue).toFixed(1)}%
-              </div>
-            )}
-          </div>
-          <h3 className="text-sm font-medium text-[#8e8e93] mb-1">{title}</h3>
-          <p className="text-2xl font-bold text-[#e5e5ea]">{value}</p>
-          {subtitle && <p className="text-xs text-[#636366] mt-1">{subtitle}</p>}
-        </div>
-      </div>
-    );
-  };
-
-  const RatioIndicator = ({ label, value, benchmark, unit = '', inverse = false }) => {
-    let status = 'good';
-    if (inverse) {
-      if (value > benchmark * 1.2) status = 'bad';
-      else if (value > benchmark) status = 'warning';
-    } else {
-      if (value < benchmark * 0.8) status = 'bad';
-      else if (value < benchmark) status = 'warning';
-    }
-
-    const statusColors = {
-      good: 'bg-[rgba(16,185,129,0.12)] text-[#30d158] border-[rgba(16,185,129,0.25)]',
-      warning: 'bg-[rgba(245,158,11,0.12)] text-[#ff9f0a] border-[rgba(245,158,11,0.25)]',
-      bad: 'bg-[rgba(239,68,68,0.12)] text-[#ff453a] border-[rgba(239,68,68,0.25)]'
-    };
-
-    const dotColors = {
-      good: 'bg-[#30d158]',
-      warning: 'bg-[#ff9f0a]',
-      bad: 'bg-[#ff453a]'
-    };
-
-    return (
-      <div className={`flex items-center justify-between p-3 rounded-xl border ${statusColors[status]}`}>
-        <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${dotColors[status]}`} />
-          <span className="text-sm font-medium">{label}</span>
-        </div>
-        <span className="font-bold">{typeof value === 'number' ? value.toFixed(1) : value}{unit}</span>
-      </div>
-    );
-  };
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-[#1c1c1e] p-3 rounded-xl shadow-lg border border-[rgba(255,255,255,0.08)]">
-          <p className="text-sm font-semibold text-[#c7c7cc] mb-2">{label}</p>
-          {payload.map((entry, index) => (
-            <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {entry.name}: {formatCurrency(entry.value)}
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
   };
 
   return (

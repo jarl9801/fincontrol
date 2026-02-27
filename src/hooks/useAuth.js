@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../services/firebase';
-import { ADMIN_EMAIL } from '../constants/config';
+import { USER_ROLES, ROLE_PERMISSIONS } from '../constants/config';
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);
@@ -12,11 +12,7 @@ export const useAuth = () => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-        if (currentUser.email === ADMIN_EMAIL) {
-          setUserRole('admin');
-        } else {
-          setUserRole('editor');
-        }
+        setUserRole(USER_ROLES[currentUser.email] || 'editor');
       } else {
         setUser(null);
         setUserRole(null);
@@ -27,5 +23,12 @@ export const useAuth = () => {
     return () => unsubscribe();
   }, []);
 
-  return { user, userRole, loading };
+  // Helper: check if current role has permission for a section
+  const hasPermission = (section) => {
+    if (!userRole) return false;
+    const perms = ROLE_PERMISSIONS[userRole] || ROLE_PERMISSIONS.editor;
+    return perms.includes(section);
+  };
+
+  return { user, userRole, hasPermission, loading };
 };

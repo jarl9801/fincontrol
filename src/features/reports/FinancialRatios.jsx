@@ -4,10 +4,107 @@ import {
   CreditCard, Wallet, Target, BarChart3, AlertTriangle, CheckCircle2, Info
 } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
+import { FINANCIAL_CONSTANTS } from '../../constants/config';
 import {
   RadialBarChart, RadialBar, ResponsiveContainer, PolarAngleAxis,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell
 } from 'recharts';
+
+const statusColors = {
+  good: { bg: 'bg-[rgba(16,185,129,0.12)]', text: 'text-[#30d158]', border: 'border-[rgba(16,185,129,0.25)]', icon: 'text-[#30d158]' },
+  warning: { bg: 'bg-[rgba(245,158,11,0.12)]', text: 'text-[#ff9f0a]', border: 'border-[rgba(245,158,11,0.25)]', icon: 'text-[#ff9f0a]' },
+  bad: { bg: 'bg-[rgba(239,68,68,0.12)]', text: 'text-[#ff453a]', border: 'border-[rgba(239,68,68,0.25)]', icon: 'text-[#ff453a]' }
+};
+
+const getStatus = (value, benchmark, inverse = false) => {
+  if (inverse) {
+    if (value <= benchmark.good) return 'good';
+    if (value <= benchmark.warning) return 'warning';
+    return 'bad';
+  }
+  if (value >= benchmark.good) return 'good';
+  if (value >= benchmark.warning) return 'warning';
+  return 'bad';
+};
+
+const RatioCard = ({ title, value, unit = '', benchmark, inverse = false, description, icon: Icon }) => {
+  const status = getStatus(value, benchmark, inverse);
+  const colors = statusColors[status];
+  const displayValue = typeof value === 'number' ? (value > 100 ? '>100' : value.toFixed(1)) : value;
+
+  const maxValue = inverse ? benchmark.warning * 2 : benchmark.good * 2;
+  const gaugePercent = Math.min(100, Math.max(0, (value / maxValue) * 100));
+  const gaugeData = [{ name: 'value', value: gaugePercent, fill: status === 'good' ? '#30d158' : status === 'warning' ? '#ff9f0a' : '#ff453a' }];
+
+  return (
+    <div className={`bg-[#1c1c1e] rounded-xl shadow-sm border ${colors.border} overflow-hidden`}>
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className={`p-2 rounded-lg ${colors.bg}`}>
+              <Icon className={colors.icon} size={18} />
+            </div>
+            <div>
+              <h4 className="font-semibold text-[#e5e5ea] text-sm">{title}</h4>
+              <p className="text-xs text-[#8e8e93]">{description}</p>
+            </div>
+          </div>
+          {status === 'good' ? (
+            <CheckCircle2 className="text-[#30d158]" size={20} />
+          ) : (
+            <AlertTriangle className={status === 'warning' ? 'text-[#ff9f0a]' : 'text-[#ff453a]'} size={20} />
+          )}
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className={`text-3xl font-bold ${colors.text}`}>
+              {displayValue}{unit}
+            </p>
+            <p className="text-xs text-[#636366] mt-1">
+              Referencia: {inverse ? '<' : '>'}{benchmark.good}{unit}
+            </p>
+          </div>
+          <div className="w-20 h-20">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadialBarChart cx="50%" cy="50%" innerRadius="60%" outerRadius="100%" data={gaugeData} startAngle={180} endAngle={0}>
+                <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
+                <RadialBar background={{ fill: '#000000' }} dataKey="value" cornerRadius={10} fill={gaugeData[0].fill} />
+              </RadialBarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      <div className={`px-4 py-2 ${colors.bg} flex items-center gap-2`}>
+        <span className={`w-2 h-2 rounded-full ${status === 'good' ? 'bg-[#30d158]' : status === 'warning' ? 'bg-[#ff9f0a]' : 'bg-[#ff453a]'}`} />
+        <span className={`text-xs font-medium ${colors.text}`}>
+          {status === 'good' ? 'Saludable' : status === 'warning' ? 'Requiere atención' : 'Crítico'}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const SummaryMetric = ({ label, value, subvalue, color = 'blue' }) => {
+  const colorClasses = {
+    blue: 'from-[#0a84ff] to-[#0070e0]',
+    emerald: 'from-[#30d158] to-[#28c74e]',
+    rose: 'from-[#ff453a] to-[#e63b31]',
+    amber: 'from-[#ff9f0a] to-[#e68f09]',
+    indigo: 'from-[#5e5ce6] to-[#4f4dd4]'
+  };
+
+  return (
+    <div className="bg-[#1c1c1e] rounded-xl shadow-sm border border-[rgba(255,255,255,0.08)] p-4">
+      <p className="text-sm text-[#8e8e93] mb-1">{label}</p>
+      <p className={`text-2xl font-bold bg-gradient-to-r ${colorClasses[color]} bg-clip-text text-transparent`}>
+        {value}
+      </p>
+      {subvalue && <p className="text-xs text-[#636366] mt-1">{subvalue}</p>}
+    </div>
+  );
+};
 
 const FinancialRatios = ({ transactions }) => {
   const now = new Date();
@@ -67,8 +164,8 @@ const FinancialRatios = ({ transactions }) => {
   const cashRatio = cxp > 0 ? (workingCapital / cxp) : 1;
 
   // === RATIOS DE ACTIVIDAD ===
-  const avgDaysReceivable = cxc > 0 && currentIncome > 0 ? Math.round((cxc / (currentIncome / 30))) : 0;
-  const avgDaysPayable = cxp > 0 && currentExpenses > 0 ? Math.round((cxp / (currentExpenses / 30))) : 0;
+  const avgDaysReceivable = cxc > 0 && currentIncome > 0 ? Math.round((cxc / (currentIncome / FINANCIAL_CONSTANTS.DAYS_PER_MONTH))) : 0;
+  const avgDaysPayable = cxp > 0 && currentExpenses > 0 ? Math.round((cxp / (currentExpenses / FINANCIAL_CONSTANTS.DAYS_PER_MONTH))) : 0;
   const cashConversionCycle = avgDaysReceivable - avgDaysPayable;
   const receivablesTurnover = currentIncome > 0 && cxc > 0 ? (currentIncome * 12 / cxc) : 0;
   const payablesTurnover = currentExpenses > 0 && cxp > 0 ? (currentExpenses * 12 / cxp) : 0;
@@ -76,7 +173,7 @@ const FinancialRatios = ({ transactions }) => {
   // === RATIOS DE RENTABILIDAD ===
   const grossMargin = currentIncome > 0 ? (currentProfit / currentIncome * 100) : 0;
   const operatingMargin = currentIncome > 0 ? ((currentProfit * 0.85) / currentIncome * 100) : 0; // Estimado
-  const netMargin = currentIncome > 0 ? ((currentProfit * 0.75) / currentIncome * 100) : 0; // Después de impuestos estimado
+  const netMargin = currentIncome > 0 ? ((currentProfit * (1 - FINANCIAL_CONSTANTS.ESTIMATED_TAX_RATE)) / currentIncome * 100) : 0; // Después de impuestos estimado
   const ytdMargin = ytdIncome > 0 ? (ytdProfit / ytdIncome * 100) : 0;
 
   // ROA y ROE simplificados (sin activos totales reales)
@@ -101,119 +198,6 @@ const FinancialRatios = ({ transactions }) => {
     roa: { good: 15, warning: 5 },
     roe: { good: 20, warning: 10 },
     operatingEfficiency: { good: 30, warning: 15 }
-  };
-
-  const getStatus = (value, benchmark, inverse = false) => {
-    if (inverse) {
-      if (value <= benchmark.good) return 'good';
-      if (value <= benchmark.warning) return 'warning';
-      return 'bad';
-    }
-    if (value >= benchmark.good) return 'good';
-    if (value >= benchmark.warning) return 'warning';
-    return 'bad';
-  };
-
-  const statusColors = {
-    good: { bg: 'bg-[rgba(16,185,129,0.12)]', text: 'text-[#30d158]', border: 'border-[rgba(16,185,129,0.25)]', icon: 'text-[#30d158]' },
-    warning: { bg: 'bg-[rgba(245,158,11,0.12)]', text: 'text-[#ff9f0a]', border: 'border-[rgba(245,158,11,0.25)]', icon: 'text-[#ff9f0a]' },
-    bad: { bg: 'bg-[rgba(239,68,68,0.12)]', text: 'text-[#ff453a]', border: 'border-[rgba(239,68,68,0.25)]', icon: 'text-[#ff453a]' }
-  };
-
-  const RatioCard = ({ title, value, unit = '', benchmark, inverse = false, description, icon: Icon }) => {
-    const status = getStatus(value, benchmark, inverse);
-    const colors = statusColors[status];
-    const displayValue = typeof value === 'number' ? (value > 100 ? '>100' : value.toFixed(1)) : value;
-
-    // Calculate gauge percentage
-    const maxValue = inverse ? benchmark.warning * 2 : benchmark.good * 2;
-    const gaugePercent = Math.min(100, Math.max(0, (value / maxValue) * 100));
-
-    const gaugeData = [{ name: 'value', value: gaugePercent, fill: status === 'good' ? '#30d158' : status === 'warning' ? '#ff9f0a' : '#ff453a' }];
-
-    return (
-      <div className={`bg-[#1c1c1e] rounded-xl shadow-sm border ${colors.border} overflow-hidden`}>
-        <div className="p-4">
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className={`p-2 rounded-lg ${colors.bg}`}>
-                <Icon className={colors.icon} size={18} />
-              </div>
-              <div>
-                <h4 className="font-semibold text-[#e5e5ea] text-sm">{title}</h4>
-                <p className="text-xs text-[#8e8e93]">{description}</p>
-              </div>
-            </div>
-            {status === 'good' ? (
-              <CheckCircle2 className="text-[#30d158]" size={20} />
-            ) : status === 'warning' ? (
-              <AlertTriangle className="text-[#ff9f0a]" size={20} />
-            ) : (
-              <AlertTriangle className="text-[#ff453a]" size={20} />
-            )}
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <p className={`text-3xl font-bold ${colors.text}`}>
-                {displayValue}{unit}
-              </p>
-              <p className="text-xs text-[#636366] mt-1">
-                Referencia: {inverse ? '<' : '>'}{benchmark.good}{unit}
-              </p>
-            </div>
-            <div className="w-20 h-20">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadialBarChart
-                  cx="50%"
-                  cy="50%"
-                  innerRadius="60%"
-                  outerRadius="100%"
-                  data={gaugeData}
-                  startAngle={180}
-                  endAngle={0}
-                >
-                  <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
-                  <RadialBar
-                    background={{ fill: '#000000' }}
-                    dataKey="value"
-                    cornerRadius={10}
-                    fill={gaugeData[0].fill}
-                  />
-                </RadialBarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-
-        <div className={`px-4 py-2 ${colors.bg} flex items-center gap-2`}>
-          <span className={`w-2 h-2 rounded-full ${status === 'good' ? 'bg-[#30d158]' : status === 'warning' ? 'bg-[#ff9f0a]' : 'bg-[#ff453a]'}`} />
-          <span className={`text-xs font-medium ${colors.text}`}>
-            {status === 'good' ? 'Saludable' : status === 'warning' ? 'Requiere atención' : 'Crítico'}
-          </span>
-        </div>
-      </div>
-    );
-  };
-
-  const SummaryMetric = ({ label, value, subvalue, trend, color = 'blue' }) => {
-    const colorClasses = {
-      blue: 'from-[#0a84ff] to-[#0070e0]',
-      emerald: 'from-[#30d158] to-[#28c74e]',
-      rose: 'from-[#ff453a] to-[#e63b31]',
-      amber: 'from-[#ff9f0a] to-[#e68f09]',
-      indigo: 'from-[#5e5ce6] to-[#4f4dd4]'
-    };
-
-    return (
-      <div className="bg-[#1c1c1e] rounded-xl shadow-sm border border-[rgba(255,255,255,0.08)] p-4">
-        <p className="text-sm text-[#8e8e93] mb-1">{label}</p>
-        <p className={`text-2xl font-bold bg-gradient-to-r ${colorClasses[color]} bg-clip-text text-transparent`}>
-          {value}
-        </p>
-        {subvalue && <p className="text-xs text-[#636366] mt-1">{subvalue}</p>}
-      </div>
-    );
   };
 
   // Data for comparison chart

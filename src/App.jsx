@@ -16,8 +16,7 @@ import CXC from './features/cxc/CXC';
 import Reports from './features/reports/Reports';
 import ExecutiveSummary from './features/reports/ExecutiveSummary';
 import FinancialRatios from './features/reports/FinancialRatios';
-import ReportCXP from './features/reports/ReportCXP';
-import ReportCXC from './features/reports/ReportCXC';
+import ReportCXCXP from './features/reports/ReportCXCXP';
 import CashFlow from './features/cashflow/CashFlow';
 import Categories from './features/settings/Categories';
 import CostCenters from './features/settings/CostCenters';
@@ -85,7 +84,7 @@ const LoadingState = () => (
 );
 
 function App() {
-  const { user, userRole, loading: authLoading } = useAuth();
+  const { user, userRole, hasPermission, loading: authLoading } = useAuth();
   const { transactions, loading: transactionsLoading } = useTransactions(user);
   const { allTransactions, loading: allTxLoading } = useAllTransactions(user);
   const { createTransaction } = useTransactionActions(user);
@@ -144,7 +143,7 @@ function App() {
 
     switch (view) {
       case 'dashboard':
-        return userRole === 'admin' ? <Dashboard transactions={filteredTransactions} allTransactions={allTransactions} user={user} /> : null;
+        return hasPermission('dashboard') ? <Dashboard transactions={filteredTransactions} allTransactions={allTransactions} user={user} /> : null;
       case 'transactions':
         return <TransactionList {...commonProps} />;
       case 'cxp':
@@ -158,9 +157,9 @@ function App() {
       case 'financial-ratios':
         return <FinancialRatios transactions={filteredTransactions} allTransactions={allTransactions} />;
       case 'report-cxp':
-        return <ReportCXP transactions={filteredTransactions} />;
+        return <ReportCXCXP transactions={filteredTransactions} type="cxp" />;
       case 'report-cxc':
-        return <ReportCXC transactions={filteredTransactions} />;
+        return <ReportCXCXP transactions={filteredTransactions} type="cxc" />;
       case 'cashflow':
         return <CashFlow user={user} />;
       case 'categories':
@@ -181,6 +180,7 @@ function App() {
       <Sidebar
         user={user}
         userRole={userRole}
+        hasPermission={hasPermission}
         view={view}
         setView={setView}
         onNewTransaction={handleNewTransaction}
@@ -241,6 +241,7 @@ function App() {
         onClose={() => setIsMobileMenuOpen(false)}
         user={user}
         userRole={userRole}
+        hasPermission={hasPermission}
         view={view}
         setView={setView}
         onNewTransaction={handleNewTransaction}

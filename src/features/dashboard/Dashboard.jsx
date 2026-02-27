@@ -25,10 +25,30 @@ import { COLORS, ALERT_THRESHOLDS } from '../../constants/config';
 
 const CHART_COLORS = ['#0a84ff', '#30d158', '#ff9f0a', '#ff453a', '#bf5af2', '#64d2ff'];
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-[#1c1c1e] p-3 rounded-lg shadow-lg border border-[rgba(255,255,255,0.08)] text-sm">
+        <p className="font-medium text-[#c7c7cc] mb-1">{label}</p>
+        {payload.map((entry, index) => (
+          <p key={index} style={{ color: entry.color }}>
+            {entry.name}: {formatCurrency(entry.value)}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
+const SectionTitle = ({ children }) => (
+  <h3 className="text-sm font-semibold text-[#636366] uppercase tracking-wider">{children}</h3>
+);
+
 const Dashboard = ({ transactions, allTransactions, user }) => {
   const [selectedProject, setSelectedProject] = useState(null);
   const period = usePeriodSelector(2026);
-  
+
   // Use allTransactions if available, otherwise fall back to transactions
   const sourceData = allTransactions && allTransactions.length > 0 ? allTransactions : transactions;
   const filteredByPeriod = period.filterTransactions(sourceData);
@@ -44,26 +64,6 @@ const Dashboard = ({ transactions, allTransactions, user }) => {
       />
     );
   }
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-[#1c1c1e] p-3 rounded-lg shadow-lg border border-[rgba(255,255,255,0.08)] text-sm">
-          <p className="font-medium text-[#c7c7cc] mb-1">{label}</p>
-          {payload.map((entry, index) => (
-            <p key={index} style={{ color: entry.color }}>
-              {entry.name}: {formatCurrency(entry.value)}
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const SectionTitle = ({ children }) => (
-    <h3 className="text-sm font-semibold text-[#636366] uppercase tracking-wider">{children}</h3>
-  );
 
   return (
     <div className="space-y-8 animate-fadeIn">
@@ -273,7 +273,7 @@ const Dashboard = ({ transactions, allTransactions, user }) => {
                   const isHighRoi = roi >= 30;
 
                   return (
-                    <tr key={idx} className="border-b border-[rgba(255,255,255,0.08)] last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors cursor-pointer" onClick={() => setSelectedProject(project.name)}>
+                    <tr key={idx} className="border-b border-[rgba(255,255,255,0.08)] last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors cursor-pointer" tabIndex={0} role="button" aria-label={`Ver detalle de ${project.name}`} onClick={() => setSelectedProject(project.name)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedProject(project.name); } }}>
                       <td className="px-4 py-3">
                         <span className="font-medium text-[#c7c7cc] hover:text-[#0a84ff] transition-colors">{project.name}</span>
                       </td>

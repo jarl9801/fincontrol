@@ -12,9 +12,9 @@ import {
   ReferenceLine, Cell, BarChart
 } from 'recharts';
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
+import { FINANCIAL_CONSTANTS } from '../../constants/config';
 
-const BANK_REAL_KEY = 'fincontrol_banco_real';
+// ─── Helpers ────────────────────────────────────────────────────────────────
 
 const formatAxis = (value) => {
   if (Math.abs(value) >= 1000) return `€${(value / 1000).toFixed(0)}k`;
@@ -54,15 +54,11 @@ const CashFlow = ({ user }) => {
   const { loading, csvError, monthlyData, kpis, fcfData, allMonths } = useCashFlow(user);
   const period = usePeriodSelector('all');
 
-  // Bank Reconciliation state
-  const [bancoReal, setBancoReal] = useState(() => {
-    const stored = localStorage.getItem(BANK_REAL_KEY);
-    return stored !== null ? stored : '';
-  });
-  const [bancoRealInput, setBancoRealInput] = useState(bancoReal);
+  // Bank Reconciliation state (session-only, not persisted)
+  const [bancoReal, setBancoReal] = useState('');
+  const [bancoRealInput, setBancoRealInput] = useState('');
 
   const handleSaveBanco = () => {
-    localStorage.setItem(BANK_REAL_KEY, bancoRealInput);
     setBancoReal(bancoRealInput);
   };
 
@@ -418,10 +414,10 @@ const CashFlow = ({ user }) => {
               <p className="text-xs text-[#636366] mb-1">Discrepancia</p>
               {discrepancia !== null ? (
                 <>
-                  <p className={`text-lg font-bold ${Math.abs(discrepancia) < 100 ? 'text-[#30d158]' : discPercent > 5 ? 'text-[#ff453a]' : 'text-[#ff9f0a]'}`}>
+                  <p className={`text-lg font-bold ${Math.abs(discrepancia) < FINANCIAL_CONSTANTS.DISCREPANCY_SMALL_AMOUNT ? 'text-[#30d158]' : discPercent > FINANCIAL_CONSTANTS.DISCREPANCY_THRESHOLD_PERCENT ? 'text-[#ff453a]' : 'text-[#ff9f0a]'}`}>
                     {discrepancia >= 0 ? '+' : ''}{formatCurrency(discrepancia)}
                   </p>
-                  {discPercent > 5 && (
+                  {discPercent > FINANCIAL_CONSTANTS.DISCREPANCY_THRESHOLD_PERCENT && (
                     <p className="text-xs text-[#ff453a] mt-1 flex items-center gap-1">
                       <AlertTriangle size={10} /> {discPercent.toFixed(1)}% — revisar registros
                     </p>

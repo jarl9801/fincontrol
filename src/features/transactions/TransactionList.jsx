@@ -10,6 +10,25 @@ import { useCategories } from '../../hooks/useCategories';
 import { useCostCenters } from '../../hooks/useCostCenters';
 import { exportTransactionsToPDF } from '../../utils/pdfExport';
 
+const SortableHeader = ({ field, label, align = 'left', sortConfig, onSort }) => {
+  const isActive = sortConfig.field === field;
+  return (
+    <th
+      className={`px-4 py-4 text-xs font-semibold text-[#8e8e93] uppercase tracking-wider cursor-pointer hover:text-[#c7c7cc] transition-colors select-none ${align === 'right' ? 'text-right' : ''}`}
+      onClick={() => onSort(field)}
+    >
+      <span className={`inline-flex items-center gap-1 ${align === 'right' ? 'justify-end' : ''}`}>
+        {label}
+        {isActive ? (
+          sortConfig.direction === 'desc' ? <ArrowDown size={14} /> : <ArrowUp size={14} />
+        ) : (
+          <ArrowUpDown size={14} className="opacity-40" />
+        )}
+      </span>
+    </th>
+  );
+};
+
 const TransactionList = ({
   transactions,
   userRole,
@@ -93,37 +112,19 @@ const TransactionList = ({
     }));
   };
 
-  const sortedTransactions = [...filteredByQuick].sort((a, b) => {
-    if (sortConfig.field === 'date') {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      return sortConfig.direction === 'desc' ? dateB - dateA : dateA - dateB;
-    }
-    if (sortConfig.field === 'amount') {
-      return sortConfig.direction === 'desc' ? b.amount - a.amount : a.amount - b.amount;
-    }
-    return 0;
-  });
-
-  // Sortable header component
-  const SortableHeader = ({ field, label, align = 'left' }) => {
-    const isActive = sortConfig.field === field;
-    return (
-      <th
-        className={`px-4 py-4 text-xs font-semibold text-[#8e8e93] uppercase tracking-wider cursor-pointer hover:text-[#c7c7cc] transition-colors select-none ${align === 'right' ? 'text-right' : ''}`}
-        onClick={() => handleSort(field)}
-      >
-        <span className={`inline-flex items-center gap-1 ${align === 'right' ? 'justify-end' : ''}`}>
-          {label}
-          {isActive ? (
-            sortConfig.direction === 'desc' ? <ArrowDown size={14} /> : <ArrowUp size={14} />
-          ) : (
-            <ArrowUpDown size={14} className="opacity-40" />
-          )}
-        </span>
-      </th>
-    );
-  };
+  const sortedTransactions = useMemo(() => {
+    return [...filteredByQuick].sort((a, b) => {
+      if (sortConfig.field === 'date') {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return sortConfig.direction === 'desc' ? dateB - dateA : dateA - dateB;
+      }
+      if (sortConfig.field === 'amount') {
+        return sortConfig.direction === 'desc' ? b.amount - a.amount : a.amount - b.amount;
+      }
+      return 0;
+    });
+  }, [filteredByQuick, sortConfig.field, sortConfig.direction]);
 
   const handleToggleStatus = async (transaction) => {
     if (userRole !== 'admin') return;
@@ -345,10 +346,10 @@ const TransactionList = ({
           <table className="w-full text-left">
             <thead className="bg-[rgba(255,255,255,0.02)] border-b border-[rgba(255,255,255,0.08)]">
               <tr>
-                <SortableHeader field="date" label="Fecha" />
+                <SortableHeader field="date" label="Fecha" sortConfig={sortConfig} onSort={handleSort} />
                 <th className="px-4 py-4 text-xs font-semibold text-[#8e8e93] uppercase tracking-wider">Descripción</th>
                 <th className="px-4 py-4 text-xs font-semibold text-[#8e8e93] uppercase tracking-wider hidden md:table-cell">Categoría</th>
-                <SortableHeader field="amount" label="Monto" align="right" />
+                <SortableHeader field="amount" label="Monto" align="right" sortConfig={sortConfig} onSort={handleSort} />
                 <th className="px-4 py-4 text-xs font-semibold text-[#8e8e93] uppercase tracking-wider text-center">Estado</th>
                 <th className="px-4 py-4 text-xs font-semibold text-[#8e8e93] uppercase tracking-wider text-center">Acciones</th>
               </tr>
