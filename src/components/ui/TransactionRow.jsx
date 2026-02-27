@@ -190,10 +190,10 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, onRe
           {(t.status === 'pending' || t.status === 'partial') && (userRole === 'admin' || userRole === 'manager') && onRegisterPayment && (
             <button
               onClick={() => onRegisterPayment(t)}
-              className="p-2 text-[#30d158] hover:bg-[rgba(48,209,88,0.08)] rounded-lg transition-all duration-200"
+              className="px-2.5 py-1.5 text-xs font-semibold text-[#30d158] bg-[rgba(48,209,88,0.1)] hover:bg-[rgba(48,209,88,0.2)] border border-[rgba(48,209,88,0.2)] rounded-lg transition-all duration-200"
               title="Registrar Pago"
             >
-              <span className="text-sm">💰</span>
+              💰 Pagar
             </button>
           )}
           <button
