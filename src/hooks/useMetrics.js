@@ -82,6 +82,7 @@ export const useMetrics = (filteredTransactions) => {
     // Monthly trend
     const monthlyData = {};
     filteredTransactions.forEach(t => {
+      if (!t.date) return;
       const month = t.date.substring(0, 7);
       if (!monthlyData[month]) {
         monthlyData[month] = { month, ingresos: 0, gastos: 0 };
@@ -97,17 +98,18 @@ export const useMetrics = (filteredTransactions) => {
     // Category distribution
     const categoryData = {};
     filteredTransactions.filter(t => t.type === 'expense').forEach(t => {
-      if (!categoryData[t.category]) {
-        categoryData[t.category] = 0;
+      const cat = t.category || 'Sin Categoría';
+      if (!categoryData[cat]) {
+        categoryData[cat] = 0;
       }
-      categoryData[t.category] += t.amount;
+      categoryData[cat] += t.amount;
     });
     const categoryDistribution = Object.entries(categoryData).map(([name, value]) => ({ name, value }));
 
     // Project margins
     const projectData = {};
     filteredTransactions.forEach(t => {
-      const pName = t.project.split(' ')[0];
+      const pName = (t.project || 'Sin Proyecto').split(' ')[0];
       if (!projectData[pName]) {
         projectData[pName] = { name: pName, ingresos: 0, gastos: 0, margen: 0 };
       }
@@ -146,7 +148,7 @@ export const useMetrics = (filteredTransactions) => {
 
     // Overdue transactions
     const overdueTransactions = filteredTransactions.filter(t =>
-      t.status === 'pending' && getDaysOverdue(t.date) > ALERT_THRESHOLDS.overdueDays
+      (t.status === 'pending' || t.status === 'partial') && t.date && getDaysOverdue(t.date) > ALERT_THRESHOLDS.overdueDays
     );
 
     const negativeProjects = projectMargins.filter(p => p.ingresos > 0 && p.gastos > p.ingresos);

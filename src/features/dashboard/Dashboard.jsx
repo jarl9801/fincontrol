@@ -564,7 +564,7 @@ const Dashboard = ({ transactions, allTransactions, user }) => {
                         <span className="text-[#c7c7cc]">{t.description}</span>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-[#8e8e93]">{t.project.split(' ')[0]}</td>
+                    <td className="py-3 px-4 text-[#8e8e93]">{(t.project || '').split(' ')[0]}</td>
                     <td className={`py-3 px-4 text-right font-medium ${
                       t.type === 'income' ? 'text-[#30d158]' : 'text-[#ff453a]'
                     }`}>
