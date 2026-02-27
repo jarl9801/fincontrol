@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { X, Loader2, DollarSign } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 
-const PartialPaymentModal = ({ isOpen, onClose, transaction, onSubmit }) => {
+const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
   const [submitting, setSubmitting] = useState(false);
-  const paidAmount = transaction?.paidAmount || 0;
-  const remaining = (transaction?.amount || 0) - paidAmount;
+  const paidAmount = transaction.paidAmount || 0;
+  const remaining = transaction.amount - paidAmount;
 
   const [formData, setFormData] = useState({
     amount: '',
@@ -16,8 +16,8 @@ const PartialPaymentModal = ({ isOpen, onClose, transaction, onSubmit }) => {
 
   // Reset form when transaction changes
   const [lastTxId, setLastTxId] = useState(null);
-  if (transaction?.id !== lastTxId) {
-    setLastTxId(transaction?.id || null);
+  if (transaction.id !== lastTxId) {
+    setLastTxId(transaction.id);
     setFormData({
       amount: '',
       date: new Date().toISOString().split('T')[0],
@@ -25,8 +25,6 @@ const PartialPaymentModal = ({ isOpen, onClose, transaction, onSubmit }) => {
       note: ''
     });
   }
-
-  if (!isOpen || !transaction) return null;
 
   const setQuickAmount = (pct) => {
     setFormData({ ...formData, amount: (remaining * pct).toFixed(2) });
@@ -187,6 +185,11 @@ const PartialPaymentModal = ({ isOpen, onClose, transaction, onSubmit }) => {
       </div>
     </div>
   );
+};
+
+const PartialPaymentModal = ({ isOpen, onClose, transaction, onSubmit }) => {
+  if (!isOpen || !transaction) return null;
+  return <PartialPaymentModalInner transaction={transaction} onClose={onClose} onSubmit={onSubmit} />;
 };
 
 export default PartialPaymentModal;
