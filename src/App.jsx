@@ -148,9 +148,9 @@ function App() {
       case 'transactions':
         return <TransactionList {...commonProps} />;
       case 'cxp':
-        return <CXP {...commonProps} />;
+        return <CXP {...commonProps} transactions={allTransactions} />;
       case 'cxc':
-        return <CXC {...commonProps} />;
+        return <CXC {...commonProps} transactions={allTransactions} />;
       case 'executive-summary':
         return <ExecutiveSummary transactions={filteredTransactions} allTransactions={allTransactions} />;
       case 'reports':
