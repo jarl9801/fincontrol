@@ -379,7 +379,6 @@ const TransactionList = ({
                   onDelete={handleDelete}
                   onEdit={handleEdit}
                   onViewNotes={handleViewNotes}
-                  onRegisterPayment={handleRegisterPayment}
                   userRole={userRole}
                   searchTerm={searchTerm}
                 />

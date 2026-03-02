@@ -225,6 +225,33 @@ export const useTransactionActions = (user) => {
     }
   };
 
+  const markAsCompleted = async (transaction) => {
+    if (!user) return { success: false };
+    try {
+      const transactionDoc = doc(db, 'artifacts', appId, 'public', 'data', 'transactions', transaction.id);
+      const isIncome = transaction.type === 'income';
+      const label = isIncome ? 'Cobrado' : 'Pagado';
+      await updateDoc(transactionDoc, {
+        status: 'completed',
+        paidDate: new Date().toISOString(),
+        paidAmount: transaction.amount,
+        notes: arrayUnion({
+          text: `Marcado como ${label} por ${user.email}`,
+          timestamp: new Date().toISOString(),
+          user: user.email,
+          type: 'system'
+        }),
+        hasUnreadUpdates: true,
+        lastModifiedBy: user.email,
+        lastModifiedAt: serverTimestamp()
+      });
+      return { success: true };
+    } catch (error) {
+      console.error("Error marking as completed:", error);
+      return { success: false, error };
+    }
+  };
+
   return {
     createTransaction,
     updateTransaction,
@@ -232,6 +259,7 @@ export const useTransactionActions = (user) => {
     toggleStatus,
     addNote,
     markAsRead,
-    registerPayment
+    registerPayment,
+    markAsCompleted
   };
 };
