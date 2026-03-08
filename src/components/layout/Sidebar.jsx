@@ -1,29 +1,67 @@
 import { signOut } from 'firebase/auth';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { auth } from '../../services/firebase';
 import {
-  Briefcase,
-  LayoutDashboard,
-  ArrowUpCircle,
-  ArrowDownCircle,
-  ListFilter,
-  DollarSign,
-  BarChart3,
-  Settings,
-  Plus,
-  LogOut
+  Briefcase, LayoutDashboard, ArrowUpCircle, ArrowDownCircle,
+  ListFilter, DollarSign, BarChart3, Settings, Plus, LogOut,
+  FileText, Target, Scale, Bell, History, Paperclip, RefreshCw,
+  Upload, BookOpen, Folder, TrendingUp, Coins, Shield, Database
 } from 'lucide-react';
 
-const NAV_ITEMS = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
-  { id: 'ingresos', label: 'Ingresos', icon: ArrowUpCircle, permission: 'cxc', color: '#30d158' },
-  { id: 'gastos', label: 'Gastos', icon: ArrowDownCircle, permission: 'cxp', color: '#ff453a' },
-  { id: 'transactions', label: 'Transacciones', icon: ListFilter },
-  { id: 'cashflow', label: 'Flujo de Caja', icon: DollarSign, permission: 'reports' },
-  { id: 'reportes', label: 'Reportes', icon: BarChart3, permission: 'reports' },
-  { id: 'configuracion', label: 'Configuración', icon: Settings, permission: 'settings' },
+const NAV_SECTIONS = [
+  {
+    label: 'Principal',
+    items: [
+      { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
+      { path: '/alertas', label: 'Alertas', icon: Bell, permission: 'dashboard', color: '#ff9f0a' },
+    ],
+  },
+  {
+    label: 'Operaciones',
+    items: [
+      { path: '/ingresos', label: 'Ingresos', icon: ArrowUpCircle, permission: 'cxc', color: '#30d158' },
+      { path: '/gastos', label: 'Gastos', icon: ArrowDownCircle, permission: 'cxp', color: '#ff453a' },
+      { path: '/transactions', label: 'Transacciones', icon: ListFilter },
+      { path: '/recurrencia', label: 'Recurrentes', icon: RefreshCw },
+    ],
+  },
+  {
+    label: 'Cuentas',
+    items: [
+      { path: '/cxc', label: 'Ctas por Cobrar', icon: FileText, permission: 'cxc', color: '#30d158' },
+      { path: '/cxp', label: 'Ctas por Pagar', icon: FileText, permission: 'cxp', color: '#ff453a' },
+    ],
+  },
+  {
+    label: 'Análisis',
+    items: [
+      { path: '/presupuesto', label: 'Presupuesto', icon: Target, permission: 'reports', color: '#0a84ff' },
+      { path: '/cashflow', label: 'Flujo de Caja', icon: DollarSign, permission: 'reports' },
+      { path: '/proyeccion', label: 'Proyección', icon: TrendingUp, permission: 'reports', color: '#bf5af2' },
+      { path: '/balance', label: 'Balance General', icon: BookOpen, permission: 'reports' },
+      { path: '/proyectos', label: 'Por Proyecto', icon: Folder, permission: 'reports' },
+      { path: '/reportes', label: 'Reportes', icon: BarChart3, permission: 'reports' },
+    ],
+  },
+  {
+    label: 'Administración',
+    items: [
+      { path: '/conciliacion', label: 'Conciliación', icon: Scale, permission: 'settings' },
+      { path: '/import-export', label: 'Import/Export', icon: Upload, permission: 'settings' },
+      { path: '/adjuntos', label: 'Adjuntos', icon: Paperclip, permission: 'settings' },
+      { path: '/multi-moneda', label: 'Multi-Moneda', icon: Coins, permission: 'settings' },
+      { path: '/roles', label: 'Roles', icon: Shield, permission: 'settings' },
+      { path: '/auditoria', label: 'Auditoría', icon: History, permission: 'settings' },
+      { path: '/backup', label: 'Backup', icon: Database, permission: 'settings' },
+      { path: '/configuracion', label: 'Configuración', icon: Settings, permission: 'settings' },
+    ],
+  },
 ];
 
-const Sidebar = ({ user, userRole, hasPermission, view, setView, onNewTransaction }) => {
+const Sidebar = ({ user, userRole, hasPermission, onNewTransaction }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -32,14 +70,14 @@ const Sidebar = ({ user, userRole, hasPermission, view, setView, onNewTransactio
     }
   };
 
-  const NavItem = ({ id, label, icon: Icon, color }) => {
-    const isActive = view === id;
+  const NavItem = ({ path, label, icon: Icon, color }) => {
+    const isActive = location.pathname === path;
 
     return (
       <button
-        onClick={() => setView(id)}
+        onClick={() => navigate(path)}
         className={`
-          relative flex items-center gap-2.5 w-full px-3 py-[8px] rounded-[10px] text-[13px] font-medium transition-all duration-150
+          relative flex items-center gap-2.5 w-full px-3 py-[7px] rounded-[10px] text-[13px] font-medium transition-all duration-150
           ${isActive
             ? 'bg-[rgba(255,255,255,0.08)] text-white'
             : 'text-[#8e8e93] hover:bg-[rgba(255,255,255,0.05)] hover:text-[#c7c7cc]'}
@@ -48,7 +86,7 @@ const Sidebar = ({ user, userRole, hasPermission, view, setView, onNewTransactio
         {isActive && (
           <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 bg-[#30d158] rounded-r-sm" />
         )}
-        <Icon size={17} className={isActive ? (color || 'text-[#30d158]') : 'text-[#636366]'} style={isActive && color ? { color } : undefined} />
+        <Icon size={16} className={isActive ? (color || 'text-[#30d158]') : 'text-[#636366]'} style={isActive && color ? { color } : undefined} />
         <span className="flex-1 text-left truncate">{label}</span>
       </button>
     );
@@ -87,10 +125,18 @@ const Sidebar = ({ user, userRole, hasPermission, view, setView, onNewTransactio
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
-        {NAV_ITEMS.map(item => {
-          if (item.permission && !hasPermission(item.permission)) return null;
-          return <NavItem key={item.id} {...item} />;
+      <nav className="flex-1 px-3 py-2 overflow-y-auto">
+        {NAV_SECTIONS.map((section) => {
+          const visibleItems = section.items.filter(item => !item.permission || hasPermission(item.permission));
+          if (visibleItems.length === 0) return null;
+          return (
+            <div key={section.label} className="mb-2">
+              <p className="text-[9px] font-bold text-[#48484a] uppercase tracking-widest px-3 py-1.5">{section.label}</p>
+              <div className="space-y-0.5">
+                {visibleItems.map(item => <NavItem key={item.path} {...item} />)}
+              </div>
+            </div>
+          );
         })}
       </nav>
 

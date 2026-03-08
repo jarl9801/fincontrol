@@ -20,9 +20,9 @@ export const USER_ROLES = {
 
 // Permissions per role
 export const ROLE_PERMISSIONS = {
-  admin: ['dashboard', 'transactions', 'cxp', 'cxc', 'reports', 'cashflow', 'settings'],
-  manager: ['transactions', 'cxp', 'cxc'],
-  editor: ['transactions'],
+  admin: ['dashboard', 'transactions', 'cxp', 'cxc', 'reports', 'cashflow', 'settings', 'budget', 'audit', 'backup'],
+  manager: ['dashboard', 'transactions', 'cxp', 'cxc', 'reports'],
+  editor: ['dashboard', 'transactions'],
 };
 export const EDITOR_EMAIL = 'beatriz@umtelkomd.com';
 

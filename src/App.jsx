@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import { useAuth } from './hooks/useAuth';
 import { useTransactions } from './hooks/useTransactions';
@@ -11,6 +12,7 @@ import { ToastProvider, useToast } from './contexts/ToastContext';
 import Login from './features/auth/Login';
 import Sidebar from './components/layout/Sidebar';
 import MobileMenu, { MobileMenuButton } from './components/layout/MobileMenu';
+// Sprint 1
 import Dashboard from './features/dashboard/Dashboard';
 import Ingresos from './features/ingresos/Ingresos';
 import Gastos from './features/gastos/Gastos';
@@ -18,17 +20,52 @@ import TransactionList from './features/transactions/TransactionList';
 import CashFlow from './features/cashflow/CashFlow';
 import ReportesUnified from './features/reportes/ReportesUnified';
 import ConfiguracionUnified from './features/configuracion/ConfiguracionUnified';
+import CXCIndependiente from './features/cxc/CXCIndependiente';
+import CXPIndependiente from './features/cxp/CXPIndependiente';
+import BudgetVsActual from './features/presupuesto/BudgetVsActual';
+// Sprint 2
+import Conciliacion from './features/conciliacion/Conciliacion';
+import Alertas from './features/alertas/Alertas';
+import AuditLog from './features/auditoria/AuditLog';
+// Sprint 3
+import Adjuntos from './features/adjuntos/Adjuntos';
+import Recurrencia from './features/recurrencia/Recurrencia';
+import ImportExport from './features/importexport/ImportExport';
+// Sprint 4
+import BalanceGeneral from './features/balance/BalanceGeneral';
+import ProyectoDashboard from './features/proyectos/ProyectoDashboard';
+import ProyeccionCashflow from './features/cashflow/ProyeccionCashflow';
+// Sprint 5
+import MultiMoneda from './features/multimoneda/MultiMoneda';
+import RolesManager from './features/roles/RolesManager';
+import BackupManager from './features/backup/BackupManager';
+
 import TransactionFormModal from './components/ui/TransactionFormModal';
 import { Loader2 } from 'lucide-react';
 
 const VIEW_TITLES = {
-  'dashboard': 'Dashboard',
-  'ingresos': 'Ingresos',
-  'gastos': 'Gastos',
-  'transactions': 'Transacciones',
-  'cashflow': 'Flujo de Caja',
-  'reportes': 'Reportes',
-  'configuracion': 'Configuración',
+  '/': 'Dashboard',
+  '/ingresos': 'Ingresos',
+  '/gastos': 'Gastos',
+  '/transactions': 'Transacciones',
+  '/cashflow': 'Flujo de Caja',
+  '/reportes': 'Reportes',
+  '/configuracion': 'Configuración',
+  '/cxc': 'Cuentas por Cobrar',
+  '/cxp': 'Cuentas por Pagar',
+  '/presupuesto': 'Presupuesto vs Real',
+  '/conciliacion': 'Conciliación Bancaria',
+  '/alertas': 'Centro de Alertas',
+  '/auditoria': 'Registro de Auditoría',
+  '/adjuntos': 'Documentos Adjuntos',
+  '/recurrencia': 'Transacciones Recurrentes',
+  '/import-export': 'Import / Export',
+  '/balance': 'Balance General',
+  '/proyectos': 'Dashboard por Proyecto',
+  '/proyeccion': 'Proyección de Cashflow',
+  '/multi-moneda': 'Multi-Moneda',
+  '/roles': 'Roles y Permisos',
+  '/backup': 'Backup y Restauración',
 };
 
 // Skeleton Loading Component
@@ -76,7 +113,9 @@ function AppContent() {
     filteredTransactions
   } = useFilters(transactions);
 
-  const [view, setView] = useState('dashboard');
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalDefaultType, setModalDefaultType] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -90,6 +129,35 @@ function AppContent() {
   if (!user) {
     return <Login />;
   }
+
+  // Bridge: setView for backward compatibility with Dashboard
+  const setView = (viewId) => {
+    const pathMap = {
+      dashboard: '/',
+      ingresos: '/ingresos',
+      gastos: '/gastos',
+      transactions: '/transactions',
+      cashflow: '/cashflow',
+      reportes: '/reportes',
+      configuracion: '/configuracion',
+      cxc: '/cxc',
+      cxp: '/cxp',
+      presupuesto: '/presupuesto',
+      conciliacion: '/conciliacion',
+      alertas: '/alertas',
+      auditoria: '/auditoria',
+      adjuntos: '/adjuntos',
+      recurrencia: '/recurrencia',
+      'import-export': '/import-export',
+      balance: '/balance',
+      proyectos: '/proyectos',
+      proyeccion: '/proyeccion',
+      'multi-moneda': '/multi-moneda',
+      roles: '/roles',
+      backup: '/backup',
+    };
+    navigate(pathMap[viewId] || '/');
+  };
 
   const handleNewTransaction = (defaultType) => {
     setModalDefaultType(defaultType || null);
@@ -107,61 +175,17 @@ function AppContent() {
     setModalDefaultType(null);
   };
 
-  const renderView = () => {
-    if (loading) return <LoadingState />;
+  const currentTitle = VIEW_TITLES[location.pathname] || 'Dashboard';
 
-    const commonProps = {
-      transactions: filteredTransactions,
-      userRole,
-      user,
-      searchTerm,
-      setSearchTerm,
-      filters,
-      setFilters,
-      applyFilters
-    };
-
-    switch (view) {
-      case 'dashboard':
-        return hasPermission('dashboard') ? (
-          <Dashboard
-            transactions={filteredTransactions}
-            allTransactions={allTransactions}
-            user={user}
-            setView={setView}
-          />
-        ) : null;
-      case 'ingresos':
-        return (
-          <Ingresos
-            transactions={filteredTransactions}
-            allTransactions={allTransactions}
-            userRole={userRole}
-            user={user}
-            onNewTransaction={handleNewTransaction}
-          />
-        );
-      case 'gastos':
-        return (
-          <Gastos
-            transactions={filteredTransactions}
-            allTransactions={allTransactions}
-            userRole={userRole}
-            user={user}
-            onNewTransaction={handleNewTransaction}
-          />
-        );
-      case 'transactions':
-        return <TransactionList {...commonProps} />;
-      case 'cashflow':
-        return <CashFlow user={user} />;
-      case 'reportes':
-        return <ReportesUnified transactions={filteredTransactions} allTransactions={allTransactions} />;
-      case 'configuracion':
-        return <ConfiguracionUnified user={user} transactions={filteredTransactions} />;
-      default:
-        return null;
-    }
+  const commonProps = {
+    transactions: filteredTransactions,
+    userRole,
+    user,
+    searchTerm,
+    setSearchTerm,
+    filters,
+    setFilters,
+    applyFilters
   };
 
   return (
@@ -170,8 +194,6 @@ function AppContent() {
         user={user}
         userRole={userRole}
         hasPermission={hasPermission}
-        view={view}
-        setView={setView}
         onNewTransaction={handleNewTransaction}
       />
 
@@ -183,7 +205,7 @@ function AppContent() {
               <MobileMenuButton onClick={() => setIsMobileMenuOpen(true)} />
               <div>
                 <h2 className="text-[17px] md:text-[19px] font-semibold text-white tracking-tight">
-                  {VIEW_TITLES[view] || 'Dashboard'}
+                  {currentTitle}
                 </h2>
                 <p className="text-[11px] text-[#636366] hidden md:block mt-0.5">
                   {new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
@@ -207,7 +229,43 @@ function AppContent() {
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-4 md:p-8">
           <div className="max-w-7xl mx-auto">
-            {renderView()}
+            {loading ? <LoadingState /> : (
+              <Routes>
+                {/* Sprint 1 */}
+                <Route path="/" element={
+                  hasPermission('dashboard') ? (
+                    <Dashboard transactions={filteredTransactions} allTransactions={allTransactions} user={user} setView={setView} />
+                  ) : <Navigate to="/transactions" replace />
+                } />
+                <Route path="/ingresos" element={<Ingresos transactions={filteredTransactions} allTransactions={allTransactions} userRole={userRole} user={user} onNewTransaction={handleNewTransaction} />} />
+                <Route path="/gastos" element={<Gastos transactions={filteredTransactions} allTransactions={allTransactions} userRole={userRole} user={user} onNewTransaction={handleNewTransaction} />} />
+                <Route path="/transactions" element={<TransactionList {...commonProps} />} />
+                <Route path="/cashflow" element={<CashFlow user={user} />} />
+                <Route path="/reportes" element={<ReportesUnified transactions={filteredTransactions} allTransactions={allTransactions} />} />
+                <Route path="/configuracion" element={<ConfiguracionUnified user={user} transactions={filteredTransactions} />} />
+                <Route path="/cxc" element={<CXCIndependiente user={user} userRole={userRole} />} />
+                <Route path="/cxp" element={<CXPIndependiente user={user} userRole={userRole} />} />
+                <Route path="/presupuesto" element={<BudgetVsActual user={user} userRole={userRole} />} />
+                {/* Sprint 2 */}
+                <Route path="/conciliacion" element={<Conciliacion user={user} userRole={userRole} />} />
+                <Route path="/alertas" element={<Alertas user={user} userRole={userRole} />} />
+                <Route path="/auditoria" element={<AuditLog user={user} userRole={userRole} />} />
+                {/* Sprint 3 */}
+                <Route path="/adjuntos" element={<Adjuntos user={user} userRole={userRole} />} />
+                <Route path="/recurrencia" element={<Recurrencia user={user} userRole={userRole} />} />
+                <Route path="/import-export" element={<ImportExport user={user} userRole={userRole} />} />
+                {/* Sprint 4 */}
+                <Route path="/balance" element={<BalanceGeneral user={user} userRole={userRole} />} />
+                <Route path="/proyectos" element={<ProyectoDashboard user={user} userRole={userRole} />} />
+                <Route path="/proyeccion" element={<ProyeccionCashflow user={user} userRole={userRole} />} />
+                {/* Sprint 5 */}
+                <Route path="/multi-moneda" element={<MultiMoneda user={user} userRole={userRole} />} />
+                <Route path="/roles" element={<RolesManager user={user} userRole={userRole} />} />
+                <Route path="/backup" element={<BackupManager user={user} userRole={userRole} />} />
+                {/* Fallback */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            )}
           </div>
         </div>
       </main>
@@ -232,8 +290,6 @@ function AppContent() {
         user={user}
         userRole={userRole}
         hasPermission={hasPermission}
-        view={view}
-        setView={setView}
         onNewTransaction={handleNewTransaction}
       />
     </div>

@@ -1,31 +1,62 @@
 import { signOut } from 'firebase/auth';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { auth } from '../../services/firebase';
 import {
-  Briefcase,
-  LayoutDashboard,
-  ArrowUpCircle,
-  ArrowDownCircle,
-  ListFilter,
-  DollarSign,
-  BarChart3,
-  Settings,
-  Plus,
-  LogOut,
-  Menu,
-  X
+  Briefcase, LayoutDashboard, ArrowUpCircle, ArrowDownCircle,
+  ListFilter, DollarSign, BarChart3, Settings, Plus, LogOut, Menu, X,
+  FileText, Target, Scale, Bell, History, Paperclip, RefreshCw,
+  Upload, BookOpen, Folder, TrendingUp, Coins, Shield, Database
 } from 'lucide-react';
 
-const NAV_ITEMS = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
-  { id: 'ingresos', label: 'Ingresos', icon: ArrowUpCircle, permission: 'cxc' },
-  { id: 'gastos', label: 'Gastos', icon: ArrowDownCircle, permission: 'cxp' },
-  { id: 'transactions', label: 'Transacciones', icon: ListFilter },
-  { id: 'cashflow', label: 'Flujo de Caja', icon: DollarSign, permission: 'reports' },
-  { id: 'reportes', label: 'Reportes', icon: BarChart3, permission: 'reports' },
-  { id: 'configuracion', label: 'Configuración', icon: Settings, permission: 'settings' },
+const NAV_SECTIONS = [
+  {
+    label: 'Principal',
+    items: [
+      { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
+      { path: '/alertas', label: 'Alertas', icon: Bell, permission: 'dashboard' },
+    ],
+  },
+  {
+    label: 'Operaciones',
+    items: [
+      { path: '/ingresos', label: 'Ingresos', icon: ArrowUpCircle, permission: 'cxc' },
+      { path: '/gastos', label: 'Gastos', icon: ArrowDownCircle, permission: 'cxp' },
+      { path: '/transactions', label: 'Transacciones', icon: ListFilter },
+      { path: '/recurrencia', label: 'Recurrentes', icon: RefreshCw },
+    ],
+  },
+  {
+    label: 'Cuentas',
+    items: [
+      { path: '/cxc', label: 'Ctas por Cobrar', icon: FileText, permission: 'cxc' },
+      { path: '/cxp', label: 'Ctas por Pagar', icon: FileText, permission: 'cxp' },
+    ],
+  },
+  {
+    label: 'Análisis',
+    items: [
+      { path: '/presupuesto', label: 'Presupuesto', icon: Target, permission: 'reports' },
+      { path: '/cashflow', label: 'Flujo de Caja', icon: DollarSign, permission: 'reports' },
+      { path: '/proyeccion', label: 'Proyección', icon: TrendingUp, permission: 'reports' },
+      { path: '/balance', label: 'Balance General', icon: BookOpen, permission: 'reports' },
+      { path: '/proyectos', label: 'Por Proyecto', icon: Folder, permission: 'reports' },
+      { path: '/reportes', label: 'Reportes', icon: BarChart3, permission: 'reports' },
+    ],
+  },
+  {
+    label: 'Administración',
+    items: [
+      { path: '/conciliacion', label: 'Conciliación', icon: Scale, permission: 'settings' },
+      { path: '/import-export', label: 'Import/Export', icon: Upload, permission: 'settings' },
+      { path: '/configuracion', label: 'Configuración', icon: Settings, permission: 'settings' },
+    ],
+  },
 ];
 
-const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, view, setView, onNewTransaction }) => {
+const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, onNewTransaction }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -34,8 +65,8 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, view, setV
     }
   };
 
-  const handleNavigation = (newView) => {
-    setView(newView);
+  const handleNavigation = (path) => {
+    navigate(path);
     onClose();
   };
 
@@ -46,13 +77,13 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, view, setV
 
   if (!isOpen) return null;
 
-  const NavItem = ({ id, label, icon: Icon }) => {
-    const isActive = view === id;
+  const NavItem = ({ path, label, icon: Icon }) => {
+    const isActive = location.pathname === path;
     return (
       <button
-        onClick={() => handleNavigation(id)}
+        onClick={() => handleNavigation(path)}
         className={`
-          relative flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all
+          relative flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-all
           ${isActive
             ? 'bg-[rgba(10,132,255,0.1)] text-white'
             : 'text-[#8e8e93] hover:bg-[rgba(255,255,255,0.05)] hover:text-white'}
@@ -61,7 +92,7 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, view, setV
         {isActive && (
           <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-[#30d158] rounded-r" />
         )}
-        <Icon size={20} className={isActive ? 'text-[#0a84ff]' : 'text-[#636366]'} />
+        <Icon size={18} className={isActive ? 'text-[#0a84ff]' : 'text-[#636366]'} />
         <span className="flex-1 text-left">{label}</span>
       </button>
     );
@@ -69,12 +100,8 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, view, setV
 
   return (
     <div className="fixed inset-0 z-50 md:hidden">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn" onClick={onClose} />
-
-      {/* Menu Panel */}
       <div className="absolute left-0 top-0 bottom-0 w-80 shadow-2xl flex flex-col animate-slideIn" style={{ background: 'rgba(28, 28, 30, 0.95)' }}>
-        {/* Header */}
         <div className="p-5 border-b border-[rgba(255,255,255,0.06)]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
@@ -90,8 +117,6 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, view, setV
               <X size={22} />
             </button>
           </div>
-
-          {/* User Info */}
           <div className="mt-3 flex items-center gap-2 px-3 py-2 bg-[rgba(255,255,255,0.04)] rounded-lg">
             <div className="w-7 h-7 rounded-full bg-[rgba(191,90,242,0.15)] flex items-center justify-center">
               <span className="text-[11px] font-bold text-[#bf5af2]">{(user?.email || '?')[0].toUpperCase()}</span>
@@ -107,15 +132,21 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, view, setV
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          {NAV_ITEMS.map(item => {
-            if (item.permission && !hasPermission(item.permission)) return null;
-            return <NavItem key={item.id} {...item} />;
+        <nav className="flex-1 p-3 overflow-y-auto">
+          {NAV_SECTIONS.map((section) => {
+            const visibleItems = section.items.filter(item => !item.permission || hasPermission(item.permission));
+            if (visibleItems.length === 0) return null;
+            return (
+              <div key={section.label} className="mb-2">
+                <p className="text-[9px] font-bold text-[#48484a] uppercase tracking-widest px-4 py-1.5">{section.label}</p>
+                <div className="space-y-0.5">
+                  {visibleItems.map(item => <NavItem key={item.path} {...item} />)}
+                </div>
+              </div>
+            );
           })}
         </nav>
 
-        {/* Actions */}
         <div className="p-4 border-t border-[rgba(255,255,255,0.06)] space-y-2">
           <button
             onClick={handleNewTransactionClick}
@@ -131,7 +162,6 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, view, setV
           </button>
         </div>
 
-        {/* Footer */}
         <div className="px-4 py-2.5 border-t border-[rgba(255,255,255,0.04)] text-center">
           <p className="text-[9px] text-[#3a3a3c]">
             Desarrollado por <span className="font-semibold text-[#48484a]">HMR NEXUS</span>
