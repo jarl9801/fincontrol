@@ -1,8 +1,15 @@
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 import { formatCurrency, formatDate } from './formatters';
 
-export const exportTransactionsToPDF = (transactions, title = 'Reporte de Transacciones') => {
+const loadPdf = async () => {
+  const [{ jsPDF }, { autoTable }] = await Promise.all([
+    import('jspdf'),
+    import('jspdf-autotable'),
+  ]);
+  return { jsPDF, autoTable };
+};
+
+export const exportTransactionsToPDF = async (transactions, title = 'Reporte de Transacciones') => {
+  const { jsPDF, autoTable } = await loadPdf();
   const doc = new jsPDF();
 
   // Header
@@ -58,7 +65,7 @@ export const exportTransactionsToPDF = (transactions, title = 'Reporte de Transa
     t.status === 'paid' ? 'Pagado' : 'Pendiente'
   ]);
 
-  doc.autoTable({
+  autoTable(doc, {
     startY: 90,
     head: [['Fecha', 'Descripción', 'Proyecto', 'Categoría', 'Ingreso', 'Gasto', 'Estado']],
     body: tableData,
@@ -106,21 +113,109 @@ export const exportTransactionsToPDF = (transactions, title = 'Reporte de Transa
   doc.save(fileName);
 };
 
-export const exportCXPToPDF = (transactions) => {
+export const exportCXPToPDF = async (transactions) => {
   const cxp = transactions.filter(t => t.type === 'expense' && t.status === 'pending');
-  exportTransactionsToPDF(cxp, 'Cuentas por Pagar (CXP)');
+  await exportTransactionsToPDF(cxp, 'Cuentas por Pagar (CXP)');
 };
 
-export const exportCXCToPDF = (transactions) => {
+export const exportCXCToPDF = async (transactions) => {
   const cxc = transactions.filter(t => t.type === 'income' && t.status === 'pending');
-  exportTransactionsToPDF(cxc, 'Cuentas por Cobrar (CXC)');
+  await exportTransactionsToPDF(cxc, 'Cuentas por Cobrar (CXC)');
 };
 
-export const exportReportToPDF = (transactions, reportType = 'general') => {
+export const exportReportToPDF = async (transactions, reportType = 'general') => {
   const titles = {
     general: 'Reporte General',
     monthly: 'Reporte Mensual',
     project: 'Reporte por Proyecto'
   };
-  exportTransactionsToPDF(transactions, titles[reportType] || 'Reporte');
+  await exportTransactionsToPDF(transactions, titles[reportType] || 'Reporte');
+};
+
+export const exportAuditTrailToPDF = async (record, entries = []) => {
+  const { jsPDF, autoTable } = await loadPdf();
+  const doc = new jsPDF();
+
+  const safeRecordName = record?.description || record?.documentNumber || 'Registro';
+  const fileLabel = `${record?.recordFamilyLabel || 'Registro'} · ${safeRecordName}`;
+
+  doc.setFontSize(20);
+  doc.setTextColor(30, 58, 138);
+  doc.text('UMTELKOMD', 14, 20);
+
+  doc.setFontSize(10);
+  doc.setTextColor(100);
+  doc.text('Historial de auditoría por registro', 14, 26);
+
+  doc.setFontSize(16);
+  doc.setTextColor(30, 41, 59);
+  doc.text('Trazabilidad del registro', 14, 40);
+
+  doc.setFontSize(10);
+  doc.setTextColor(100);
+  doc.text(`Generado: ${new Date().toLocaleString('es-ES')}`, 14, 48);
+  doc.text(`Registro: ${fileLabel}`, 14, 54);
+  doc.text(`Total de eventos: ${entries.length}`, 14, 60);
+
+  doc.setFillColor(248, 250, 252);
+  doc.rect(14, 68, 180, 22, 'F');
+
+  doc.setFontSize(10);
+  doc.setTextColor(30, 41, 59);
+  doc.text(`Documento: ${record?.documentNumber || 'Sin documento'}`, 20, 77);
+  doc.text(`Contraparte: ${record?.counterpartyName || 'Sin contraparte'}`, 20, 83);
+  doc.text(`Importe: €${formatCurrency(record?.amount || 0)}`, 110, 77);
+  doc.text(`Estado: ${record?.statusLabel || record?.status || '—'}`, 110, 83);
+
+  const tableData = entries.map((entry) => [
+    formatDate(entry.timestamp || new Date().toISOString()),
+    entry.action || '-',
+    entry.user || 'Sistema',
+    entry.source === 'global' ? 'Global' : 'Documento',
+    entry.description || '-',
+  ]);
+
+  autoTable(doc, {
+    startY: 98,
+    head: [['Fecha', 'Acción', 'Usuario', 'Origen', 'Detalle']],
+    body: tableData,
+    headStyles: {
+      fillColor: [30, 58, 138],
+      textColor: 255,
+      fontSize: 9,
+      fontStyle: 'bold',
+    },
+    bodyStyles: {
+      fontSize: 8,
+      textColor: [51, 65, 85],
+      valign: 'top',
+    },
+    alternateRowStyles: {
+      fillColor: [248, 250, 252],
+    },
+    columnStyles: {
+      0: { cellWidth: 26 },
+      1: { cellWidth: 24 },
+      2: { cellWidth: 36 },
+      3: { cellWidth: 20 },
+      4: { cellWidth: 84 },
+    },
+    margin: { left: 14, right: 14 },
+  });
+
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(150);
+    doc.text(
+      `Página ${i} de ${pageCount}`,
+      doc.internal.pageSize.width / 2,
+      doc.internal.pageSize.height - 10,
+      { align: 'center' },
+    );
+  }
+
+  const fileName = `audit_${safeRecordName.replace(/[^\w\s-]/g, '').replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+  doc.save(fileName);
 };

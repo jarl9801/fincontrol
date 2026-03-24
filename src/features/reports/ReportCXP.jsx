@@ -50,136 +50,133 @@ const ReportCXP = ({ transactions }) => {
 
   return (
     <div className="space-y-6">
-      {/* Header con exportar */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-[#e5e5ea]">Reporte de Cuentas por Pagar</h2>
+        <div>
+          <h2 className="text-xl font-semibold tracking-[-0.03em] text-[#1f2a44]">Reporte de cuentas por pagar</h2>
+          <p className="mt-1 text-sm text-[#6b7a99]">Antigüedad, vencimientos y detalle operativo de pagos pendientes.</p>
+        </div>
         <button
           onClick={() => exportCXPToPDF(transactions)}
-          className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition-colors"
+          className="inline-flex items-center gap-2 rounded-2xl bg-[#d04c36] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#b8412f]"
         >
           <Download size={18} /> Exportar PDF
         </button>
       </div>
 
-      {/* Métricas principales */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-6 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Total por Pagar</h3>
-            <TrendingDown className="text-[#ff453a]" size={20} />
+            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#70819f]">Total por pagar</h3>
+            <TrendingDown className="text-[#d04c36]" size={20} />
           </div>
-          <p className="text-2xl font-bold text-[#ff453a]">{formatCurrency(totalPayable)}</p>
-          <p className="text-xs text-[#636366] mt-1">{payables.length} facturas</p>
+          <p className="text-2xl font-semibold text-[#d04c36]">{formatCurrency(totalPayable)}</p>
+          <p className="mt-1 text-xs text-[#70819f]">{payables.length} facturas</p>
         </div>
 
-        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-6 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Monto Vencido</h3>
-            <AlertCircle className="text-[#ff453a]" size={20} />
+            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#70819f]">Monto vencido</h3>
+            <AlertCircle className="text-[#d04c36]" size={20} />
           </div>
-          <p className="text-2xl font-bold text-[#ff453a]">{formatCurrency(overdueAmount)}</p>
-          <p className="text-xs text-[#636366] mt-1">{agingAnalysis.over90.count} facturas</p>
+          <p className="text-2xl font-semibold text-[#d04c36]">{formatCurrency(overdueAmount)}</p>
+          <p className="mt-1 text-xs text-[#70819f]">{agingAnalysis.over90.count} facturas</p>
         </div>
 
-        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-6 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Critico (90+ dias)</h3>
-            <Clock className="text-[#ff9f0a]" size={20} />
+            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#70819f]">Crítico (90+ días)</h3>
+            <Clock className="text-[#c98717]" size={20} />
           </div>
-          <p className="text-2xl font-bold text-[#ff9f0a]">{formatCurrency(criticalAmount)}</p>
-          <p className="text-xs text-[#636366] mt-1">{agingAnalysis.days60_90.count + agingAnalysis.over90.count} facturas</p>
+          <p className="text-2xl font-semibold text-[#c98717]">{formatCurrency(criticalAmount)}</p>
+          <p className="mt-1 text-xs text-[#70819f]">{agingAnalysis.days60_90.count + agingAnalysis.over90.count} facturas</p>
         </div>
 
-        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-6 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Al Corriente</h3>
-            <TrendingDown className="text-[#30d158]" size={20} />
+            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#70819f]">Al corriente</h3>
+            <TrendingDown className="text-[#0f9f6e]" size={20} />
           </div>
-          <p className="text-2xl font-bold text-[#30d158]">{formatCurrency(currentAmount)}</p>
-          <p className="text-xs text-[#636366] mt-1">{agingAnalysis.current.count} facturas</p>
+          <p className="text-2xl font-semibold text-[#0f9f6e]">{formatCurrency(currentAmount)}</p>
+          <p className="mt-1 text-xs text-[#70819f]">{agingAnalysis.current.count} facturas</p>
         </div>
       </div>
 
-      {/* Gráfico y tabla de antigüedad */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Gráfico de barras */}
-        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
-          <h3 className="text-lg font-bold text-[#e5e5ea] mb-4">Analisis de Antiguedad</h3>
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-6 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
+          <h3 className="mb-4 text-lg font-semibold tracking-[-0.03em] text-[#1f2a44]">Análisis de antigüedad</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`} />
-              <Tooltip formatter={(value) => formatCurrency(value)} />
-              <Bar dataKey="monto" fill="#ff453a" radius={[4, 4, 0, 0]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.22)" />
+              <XAxis dataKey="name" tick={{ fill: '#70819f', fontSize: 11 }} />
+              <YAxis tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`} tick={{ fill: '#70819f', fontSize: 11 }} />
+              <Tooltip formatter={(value) => formatCurrency(value)} contentStyle={{ borderRadius: '16px', border: '1px solid #dce6f8', backgroundColor: 'rgba(255,255,255,0.96)' }} />
+              <Bar dataKey="monto" fill="#d04c36" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Tabla resumen */}
-        <div className="bg-[#1c1c1e] rounded-xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
-          <h3 className="text-lg font-bold text-[#e5e5ea] mb-4">Resumen por Antiguedad</h3>
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-6 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
+          <h3 className="mb-4 text-lg font-semibold tracking-[-0.03em] text-[#1f2a44]">Resumen por antigüedad</h3>
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[rgba(255,255,255,0.08)]">
-                <th className="text-left py-2 text-sm font-semibold text-[#8e8e93]">Periodo</th>
-                <th className="text-center py-2 text-sm font-semibold text-[#8e8e93]">Facturas</th>
-                <th className="text-right py-2 text-sm font-semibold text-[#8e8e93]">Monto</th>
+              <tr className="border-b border-[#e2ebfb]">
+                <th className="py-2 text-left text-sm font-semibold text-[#70819f]">Periodo</th>
+                <th className="py-2 text-center text-sm font-semibold text-[#70819f]">Facturas</th>
+                <th className="py-2 text-right text-sm font-semibold text-[#70819f]">Monto</th>
               </tr>
             </thead>
             <tbody>
               {Object.values(agingAnalysis).map((item, idx) => (
-                <tr key={idx} className="border-b border-[rgba(255,255,255,0.08)]">
-                  <td className="py-3 text-sm text-[#c7c7cc]">{item.label}</td>
-                  <td className="py-3 text-sm text-[#c7c7cc] text-center">{item.count}</td>
-                  <td className="py-3 text-sm font-medium text-right text-[#ff453a]">{formatCurrency(item.amount)}</td>
+                <tr key={idx} className="border-b border-[#eef2fb]">
+                  <td className="py-3 text-sm text-[#1f2a44]">{item.label}</td>
+                  <td className="py-3 text-center text-sm text-[#5f6f8d]">{item.count}</td>
+                  <td className="py-3 text-right text-sm font-medium text-[#d04c36]">{formatCurrency(item.amount)}</td>
                 </tr>
               ))}
-              <tr className="bg-[#111111]">
-                <td className="py-3 text-sm font-bold text-[#e5e5ea]">Total</td>
-                <td className="py-3 text-sm font-bold text-[#e5e5ea] text-center">{payables.length}</td>
-                <td className="py-3 text-sm font-bold text-right text-[#ff453a]">{formatCurrency(totalPayable)}</td>
+              <tr className="bg-[rgba(245,248,255,0.94)]">
+                <td className="py-3 text-sm font-semibold text-[#1f2a44]">Total</td>
+                <td className="py-3 text-center text-sm font-semibold text-[#1f2a44]">{payables.length}</td>
+                <td className="py-3 text-right text-sm font-semibold text-[#d04c36]">{formatCurrency(totalPayable)}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Detalle de facturas */}
-      <div className="bg-[#1c1c1e] rounded-xl shadow-sm border border-[rgba(255,255,255,0.08)] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)]">
-          <h3 className="text-lg font-bold text-[#e5e5ea]">Detalle de Cuentas por Pagar</h3>
+      <div className="overflow-hidden rounded-[28px] border border-[#dce6f8] bg-white/88 shadow-[0_20px_65px_rgba(134,153,186,0.12)]">
+        <div className="border-b border-[#e2ebfb] px-6 py-4">
+          <h3 className="text-lg font-semibold tracking-[-0.03em] text-[#1f2a44]">Detalle de cuentas por pagar</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-[#111111] border-b border-[rgba(255,255,255,0.08)]">
+            <thead className="border-b border-[#e2ebfb] bg-[rgba(245,248,255,0.94)]">
               <tr>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Fecha</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Descripcion</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Proyecto</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Categoria</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase text-right">Monto</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase text-center">Dias</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase text-[#70819f]">Fecha</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase text-[#70819f]">Descripción</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase text-[#70819f]">Proyecto</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase text-[#70819f]">Categoría</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-[#70819f]">Monto</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold uppercase text-[#70819f]">Días</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[rgba(255,255,255,0.08)]">
+            <tbody className="divide-y divide-[#eef2fb]">
               {payables.map(t => {
                 const days = getDaysOverdue(t.date);
                 return (
-                  <tr key={t.id} className="hover:bg-[#111111]">
-                    <td className="px-4 py-3 text-sm text-[#98989d]">{formatDate(t.date)}</td>
-                    <td className="px-4 py-3 text-sm font-medium text-[#e5e5ea]">{t.description}</td>
-                    <td className="px-4 py-3 text-sm text-[#98989d]">{t.project || '-'}</td>
-                    <td className="px-4 py-3 text-sm text-[#98989d]">{t.category || '-'}</td>
-                    <td className="px-4 py-3 text-sm font-medium text-[#ff453a] text-right">{formatCurrency(t.amount)}</td>
+                  <tr key={t.id} className="transition-colors hover:bg-[rgba(241,246,255,0.8)]">
+                    <td className="px-4 py-3 text-sm text-[#6b7a99]">{formatDate(t.date)}</td>
+                    <td className="px-4 py-3 text-sm font-medium text-[#1f2a44]">{t.description}</td>
+                    <td className="px-4 py-3 text-sm text-[#5f6f8d]">{t.project || '-'}</td>
+                    <td className="px-4 py-3 text-sm text-[#5f6f8d]">{t.category || '-'}</td>
+                    <td className="px-4 py-3 text-right text-sm font-medium text-[#d04c36]">{formatCurrency(t.amount)}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        days > 90 ? 'bg-[rgba(239,68,68,0.12)] text-[#ff453a]' :
-                        days > 60 ? 'bg-[rgba(245,158,11,0.12)] text-[#ff9f0a]' :
-                        days > 30 ? 'bg-[rgba(234,179,8,0.12)] text-[#ff9f0a]' :
-                        'bg-[rgba(16,185,129,0.12)] text-[#30d158]'
+                        days > 90 ? 'bg-[rgba(208,76,54,0.12)] text-[#d04c36]' :
+                        days > 60 ? 'bg-[rgba(214,149,44,0.12)] text-[#c98717]' :
+                        days > 30 ? 'bg-[rgba(214,149,44,0.12)] text-[#c98717]' :
+                        'bg-[rgba(15,159,110,0.12)] text-[#0f9f6e]'
                       }`}>
-                        {days} dias
+                        {days} días
                       </span>
                     </td>
                   </tr>
@@ -187,7 +184,7 @@ const ReportCXP = ({ transactions }) => {
               })}
               {payables.length === 0 && (
                 <tr>
-                  <td colSpan="6" className="px-4 py-8 text-center text-[#636366]">
+                  <td colSpan="6" className="px-4 py-8 text-center text-[#6b7a99]">
                     No hay cuentas por pagar pendientes
                   </td>
                 </tr>

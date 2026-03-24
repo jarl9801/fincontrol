@@ -9,7 +9,6 @@ import {
   Search,
   Calendar,
   User,
-  MoreVertical,
   Power,
   CheckCircle2,
   AlertCircle
@@ -20,7 +19,7 @@ import ConfirmModal from '../../components/ui/ConfirmModal';
 import Toast from '../../components/ui/Toast';
 
 const Projects = ({ user }) => {
-  const { projects, loading, createProject, updateProject, deleteProject, toggleProjectStatus } = useProjects(user);
+  const { projects, loading, createProject, updateProject, deleteProject } = useProjects(user);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
@@ -159,110 +158,107 @@ const Projects = ({ user }) => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-[#e5e5ea]">Gestión de Proyectos</h2>
-          <p className="text-sm text-[#8e8e93] mt-1">
-            Administra los proyectos disponibles para las transacciones
+        <div className="rounded-[28px] border border-[#dbe7ff] bg-[rgba(255,255,255,0.82)] px-6 py-5 shadow-[0_22px_70px_rgba(128,150,196,0.12)] backdrop-blur-xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#5b7bd6]">Configuración operativa</p>
+          <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[#1f2a44]">Proyectos</h2>
+          <p className="mt-1 text-sm text-[#6b7a99]">
+            Administra el catálogo de proyectos para reportes, cobros, pagos y seguimiento financiero.
           </p>
         </div>
         <button
           onClick={handleOpenAdd}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[#0a84ff] hover:bg-[#0070e0] text-white rounded-xl font-semibold transition-all shadow-lg  hover:shadow-xl hover:-translate-y-0.5"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#2563eb] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1f56cf]"
         >
-          <Plus size={18} /> Nuevo Proyecto
+          <Plus size={18} /> Nuevo proyecto
         </button>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-[#1c1c1e] p-5 rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)]">
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/86 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[rgba(59,130,246,0.12)] rounded-xl flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-[#0a84ff]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(59,130,246,0.12)]">
+              <Briefcase className="h-5 w-5 text-[#2563eb]" />
             </div>
             <div>
-              <p className="text-sm text-[#8e8e93]">Total Proyectos</p>
-              <p className="text-2xl font-bold text-[#e5e5ea]">{projects.length}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Total proyectos</p>
+              <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#1f2a44]">{projects.length}</p>
             </div>
           </div>
         </div>
-        <div className="bg-[#1c1c1e] p-5 rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)]">
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/86 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[rgba(16,185,129,0.12)] rounded-xl flex items-center justify-center">
-              <CheckCircle2 className="w-5 h-5 text-[#30d158]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(15,159,110,0.12)]">
+              <CheckCircle2 className="h-5 w-5 text-[#0f9f6e]" />
             </div>
             <div>
-              <p className="text-sm text-[#8e8e93]">Activos</p>
-              <p className="text-2xl font-bold text-[#30d158]">{activeProjects.length}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Activos</p>
+              <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#0f9f6e]">{activeProjects.length}</p>
             </div>
           </div>
         </div>
-        <div className="bg-[#1c1c1e] p-5 rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)]">
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/86 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#2c2c2e] rounded-xl flex items-center justify-center">
-              <AlertCircle className="w-5 h-5 text-[#98989d]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(107,122,153,0.12)]">
+              <AlertCircle className="h-5 w-5 text-[#6b7a99]" />
             </div>
             <div>
-              <p className="text-sm text-[#8e8e93]">Inactivos</p>
-              <p className="text-2xl font-bold text-[#98989d]">{inactiveProjects.length}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Inactivos</p>
+              <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#6b7a99]">{inactiveProjects.length}</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Search */}
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#636366]" size={18} />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7a879d]" size={18} />
         <input
           type="text"
           placeholder="Buscar proyectos por código, nombre o cliente..."
-          className="w-full pl-12 pr-4 py-3 bg-[#1c1c1e] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+          className="w-full rounded-[22px] border border-[#d8e3f7] bg-white/88 py-3 pl-12 pr-4 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
-      {/* Projects Table */}
-      <div className="bg-[#1c1c1e] rounded-2xl shadow-sm border border-[rgba(255,255,255,0.08)] overflow-hidden">
+      <div className="overflow-hidden rounded-[28px] border border-[#dce6f8] bg-white/88 shadow-[0_20px_65px_rgba(134,153,186,0.12)]">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-[rgba(255,255,255,0.08)]">
+            <thead className="border-b border-[#e2ebfb] bg-[rgba(245,248,255,0.94)]">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-[#8e8e93] uppercase tracking-wider">Código</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-[#8e8e93] uppercase tracking-wider">Nombre</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-[#8e8e93] uppercase tracking-wider hidden md:table-cell">Cliente</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-[#8e8e93] uppercase tracking-wider hidden sm:table-cell">Fechas</th>
-                <th className="px-6 py-4 text-center text-xs font-semibold text-[#8e8e93] uppercase tracking-wider">Estado</th>
-                <th className="px-6 py-4 text-right text-xs font-semibold text-[#8e8e93] uppercase tracking-wider">Acciones</th>
+                <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Código</th>
+                <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Nombre</th>
+                <th className="hidden px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f] md:table-cell">Cliente</th>
+                <th className="hidden px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f] sm:table-cell">Fechas</th>
+                <th className="px-6 py-4 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Estado</th>
+                <th className="px-6 py-4 text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[rgba(255,255,255,0.08)]">
+            <tbody className="divide-y divide-[#edf1fb]">
               {activeProjects.map((project) => (
-                <tr key={project.id} className="hover:bg-[rgba(255,255,255,0.02)] transition-colors">
+                <tr key={project.id} className="transition-colors hover:bg-[rgba(241,246,255,0.8)]">
                   <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-1 bg-[rgba(59,130,246,0.12)] text-[#0a84ff] rounded-lg text-sm font-bold">
+                    <span className="inline-flex items-center rounded-xl bg-[rgba(59,130,246,0.12)] px-2.5 py-1 text-sm font-semibold text-[#2563eb]">
                       {project.code}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <div>
-                      <p className="font-semibold text-[#e5e5ea]">{project.name}</p>
+                      <p className="font-semibold text-[#1f2a44]">{project.name}</p>
                       {project.description && (
-                        <p className="text-xs text-[#8e8e93] mt-0.5 truncate max-w-xs">{project.description}</p>
+                        <p className="mt-0.5 max-w-xs truncate text-xs text-[#70819f]">{project.description}</p>
                       )}
                     </div>
                   </td>
                   <td className="px-6 py-4 hidden md:table-cell">
                     <div className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-[#636366]" />
-                      <span className="text-sm text-[#98989d]">{project.client || '-'}</span>
+                      <User className="h-4 w-4 text-[#7a879d]" />
+                      <span className="text-sm text-[#5f6f8d]">{project.client || '-'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 hidden sm:table-cell">
-                    <div className="flex items-center gap-2 text-sm text-[#8e8e93]">
-                      <Calendar className="w-4 h-4" />
+                    <div className="flex items-center gap-2 text-sm text-[#6b7a99]">
+                      <Calendar className="h-4 w-4" />
                       <span>
                         {project.startDate ? formatDate(project.startDate) : '-'} 
                         {project.endDate && ` → ${formatDate(project.endDate)}`}
@@ -270,8 +266,8 @@ const Projects = ({ user }) => {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-[rgba(16,185,129,0.12)] text-[#30d158] rounded-full text-xs font-medium">
-                      <CheckCircle2 className="w-3 h-3" />
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[rgba(15,159,110,0.1)] px-3 py-1 text-xs font-medium text-[#0f9f6e]">
+                      <CheckCircle2 className="h-3 w-3" />
                       Activo
                     </span>
                   </td>
@@ -279,24 +275,24 @@ const Projects = ({ user }) => {
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => handleToggleStatus(project)}
-                        className="p-2 text-[#636366] hover:text-[#98989d] hover:bg-[rgba(255,255,255,0.05)] rounded-lg transition-all"
+                        className="rounded-xl p-2 text-[#7a879d] transition hover:bg-[rgba(107,122,153,0.08)] hover:text-[#5f6f8d]"
                         title="Desactivar"
                       >
-                        <Power className="w-4 h-4" />
+                        <Power className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(project)}
-                        className="p-2 text-[#636366] hover:text-[#0a84ff] hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
+                        className="rounded-xl p-2 text-[#7a879d] transition hover:bg-[rgba(59,130,246,0.08)] hover:text-[#2563eb]"
                         title="Editar"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => setProjectToDelete(project)}
-                        className="p-2 text-[#636366] hover:text-[#ff453a] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
+                        className="rounded-xl p-2 text-[#7a879d] transition hover:bg-[rgba(208,76,54,0.08)] hover:text-[#d04c36]"
                         title="Eliminar"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                   </td>
@@ -305,29 +301,29 @@ const Projects = ({ user }) => {
               
               {/* Inactive Projects */}
               {inactiveProjects.map((project) => (
-                <tr key={project.id} className="hover:bg-[rgba(255,255,255,0.02)] transition-colors bg-[rgba(255,255,255,0.02)]">
+                <tr key={project.id} className="bg-[rgba(248,250,255,0.88)] transition-colors hover:bg-[rgba(241,246,255,0.92)]">
                   <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-1 bg-[#2c2c2e] text-[#98989d] rounded-lg text-sm font-bold">
+                    <span className="inline-flex items-center rounded-xl bg-[rgba(107,122,153,0.12)] px-2.5 py-1 text-sm font-semibold text-[#6b7a99]">
                       {project.code}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <div>
-                      <p className="font-semibold text-[#8e8e93] line-through">{project.name}</p>
+                      <p className="font-semibold text-[#8090ab] line-through">{project.name}</p>
                       {project.description && (
-                        <p className="text-xs text-[#636366] mt-0.5 truncate max-w-xs">{project.description}</p>
+                        <p className="mt-0.5 max-w-xs truncate text-xs text-[#93a0b6]">{project.description}</p>
                       )}
                     </div>
                   </td>
                   <td className="px-6 py-4 hidden md:table-cell">
                     <div className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-[#636366]" />
-                      <span className="text-sm text-[#636366]">{project.client || '-'}</span>
+                      <User className="h-4 w-4 text-[#93a0b6]" />
+                      <span className="text-sm text-[#93a0b6]">{project.client || '-'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 hidden sm:table-cell">
-                    <div className="flex items-center gap-2 text-sm text-[#636366]">
-                      <Calendar className="w-4 h-4" />
+                    <div className="flex items-center gap-2 text-sm text-[#93a0b6]">
+                      <Calendar className="h-4 w-4" />
                       <span>
                         {project.startDate ? formatDate(project.startDate) : '-'} 
                         {project.endDate && ` → ${formatDate(project.endDate)}`}
@@ -335,7 +331,7 @@ const Projects = ({ user }) => {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#2c2c2e] text-[#98989d] rounded-full text-xs font-medium">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[rgba(107,122,153,0.12)] px-3 py-1 text-xs font-medium text-[#6b7a99]">
                       Inactivo
                     </span>
                   </td>
@@ -343,24 +339,24 @@ const Projects = ({ user }) => {
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => handleToggleStatus(project)}
-                        className="p-2 text-[#636366] hover:text-[#30d158] hover:bg-[rgba(16,185,129,0.08)] rounded-lg transition-all"
+                        className="rounded-xl p-2 text-[#7a879d] transition hover:bg-[rgba(15,159,110,0.08)] hover:text-[#0f9f6e]"
                         title="Activar"
                       >
-                        <Power className="w-4 h-4" />
+                        <Power className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(project)}
-                        className="p-2 text-[#636366] hover:text-[#0a84ff] hover:bg-[rgba(59,130,246,0.08)] rounded-lg transition-all"
+                        className="rounded-xl p-2 text-[#7a879d] transition hover:bg-[rgba(59,130,246,0.08)] hover:text-[#2563eb]"
                         title="Editar"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => setProjectToDelete(project)}
-                        className="p-2 text-[#636366] hover:text-[#ff453a] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all"
+                        className="rounded-xl p-2 text-[#7a879d] transition hover:bg-[rgba(208,76,54,0.08)] hover:text-[#d04c36]"
                         title="Eliminar"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                   </td>
@@ -371,14 +367,14 @@ const Projects = ({ user }) => {
                 <tr>
                   <td colSpan="6" className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center gap-3 text-[#636366]">
-                      <div className="w-16 h-16 bg-[#2c2c2e] rounded-full flex items-center justify-center">
-                        <Briefcase className="w-8 h-8 text-[#636366]" />
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(107,122,153,0.1)]">
+                        <Briefcase className="h-8 w-8 text-[#7a879d]" />
                       </div>
-                      <p className="text-sm">No se encontraron proyectos</p>
+                      <p className="text-sm text-[#6b7a99]">No se encontraron proyectos</p>
                       {searchTerm && (
                         <button
                           onClick={() => setSearchTerm('')}
-                          className="text-sm text-[#0a84ff] hover:text-[#0a84ff]"
+                          className="text-sm font-medium text-[#2563eb]"
                         >
                           Limpiar búsqueda
                         </button>
@@ -395,128 +391,123 @@ const Projects = ({ user }) => {
       {/* Add/Edit Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="bg-[#1c1c1e] rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-scaleIn max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-5 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-gradient-to-r from-slate-50 to-white">
+          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[30px] border border-[#dce6f8] bg-[rgba(255,255,255,0.96)] shadow-[0_35px_120px_rgba(15,23,42,0.24)] animate-scaleIn">
+            <div className="flex items-center justify-between border-b border-[#e2ebfb] bg-[rgba(245,248,255,0.94)] px-6 py-5">
               <div>
-                <h3 className="font-bold text-xl text-[#e5e5ea]">
-                  {editingProject ? 'Editar Proyecto' : 'Nuevo Proyecto'}
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5b7bd6]">Ficha de proyecto</p>
+                <h3 className="text-xl font-semibold tracking-[-0.03em] text-[#1f2a44]">
+                  {editingProject ? 'Editar proyecto' : 'Nuevo proyecto'}
                 </h3>
               </div>
               <button 
                 onClick={() => setShowAddModal(false)} 
-                className="p-2 text-[#636366] hover:text-[#98989d] hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all"
+                className="rounded-2xl p-2 text-[#7a879d] transition hover:bg-[rgba(94,115,159,0.08)]"
               >
                 <X size={20} />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-5">
-              {/* Code and Name */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">
                     Código <span className="text-[#ff453a]">*</span>
                   </label>
                   <input
                     type="text"
                     required
                     placeholder="PROY-001"
-                    className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all uppercase"
+                    className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm uppercase text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                     value={formData.code}
                     onChange={e => setFormData({...formData, code: e.target.value})}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">
                     Nombre <span className="text-[#ff453a]">*</span>
                   </label>
                   <input
                     type="text"
                     required
                     placeholder="Nombre del proyecto"
-                    className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
+                    className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                     value={formData.name}
                     onChange={e => setFormData({...formData, name: e.target.value})}
                   />
                 </div>
               </div>
 
-              {/* Client */}
               <div>
-                <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">
                   Cliente
                 </label>
                 <input
                   type="text"
                   placeholder="Nombre del cliente"
-                  className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
+                  className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                   value={formData.client}
                   onChange={e => setFormData({...formData, client: e.target.value})}
                 />
               </div>
 
-              {/* Description */}
               <div>
-                <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">
                   Descripción
                 </label>
                 <textarea
                   rows="2"
                   placeholder="Descripción breve del proyecto..."
-                  className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all resize-none"
+                  className="w-full resize-none rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                   value={formData.description}
                   onChange={e => setFormData({...formData, description: e.target.value})}
                 />
               </div>
 
-              {/* Dates */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
-                    Fecha Inicio
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">
+                    Fecha inicio
                   </label>
                   <input
                     type="date"
-                    className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
+                    className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                     value={formData.startDate}
                     onChange={e => setFormData({...formData, startDate: e.target.value})}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
-                    Fecha Fin
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">
+                    Fecha fin
                   </label>
                   <input
                     type="date"
-                    className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
+                    className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                     value={formData.endDate}
                     onChange={e => setFormData({...formData, endDate: e.target.value})}
                   />
                 </div>
               </div>
 
-              {/* Budget */}
               <div>
-                <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">
                   Presupuesto (EUR)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#636366] font-medium">€</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-medium text-[#7a879d]">€</span>
                   <input
                     type="number"
                     step="0.01"
                     min="0"
                     placeholder="0.00"
-                    className="w-full pl-8 pr-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
+                    className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] py-3 pl-8 pr-4 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                     value={formData.budget}
                     onChange={e => setFormData({...formData, budget: e.target.value})}
                   />
                 </div>
               </div>
 
-              {/* Status */}
               <div>
-                <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Estado</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">Estado</label>
                 <div className="flex gap-3">
                   <button
                     type="button"
@@ -524,8 +515,8 @@ const Projects = ({ user }) => {
                     className={`
                       flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
                       ${formData.status === 'active'
-                        ? 'border-emerald-400 bg-[rgba(16,185,129,0.08)] text-[#30d158]'
-                        : 'border-[rgba(255,255,255,0.08)] text-[#98989d] hover:border-[rgba(16,185,129,0.25)]'}
+                        ? 'border-[#83d5ba] bg-[rgba(15,159,110,0.08)] text-[#0f9f6e]'
+                        : 'border-[#d8e3f7] text-[#6b7a99] hover:border-[rgba(15,159,110,0.25)]'}
                     `}
                   >
                     Activo
@@ -536,8 +527,8 @@ const Projects = ({ user }) => {
                     className={`
                       flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
                       ${formData.status === 'inactive'
-                        ? 'border-slate-400 bg-[#2c2c2e] text-[#c7c7cc]'
-                        : 'border-[rgba(255,255,255,0.08)] text-[#98989d] hover:border-[rgba(255,255,255,0.14)]'}
+                        ? 'border-[#cbd7eb] bg-[rgba(107,122,153,0.08)] text-[#5f6f8d]'
+                        : 'border-[#d8e3f7] text-[#6b7a99] hover:border-[#cbd7eb]'}
                     `}
                   >
                     Inactivo
@@ -545,13 +536,12 @@ const Projects = ({ user }) => {
                 </div>
               </div>
 
-              {/* Submit */}
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-white bg-[#0a84ff] hover:bg-[#0070e0] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#2563eb] py-4 text-sm font-semibold text-white transition hover:bg-[#1f56cf]"
               >
                 <Check size={18} />
-                {editingProject ? 'Guardar Cambios' : 'Crear Proyecto'}
+                {editingProject ? 'Guardar cambios' : 'Crear proyecto'}
               </button>
             </form>
           </div>

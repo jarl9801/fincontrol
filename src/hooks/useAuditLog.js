@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   collection, query, onSnapshot, addDoc, serverTimestamp, orderBy
 } from 'firebase/firestore';
@@ -6,12 +6,15 @@ import { db, appId } from '../services/firebase';
 
 export const useAuditLog = (user) => {
   const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(user));
 
-  const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'auditLog');
+  const colRef = useMemo(
+    () => collection(db, 'artifacts', appId, 'public', 'data', 'auditLog'),
+    [],
+  );
 
   useEffect(() => {
-    if (!user) { setLoading(false); return; }
+    if (!user) return undefined;
 
     const q = query(colRef, orderBy('timestamp', 'desc'));
     const unsub = onSnapshot(q, (snap) => {
@@ -31,7 +34,7 @@ export const useAuditLog = (user) => {
     });
 
     return () => unsub();
-  }, [user]);
+  }, [colRef, user]);
 
   const logAction = async (data) => {
     if (!user) return;

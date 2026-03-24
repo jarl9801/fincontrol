@@ -1,12 +1,22 @@
-import { CheckCircle2, Circle, MessageSquare, Edit2, Trash2, Sparkles, ArrowUpCircle, ArrowDownCircle, RefreshCw } from 'lucide-react';
-import { formatDate, formatCurrency, getDaysOverdue } from '../../utils/formatters';
+import {
+  ArrowDownCircle,
+  ArrowUpCircle,
+  CheckCircle2,
+  Circle,
+  Edit2,
+  History,
+  MessageSquare,
+  RefreshCw,
+  Trash2,
+} from 'lucide-react';
+import { formatCurrency, formatDate, formatDateTime, getDaysOverdue } from '../../utils/formatters';
 import { ALERT_THRESHOLDS } from '../../constants/config';
 
-// Safely convert any value to a renderable string
-const safe = (v) => (v == null ? '' : typeof v === 'object' ? JSON.stringify(v) : String(v));
+const safe = (value) => (value == null ? '' : typeof value === 'object' ? JSON.stringify(value) : String(value));
 
-const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, onRegisterPayment, userRole, searchTerm }) => {
-  const isOverdue = t.status === 'pending' && getDaysOverdue(t.date) > ALERT_THRESHOLDS.overdueDays;
+const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, onVoid, onViewAuditTrail, userRole, searchTerm }) => {
+  const normalizedStatus = safe(t.status).toLowerCase();
+  const isOverdue = normalizedStatus === 'overdue' || (normalizedStatus === 'pending' && getDaysOverdue(t.date) > ALERT_THRESHOLDS.overdueDays);
   const isNew = t.hasUnreadUpdates === true;
   const isIncome = t.type === 'income';
   const daysOverdue = getDaysOverdue(t.date);
@@ -16,134 +26,177 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, onRe
     if (!searchTerm) return str;
     const escaped = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const parts = str.split(new RegExp(`(${escaped})`, 'gi'));
-    return parts.map((part, i) =>
-      part.toLowerCase() === searchTerm.toLowerCase() ?
-        <mark key={i} className="bg-[rgba(245,158,11,0.2)] text-[#ff9f0a] rounded px-0.5">{part}</mark> : part
+    return parts.map((part, index) =>
+      part.toLowerCase() === searchTerm.toLowerCase()
+        ? <mark key={index} className="rounded px-0.5 text-[#b35b15] bg-[rgba(255,215,153,0.55)]">{part}</mark>
+        : part,
     );
   };
 
-  const commentCount = t.notes?.filter(n => n.type === 'comment').length || 0;
-
-  const hasRecentComments = t.notes?.some(n => {
-    if (n.type !== 'comment') return false;
-    const noteDate = new Date(n.timestamp);
+  const commentCount = Array.isArray(t.notes) ? t.notes.filter((note) => note.type === 'comment').length : 0;
+  const hasRecentComments = Array.isArray(t.notes) && t.notes.some((note) => {
+    if (note.type !== 'comment') return false;
+    const noteDate = new Date(note.timestamp);
     const oneDayAgo = new Date();
     oneDayAgo.setHours(oneDayAgo.getHours() - 24);
     return noteDate >= oneDayAgo;
-  }) || false;
+  });
 
-  // Status badge config — dark theme
-  const isPartial = t.status === 'partial';
-  const paidAmount = t.paidAmount || 0;
-  const remaining = t.amount - paidAmount;
-  const paidPct = t.amount > 0 ? (paidAmount / t.amount) * 100 : 0;
+  const isPartial = normalizedStatus === 'partial';
+  const paidAmount = Number(t.paidAmount) || 0;
+  const paidPct = Number(t.amount) > 0 ? (paidAmount / Number(t.amount)) * 100 : 0;
+  const lastEditedLabel = t.lastEditedAt ? formatDateTime(t.lastEditedAt) : '';
 
   const getStatusConfig = () => {
-    if (t.status === 'paid') {
+    if (normalizedStatus === 'paid') {
       return {
         icon: CheckCircle2,
-        text: 'Pagado',
-        class: 'bg-[rgba(16,185,129,0.12)] text-[#30d158] border-[rgba(16,185,129,0.25)]'
+        text: t.statusLabel || 'Liquidado',
+        class: 'bg-[rgba(208,244,220,0.72)] text-[#0f8f4b] border-[rgba(48,165,105,0.25)]',
       };
     }
-    if (t.status === 'partial') {
+
+    if (normalizedStatus === 'partial') {
       return {
         icon: Circle,
-        text: 'Pago Parcial',
-        class: 'bg-[rgba(255,159,10,0.12)] text-[#ff9f0a] border-[rgba(255,159,10,0.25)]'
+        text: t.statusLabel || 'Parcial',
+        class: 'bg-[rgba(255,239,209,0.82)] text-[#d46a13] border-[rgba(212,106,19,0.18)]',
       };
     }
+
+    if (normalizedStatus === 'cancelled' || normalizedStatus === 'void') {
+      return {
+        icon: Circle,
+        text: t.statusLabel || 'Anulado',
+        class: 'bg-[rgba(236,239,245,0.88)] text-[#6f7d96] border-[rgba(177,188,208,0.36)]',
+      };
+    }
+
     if (isOverdue) {
       return {
         icon: Circle,
-        text: `Vencido (${daysOverdue}d)`,
-        class: 'bg-[rgba(239,68,68,0.12)] text-[#ff453a] border-[rgba(239,68,68,0.25)] ring-1 ring-[rgba(239,68,68,0.2)]'
+        text: t.statusLabel || `Vencido (${daysOverdue}d)`,
+        class: 'bg-[rgba(255,234,231,0.9)] text-[#cc4b3f] border-[rgba(204,75,63,0.18)] ring-1 ring-[rgba(204,75,63,0.12)]',
       };
     }
+
     return {
       icon: Circle,
-      text: 'Pendiente',
-      class: 'bg-[rgba(245,158,11,0.12)] text-[#ff9f0a] border-[rgba(245,158,11,0.25)]'
+      text: t.statusLabel || 'Pendiente',
+      class: 'bg-[rgba(255,244,223,0.88)] text-[#c47a09] border-[rgba(196,122,9,0.16)]',
     };
   };
 
   const statusConfig = getStatusConfig();
   const StatusIcon = statusConfig.icon;
+  const canRegisterPayment = Boolean(t.canRegisterPayment && onRegisterPayment);
+  const canViewNotes = Boolean(t.canViewNotes && onViewNotes);
+  const canEdit = Boolean(t.canEdit && onEdit && userRole === 'admin');
+  const canDelete = Boolean(t.canDelete && onDelete && userRole === 'admin');
+  const canVoid = Boolean(t.canVoid && onVoid && userRole === 'admin');
+  const canViewAuditTrail = Boolean(onViewAuditTrail && userRole === 'admin');
 
   return (
-    <tr className={`
-      group transition-all duration-200 border-b border-[rgba(255,255,255,0.08)] last:border-0
-      ${isOverdue ? 'bg-[rgba(239,68,68,0.04)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}
-      ${isNew ? 'animate-pulse-glow' : ''}
-    `}>
-      {/* Fecha */}
-      <td className="px-4 py-4 whitespace-nowrap">
+    <tr
+      className={`
+        group border-b border-[rgba(201,214,238,0.58)] transition-all duration-200 last:border-0
+        ${isOverdue ? 'bg-[rgba(255,236,234,0.72)]' : 'hover:bg-[rgba(90,141,221,0.05)]'}
+        ${isNew ? 'animate-pulse-glow' : ''}
+      `}
+    >
+      <td className="px-3 py-3 whitespace-nowrap">
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-[#c7c7cc]">{formatDate(t.date)}</span>
-          {isOverdue && (
-            <span className="text-[10px] text-[#ff453a] font-medium">Vencido</span>
-          )}
+          <span className="text-[13px] font-medium text-[#243251]">{formatDate(t.date)}</span>
+          <span className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[#7b8cab]">{t.recordFamilyLabel}</span>
         </div>
       </td>
 
-      {/* Descripción */}
-      <td className="px-4 py-4">
+      <td className="px-3 py-3">
         <div className="flex items-start gap-3">
-          <div className={`
-            w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0
-            ${isIncome ? 'bg-[rgba(16,185,129,0.12)]' : 'bg-[rgba(239,68,68,0.12)]'}
-          `}>
+          <div
+            className={`
+              flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl
+              ${isIncome ? 'bg-[rgba(208,244,220,0.78)]' : 'bg-[rgba(255,234,231,0.82)]'}
+            `}
+          >
             {isIncome ? (
-              <ArrowUpCircle className="w-5 h-5 text-[#30d158]" />
+              <ArrowUpCircle className="h-4 w-4 text-[#0f8f4b]" />
             ) : (
-              <ArrowDownCircle className="w-5 h-5 text-[#ff453a]" />
+              <ArrowDownCircle className="h-4 w-4 text-[#cc4b3f]" />
             )}
           </div>
-          
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              {isNew && (
-                <span className="w-2 h-2 rounded-full bg-[#00C853] flex-shrink-0" />
-              )}
 
-              <span className="text-sm font-semibold text-[#ffffff]">
-                {highlightText(t.description)}
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              {isNew && <span className="h-2 w-2 flex-shrink-0 rounded-full bg-[#00C853]" />}
+              <span className="text-[13px] font-semibold text-[#101938]">{highlightText(t.description)}</span>
+
+              <span className="inline-flex items-center rounded-full border border-[rgba(201,214,238,0.76)] bg-white/76 px-2 py-0.5 text-[10px] font-medium text-[#6b7a96]">
+                {t.sourceLabel}
               </span>
-              
+
               {isNew && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#00C853] text-[#000000] shadow-sm">
-                  <Sparkles size={10} />
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#daf7e5] px-2 py-0.5 text-[10px] font-bold text-[#0f8f4b] shadow-sm">
                   Nueva
                 </span>
               )}
 
               {t.isRecurring && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(255,255,255,0.06)] text-[#98989d] border border-[rgba(255,255,255,0.08)]">
+                <span className="inline-flex items-center gap-1 rounded-full border border-[rgba(210,214,246,0.8)] bg-[rgba(239,240,255,0.88)] px-2 py-0.5 text-[10px] font-medium text-[#6662cc]">
                   <RefreshCw size={10} />
                   Recurrente
                 </span>
               )}
-              
+
               {commentCount > 0 && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(245,158,11,0.12)] text-[#ff9f0a]">
+                <span className="inline-flex items-center gap-1 rounded-full bg-[rgba(255,239,209,0.88)] px-2 py-0.5 text-[10px] font-medium text-[#c47a09]">
                   <MessageSquare size={10} />
                   {commentCount}
                 </span>
               )}
 
               {hasRecentComments && (
-                <span className="text-[#636366]" title="Comentario reciente">
-                  <MessageSquare size={12} className="fill-[rgba(255,255,255,0.14)]" />
+                <span className="text-[#8da0c2]" title="Comentario reciente">
+                  <MessageSquare size={12} className="fill-[rgba(141,160,194,0.18)]" />
                 </span>
               )}
             </div>
-            <span className="text-xs text-[#636366] block mt-0.5">{safe(t.project)}</span>
+
+            <div className="mt-0.5 flex flex-wrap items-center gap-2 text-[11px] text-[#6b7a96]">
+              <span>{safe(t.secondaryMeta || t.project)}</span>
+              {t.documentNumber && (
+                <span className="rounded-full border border-[rgba(201,214,238,0.68)] bg-white/72 px-2 py-0.5 text-[10px] text-[#7b8cab]">
+                  {t.documentNumber}
+                </span>
+              )}
+              {t.traceMeta && (
+                <span className="rounded-full border border-[rgba(201,214,238,0.68)] bg-white/72 px-2 py-0.5 text-[10px] text-[#7b8cab]">
+                  {safe(t.traceMeta)}
+                </span>
+              )}
+            </div>
+
+            {(t.lastEditor || lastEditedLabel) && (
+              <div className="mt-1 flex flex-wrap items-center gap-2 text-[10px] text-[#7b8cab]">
+                {t.lastEditor && (
+                  <span className="rounded-full border border-[rgba(201,214,238,0.68)] bg-[rgba(244,248,255,0.84)] px-2 py-0.5">
+                    Ult. ed.: {safe(t.lastEditor)}
+                  </span>
+                )}
+                {lastEditedLabel && (
+                  <span className="rounded-full border border-[rgba(201,214,238,0.68)] bg-[rgba(244,248,255,0.84)] px-2 py-0.5">
+                    {lastEditedLabel}
+                  </span>
+                )}
+              </div>
+            )}
+
             {isPartial && (
               <div className="mt-1.5">
-                <div className="w-full max-w-[160px] h-1.5 bg-[#2c2c2e] rounded-full overflow-hidden">
-                  <div className="h-full bg-[#30d158] rounded-full transition-all" style={{ width: `${paidPct}%` }} />
+                <div className="h-1.5 w-full max-w-[160px] overflow-hidden rounded-full bg-[rgba(183,195,220,0.38)]">
+                  <div className="h-full rounded-full bg-[#0f8f4b] transition-all" style={{ width: `${paidPct}%` }} />
                 </div>
-                <span className="text-[10px] text-[#8e8e93] mt-0.5 block">
+                <span className="mt-0.5 block text-[10px] text-[#7b8cab]">
                   Pagado: {formatCurrency(paidAmount)} / {formatCurrency(t.amount)}
                 </span>
               </div>
@@ -152,31 +205,37 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, onRe
         </div>
       </td>
 
-      {/* Categoría */}
-      <td className="px-4 py-4 hidden md:table-cell">
-        <span className={`
-          inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium
-          ${isIncome 
-            ? 'bg-[rgba(16,185,129,0.1)] text-[#30d158] border border-[rgba(16,185,129,0.2)]' 
-            : 'bg-[rgba(239,68,68,0.1)] text-[#ff453a] border border-[rgba(239,68,68,0.2)]'}
-        `}>
-          {safe(t.category)}
+      <td className="px-3 py-3">
+        <div className="max-w-[180px]">
+          <p className="truncate text-[12px] font-medium text-[#243251]">{safe(t.project || 'Sin proyecto')}</p>
+          {t.costCenter && <p className="mt-0.5 truncate text-[10px] text-[#7b8cab]">{safe(t.costCenter)}</p>}
+        </div>
+      </td>
+
+      <td className="px-3 py-3">
+        <span
+          className={`
+            inline-flex items-center rounded-lg border px-2.5 py-1 text-[11px] font-medium
+            ${isIncome
+              ? 'border-[rgba(48,165,105,0.18)] bg-[rgba(208,244,220,0.72)] text-[#0f8f4b]'
+              : 'border-[rgba(204,75,63,0.16)] bg-[rgba(255,234,231,0.78)] text-[#cc4b3f]'}
+          `}
+        >
+          {safe(t.categoryLabel || t.category)}
         </span>
       </td>
 
-      {/* Monto */}
-      <td className="px-4 py-4 text-right whitespace-nowrap">
-        <span className={`text-sm font-bold ${isIncome ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
+      <td className="px-3 py-3 text-right whitespace-nowrap">
+        <span className={`text-[13px] font-bold ${isIncome ? 'text-[#0f8f4b]' : 'text-[#cc4b3f]'}`}>
           {isIncome ? '+' : '-'}{formatCurrency(t.amount)}
         </span>
       </td>
 
-      {/* Estado */}
-      <td className="px-4 py-4 text-center">
+      <td className="px-3 py-3 text-center">
         <span
           className={`
-            inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium
-            border ${statusConfig.class}
+            inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-medium
+            ${statusConfig.class}
           `}
         >
           <StatusIcon size={14} />
@@ -184,46 +243,72 @@ const TransactionRow = ({ t, onToggleStatus, onDelete, onEdit, onViewNotes, onRe
         </span>
       </td>
 
-      {/* Acciones */}
-      <td className="px-4 py-4 text-center">
-        <div className="flex items-center justify-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
-          {(t.status === 'pending' || t.status === 'partial') && (userRole === 'admin' || userRole === 'manager') && onRegisterPayment && (
+      <td className="px-3 py-3 text-center">
+        <div className="flex items-center justify-center gap-1 opacity-50 transition-opacity group-hover:opacity-100">
+          {canRegisterPayment && (
             <button
               onClick={() => onRegisterPayment(t)}
-              className="px-2.5 py-1.5 text-xs font-semibold text-[#30d158] bg-[rgba(48,209,88,0.1)] hover:bg-[rgba(48,209,88,0.2)] border border-[rgba(48,209,88,0.2)] rounded-lg transition-all duration-200"
-              title="Registrar Pago"
+              className="rounded-lg border border-[rgba(48,165,105,0.18)] bg-[rgba(208,244,220,0.72)] px-2.5 py-1.5 text-[11px] font-semibold text-[#0f8f4b] transition-all duration-200 hover:bg-[rgba(208,244,220,0.96)]"
+              title={t.paymentActionLabel || 'Abono'}
             >
-              💰 Pagar
+              {t.paymentActionLabel || 'Abono'}
             </button>
           )}
-          <button
-            onClick={() => onViewNotes(t)}
-            className={`
-              p-2 rounded-lg transition-all duration-200
-              ${isNew 
-                ? 'text-[#00C853] hover:bg-[rgba(0,200,83,0.08)]' 
-                : 'text-[#636366] hover:text-[#00C853] hover:bg-[rgba(255,255,255,0.04)]'}
-            `}
-            title="Ver notas"
-          >
-            <MessageSquare size={16} />
-          </button>
-          <button
-            onClick={() => onEdit(t)}
-            className={`
-              p-2 rounded-lg transition-all duration-200
-              ${isNew 
-                ? 'text-[#00C853] hover:bg-[rgba(0,200,83,0.08)]' 
-                : 'text-[#636366] hover:text-[#00C853] hover:bg-[rgba(255,255,255,0.04)]'}
-            `}
-            title="Editar"
-          >
-            <Edit2 size={16} />
-          </button>
-          {userRole === 'admin' && (
+
+          {canViewNotes && (
+            <button
+              onClick={() => onViewNotes(t)}
+              className={`
+                rounded-lg p-2 transition-all duration-200
+                ${isNew
+                  ? 'text-[#0f8f4b] hover:bg-[rgba(208,244,220,0.7)]'
+                  : 'text-[#7b8cab] hover:bg-[rgba(90,141,221,0.08)] hover:text-[#0f8f4b]'}
+              `}
+              title="Ver notas"
+            >
+              <MessageSquare size={16} />
+            </button>
+          )}
+
+          {canEdit && (
+            <button
+              onClick={() => onEdit(t)}
+              className={`
+                rounded-lg p-2 transition-all duration-200
+                ${isNew
+                  ? 'text-[#3156d3] hover:bg-[rgba(90,141,221,0.08)]'
+                  : 'text-[#7b8cab] hover:bg-[rgba(90,141,221,0.08)] hover:text-[#3156d3]'}
+              `}
+              title="Editar"
+            >
+              <Edit2 size={16} />
+            </button>
+          )}
+
+          {canViewAuditTrail && (
+            <button
+              onClick={() => onViewAuditTrail(t)}
+              className="rounded-lg p-2 text-[#7b8cab] transition-all duration-200 hover:bg-[rgba(90,141,221,0.08)] hover:text-[#3156d3]"
+              title="Ver trazabilidad"
+            >
+              <History size={16} />
+            </button>
+          )}
+
+          {canVoid && (
+            <button
+              onClick={() => onVoid(t)}
+              className="rounded-lg border border-[rgba(204,75,63,0.16)] bg-[rgba(255,234,231,0.64)] px-2.5 py-1.5 text-[11px] font-semibold text-[#cc4b3f] transition-all duration-200 hover:bg-[rgba(255,234,231,0.92)]"
+              title={t.voidActionLabel || 'Anular'}
+            >
+              {t.voidActionLabel || 'Anular'}
+            </button>
+          )}
+
+          {canDelete && (
             <button
               onClick={() => onDelete(t)}
-              className="p-2 text-[#636366] hover:text-[#ff453a] hover:bg-[rgba(239,68,68,0.08)] rounded-lg transition-all duration-200"
+              className="rounded-lg p-2 text-[#7b8cab] transition-all duration-200 hover:bg-[rgba(255,234,231,0.82)] hover:text-[#cc4b3f]"
               title="Eliminar"
             >
               <Trash2 size={16} />

@@ -1,12 +1,11 @@
 import React, { useState, useMemo, useRef } from 'react';
 import {
-  Download, Upload, FileSpreadsheet, FileText, AlertTriangle,
+  Download, Upload, FileSpreadsheet, FileText,
   CheckCircle2, X, Eye, Loader2
 } from 'lucide-react';
 import { useAllTransactions } from '../../hooks/useAllTransactions';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import { exportToExcel } from '../../utils/excelExport';
-import { formatCurrency, formatDate } from '../../utils/formatters';
 import { useToast } from '../../contexts/ToastContext';
 
 const REQUIRED_COLUMNS = ['fecha', 'monto', 'descripcion', 'categoria', 'tipo'];
@@ -94,9 +93,10 @@ const normalizeAmount = (val) => {
   return Math.abs(parseFloat(str)) || 0;
 };
 
-const ImportExport = ({ user, userRole }) => {
+const ImportExport = ({ user }) => {
   const { allTransactions, loading } = useAllTransactions(user);
   const { createTransaction } = useTransactionActions(user);
+  const { showToast } = useToast();
   const fileInputRef = useRef(null);
 
   const [importData, setImportData] = useState(null);
@@ -104,10 +104,6 @@ const ImportExport = ({ user, userRole }) => {
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
-
-  let toastCtx;
-  try { toastCtx = useToast(); } catch { toastCtx = null; }
-  const showToast = toastCtx?.showToast;
 
   // Auto-map columns
   const autoMapColumns = (headers) => {
@@ -135,12 +131,12 @@ const ImportExport = ({ user, userRole }) => {
       const { headers, rows, error } = parseCSV(text);
 
       if (error) {
-        showToast?.(error, 'error');
+        showToast(error, 'error');
         return;
       }
 
       if (rows.length === 0) {
-        showToast?.('El archivo no contiene datos', 'error');
+        showToast('El archivo no contiene datos', 'error');
         return;
       }
 
@@ -166,7 +162,7 @@ const ImportExport = ({ user, userRole }) => {
     if (file && (file.name.endsWith('.csv') || file.type === 'text/csv')) {
       handleFileRead(file);
     } else {
-      showToast?.('Solo se aceptan archivos CSV', 'error');
+      showToast('Solo se aceptan archivos CSV', 'error');
     }
   };
 
@@ -207,7 +203,7 @@ const ImportExport = ({ user, userRole }) => {
 
     const missingCols = REQUIRED_COLUMNS.filter(c => !columnMapping[c]);
     if (missingCols.length > 0) {
-      showToast?.(`Columnas sin mapear: ${missingCols.join(', ')}`, 'error');
+      showToast(`Columnas sin mapear: ${missingCols.join(', ')}`, 'error');
       return;
     }
 
@@ -256,10 +252,10 @@ const ImportExport = ({ user, userRole }) => {
       }
 
       setImportResult({ imported, skipped, errors, total: importData.rows.length });
-      showToast?.(`Importacion completa: ${imported} creadas, ${skipped} omitidas, ${errors} errores`, imported > 0 ? 'success' : 'info');
+      showToast(`Importacion completa: ${imported} creadas, ${skipped} omitidas, ${errors} errores`, imported > 0 ? 'success' : 'info');
     } catch (err) {
       console.error('Import error:', err);
-      showToast?.('Error durante la importacion', 'error');
+      showToast('Error durante la importacion', 'error');
     } finally {
       setImporting(false);
     }
@@ -267,7 +263,7 @@ const ImportExport = ({ user, userRole }) => {
 
   const handleExportCSV = () => {
     if (allTransactions.length === 0) {
-      showToast?.('No hay transacciones para exportar', 'info');
+      showToast('No hay transacciones para exportar', 'info');
       return;
     }
 
@@ -304,16 +300,16 @@ const ImportExport = ({ user, userRole }) => {
     link.click();
     document.body.removeChild(link);
 
-    showToast?.(`${allTransactions.length} transacciones exportadas a CSV`, 'success');
+    showToast(`${allTransactions.length} transacciones exportadas a CSV`, 'success');
   };
 
   const handleExportExcel = () => {
     if (allTransactions.length === 0) {
-      showToast?.('No hay transacciones para exportar', 'info');
+      showToast('No hay transacciones para exportar', 'info');
       return;
     }
     exportToExcel(allTransactions, 'fincontrol_export');
-    showToast?.(`${allTransactions.length} transacciones exportadas a Excel`, 'success');
+    showToast(`${allTransactions.length} transacciones exportadas a Excel`, 'success');
   };
 
   const handleClearImport = () => {
@@ -332,30 +328,29 @@ const ImportExport = ({ user, userRole }) => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* Header */}
-      <div>
-        <h2 className="text-xl font-bold text-white tracking-tight">Import / Export Masivo</h2>
-        <p className="text-[13px] text-[#636366] mt-0.5">Exporta o importa transacciones en lote</p>
+      <div className="rounded-[28px] border border-[#dbe7ff] bg-[rgba(255,255,255,0.82)] px-6 py-5 shadow-[0_22px_70px_rgba(128,150,196,0.12)] backdrop-blur-xl">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#5b7bd6]">Operación de datos</p>
+        <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[#1f2a44]">Importación y exportación</h2>
+        <p className="mt-1 text-sm text-[#6b7a99]">Mueve registros en bloque con control previo de columnas y duplicados.</p>
       </div>
 
-      {/* Export Section */}
-      <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.06)] p-6">
+      <div className="rounded-[28px] border border-[#dce6f8] bg-white/88 p-6 shadow-[0_20px_65px_rgba(134,153,186,0.12)]">
         <div className="flex items-center gap-2 mb-4">
-          <Download size={18} className="text-[#30d158]" />
-          <h3 className="text-[15px] font-semibold text-white">Exportar Transacciones</h3>
-          <span className="ml-auto text-[11px] text-[#636366]">{allTransactions.length} transacciones disponibles</span>
+          <Download size={18} className="text-[#0f9f6e]" />
+          <h3 className="text-[15px] font-semibold text-[#1f2a44]">Exportar transacciones</h3>
+          <span className="ml-auto text-[11px] text-[#6b7a99]">{allTransactions.length} transacciones disponibles</span>
         </div>
         <div className="flex gap-3">
           <button
             onClick={handleExportCSV}
-            className="flex items-center gap-2 px-4 py-2.5 text-[12px] font-medium bg-[rgba(48,209,88,0.12)] text-[#30d158] border border-[rgba(48,209,88,0.3)] rounded-lg hover:bg-[rgba(48,209,88,0.2)] transition-colors"
+            className="inline-flex items-center gap-2 rounded-2xl border border-[rgba(15,159,110,0.24)] bg-[rgba(15,159,110,0.08)] px-4 py-2.5 text-[12px] font-medium text-[#0f9f6e] transition hover:bg-[rgba(15,159,110,0.14)]"
           >
             <FileText size={14} />
             Exportar CSV
           </button>
           <button
             onClick={handleExportExcel}
-            className="flex items-center gap-2 px-4 py-2.5 text-[12px] font-medium bg-[rgba(10,132,255,0.12)] text-[#0a84ff] border border-[rgba(10,132,255,0.3)] rounded-lg hover:bg-[rgba(10,132,255,0.2)] transition-colors"
+            className="inline-flex items-center gap-2 rounded-2xl border border-[rgba(59,130,246,0.24)] bg-[rgba(59,130,246,0.08)] px-4 py-2.5 text-[12px] font-medium text-[#2563eb] transition hover:bg-[rgba(59,130,246,0.14)]"
           >
             <FileSpreadsheet size={14} />
             Exportar Excel
@@ -363,16 +358,14 @@ const ImportExport = ({ user, userRole }) => {
         </div>
       </div>
 
-      {/* Import Section */}
-      <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.06)] p-6">
+      <div className="rounded-[28px] border border-[#dce6f8] bg-white/88 p-6 shadow-[0_20px_65px_rgba(134,153,186,0.12)]">
         <div className="flex items-center gap-2 mb-4">
-          <Upload size={18} className="text-[#ff9f0a]" />
-          <h3 className="text-[15px] font-semibold text-white">Importar Transacciones</h3>
+          <Upload size={18} className="text-[#c98717]" />
+          <h3 className="text-[15px] font-semibold text-[#1f2a44]">Importar transacciones</h3>
         </div>
 
         {!importData ? (
           <>
-            {/* Upload Area */}
             <div
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -380,15 +373,15 @@ const ImportExport = ({ user, userRole }) => {
               onClick={() => fileInputRef.current?.click()}
               className={`cursor-pointer rounded-xl border-2 border-dashed p-10 text-center transition-all ${
                 isDragging
-                  ? 'border-[#ff9f0a] bg-[rgba(255,159,10,0.08)]'
-                  : 'border-[rgba(255,255,255,0.06)] bg-[#2c2c2e] hover:border-[rgba(255,255,255,0.15)]'
+                  ? 'border-[#d9a44b] bg-[rgba(214,149,44,0.08)]'
+                  : 'border-[#d8e3f7] bg-[rgba(247,250,255,0.86)] hover:border-[#b7caef]'
               }`}
             >
-              <Upload size={32} className={`mx-auto mb-3 ${isDragging ? 'text-[#ff9f0a]' : 'text-[#636366]'}`} />
-              <p className="text-[14px] font-medium text-white mb-1">
-                {isDragging ? 'Suelta el archivo aqui' : 'Arrastra un CSV o haz clic para seleccionar'}
+              <Upload size={32} className={`mx-auto mb-3 ${isDragging ? 'text-[#c98717]' : 'text-[#7a879d]'}`} />
+              <p className="mb-1 text-[14px] font-medium text-[#1f2a44]">
+                {isDragging ? 'Suelta el archivo aquí' : 'Arrastra un CSV o haz clic para seleccionar'}
               </p>
-              <p className="text-[12px] text-[#636366]">Columnas esperadas: fecha, monto, descripcion, categoria, tipo</p>
+              <p className="text-[12px] text-[#6b7a99]">Columnas esperadas: fecha, monto, descripción, categoría y tipo.</p>
             </div>
             <input
               ref={fileInputRef}
@@ -400,34 +393,32 @@ const ImportExport = ({ user, userRole }) => {
           </>
         ) : (
           <div className="space-y-4">
-            {/* File Info */}
-            <div className="flex items-center justify-between px-4 py-3 bg-[rgba(255,159,10,0.08)] border border-[rgba(255,159,10,0.2)] rounded-xl">
+            <div className="flex items-center justify-between rounded-2xl border border-[rgba(214,149,44,0.22)] bg-[rgba(255,248,234,0.92)] px-4 py-3">
               <div className="flex items-center gap-2">
-                <FileText size={16} className="text-[#ff9f0a]" />
-                <span className="text-[13px] text-white font-medium">{importData.fileName}</span>
-                <span className="text-[11px] text-[#636366]">{importData.rows.length} filas</span>
+                <FileText size={16} className="text-[#c98717]" />
+                <span className="text-[13px] font-medium text-[#1f2a44]">{importData.fileName}</span>
+                <span className="text-[11px] text-[#8a6d66]">{importData.rows.length} filas</span>
                 {duplicates.size > 0 && (
-                  <span className="text-[11px] text-[#ff453a] bg-[rgba(255,69,58,0.1)] px-2 py-0.5 rounded-full">
+                  <span className="rounded-full bg-[rgba(208,76,54,0.1)] px-2 py-0.5 text-[11px] text-[#d04c36]">
                     {duplicates.size} posibles duplicados
                   </span>
                 )}
               </div>
-              <button onClick={handleClearImport} className="p-1.5 text-[#636366] hover:text-[#ff453a] transition-colors">
+              <button onClick={handleClearImport} className="p-1.5 text-[#8a6d66] transition-colors hover:text-[#d04c36]">
                 <X size={16} />
               </button>
             </div>
 
-            {/* Column Mapping */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {REQUIRED_COLUMNS.map(col => (
                 <div key={col}>
-                  <label className="text-[10px] font-semibold text-[#8e8e93] uppercase tracking-wider mb-1 block">
+                  <label className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">
                     {col} {!columnMapping[col] && <span className="text-[#ff453a]">*</span>}
                   </label>
                   <select
                     value={columnMapping[col] || ''}
                     onChange={(e) => setColumnMapping(prev => ({ ...prev, [col]: e.target.value }))}
-                    className="w-full px-2 py-1.5 bg-[#2c2c2e] border border-[rgba(255,255,255,0.06)] rounded-lg text-[12px] text-white focus:outline-none focus:border-[rgba(10,132,255,0.4)]"
+                    className="w-full rounded-xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-2 py-1.5 text-[12px] text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                   >
                     <option value="">-- Seleccionar --</option>
                     {importData.headers.map(h => (
@@ -438,51 +429,50 @@ const ImportExport = ({ user, userRole }) => {
               ))}
             </div>
 
-            {/* Preview Table */}
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <Eye size={14} className="text-[#8e8e93]" />
-                <span className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">
+                <Eye size={14} className="text-[#70819f]" />
+                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">
                   Vista previa (primeras {Math.min(previewRows.length, 10)} filas)
                 </span>
               </div>
-              <div className="overflow-x-auto rounded-xl border border-[rgba(255,255,255,0.06)]">
+              <div className="overflow-x-auto rounded-[24px] border border-[#dce6f8] bg-white/92">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-[rgba(255,255,255,0.06)] bg-[#2c2c2e]">
-                      <th className="px-3 py-2 text-[10px] font-semibold text-[#8e8e93] uppercase">#</th>
-                      <th className="px-3 py-2 text-[10px] font-semibold text-[#8e8e93] uppercase">Fecha</th>
-                      <th className="px-3 py-2 text-[10px] font-semibold text-[#8e8e93] uppercase">Descripcion</th>
-                      <th className="px-3 py-2 text-[10px] font-semibold text-[#8e8e93] uppercase">Categoria</th>
-                      <th className="px-3 py-2 text-[10px] font-semibold text-[#8e8e93] uppercase">Tipo</th>
-                      <th className="px-3 py-2 text-[10px] font-semibold text-[#8e8e93] uppercase text-right">Monto</th>
-                      <th className="px-3 py-2 text-[10px] font-semibold text-[#8e8e93] uppercase">Estado</th>
+                    <tr className="border-b border-[#e2ebfb] bg-[rgba(245,248,255,0.94)]">
+                      <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">#</th>
+                      <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Fecha</th>
+                      <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Descripción</th>
+                      <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Categoría</th>
+                      <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Tipo</th>
+                      <th className="px-3 py-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Monto</th>
+                      <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Estado</th>
                     </tr>
                   </thead>
                   <tbody>
                     {previewRows.map((row, idx) => {
                       const isDupe = duplicates.has(idx);
                       return (
-                        <tr key={idx} className={`border-b border-[rgba(255,255,255,0.03)] ${isDupe ? 'opacity-50' : ''}`}>
-                          <td className="px-3 py-2 text-[11px] text-[#636366]">{idx + 1}</td>
-                          <td className="px-3 py-2 text-[12px] text-[#8e8e93]">{row.fecha}</td>
-                          <td className="px-3 py-2 text-[12px] text-white truncate max-w-[200px]">{row.descripcion}</td>
-                          <td className="px-3 py-2 text-[12px] text-[#8e8e93]">{row.categoria}</td>
+                        <tr key={idx} className={`border-b border-[#eef2fb] ${isDupe ? 'opacity-55' : ''}`}>
+                          <td className="px-3 py-2 text-[11px] text-[#93a0b6]">{idx + 1}</td>
+                          <td className="px-3 py-2 text-[12px] text-[#70819f]">{row.fecha}</td>
+                          <td className="max-w-[200px] truncate px-3 py-2 text-[12px] text-[#1f2a44]">{row.descripcion}</td>
+                          <td className="px-3 py-2 text-[12px] text-[#70819f]">{row.categoria}</td>
                           <td className="px-3 py-2">
-                            <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
+                            <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
                               normalizeType(row.tipo) === 'income'
-                                ? 'bg-[rgba(48,209,88,0.1)] text-[#30d158]'
-                                : 'bg-[rgba(255,69,58,0.1)] text-[#ff453a]'
+                                ? 'bg-[rgba(15,159,110,0.1)] text-[#0f9f6e]'
+                                : 'bg-[rgba(208,76,54,0.1)] text-[#d04c36]'
                             }`}>
                               {normalizeType(row.tipo) === 'income' ? 'Ingreso' : 'Gasto'}
                             </span>
                           </td>
-                          <td className="px-3 py-2 text-[12px] text-white text-right font-mono">{row.monto}</td>
+                          <td className="px-3 py-2 text-right font-mono text-[12px] text-[#1f2a44]">{row.monto}</td>
                           <td className="px-3 py-2">
                             {isDupe ? (
-                              <span className="text-[10px] text-[#ff453a] bg-[rgba(255,69,58,0.1)] px-1.5 py-0.5 rounded">Duplicado</span>
+                              <span className="rounded-full bg-[rgba(208,76,54,0.1)] px-1.5 py-0.5 text-[10px] text-[#d04c36]">Duplicado</span>
                             ) : (
-                              <span className="text-[10px] text-[#30d158] bg-[rgba(48,209,88,0.1)] px-1.5 py-0.5 rounded">Nuevo</span>
+                              <span className="rounded-full bg-[rgba(15,159,110,0.1)] px-1.5 py-0.5 text-[10px] text-[#0f9f6e]">Nuevo</span>
                             )}
                           </td>
                         </tr>
@@ -492,42 +482,40 @@ const ImportExport = ({ user, userRole }) => {
                 </table>
               </div>
               {importData.rows.length > 10 && (
-                <p className="text-[11px] text-[#636366] mt-2 text-center">
-                  ... y {importData.rows.length - 10} filas mas
+                <p className="mt-2 text-center text-[11px] text-[#70819f]">
+                  ... y {importData.rows.length - 10} filas más
                 </p>
               )}
             </div>
 
-            {/* Import Result */}
             {importResult && (
-              <div className="flex items-center gap-3 px-4 py-3 bg-[rgba(48,209,88,0.08)] border border-[rgba(48,209,88,0.2)] rounded-xl">
-                <CheckCircle2 size={18} className="text-[#30d158]" />
-                <div className="text-[12px] text-white">
-                  <span className="font-medium">Importacion completada:</span>{' '}
-                  <span className="text-[#30d158]">{importResult.imported} creadas</span>,{' '}
-                  <span className="text-[#ff9f0a]">{importResult.skipped} omitidas</span>
+              <div className="flex items-center gap-3 rounded-2xl border border-[rgba(15,159,110,0.22)] bg-[rgba(244,252,248,0.94)] px-4 py-3">
+                <CheckCircle2 size={18} className="text-[#0f9f6e]" />
+                <div className="text-[12px] text-[#1f2a44]">
+                  <span className="font-medium">Importación completada:</span>{' '}
+                  <span className="text-[#0f9f6e]">{importResult.imported} creadas</span>,{' '}
+                  <span className="text-[#c98717]">{importResult.skipped} omitidas</span>
                   {importResult.errors > 0 && (
-                    <>, <span className="text-[#ff453a]">{importResult.errors} errores</span></>
+                    <>, <span className="text-[#d04c36]">{importResult.errors} errores</span></>
                   )}
                 </div>
               </div>
             )}
 
-            {/* Actions */}
             <div className="flex justify-end gap-3">
               <button
                 onClick={handleClearImport}
-                className="px-4 py-2 text-[12px] font-medium text-[#8e8e93] hover:bg-[rgba(255,255,255,0.05)] rounded-lg transition-colors"
+                className="rounded-2xl px-4 py-2 text-[12px] font-medium text-[#6b7a99] transition hover:bg-[rgba(94,115,159,0.08)]"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleImport}
                 disabled={importing || !!importResult}
-                className="flex items-center gap-2 px-5 py-2 text-[12px] font-medium bg-[rgba(255,159,10,0.12)] text-[#ff9f0a] border border-[rgba(255,159,10,0.3)] rounded-lg hover:bg-[rgba(255,159,10,0.2)] transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-2xl border border-[rgba(214,149,44,0.24)] bg-[rgba(214,149,44,0.08)] px-5 py-2 text-[12px] font-medium text-[#c98717] transition hover:bg-[rgba(214,149,44,0.14)] disabled:opacity-50"
               >
                 {importing ? (
-                  <div className="w-3.5 h-3.5 border-2 border-[#ff9f0a] border-t-transparent rounded-full animate-spin" />
+                  <Loader2 size={14} className="animate-spin" />
                 ) : (
                   <Upload size={14} />
                 )}

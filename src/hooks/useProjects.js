@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { 
   collection, 
   query, 
@@ -17,13 +17,13 @@ export const useProjects = (user) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const projectsRef = collection(db, 'artifacts', appId, 'public', 'data', 'projects');
+  const projectsRef = useMemo(
+    () => collection(db, 'artifacts', appId, 'public', 'data', 'projects'),
+    [],
+  );
 
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
+    if (!user) return undefined;
 
     const q = query(projectsRef, orderBy('createdAt', 'desc'));
 
@@ -45,7 +45,7 @@ export const useProjects = (user) => {
     );
 
     return () => unsubscribe();
-  }, [user]);
+  }, [projectsRef, user]);
 
   const createProject = async (projectData) => {
     if (!user) return { success: false, error: 'No user' };

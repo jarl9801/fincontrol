@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Loader2, DollarSign } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 
@@ -28,6 +28,17 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
     });
   }
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const setQuickAmount = (pct) => {
     setFormData({ ...formData, amount: (remaining * pct).toFixed(2) });
   };
@@ -55,56 +66,59 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
-      <div className="bg-[#1c1c1e] rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-scaleIn">
-        {/* Header */}
-        <div className="px-6 py-5 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#2c2c2e]">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-[rgba(20,27,42,0.34)] p-4 backdrop-blur-sm animate-fadeIn">
+      <div className="w-full max-w-md overflow-hidden rounded-3xl border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(244,248,255,0.94))] shadow-[0_36px_110px_rgba(93,117,161,0.22)] animate-scaleIn">
+        <div className="flex items-center justify-between border-b border-[rgba(201,214,238,0.78)] px-6 py-5">
           <div>
-            <h3 className="font-bold text-xl text-[#e5e5ea]">Registrar Pago</h3>
-            <p className="text-sm text-[#8e8e93] mt-0.5 truncate max-w-[280px]">{safe(transaction.description)}</p>
+            <h3 className="text-xl font-bold text-[#101938]">
+              {transaction.type === 'income' ? 'Registrar cobro' : 'Registrar pago'}
+            </h3>
+            <p className="mt-0.5 max-w-[280px] truncate text-sm text-[#6b7a96]">{safe(transaction.description)}</p>
           </div>
-          <button onClick={onClose} className="p-2 text-[#636366] hover:text-[#98989d] hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all">
+          <button
+            type="button"
+            aria-label="Cerrar registro de pago"
+            onClick={onClose}
+            className="rounded-xl p-2 text-[#6b7a96] transition-all hover:bg-white hover:text-[#101938]"
+          >
             <X size={20} />
           </button>
         </div>
 
-        {/* Summary */}
         <div className="px-6 pt-5 pb-3 grid grid-cols-3 gap-3">
-          <div className="bg-[#111111] rounded-xl p-3 text-center">
-            <p className="text-[10px] text-[#8e8e93] uppercase font-semibold mb-1">Total</p>
-            <p className="text-sm font-bold text-[#e5e5ea]">{formatCurrency(transaction.amount)}</p>
+          <div className="rounded-xl border border-[rgba(201,214,238,0.74)] bg-white/84 p-3 text-center">
+            <p className="mb-1 text-[10px] font-semibold uppercase text-[#6980ac]">Total</p>
+            <p className="text-sm font-bold text-[#101938]">{formatCurrency(transaction.amount)}</p>
           </div>
-          <div className="bg-[#111111] rounded-xl p-3 text-center">
-            <p className="text-[10px] text-[#8e8e93] uppercase font-semibold mb-1">Pagado</p>
-            <p className="text-sm font-bold text-[#30d158]">{formatCurrency(paidAmount)}</p>
+          <div className="rounded-xl border border-[rgba(201,214,238,0.74)] bg-white/84 p-3 text-center">
+            <p className="mb-1 text-[10px] font-semibold uppercase text-[#6980ac]">Pagado</p>
+            <p className="text-sm font-bold text-[#0f8f4b]">{formatCurrency(paidAmount)}</p>
           </div>
-          <div className="bg-[#111111] rounded-xl p-3 text-center">
-            <p className="text-[10px] text-[#8e8e93] uppercase font-semibold mb-1">Restante</p>
-            <p className="text-sm font-bold text-[#ff9f0a]">{formatCurrency(remaining)}</p>
+          <div className="rounded-xl border border-[rgba(201,214,238,0.74)] bg-white/84 p-3 text-center">
+            <p className="mb-1 text-[10px] font-semibold uppercase text-[#6980ac]">Restante</p>
+            <p className="text-sm font-bold text-[#c46a19]">{formatCurrency(remaining)}</p>
           </div>
         </div>
 
-        {/* Progress bar */}
         <div className="px-6 pb-4">
-          <div className="w-full h-2 bg-[#2c2c2e] rounded-full overflow-hidden">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-[rgba(201,214,238,0.74)]">
             <div
-              className="h-full bg-[#30d158] rounded-full transition-all duration-500"
+              className="h-full rounded-full bg-[#0f8f4b] transition-all duration-500"
               style={{ width: `${Math.min((paidAmount / transaction.amount) * 100, 100)}%` }}
             />
           </div>
-          <p className="text-[10px] text-[#636366] text-right mt-1">
+          <p className="mt-1 text-right text-[10px] text-[#6b7a96]">
             {((paidAmount / transaction.amount) * 100).toFixed(0)}% pagado
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-4">
-          {/* Amount */}
           <div>
-            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
+            <label className="mb-2 block text-sm font-semibold text-[#101938]">
               Monto del pago <span className="text-[#ff453a]">*</span>
             </label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#636366] font-medium">€</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 font-medium text-[#6b7a96]">€</span>
               <input
                 type="number"
                 step="0.01"
@@ -112,12 +126,11 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
                 max={remaining}
                 required
                 placeholder="0.00"
-                className="w-full pl-8 pr-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
+                className="w-full rounded-xl border border-[rgba(201,214,238,0.82)] bg-white/88 py-3 pl-8 pr-4 text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
                 value={formData.amount}
                 onChange={e => setFormData({ ...formData, amount: e.target.value })}
               />
             </div>
-            {/* Quick buttons */}
             <div className="flex gap-2 mt-2">
               {[
                 { label: '25%', pct: 0.25 },
@@ -128,7 +141,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
                   key={label}
                   type="button"
                   onClick={() => setQuickAmount(pct)}
-                  className="flex-1 py-1.5 text-xs font-medium bg-[#2c2c2e] text-[#8e8e93] hover:text-[#e5e5ea] hover:bg-[rgba(255,255,255,0.08)] rounded-lg transition-all"
+                  className="flex-1 rounded-lg border border-[rgba(201,214,238,0.74)] bg-white/84 py-1.5 text-xs font-medium text-[#6b7a96] transition-all hover:bg-white hover:text-[#101938]"
                 >
                   {label}
                 </button>
@@ -136,22 +149,21 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
             </div>
           </div>
 
-          {/* Date & Method */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Fecha</label>
+              <label className="mb-2 block text-sm font-semibold text-[#101938]">Fecha</label>
               <input
                 type="date"
                 required
-                className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
+                className="w-full rounded-xl border border-[rgba(201,214,238,0.82)] bg-white/88 px-4 py-3 text-sm text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
                 value={formData.date}
                 onChange={e => setFormData({ ...formData, date: e.target.value })}
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Método</label>
+              <label className="mb-2 block text-sm font-semibold text-[#101938]">Método</label>
               <select
-                className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
+                className="w-full rounded-xl border border-[rgba(201,214,238,0.82)] bg-white/88 px-4 py-3 text-sm text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
                 value={formData.method}
                 onChange={e => setFormData({ ...formData, method: e.target.value })}
               >
@@ -162,26 +174,24 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
             </div>
           </div>
 
-          {/* Note */}
           <div>
-            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Nota (opcional)</label>
+            <label className="mb-2 block text-sm font-semibold text-[#101938]">Nota (opcional)</label>
             <input
               type="text"
               placeholder="ej. Pago parcial factura #123"
-              className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
+              className="w-full rounded-xl border border-[rgba(201,214,238,0.82)] bg-white/88 px-4 py-3 text-sm text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
               value={formData.note}
               onChange={e => setFormData({ ...formData, note: e.target.value })}
             />
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={submitting}
-            className={`w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-white bg-[#30d158] hover:bg-[#28c74e] transition-all duration-200 shadow-lg ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl transform hover:-translate-y-0.5'}`}
+            className={`flex w-full items-center justify-center gap-2 rounded-xl bg-[#3156d3] py-4 font-bold text-white shadow-lg transition-all duration-200 ${submitting ? 'cursor-not-allowed opacity-50' : 'hover:-translate-y-0.5 hover:bg-[#2748b6] hover:shadow-xl'}`}
           >
             {submitting ? <Loader2 size={18} className="animate-spin" /> : <DollarSign size={18} />}
-            {submitting ? 'Registrando...' : 'Registrar Pago'}
+            {submitting ? 'Registrando...' : transaction.type === 'income' ? 'Registrar cobro' : 'Registrar pago'}
           </button>
         </form>
       </div>

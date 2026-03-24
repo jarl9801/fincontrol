@@ -43,16 +43,14 @@ const isInCurrentMonth = (date) => {
   return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
 };
 
-const Recurrencia = ({ user, userRole }) => {
+const Recurrencia = ({ user }) => {
   const { transactions, loading } = useTransactions(user);
   const { allTransactions } = useAllTransactions(user);
   const { createTransaction } = useTransactionActions(user);
   const [generating, setGenerating] = useState(false);
   const [filter, setFilter] = useState('all');
 
-  let toastCtx;
-  try { toastCtx = useToast(); } catch { toastCtx = null; }
-  const showToast = toastCtx?.showToast;
+  const { showToast } = useToast();
 
   const recurringTransactions = useMemo(() => {
     return transactions.filter(t => t.isRecurring === true);
@@ -134,13 +132,13 @@ const Recurrencia = ({ user, userRole }) => {
       }
 
       if (created > 0) {
-        showToast?.(`${created} transaccion(es) recurrente(s) generada(s)`, 'success');
+        showToast(`${created} transaccion(es) recurrente(s) generada(s)`, 'success');
       } else {
-        showToast?.('No hay transacciones pendientes por generar este mes', 'info');
+        showToast('No hay transacciones pendientes por generar este mes', 'info');
       }
     } catch (err) {
       console.error('Error generating recurring transactions:', err);
-      showToast?.('Error al generar transacciones recurrentes', 'error');
+      showToast('Error al generar transacciones recurrentes', 'error');
     } finally {
       setGenerating(false);
     }
@@ -156,52 +154,50 @@ const Recurrencia = ({ user, userRole }) => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Recurrencia Automatica</h2>
-          <p className="text-[13px] text-[#636366] mt-0.5">Gestiona transacciones recurrentes y genera pendientes</p>
+        <div className="rounded-[28px] border border-[#dbe7ff] bg-[rgba(255,255,255,0.82)] px-6 py-5 shadow-[0_22px_70px_rgba(128,150,196,0.12)] backdrop-blur-xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#5b7bd6]">Automatización</p>
+          <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[#1f2a44]">Recurrencia automática</h2>
+          <p className="mt-1 text-sm text-[#6b7a99]">Controla los movimientos periódicos y genera los pendientes del mes con un solo paso.</p>
         </div>
         <button
           onClick={handleGeneratePending}
           disabled={generating}
-          className="flex items-center gap-2 px-4 py-2 text-[12px] font-medium bg-[rgba(48,209,88,0.12)] text-[#30d158] border border-[rgba(48,209,88,0.3)] rounded-lg hover:bg-[rgba(48,209,88,0.2)] transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-2xl border border-[rgba(15,159,110,0.24)] bg-[rgba(15,159,110,0.08)] px-4 py-2 text-[12px] font-medium text-[#0f9f6e] transition hover:bg-[rgba(15,159,110,0.14)] disabled:opacity-50"
         >
           {generating ? (
-            <div className="w-3.5 h-3.5 border-2 border-[#30d158] border-t-transparent rounded-full animate-spin" />
+            <div className="h-3.5 w-3.5 rounded-full border-2 border-[#0f9f6e] border-t-transparent animate-spin" />
           ) : (
             <Play size={14} />
           )}
-          Generar Pendientes
+          Generar pendientes
         </button>
       </div>
 
-      {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(10,132,255,0.15)]" style={{ background: 'linear-gradient(135deg, rgba(10,132,255,0.08) 0%, #1c1c1e 55%)' }}>
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Total Recurrentes</p>
-            <RefreshCw size={18} className="text-[#0a84ff]" />
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Total recurrentes</p>
+            <RefreshCw size={18} className="text-[#2563eb]" />
           </div>
-          <p className="text-[28px] font-bold text-[#0a84ff]">{totalRecurring}</p>
+          <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#2563eb]">{totalRecurring}</p>
         </div>
-        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,159,10,0.15)]" style={{ background: 'linear-gradient(135deg, rgba(255,159,10,0.08) 0%, #1c1c1e 55%)' }}>
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Proximas Este Mes</p>
-            <CalendarClock size={18} className="text-[#ff9f0a]" />
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Próximas este mes</p>
+            <CalendarClock size={18} className="text-[#c98717]" />
           </div>
-          <p className="text-[28px] font-bold text-[#ff9f0a]">{dueThisMonth}</p>
+          <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#c98717]">{dueThisMonth}</p>
         </div>
-        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(48,209,88,0.15)]" style={{ background: 'linear-gradient(135deg, rgba(48,209,88,0.08) 0%, #1c1c1e 55%)' }}>
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Monto Mensual Estimado</p>
-            <TrendingUp size={18} className="text-[#30d158]" />
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Monto mensual estimado</p>
+            <TrendingUp size={18} className="text-[#0f9f6e]" />
           </div>
-          <p className="text-[28px] font-bold text-[#30d158]">{formatCurrency(monthlyEstimate)}</p>
+          <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#0f9f6e]">{formatCurrency(monthlyEstimate)}</p>
         </div>
       </div>
 
-      {/* Filter Tabs */}
       <div className="flex gap-2">
         {[
           { id: 'all', label: 'Todas' },
@@ -212,72 +208,71 @@ const Recurrencia = ({ user, userRole }) => {
           <button key={tab.id} onClick={() => setFilter(tab.id)}
             className={`px-3.5 py-1.5 rounded-lg text-[12px] font-medium transition-all ${
               filter === tab.id
-                ? 'bg-[rgba(10,132,255,0.15)] text-[#0a84ff] border border-[rgba(10,132,255,0.3)]'
-                : 'text-[#8e8e93] hover:bg-[rgba(255,255,255,0.05)] border border-transparent'
+                ? 'border border-[#7aa2ff] bg-[rgba(59,130,246,0.08)] text-[#2563eb]'
+                : 'border border-[#d8e3f7] bg-white/78 text-[#6b7a99] hover:bg-[rgba(94,115,159,0.08)]'
             }`}>
             {tab.label}
           </button>
         ))}
       </div>
 
-      {/* Table */}
-      <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.06)] overflow-hidden">
+      <div className="overflow-hidden rounded-[28px] border border-[#dce6f8] bg-white/88 shadow-[0_20px_65px_rgba(134,153,186,0.12)]">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-[rgba(255,255,255,0.06)]">
-                <th className="px-4 py-3 text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Descripcion</th>
-                <th className="px-4 py-3 text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Tipo</th>
-                <th className="px-4 py-3 text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Frecuencia</th>
-                <th className="px-4 py-3 text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider text-right">Monto</th>
-                <th className="px-4 py-3 text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Proxima Fecha</th>
-                <th className="px-4 py-3 text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Estado</th>
+              <tr className="border-b border-[#e2ebfb] bg-[rgba(245,248,255,0.94)]">
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Descripción</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Tipo</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Frecuencia</th>
+                <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Monto</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Próxima fecha</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Estado</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((t) => (
-                <tr key={t.id} className="border-b border-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.02)] transition-colors">
+                <tr key={t.id} className="border-b border-[#eef2fb] transition-colors hover:bg-[rgba(241,246,255,0.8)]">
                   <td className="px-4 py-3">
-                    <p className="text-[13px] font-medium text-white truncate max-w-[220px]">{t.description}</p>
-                    <p className="text-[11px] text-[#636366]">{t.project || 'Sin proyecto'}</p>
+                    <p className="max-w-[220px] truncate text-[13px] font-medium text-[#1f2a44]">{t.description}</p>
+                    <p className="text-[11px] text-[#93a0b6]">{t.project || 'Sin proyecto'}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${
+                    <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
                       t.type === 'income'
-                        ? 'bg-[rgba(48,209,88,0.1)] text-[#30d158]'
-                        : 'bg-[rgba(255,69,58,0.1)] text-[#ff453a]'
+                        ? 'bg-[rgba(15,159,110,0.1)] text-[#0f9f6e]'
+                        : 'bg-[rgba(208,76,54,0.1)] text-[#d04c36]'
                     }`}>
                       {t.type === 'income' ? 'Ingreso' : 'Gasto'}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[12px] text-[#8e8e93]">
+                    <span className="text-[12px] text-[#6b7a99]">
                       {FREQUENCY_LABELS[t.recurringFrequency] || 'Mensual'}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
                     <span className={`text-[13px] font-semibold ${
-                      t.type === 'income' ? 'text-[#30d158]' : 'text-[#ff453a]'
+                      t.type === 'income' ? 'text-[#0f9f6e]' : 'text-[#d04c36]'
                     }`}>
                       {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[12px] text-[#8e8e93]">
+                    <span className="text-[12px] text-[#6b7a99]">
                       {formatDate(t.nextDate.toISOString())}
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     {t.isExpired ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#636366] bg-[rgba(255,255,255,0.05)] px-2 py-0.5 rounded-full">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[rgba(107,122,153,0.12)] px-2 py-0.5 text-[11px] font-medium text-[#6b7a99]">
                         <Pause size={10} /> Expirada
                       </span>
                     ) : t.isDueThisMonth ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#ff9f0a] bg-[rgba(255,159,10,0.1)] px-2 py-0.5 rounded-full">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[rgba(214,149,44,0.1)] px-2 py-0.5 text-[11px] font-medium text-[#c98717]">
                         <AlertTriangle size={10} /> Pendiente
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#30d158] bg-[rgba(48,209,88,0.1)] px-2 py-0.5 rounded-full">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[rgba(15,159,110,0.1)] px-2 py-0.5 text-[11px] font-medium text-[#0f9f6e]">
                         <CheckCircle2 size={10} /> Activa
                       </span>
                     )}
@@ -288,12 +283,11 @@ const Recurrencia = ({ user, userRole }) => {
           </table>
         </div>
 
-        {/* Empty State */}
         {filtered.length === 0 && (
           <div className="text-center py-16">
-            <RefreshCw className="w-8 h-8 text-[#636366] mx-auto mb-3" />
-            <p className="text-sm text-[#636366] mb-1">No hay transacciones recurrentes</p>
-            <p className="text-[11px] text-[#48484a]">Marca una transaccion como recurrente al crearla o editarla</p>
+            <RefreshCw className="mx-auto mb-3 h-8 w-8 text-[#93a0b6]" />
+            <p className="mb-1 text-sm text-[#6b7a99]">No hay transacciones recurrentes</p>
+            <p className="text-[11px] text-[#93a0b6]">Marca una transacción como recurrente al crearla o editarla.</p>
           </div>
         )}
       </div>

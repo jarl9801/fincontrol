@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Bell, AlertTriangle, Clock, Users, TrendingDown, CheckCircle2,
-  Filter, Trash2, Eye
+  Eye
 } from 'lucide-react';
 import { useNotifications } from '../../hooks/useNotifications';
 import { useReceivables } from '../../hooks/useReceivables';
@@ -13,9 +13,9 @@ import { formatCurrency } from '../../utils/formatters';
 import { useToast } from '../../contexts/ToastContext';
 
 const SEVERITY_STYLES = {
-  critical: { bg: 'rgba(255,69,58,0.08)', border: 'rgba(255,69,58,0.2)', color: '#ff453a', icon: AlertTriangle },
-  warning: { bg: 'rgba(255,159,10,0.08)', border: 'rgba(255,159,10,0.2)', color: '#ff9f0a', icon: Clock },
-  info: { bg: 'rgba(10,132,255,0.08)', border: 'rgba(10,132,255,0.2)', color: '#0a84ff', icon: Bell },
+  critical: { bg: 'rgba(255,244,241,0.92)', border: 'rgba(208,76,54,0.22)', color: '#d04c36', icon: AlertTriangle },
+  warning: { bg: 'rgba(255,248,234,0.94)', border: 'rgba(214,149,44,0.22)', color: '#c98717', icon: Clock },
+  info: { bg: 'rgba(240,246,255,0.94)', border: 'rgba(59,130,246,0.22)', color: '#2563eb', icon: Bell },
 };
 
 const getDaysUntilDue = (dueDate) => {
@@ -27,8 +27,8 @@ const getDaysUntilDue = (dueDate) => {
   return Math.ceil((due - today) / (1000 * 60 * 60 * 24));
 };
 
-const Alertas = ({ user, userRole }) => {
-  const { notifications, loading, unreadCount, markAsRead, markAllAsRead, createNotification } = useNotifications(user);
+const Alertas = ({ user }) => {
+  const { notifications, loading, unreadCount, markAsRead, markAllAsRead } = useNotifications(user);
   const { receivables } = useReceivables(user);
   const { payables } = usePayables(user);
   const { transactions } = useTransactions(user);
@@ -36,16 +36,14 @@ const Alertas = ({ user, userRole }) => {
   const { allTransactions } = useAllTransactions(user);
   const [filter, setFilter] = useState('all');
 
-  let toastCtx;
-  try { toastCtx = useToast(); } catch { toastCtx = null; }
-  const showToast = toastCtx?.showToast;
+  const { showToast } = useToast();
 
   // Auto-generated alerts from current data
   const autoAlerts = useMemo(() => {
     const alerts = [];
 
     // CXC overdue (>30d)
-    receivables.filter(r => r.status !== 'paid').forEach(r => {
+    receivables.filter(r => r.status !== 'settled' && r.status !== 'cancelled').forEach(r => {
       const days = getDaysUntilDue(r.dueDate);
       if (days < -30) {
         alerts.push({
@@ -60,7 +58,7 @@ const Alertas = ({ user, userRole }) => {
     });
 
     // CXC due this week
-    receivables.filter(r => r.status !== 'paid').forEach(r => {
+    receivables.filter(r => r.status !== 'settled' && r.status !== 'cancelled').forEach(r => {
       const days = getDaysUntilDue(r.dueDate);
       if (days >= 0 && days <= 7) {
         alerts.push({
@@ -75,7 +73,7 @@ const Alertas = ({ user, userRole }) => {
     });
 
     // CXP overdue
-    payables.filter(p => p.status !== 'paid').forEach(p => {
+    payables.filter(p => p.status !== 'settled' && p.status !== 'cancelled').forEach(p => {
       const days = getDaysUntilDue(p.dueDate);
       if (days < 0) {
         alerts.push({
@@ -136,7 +134,6 @@ const Alertas = ({ user, userRole }) => {
 
     // Budget exceeded (>80%)
     budgets.filter(b => b.year === 2026).forEach(b => {
-      const key = b.month ? `${b.projectName}_${b.month}` : `${b.projectName}_annual`;
       let actualExpense = 0;
       allTransactions.forEach(t => {
         if (t.type !== 'expense') return;
@@ -213,44 +210,43 @@ const Alertas = ({ user, userRole }) => {
   return (
     <div className="space-y-6 animate-fadeIn">
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Centro de Alertas</h2>
-          <p className="text-[13px] text-[#636366] mt-0.5">Notificaciones y alertas automáticas</p>
+        <div className="rounded-[28px] border border-[#dbe7ff] bg-[rgba(255,255,255,0.82)] px-6 py-5 shadow-[0_22px_70px_rgba(128,150,196,0.12)] backdrop-blur-xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#5b7bd6]">Seguimiento</p>
+          <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[#1f2a44]">Centro de alertas</h2>
+          <p className="mt-1 text-sm text-[#6b7a99]">Revisa vencimientos, riesgos y avisos operativos desde una sola bandeja.</p>
         </div>
         {unreadCount > 0 && (
-          <button onClick={async () => { await markAllAsRead(); showToast?.('Todas marcadas como leídas'); }}
-            className="flex items-center gap-2 px-4 py-2 text-[12px] font-medium text-[#0a84ff] hover:bg-[rgba(10,132,255,0.08)] rounded-lg transition-colors">
+          <button onClick={async () => { await markAllAsRead(); showToast('Todas marcadas como leídas'); }}
+            className="inline-flex items-center gap-2 rounded-2xl border border-[#d8e3f7] bg-white/88 px-4 py-2 text-[12px] font-medium text-[#2563eb] transition hover:bg-[rgba(59,130,246,0.08)]">
             <CheckCircle2 size={14} /> Marcar todas como leídas
           </button>
         )}
       </div>
 
-      {/* Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,69,58,0.15)]" style={{ background: 'linear-gradient(135deg, rgba(255,69,58,0.08) 0%, #1c1c1e 55%)' }}>
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Críticas</p>
-            <AlertTriangle size={18} className="text-[#ff453a]" />
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Críticas</p>
+            <AlertTriangle size={18} className="text-[#d04c36]" />
           </div>
-          <p className="text-[28px] font-bold text-[#ff453a]">{criticalCount}</p>
+          <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#d04c36]">{criticalCount}</p>
         </div>
-        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,159,10,0.15)]" style={{ background: 'linear-gradient(135deg, rgba(255,159,10,0.08) 0%, #1c1c1e 55%)' }}>
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Advertencias</p>
-            <Clock size={18} className="text-[#ff9f0a]" />
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Advertencias</p>
+            <Clock size={18} className="text-[#c98717]" />
           </div>
-          <p className="text-[28px] font-bold text-[#ff9f0a]">{warningCount}</p>
+          <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#c98717]">{warningCount}</p>
         </div>
-        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(10,132,255,0.15)]" style={{ background: 'linear-gradient(135deg, rgba(10,132,255,0.08) 0%, #1c1c1e 55%)' }}>
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/88 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">No Leídas</p>
-            <Bell size={18} className="text-[#0a84ff]" />
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">No leídas</p>
+            <Bell size={18} className="text-[#2563eb]" />
           </div>
-          <p className="text-[28px] font-bold text-[#0a84ff]">{unreadCount}</p>
+          <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#2563eb]">{unreadCount}</p>
         </div>
       </div>
 
-      {/* Filter */}
       <div className="flex gap-2">
         {[
           { id: 'all', label: 'Todas' },
@@ -261,15 +257,14 @@ const Alertas = ({ user, userRole }) => {
           <button key={tab.id} onClick={() => setFilter(tab.id)}
             className={`px-3.5 py-1.5 rounded-lg text-[12px] font-medium transition-all ${
               filter === tab.id
-                ? 'bg-[rgba(10,132,255,0.15)] text-[#0a84ff] border border-[rgba(10,132,255,0.3)]'
-                : 'text-[#8e8e93] hover:bg-[rgba(255,255,255,0.05)] border border-transparent'
+                ? 'border border-[#7aa2ff] bg-[rgba(59,130,246,0.08)] text-[#2563eb]'
+                : 'border border-[#d8e3f7] bg-white/78 text-[#6b7a99] hover:bg-[rgba(94,115,159,0.08)]'
             }`}>
             {tab.label}
           </button>
         ))}
       </div>
 
-      {/* Alert List */}
       <div className="space-y-2">
         {filtered.map((alert) => {
           const style = SEVERITY_STYLES[alert.severity] || SEVERITY_STYLES.info;
@@ -281,30 +276,30 @@ const Alertas = ({ user, userRole }) => {
             >
               <IconComp size={18} style={{ color: style.color }} className="flex-shrink-0 mt-0.5" />
               <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-semibold text-white">{alert.title}</p>
-                <p className="text-[12px] text-[#8e8e93] mt-0.5">{alert.message}</p>
+                <p className="text-[13px] font-semibold text-[#1f2a44]">{alert.title}</p>
+                <p className="mt-0.5 text-[12px] text-[#5f6f8d]">{alert.message}</p>
                 {alert.createdAt && (
-                  <p className="text-[10px] text-[#636366] mt-1">
+                  <p className="mt-1 text-[10px] text-[#93a0b6]">
                     {new Date(alert.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
                   </p>
                 )}
               </div>
               {!alert.auto && !alert.read && (
                 <button onClick={() => markAsRead(alert.id)}
-                  className="p-1.5 text-[#636366] hover:text-[#0a84ff] transition-colors flex-shrink-0">
+                  className="flex-shrink-0 rounded-xl p-1.5 text-[#7a879d] transition-colors hover:bg-[rgba(59,130,246,0.08)] hover:text-[#2563eb]">
                   <Eye size={14} />
                 </button>
               )}
               {alert.auto && (
-                <span className="text-[9px] text-[#636366] bg-[rgba(255,255,255,0.05)] px-1.5 py-0.5 rounded flex-shrink-0">AUTO</span>
+                <span className="flex-shrink-0 rounded-full bg-[rgba(107,122,153,0.12)] px-1.5 py-0.5 text-[9px] text-[#6b7a99]">AUTO</span>
               )}
             </div>
           );
         })}
         {filtered.length === 0 && (
           <div className="text-center py-16">
-            <Bell className="w-8 h-8 text-[#636366] mx-auto mb-3" />
-            <p className="text-sm text-[#636366]">No hay alertas</p>
+            <Bell className="mx-auto mb-3 h-8 w-8 text-[#93a0b6]" />
+            <p className="text-sm text-[#6b7a99]">No hay alertas</p>
           </div>
         )}
       </div>

@@ -121,7 +121,7 @@ html, body, #root {
 
 body {
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 12px;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
@@ -185,7 +185,7 @@ body {
 
 /* ===== SKELETON LOADING ===== */
 .skeleton {
-  background: linear-gradient(90deg, #2c2c2e 25%, #3a3a3c 50%, #2c2c2e 75%);
+  background: linear-gradient(90deg, rgba(232,239,251,0.9) 25%, rgba(246,249,255,0.98) 50%, rgba(232,239,251,0.9) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-sm);
@@ -215,7 +215,7 @@ textarea:focus-visible {
 .form-control {
   width: 100%;
   padding: 10px 14px;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-primary);
   background: var(--bg-tertiary);
   border: 0.5px solid var(--border-color-strong);
@@ -240,7 +240,7 @@ textarea:focus-visible {
   justify-content: center;
   gap: 6px;
   padding: 8px 16px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   border-radius: var(--radius-md);
   cursor: pointer;

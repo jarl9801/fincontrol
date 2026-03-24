@@ -32,8 +32,7 @@ const ConfiguracionUnified = ({ user, transactions }) => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* Tab Navigation */}
-      <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.06)] p-1.5">
+      <div className="rounded-[24px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(244,248,255,0.84))] p-2 shadow-[0_20px_48px_rgba(126,147,190,0.1)]">
         <div className="flex items-center gap-1 overflow-x-auto">
           {TABS.map(tab => {
             const Icon = tab.icon;
@@ -44,8 +43,8 @@ const ConfiguracionUnified = ({ user, transactions }) => {
                 onClick={() => setActiveTab(tab.key)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                   isActive
-                    ? 'bg-[rgba(10,132,255,0.12)] text-[#0a84ff] shadow-sm'
-                    : 'text-[#8e8e93] hover:text-white hover:bg-[rgba(255,255,255,0.06)]'
+                    ? 'border border-[rgba(90,141,221,0.28)] bg-[rgba(90,141,221,0.12)] text-[#3156d3] shadow-[0_10px_24px_rgba(90,141,221,0.12)]'
+                    : 'text-[#6b7a96] hover:text-[#101938] hover:bg-white'
                 }`}
               >
                 <Icon size={16} />
@@ -56,7 +55,6 @@ const ConfiguracionUnified = ({ user, transactions }) => {
         </div>
       </div>
 
-      {/* Tab Content */}
       {renderTab()}
     </div>
   );

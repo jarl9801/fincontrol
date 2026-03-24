@@ -34,10 +34,7 @@ export const useTransactions = (user) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
+    if (!user) return undefined;
 
     const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'transactions'));
 

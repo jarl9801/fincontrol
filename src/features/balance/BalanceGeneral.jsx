@@ -1,387 +1,217 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import {
-  Scale, Landmark, Wallet, Building2, TrendingUp,
-  CheckCircle2, XCircle, RefreshCw, ChevronRight
+  Building2,
+  ChevronRight,
+  Landmark,
+  Scale,
+  ShieldCheck,
+  Wallet,
 } from 'lucide-react';
+import { balances2025 } from '../../data/balances2025';
+import { useFinanceLedger } from '../../hooks/useFinanceLedger';
 import { formatCurrency } from '../../utils/formatters';
-import { useAllTransactions } from '../../hooks/useAllTransactions';
-import { useTransactions } from '../../hooks/useTransactions';
-import { useReceivables } from '../../hooks/useReceivables';
-import { usePayables } from '../../hooks/usePayables';
 
-// ─── Constants ───────────────────────────────────────────────────────────────
-
-const STARTING_BALANCE = 28450;
 const CAPITAL_SOCIAL = 25000;
 
-// ─── Section Card ────────────────────────────────────────────────────────────
+const SectionCard = ({ title, icon, accentColor, items, total, totalLabel }) => {
+  const IconComponent = icon;
 
-const SectionCard = ({ title, icon: Icon, iconColor, items, total, totalLabel, accentColor }) => (
-  <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.06)] overflow-hidden flex flex-col">
-    {/* Header */}
-    <div className="px-5 py-4 border-b border-[rgba(255,255,255,0.06)] flex items-center gap-3">
-      <div className="p-2 rounded-lg" style={{ background: `${accentColor}15` }}>
-        <Icon size={18} style={{ color: accentColor }} />
-      </div>
-      <h3 className="text-sm font-semibold text-[#c7c7cc]">{title}</h3>
-    </div>
-
-    {/* Line Items */}
-    <div className="flex-1 p-5 space-y-3">
-      {items.map((item, i) => (
-        <div key={i} className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <ChevronRight size={12} className="text-[#636366]" />
-            <span className="text-[13px] text-[#c7c7cc]">{item.label}</span>
-          </div>
-          <span className="text-[13px] font-medium text-[#e5e5ea] tabular-nums">
-            {formatCurrency(item.value)}
-          </span>
+  return (
+    <div className="overflow-hidden rounded-[26px] border border-[rgba(255,255,255,0.08)] bg-[rgba(10,11,15,0.92)] shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
+      <div className="flex items-center gap-3 border-b border-[rgba(255,255,255,0.06)] px-5 py-4">
+        <div className="rounded-xl p-2" style={{ backgroundColor: `${accentColor}1f`, color: accentColor }}>
+          <IconComponent size={18} />
         </div>
-      ))}
-    </div>
-
-    {/* Total */}
-    <div className="px-5 py-4 border-t border-[rgba(255,255,255,0.06)] bg-[#111111]">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-[#8e8e93] uppercase tracking-wider">
-          {totalLabel}
-        </span>
-        <span className="text-lg font-bold tabular-nums" style={{ color: accentColor }}>
-          {formatCurrency(total)}
-        </span>
+        <h3 className="text-sm font-semibold text-white">{title}</h3>
+      </div>
+      <div className="space-y-3 p-5">
+        {items.map((item) => (
+          <div key={item.label} className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <ChevronRight size={12} className="text-[#6e6e73]" />
+              <span className="text-sm text-[#c7c7cc]">{item.label}</span>
+            </div>
+            <span className={`text-sm font-semibold ${item.tone || 'text-white'}`}>{formatCurrency(item.value)}</span>
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center justify-between border-t border-[rgba(255,255,255,0.06)] bg-[#101115] px-5 py-4">
+        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6e6e73]">{totalLabel}</span>
+        <span className="text-lg font-semibold" style={{ color: accentColor }}>{formatCurrency(total)}</span>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
-// ─── Main Component ──────────────────────────────────────────────────────────
+const BalanceGeneral = ({ user }) => {
+  const ledger = useFinanceLedger(user);
 
-const BalanceGeneral = ({ user, userRole }) => {
-  const { allTransactions, loading: txLoading } = useAllTransactions(user);
-  const { transactions, loading: txRtLoading } = useTransactions(user);
-  const { receivables, loading: rxLoading } = useReceivables(user);
-  const { payables, loading: pxLoading } = usePayables(user);
-
-  const loading = txLoading || txRtLoading || rxLoading || pxLoading;
-
-  // ── Calculations ─────────────────────────────────────────────────────────
-
-  const balanceData = useMemo(() => {
-    if (loading) return null;
-
-    // Caja/Bancos: starting balance + net of non-pending transactions
-    const netCashFlow = allTransactions.reduce((acc, t) => {
-      if (t.status === 'pending') return acc;
-      const amount = parseFloat(t.amount) || 0;
-      return acc + (t.type === 'income' ? amount : -amount);
-    }, 0);
-    const cajaBancos = STARTING_BALANCE + netCashFlow;
-
-    // CXC: pending receivables collection
-    const cxcFromRx = receivables
-      .filter(r => r.status !== 'paid')
-      .reduce((acc, r) => acc + (parseFloat(r.pendingAmount) || 0), 0);
-
-    // CXC: pending income transactions (not already linked to receivables)
-    const linkedRxIds = new Set(
-      receivables.filter(r => r.linkedTransactionId).map(r => r.linkedTransactionId)
-    );
-    const cxcFromTx = transactions
-      .filter(t => t.type === 'income' && (t.status === 'pending' || t.status === 'partial') && !linkedRxIds.has(t.id))
-      .reduce((acc, t) => acc + ((parseFloat(t.amount) || 0) - (parseFloat(t.paidAmount) || 0)), 0);
-
-    const cxc = cxcFromRx + cxcFromTx;
-
-    // Total Activos
-    const totalActivos = cajaBancos + cxc;
-
-    // CXP: pending payables collection
-    const cxpFromPx = payables
-      .filter(p => p.status !== 'paid')
-      .reduce((acc, p) => acc + (parseFloat(p.pendingAmount) || 0), 0);
-
-    // CXP: pending expense transactions (not already linked to payables)
-    const linkedPxIds = new Set(
-      payables.filter(p => p.linkedTransactionId).map(p => p.linkedTransactionId)
-    );
-    const cxpFromTx = transactions
-      .filter(t => t.type === 'expense' && (t.status === 'pending' || t.status === 'partial') && !linkedPxIds.has(t.id))
-      .reduce((acc, t) => acc + ((parseFloat(t.amount) || 0) - (parseFloat(t.paidAmount) || 0)), 0);
-
-    const cxp = cxpFromPx + cxpFromTx;
-
-    // Total Pasivos
-    const totalPasivos = cxp;
-
-    // Utilidades Acumuladas: total income - total expenses
-    const totalIncome = allTransactions
-      .filter(t => t.type === 'income')
-      .reduce((acc, t) => acc + (parseFloat(t.amount) || 0), 0);
-    const totalExpenses = allTransactions
-      .filter(t => t.type === 'expense')
-      .reduce((acc, t) => acc + (parseFloat(t.amount) || 0), 0);
-    const utilidadesAcumuladas = totalIncome - totalExpenses;
-
-    // Total Patrimonio
-    const totalPatrimonio = CAPITAL_SOCIAL + utilidadesAcumuladas;
-
-    // Verification: Activos = Pasivos + Patrimonio
-    const diff = Math.abs(totalActivos - (totalPasivos + totalPatrimonio));
-    const isBalanced = diff < 0.01;
+  const balance = useMemo(() => {
+    const cash = ledger.summary.currentCash;
+    const taxReserve = ledger.bankAccount.taxReserveBalance || 0;
+    const receivables = ledger.receivables.reduce((sum, entry) => sum + entry.openAmount, 0);
+    const payables = ledger.payables.reduce((sum, entry) => sum + entry.openAmount, 0);
+    const assets = cash + taxReserve + receivables;
+    const liabilities = payables;
+    const equity = assets - liabilities;
+    const retainedResult = equity - CAPITAL_SOCIAL;
 
     return {
-      cajaBancos,
-      cxc,
-      totalActivos,
-      cxp,
-      totalPasivos,
-      capitalSocial: CAPITAL_SOCIAL,
-      utilidadesAcumuladas,
-      totalPatrimonio,
-      isBalanced,
-      diff,
+      cash,
+      taxReserve,
+      receivables,
+      payables,
+      assets,
+      liabilities,
+      capital: CAPITAL_SOCIAL,
+      retainedResult,
+      equity,
+      netWorkingCapital: cash + receivables - payables,
     };
-  }, [allTransactions, transactions, receivables, payables, loading]);
+  }, [ledger]);
 
-  // ── Loading State ────────────────────────────────────────────────────────
-
-  if (loading) {
+  if (ledger.loading) {
     return (
-      <div className="flex items-center justify-center py-24">
+      <div className="flex items-center justify-center py-28">
         <div className="flex flex-col items-center gap-3">
-          <RefreshCw className="w-7 h-7 text-[#30d158] animate-spin" />
-          <p className="text-[#8e8e93] text-sm">Cargando balance general...</p>
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#64d2ff] border-t-transparent" />
+          <p className="text-sm text-[#8e8e93]">Armando balance operativo...</p>
         </div>
-      </div>
-    );
-  }
-
-  if (!balanceData) {
-    return (
-      <div className="flex items-center justify-center py-24">
-        <p className="text-[#636366] text-sm">No hay datos disponibles</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 animate-fadeIn">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-        <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Balance General</h2>
-          <p className="text-[13px] text-[#636366] mt-0.5">
-            Estado de situaci&oacute;n financiera &mdash; {new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}
-          </p>
+    <div className="space-y-6 pb-12">
+      <section className="rounded-[34px] border border-[rgba(255,255,255,0.08)] bg-[radial-gradient(circle_at_top_left,rgba(100,210,255,0.18),transparent_28%),linear-gradient(160deg,#0c1018_0%,#090b10_100%)] px-6 py-7 shadow-[0_40px_120px_rgba(0,0,0,0.42)]">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div>
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8fdcff]">Balance general</p>
+            <h2 className="text-[32px] font-semibold tracking-tight text-white">Posición financiera operativa a partir de caja, CXC, CXP y saldos de apertura.</h2>
+            <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[#a7a7ad]">
+              Esta vista es gerencial: parte de tesorería real y documentos abiertos. No intenta reemplazar un ERP contable completo.
+            </p>
+          </div>
+          <div className="rounded-[22px] border border-[rgba(100,210,255,0.18)] bg-[rgba(100,210,255,0.1)] px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8fdcff]">Fecha de corte</p>
+            <p className="mt-1 text-sm font-semibold text-white">
+              {new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}
+            </p>
+          </div>
         </div>
-        {/* Verification Badge */}
-        <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border ${
-          balanceData.isBalanced
-            ? 'bg-[rgba(48,209,88,0.08)] border-[rgba(48,209,88,0.2)]'
-            : 'bg-[rgba(255,69,58,0.08)] border-[rgba(255,69,58,0.2)]'
-        }`}>
-          {balanceData.isBalanced ? (
-            <>
-              <CheckCircle2 size={16} className="text-[#30d158]" />
-              <span className="text-xs font-semibold text-[#30d158]">Ecuaci&oacute;n Contable Verificada</span>
-            </>
-          ) : (
-            <>
-              <XCircle size={16} className="text-[#ff453a]" />
-              <span className="text-xs font-semibold text-[#ff453a]">
-                Descuadre: {formatCurrency(balanceData.diff)}
-              </span>
-            </>
-          )}
-        </div>
-      </div>
+      </section>
 
-      {/* Accounting Equation Summary */}
-      <div className="bg-[rgba(28,28,30,0.8)] rounded-xl p-5 border border-[rgba(255,255,255,0.06)]" style={{ backdropFilter: 'blur(40px)' }}>
-        <div className="flex items-center justify-center gap-4 flex-wrap">
-          <div className="text-center">
-            <p className="text-[10px] font-semibold text-[#8e8e93] uppercase tracking-wider mb-1">Activos</p>
-            <p className="text-xl font-bold text-[#0a84ff]">{formatCurrency(balanceData.totalActivos)}</p>
+      <div className="rounded-[28px] border border-[rgba(255,255,255,0.08)] bg-[rgba(10,11,15,0.92)] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-center">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6e6e73]">Activos</p>
+            <p className="mt-2 text-2xl font-semibold text-[#64d2ff]">{formatCurrency(balance.assets)}</p>
           </div>
-          <span className="text-lg font-bold text-[#636366]">=</span>
-          <div className="text-center">
-            <p className="text-[10px] font-semibold text-[#8e8e93] uppercase tracking-wider mb-1">Pasivos</p>
-            <p className="text-xl font-bold text-[#ff453a]">{formatCurrency(balanceData.totalPasivos)}</p>
+          <span className="text-xl font-bold text-[#6e6e73]">=</span>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6e6e73]">Pasivos</p>
+            <p className="mt-2 text-2xl font-semibold text-[#ff453a]">{formatCurrency(balance.liabilities)}</p>
           </div>
-          <span className="text-lg font-bold text-[#636366]">+</span>
-          <div className="text-center">
-            <p className="text-[10px] font-semibold text-[#8e8e93] uppercase tracking-wider mb-1">Patrimonio</p>
-            <p className="text-xl font-bold text-[#30d158]">{formatCurrency(balanceData.totalPatrimonio)}</p>
+          <span className="text-xl font-bold text-[#6e6e73]">+</span>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6e6e73]">Patrimonio</p>
+            <p className="mt-2 text-2xl font-semibold text-[#30d158]">{formatCurrency(balance.equity)}</p>
           </div>
         </div>
       </div>
 
-      {/* 3-Column Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Activos */}
+      <div className="grid gap-4 lg:grid-cols-3">
         <SectionCard
           title="Activos"
           icon={Wallet}
-          iconColor="#0a84ff"
-          accentColor="#0a84ff"
+          accentColor="#64d2ff"
           items={[
-            { label: 'Caja / Bancos', value: balanceData.cajaBancos },
-            { label: 'Cuentas por Cobrar (CXC)', value: balanceData.cxc },
+            { label: 'Caja / bancos', value: balance.cash },
+            { label: 'Reserva IVA 2025', value: balance.taxReserve },
+            { label: 'Cuentas por cobrar abiertas', value: balance.receivables },
           ]}
-          total={balanceData.totalActivos}
-          totalLabel="Total Activos"
+          total={balance.assets}
+          totalLabel="Total activos"
         />
-
-        {/* Pasivos */}
         <SectionCard
           title="Pasivos"
           icon={Landmark}
-          iconColor="#ff453a"
           accentColor="#ff453a"
           items={[
-            { label: 'Cuentas por Pagar (CXP)', value: balanceData.cxp },
+            { label: 'Cuentas por pagar abiertas', value: balance.payables },
           ]}
-          total={balanceData.totalPasivos}
-          totalLabel="Total Pasivos"
+          total={balance.liabilities}
+          totalLabel="Total pasivos"
         />
-
-        {/* Patrimonio */}
         <SectionCard
           title="Patrimonio"
           icon={Building2}
-          iconColor="#30d158"
           accentColor="#30d158"
           items={[
-            { label: 'Capital Social', value: balanceData.capitalSocial },
-            { label: 'Utilidades Acumuladas', value: balanceData.utilidadesAcumuladas },
+            { label: 'Capital social', value: balance.capital },
+            { label: 'Resultado operativo acumulado', value: balance.retainedResult, tone: balance.retainedResult >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]' },
           ]}
-          total={balanceData.totalPatrimonio}
-          totalLabel="Total Patrimonio"
+          total={balance.equity}
+          totalLabel="Total patrimonio"
         />
       </div>
 
-      {/* Detail Breakdown Table */}
-      <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.08)] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.06)] flex items-center gap-2">
-          <Scale size={16} className="text-[#8e8e93]" />
-          <h3 className="text-sm font-semibold text-[#c7c7cc]">Detalle del Balance</h3>
+      <div className="overflow-hidden rounded-[28px] border border-[rgba(255,255,255,0.08)] bg-[rgba(10,11,15,0.92)] shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
+        <div className="border-b border-[rgba(255,255,255,0.06)] px-5 py-4">
+          <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
+            <Scale size={18} className="text-[#8fdcff]" />
+            Detalle del balance
+          </h3>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[720px] text-sm">
             <thead>
-              <tr className="bg-[#111111] text-[#636366] text-xs uppercase tracking-wider">
-                <th className="text-left px-6 py-3 font-semibold">Cuenta</th>
-                <th className="text-right px-6 py-3 font-semibold">Monto</th>
-                <th className="text-right px-6 py-3 font-semibold">% del Total</th>
+              <tr className="border-b border-[rgba(255,255,255,0.06)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6e6e73]">
+                <th className="px-6 py-3 text-left">Cuenta</th>
+                <th className="px-6 py-3 text-right">Monto</th>
+                <th className="px-6 py-3 text-right">% activos</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[rgba(255,255,255,0.06)]">
-              {/* Activos Section */}
-              <tr className="bg-[rgba(10,132,255,0.04)]">
-                <td colSpan={3} className="px-6 py-2 text-xs font-bold text-[#0a84ff] uppercase tracking-wider">
-                  Activos
-                </td>
-              </tr>
-              <tr className="hover:bg-[#111111] transition-colors">
-                <td className="px-6 py-3 text-[#c7c7cc] pl-10">Caja / Bancos</td>
-                <td className="px-6 py-3 text-right text-[#e5e5ea] font-medium tabular-nums">
-                  {formatCurrency(balanceData.cajaBancos)}
-                </td>
-                <td className="px-6 py-3 text-right text-[#8e8e93] tabular-nums">
-                  {balanceData.totalActivos > 0 ? ((balanceData.cajaBancos / balanceData.totalActivos) * 100).toFixed(1) : '0.0'}%
-                </td>
-              </tr>
-              <tr className="hover:bg-[#111111] transition-colors">
-                <td className="px-6 py-3 text-[#c7c7cc] pl-10">Cuentas por Cobrar</td>
-                <td className="px-6 py-3 text-right text-[#e5e5ea] font-medium tabular-nums">
-                  {formatCurrency(balanceData.cxc)}
-                </td>
-                <td className="px-6 py-3 text-right text-[#8e8e93] tabular-nums">
-                  {balanceData.totalActivos > 0 ? ((balanceData.cxc / balanceData.totalActivos) * 100).toFixed(1) : '0.0'}%
-                </td>
-              </tr>
-              <tr className="border-t-2 border-[rgba(10,132,255,0.2)] bg-[rgba(10,132,255,0.04)]">
-                <td className="px-6 py-3 font-bold text-[#0a84ff]">Total Activos</td>
-                <td className="px-6 py-3 text-right font-bold text-[#0a84ff] tabular-nums">
-                  {formatCurrency(balanceData.totalActivos)}
-                </td>
-                <td className="px-6 py-3 text-right font-bold text-[#0a84ff]">100.0%</td>
-              </tr>
-
-              {/* Pasivos Section */}
-              <tr className="bg-[rgba(255,69,58,0.04)]">
-                <td colSpan={3} className="px-6 py-2 text-xs font-bold text-[#ff453a] uppercase tracking-wider">
-                  Pasivos
-                </td>
-              </tr>
-              <tr className="hover:bg-[#111111] transition-colors">
-                <td className="px-6 py-3 text-[#c7c7cc] pl-10">Cuentas por Pagar</td>
-                <td className="px-6 py-3 text-right text-[#e5e5ea] font-medium tabular-nums">
-                  {formatCurrency(balanceData.cxp)}
-                </td>
-                <td className="px-6 py-3 text-right text-[#8e8e93] tabular-nums">
-                  {balanceData.totalActivos > 0 ? ((balanceData.cxp / balanceData.totalActivos) * 100).toFixed(1) : '0.0'}%
-                </td>
-              </tr>
-              <tr className="border-t-2 border-[rgba(255,69,58,0.2)] bg-[rgba(255,69,58,0.04)]">
-                <td className="px-6 py-3 font-bold text-[#ff453a]">Total Pasivos</td>
-                <td className="px-6 py-3 text-right font-bold text-[#ff453a] tabular-nums">
-                  {formatCurrency(balanceData.totalPasivos)}
-                </td>
-                <td className="px-6 py-3 text-right font-bold text-[#ff453a] tabular-nums">
-                  {balanceData.totalActivos > 0 ? ((balanceData.totalPasivos / balanceData.totalActivos) * 100).toFixed(1) : '0.0'}%
-                </td>
-              </tr>
-
-              {/* Patrimonio Section */}
-              <tr className="bg-[rgba(48,209,88,0.04)]">
-                <td colSpan={3} className="px-6 py-2 text-xs font-bold text-[#30d158] uppercase tracking-wider">
-                  Patrimonio
-                </td>
-              </tr>
-              <tr className="hover:bg-[#111111] transition-colors">
-                <td className="px-6 py-3 text-[#c7c7cc] pl-10">Capital Social</td>
-                <td className="px-6 py-3 text-right text-[#e5e5ea] font-medium tabular-nums">
-                  {formatCurrency(balanceData.capitalSocial)}
-                </td>
-                <td className="px-6 py-3 text-right text-[#8e8e93] tabular-nums">
-                  {balanceData.totalActivos > 0 ? ((balanceData.capitalSocial / balanceData.totalActivos) * 100).toFixed(1) : '0.0'}%
-                </td>
-              </tr>
-              <tr className="hover:bg-[#111111] transition-colors">
-                <td className="px-6 py-3 text-[#c7c7cc] pl-10">Utilidades Acumuladas</td>
-                <td className={`px-6 py-3 text-right font-medium tabular-nums ${balanceData.utilidadesAcumuladas >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
-                  {balanceData.utilidadesAcumuladas >= 0 ? '+' : ''}{formatCurrency(balanceData.utilidadesAcumuladas)}
-                </td>
-                <td className="px-6 py-3 text-right text-[#8e8e93] tabular-nums">
-                  {balanceData.totalActivos > 0 ? ((Math.abs(balanceData.utilidadesAcumuladas) / balanceData.totalActivos) * 100).toFixed(1) : '0.0'}%
-                </td>
-              </tr>
-              <tr className="border-t-2 border-[rgba(48,209,88,0.2)] bg-[rgba(48,209,88,0.04)]">
-                <td className="px-6 py-3 font-bold text-[#30d158]">Total Patrimonio</td>
-                <td className="px-6 py-3 text-right font-bold text-[#30d158] tabular-nums">
-                  {formatCurrency(balanceData.totalPatrimonio)}
-                </td>
-                <td className="px-6 py-3 text-right font-bold text-[#30d158] tabular-nums">
-                  {balanceData.totalActivos > 0 ? ((balanceData.totalPatrimonio / balanceData.totalActivos) * 100).toFixed(1) : '0.0'}%
-                </td>
-              </tr>
+            <tbody className="divide-y divide-[rgba(255,255,255,0.04)]">
+              {[
+                { label: 'Caja / bancos', value: balance.cash, tone: 'text-[#64d2ff]' },
+                { label: 'Reserva IVA 2025', value: balance.taxReserve, tone: 'text-[#64d2ff]' },
+                { label: 'CXC abiertas', value: balance.receivables, tone: 'text-[#64d2ff]' },
+                { label: 'CXP abiertas', value: balance.payables, tone: 'text-[#ff453a]' },
+                { label: 'Capital social', value: balance.capital, tone: 'text-[#30d158]' },
+                { label: 'Resultado operativo acumulado', value: balance.retainedResult, tone: balance.retainedResult >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]' },
+              ].map((row) => (
+                <tr key={row.label} className="hover:bg-[rgba(255,255,255,0.03)]">
+                  <td className="px-6 py-3 text-[#d6d6db]">{row.label}</td>
+                  <td className={`px-6 py-3 text-right font-semibold ${row.tone}`}>{formatCurrency(row.value)}</td>
+                  <td className="px-6 py-3 text-right text-[#8e8e93]">
+                    {balance.assets > 0 ? `${((Math.abs(row.value) / balance.assets) * 100).toFixed(1)}%` : '0.0%'}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Info Note */}
-      <div className="bg-[rgba(10,132,255,0.07)] border border-[rgba(10,132,255,0.2)] rounded-xl p-4">
-        <div className="flex items-start gap-3">
-          <Scale size={16} className="text-[#0a84ff] mt-0.5 flex-shrink-0" />
-          <div>
-            <p className="text-sm font-medium text-[#0a84ff]">Notas al Balance</p>
-            <p className="text-xs text-[#636366] mt-1">
-              Capital Social: {formatCurrency(CAPITAL_SOCIAL)} (configurable). Saldo inicial Caja/Bancos: {formatCurrency(STARTING_BALANCE)} (dic 2025).
-              Las utilidades acumuladas reflejan el resultado neto de todas las operaciones registradas.
-            </p>
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(10,11,15,0.92)] p-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6e6e73]">Capital de trabajo</p>
+          <p className={`mt-3 text-[30px] font-semibold ${balance.netWorkingCapital >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
+            {formatCurrency(balance.netWorkingCapital)}
+          </p>
+          <p className="mt-2 text-sm text-[#8e8e93]">Caja más CXC menos CXP abiertas.</p>
+        </div>
+        <div className="rounded-[24px] border border-[rgba(100,210,255,0.18)] bg-[rgba(100,210,255,0.08)] p-5">
+          <div className="flex items-start gap-3">
+            <ShieldCheck size={18} className="mt-0.5 text-[#8fdcff]" />
+            <div>
+              <p className="text-sm font-semibold text-[#8fdcff]">Notas del modelo</p>
+              <p className="mt-2 text-sm leading-6 text-[#9fc2ff]">
+                Apertura banco 2025: {formatCurrency(balances2025.bancoDic2025)}. Reserva IVA 2025: {formatCurrency(balances2025.ivaDic2025)}.
+                El patrimonio se deriva desde activos y pasivos del ledger operativo, no desde asientos contables completos.
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,99 +1,90 @@
-import React, { useState } from 'react';
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { Suspense, lazy, useState } from 'react';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Landmark, Loader2 } from 'lucide-react';
 import ErrorBoundary from './components/ui/ErrorBoundary';
-import { useAuth } from './hooks/useAuth';
-import { useTransactions } from './hooks/useTransactions';
-import { useAllTransactions } from './hooks/useAllTransactions';
-import { useTransactionActions } from './hooks/useTransactionActions';
-import { useFilters } from './hooks/useFilters';
-import { useCategories } from './hooks/useCategories';
-import { useCostCenters } from './hooks/useCostCenters';
-import { useBankAccount } from './hooks/useBankAccount';
-import { ToastProvider, useToast } from './contexts/ToastContext';
-import Login from './features/auth/Login';
 import Sidebar from './components/layout/Sidebar';
 import MobileMenu, { MobileMenuButton } from './components/layout/MobileMenu';
-// Sprint 1
-import Dashboard from './features/dashboard/Dashboard';
-import Ingresos from './features/ingresos/Ingresos';
-import Gastos from './features/gastos/Gastos';
-import TransactionList from './features/transactions/TransactionList';
-import CashFlow from './features/cashflow/CashFlow';
-import ReportesUnified from './features/reportes/ReportesUnified';
-import ConfiguracionUnified from './features/configuracion/ConfiguracionUnified';
-import CXCIndependiente from './features/cxc/CXCIndependiente';
-import CXPIndependiente from './features/cxp/CXPIndependiente';
-import BudgetVsActual from './features/presupuesto/BudgetVsActual';
-// Sprint 2
-import Conciliacion from './features/conciliacion/Conciliacion';
-import Alertas from './features/alertas/Alertas';
-import AuditLog from './features/auditoria/AuditLog';
-// Sprint 3
-import Adjuntos from './features/adjuntos/Adjuntos';
-import Recurrencia from './features/recurrencia/Recurrencia';
-import ImportExport from './features/importexport/ImportExport';
-// Sprint 4
-import BalanceGeneral from './features/balance/BalanceGeneral';
-import ProyectoDashboard from './features/proyectos/ProyectoDashboard';
-import ProyeccionCashflow from './features/cashflow/ProyeccionCashflow';
-// Sprint 5
-import MultiMoneda from './features/multimoneda/MultiMoneda';
-import RolesManager from './features/roles/RolesManager';
-import BackupManager from './features/backup/BackupManager';
-import UserProfile from './features/perfil/UserProfile';
-
-import TransactionFormModal from './components/ui/TransactionFormModal';
+import { ToastProvider, useToast } from './contexts/ToastContext';
+import Login from './features/auth/Login';
+import { useAuth } from './hooks/useAuth';
+import { useFilters } from './hooks/useFilters';
+import { useTransactions } from './hooks/useTransactions';
+import { useTreasuryMetrics } from './hooks/useTreasuryMetrics';
 import { formatCurrency } from './utils/formatters';
-import { Loader2, Landmark } from 'lucide-react';
+
+const Dashboard = lazy(() => import('./features/dashboard/Dashboard'));
+const Ingresos = lazy(() => import('./features/ingresos/Ingresos'));
+const Gastos = lazy(() => import('./features/gastos/Gastos'));
+const TransactionList = lazy(() => import('./features/transactions/TransactionList'));
+const CashFlow = lazy(() => import('./features/cashflow/CashFlow'));
+const ReportesUnified = lazy(() => import('./features/reportes/ReportesUnified'));
+const ConfiguracionUnified = lazy(() => import('./features/configuracion/ConfiguracionUnified'));
+const CXCIndependiente = lazy(() => import('./features/cxc/CXCIndependiente'));
+const CXPIndependiente = lazy(() => import('./features/cxp/CXPIndependiente'));
+const BudgetVsActual = lazy(() => import('./features/presupuesto/BudgetVsActual'));
+const Conciliacion = lazy(() => import('./features/conciliacion/Conciliacion'));
+const Alertas = lazy(() => import('./features/alertas/Alertas'));
+const AuditLog = lazy(() => import('./features/auditoria/AuditLog'));
+const Adjuntos = lazy(() => import('./features/adjuntos/Adjuntos'));
+const Recurrencia = lazy(() => import('./features/recurrencia/Recurrencia'));
+const ImportExport = lazy(() => import('./features/importexport/ImportExport'));
+const BalanceGeneral = lazy(() => import('./features/balance/BalanceGeneral'));
+const ProyectoDashboard = lazy(() => import('./features/proyectos/ProyectoDashboard'));
+const ProyeccionCashflow = lazy(() => import('./features/cashflow/ProyeccionCashflow'));
+const MultiMoneda = lazy(() => import('./features/multimoneda/MultiMoneda'));
+const RolesManager = lazy(() => import('./features/roles/RolesManager'));
+const BackupManager = lazy(() => import('./features/backup/BackupManager'));
+const UserProfile = lazy(() => import('./features/perfil/UserProfile'));
+const FinanceActionLauncher = lazy(() => import('./components/finance/FinanceActionLauncher'));
 
 const VIEW_TITLES = {
-  '/': 'Dashboard',
+  '/': 'Inicio',
   '/ingresos': 'Ingresos',
   '/gastos': 'Gastos',
   '/transactions': 'Transacciones',
-  '/cashflow': 'Flujo de Caja',
+  '/cashflow': 'Tesorería',
+  '/tesoreria': 'Tesorería',
   '/reportes': 'Reportes',
   '/configuracion': 'Configuración',
   '/cxc': 'Cuentas por Cobrar',
   '/cxp': 'Cuentas por Pagar',
-  '/presupuesto': 'Presupuesto vs Real',
+  '/presupuesto': 'Presupuesto',
   '/conciliacion': 'Conciliación Bancaria',
-  '/alertas': 'Centro de Alertas',
-  '/auditoria': 'Registro de Auditoría',
-  '/adjuntos': 'Documentos Adjuntos',
-  '/recurrencia': 'Transacciones Recurrentes',
-  '/import-export': 'Import / Export',
+  '/alertas': 'Alertas',
+  '/auditoria': 'Auditoría',
+  '/adjuntos': 'Adjuntos',
+  '/recurrencia': 'Recurrentes',
+  '/import-export': 'Importación y Exportación',
   '/balance': 'Balance General',
-  '/proyectos': 'Dashboard por Proyecto',
-  '/proyeccion': 'Proyección de Cashflow',
-  '/multi-moneda': 'Multi-Moneda',
-  '/roles': 'Roles y Permisos',
-  '/backup': 'Backup y Restauración',
-  '/perfil': 'Mi Perfil',
+  '/proyectos': 'Proyectos',
+  '/proyeccion': 'Proyección',
+  '/multi-moneda': 'Multi-moneda',
+  '/roles': 'Roles',
+  '/backup': 'Backup',
+  '/perfil': 'Perfil',
 };
 
-// Skeleton Loading Component
 const SkeletonCard = () => (
-  <div className="bg-[rgba(28,28,30,0.8)] p-5 rounded-xl border border-[rgba(255,255,255,0.06)]">
+  <div className="rounded-[26px] border border-[rgba(196,214,255,0.38)] bg-[rgba(255,255,255,0.72)] p-4 shadow-[0_18px_46px_rgba(124,148,191,0.14)] backdrop-blur-xl">
     <div className="flex items-center justify-between">
       <div className="flex-1">
-        <div className="skeleton h-3 w-20 mb-2"></div>
-        <div className="skeleton h-7 w-28"></div>
+        <div className="skeleton mb-2 h-3 w-20" />
+        <div className="skeleton h-6 w-24" />
       </div>
-      <div className="skeleton w-10 h-10 rounded-lg"></div>
+      <div className="skeleton h-10 w-10 rounded-lg" />
     </div>
   </div>
 );
 
 const LoadingState = () => (
   <div className="space-y-6 animate-fadeIn">
-    <div className="flex items-center justify-center py-12">
+    <div className="flex items-center justify-center py-16">
       <div className="flex flex-col items-center gap-4">
-        <Loader2 className="w-7 h-7 text-[#30d158] animate-spin" />
-        <p className="text-[#8e8e93] text-sm">Cargando datos financieros...</p>
+        <Loader2 className="h-6 w-6 animate-spin text-[#4d74ff]" />
+        <p className="text-[12px] text-[#5f7091]">Sincronizando control financiero...</p>
       </div>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       <SkeletonCard />
       <SkeletonCard />
       <SkeletonCard />
@@ -102,142 +93,105 @@ const LoadingState = () => (
 );
 
 function AppContent() {
+  useToast();
   const { user, userRole, hasPermission, loading: authLoading } = useAuth();
   const { transactions, loading: transactionsLoading } = useTransactions(user);
-  const { allTransactions, loading: allTxLoading } = useAllTransactions(user);
-  const { createTransaction } = useTransactionActions(user);
-  const { expenseCategories, incomeCategories } = useCategories(user);
-  const { costCenters } = useCostCenters(user);
-  const { bankAccount, calculateRealBalance } = useBankAccount(user);
+  const treasury = useTreasuryMetrics({ user });
   const {
     searchTerm,
     setSearchTerm,
-    filters,
-    setFilters,
-    applyFilters,
-    filteredTransactions
+    filteredTransactions,
   } = useFilters(transactions);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalDefaultType, setModalDefaultType] = useState(null);
+  const [isActionLauncherOpen, setIsActionLauncherOpen] = useState(false);
+  const [launcherDefaultAction, setLauncherDefaultAction] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  let toastCtx;
-  try { toastCtx = useToast(); } catch { toastCtx = null; }
-  const showToast = toastCtx?.showToast;
-
   const loading = authLoading || transactionsLoading;
-
-  const allTxSource = allTransactions && allTransactions.length > 0 ? allTransactions : [];
-  const bankBalanceData = bankAccount ? calculateRealBalance(allTxSource) : null;
+  const currentTitle = VIEW_TITLES[location.pathname] || 'Inicio';
 
   if (!user) {
     return <Login />;
   }
 
-  // Bridge: setView for backward compatibility with Dashboard
   const setView = (viewId) => {
     const pathMap = {
       dashboard: '/',
-      ingresos: '/ingresos',
-      gastos: '/gastos',
-      transactions: '/transactions',
       cashflow: '/cashflow',
-      reportes: '/reportes',
-      configuracion: '/configuracion',
+      treasury: '/cashflow',
       cxc: '/cxc',
       cxp: '/cxp',
+      reportes: '/reportes',
       presupuesto: '/presupuesto',
       conciliacion: '/conciliacion',
-      alertas: '/alertas',
-      auditoria: '/auditoria',
-      adjuntos: '/adjuntos',
-      recurrencia: '/recurrencia',
-      'import-export': '/import-export',
-      balance: '/balance',
       proyectos: '/proyectos',
-      proyeccion: '/proyeccion',
-      'multi-moneda': '/multi-moneda',
-      roles: '/roles',
-      backup: '/backup',
-      perfil: '/perfil',
+      configuracion: '/configuracion',
     };
     navigate(pathMap[viewId] || '/');
   };
 
-  const handleNewTransaction = (defaultType) => {
-    setModalDefaultType(defaultType || null);
-    setIsModalOpen(true);
+  const handleOpenLauncher = (defaultAction = null) => {
+    setLauncherDefaultAction(defaultAction);
+    setIsActionLauncherOpen(true);
   };
 
-  const handleTransactionSubmit = async (formData) => {
-    const result = await createTransaction(formData);
-    if (result.success) {
-      showToast?.('Transacción creada exitosamente ✅');
-    } else {
-      showToast?.('Error al crear la transacción', 'error');
-    }
-    setIsModalOpen(false);
-    setModalDefaultType(null);
-  };
-
-  const currentTitle = VIEW_TITLES[location.pathname] || 'Dashboard';
-
-  const commonProps = {
-    transactions: filteredTransactions,
-    userRole,
-    user,
-    searchTerm,
-    setSearchTerm,
-    filters,
-    setFilters,
-    applyFilters
-  };
+  const bankBalanceData = treasury.loading
+    ? null
+    : {
+        currentBalance: treasury.currentCash,
+        creditLimit: treasury.bankAccount.creditLineLimit,
+        creditUsed: treasury.summary.creditUsed,
+      };
 
   return (
-    <div className="flex h-full bg-black font-sans text-white overflow-hidden">
+    <div className="flex h-full flex-col overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(180,204,238,0.38),transparent_24%),radial-gradient(circle_at_top_right,rgba(233,240,250,0.5),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(216,225,241,0.72),transparent_28%),linear-gradient(180deg,#edf2f8_0%,#f3f6fa_42%,#edf1f6_100%)] font-sans text-[12px] text-[#16223f]">
       <Sidebar
         user={user}
         userRole={userRole}
         hasPermission={hasPermission}
-        onNewTransaction={handleNewTransaction}
+        onNewTransaction={handleOpenLauncher}
         bankBalanceData={bankBalanceData}
-        bankAccount={bankAccount}
+        bankAccount={treasury.bankAccount}
       />
 
-      <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
-        {/* Top Header */}
-        <div className="flex-shrink-0 bg-[rgba(28,28,30,0.9)] backdrop-blur-xl border-b border-[rgba(255,255,255,0.06)] px-4 md:px-8 py-3 z-30">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <div className="z-20 flex-shrink-0 px-4 pb-0 pt-4 md:px-8 md:pt-6">
+          <div className="mx-auto flex max-w-[1280px] items-center justify-between rounded-[30px] border border-[rgba(205,219,243,0.8)] bg-[linear-gradient(135deg,rgba(255,255,255,0.88),rgba(241,248,255,0.84))] px-5 py-4 shadow-[0_24px_70px_rgba(126,147,190,0.12)] backdrop-blur-2xl md:px-7">
             <div className="flex items-center gap-3">
               <MobileMenuButton onClick={() => setIsMobileMenuOpen(true)} />
               <div>
-                <h2 className="text-[17px] md:text-[19px] font-semibold text-white tracking-tight">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#5a8ddd]">Control ejecutivo</p>
+                <h2 className="mt-1.5 text-[22px] font-semibold tracking-tight text-[#101938] md:text-[28px]">
                   {currentTitle}
                 </h2>
-                <p className="text-[11px] text-[#636366] hidden md:block mt-0.5">
-                  {new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                <p className="mt-1.5 hidden text-[12px] text-[#5f7091] md:block">
+                  {new Date().toLocaleDateString('es-ES', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
                 </p>
               </div>
             </div>
 
             {!loading && (
-              <div className="hidden md:flex items-center gap-3">
+              <div className="hidden items-center gap-3 md:flex">
                 {bankBalanceData && (
-                  <div className="flex items-center gap-2 px-2.5 py-1.5 bg-[rgba(255,255,255,0.04)] rounded-lg border border-[rgba(255,255,255,0.04)]">
-                    <Landmark size={12} className={bankBalanceData.currentBalance >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'} />
-                    <span className={`text-[12px] font-semibold tabular-nums ${bankBalanceData.currentBalance >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
+                  <div className="flex items-center gap-2 rounded-full border border-[rgba(198,211,236,0.9)] bg-white/72 px-3.5 py-2">
+                    <Landmark size={12} className={bankBalanceData.currentBalance >= 0 ? 'text-[#0f8f4b]' : 'text-[#d1463b]'} />
+                    <span className={`text-[12px] font-semibold tabular-nums ${bankBalanceData.currentBalance >= 0 ? 'text-[#0f8f4b]' : 'text-[#d1463b]'}`}>
                       €{formatCurrency(bankBalanceData.currentBalance)}
                     </span>
                   </div>
                 )}
-                <div className="flex items-center gap-2 px-2.5 py-1.5 bg-[rgba(255,255,255,0.04)] rounded-lg border border-[rgba(255,255,255,0.04)]">
-                  <div className="w-1.5 h-1.5 bg-[#30d158] rounded-full animate-pulse"></div>
-                  <span className="text-[11px] text-[#8e8e93]">
-                    {filteredTransactions.length} transacciones
+                <div className="flex items-center gap-2 rounded-full border border-[rgba(198,211,236,0.9)] bg-white/72 px-3.5 py-2">
+                  <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#4d74ff]" />
+                  <span className="text-[11px] text-[#5f7091]">
+                    {transactions.length} registros históricos visibles
                   </span>
                 </div>
               </div>
@@ -245,73 +199,86 @@ function AppContent() {
           </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-8">
-          <div className="max-w-7xl mx-auto">
-            {loading ? <LoadingState /> : (
-              <Routes>
-                {/* Sprint 1 */}
-                <Route path="/" element={
-                  hasPermission('dashboard') ? (
-                    <Dashboard transactions={filteredTransactions} allTransactions={allTransactions} user={user} setView={setView} />
-                  ) : <Navigate to="/transactions" replace />
-                } />
-                <Route path="/ingresos" element={<Ingresos transactions={filteredTransactions} allTransactions={allTransactions} userRole={userRole} user={user} onNewTransaction={handleNewTransaction} />} />
-                <Route path="/gastos" element={<Gastos transactions={filteredTransactions} allTransactions={allTransactions} userRole={userRole} user={user} onNewTransaction={handleNewTransaction} />} />
-                <Route path="/transactions" element={<TransactionList {...commonProps} />} />
-                <Route path="/cashflow" element={<CashFlow user={user} />} />
-                <Route path="/reportes" element={<ReportesUnified transactions={filteredTransactions} allTransactions={allTransactions} />} />
-                <Route path="/configuracion" element={<ConfiguracionUnified user={user} transactions={filteredTransactions} />} />
-                <Route path="/cxc" element={<CXCIndependiente user={user} userRole={userRole} />} />
-                <Route path="/cxp" element={<CXPIndependiente user={user} userRole={userRole} />} />
-                <Route path="/presupuesto" element={<BudgetVsActual user={user} userRole={userRole} />} />
-                {/* Sprint 2 */}
-                <Route path="/conciliacion" element={<Conciliacion user={user} userRole={userRole} />} />
-                <Route path="/alertas" element={<Alertas user={user} userRole={userRole} />} />
-                <Route path="/auditoria" element={<AuditLog user={user} userRole={userRole} />} />
-                {/* Sprint 3 */}
-                <Route path="/adjuntos" element={<Adjuntos user={user} userRole={userRole} />} />
-                <Route path="/recurrencia" element={<Recurrencia user={user} userRole={userRole} />} />
-                <Route path="/import-export" element={<ImportExport user={user} userRole={userRole} />} />
-                {/* Sprint 4 */}
-                <Route path="/balance" element={<BalanceGeneral user={user} userRole={userRole} />} />
-                <Route path="/proyectos" element={<ProyectoDashboard user={user} userRole={userRole} />} />
-                <Route path="/proyeccion" element={<ProyeccionCashflow user={user} userRole={userRole} />} />
-                {/* Sprint 5 */}
-                <Route path="/multi-moneda" element={<MultiMoneda user={user} userRole={userRole} />} />
-                <Route path="/roles" element={<RolesManager user={user} userRole={userRole} />} />
-                <Route path="/backup" element={<BackupManager user={user} userRole={userRole} />} />
-                {/* Perfil */}
-                <Route path="/perfil" element={<UserProfile user={user} userRole={userRole} />} />
-                {/* Fallback */}
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
+        <div className="flex-1 overflow-y-auto px-4 pb-8 pt-5 md:px-8 md:pb-10 md:pt-6">
+          <div className="mx-auto max-w-[1280px]">
+            {loading ? (
+              <LoadingState />
+            ) : (
+              <Suspense fallback={<LoadingState />}>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      hasPermission('dashboard') ? (
+                        <Dashboard user={user} setView={setView} onNewTransaction={handleOpenLauncher} />
+                      ) : (
+                        <Navigate to="/transactions" replace />
+                      )
+                    }
+                  />
+                  <Route path="/ingresos" element={<Ingresos userRole={userRole} user={user} onNewTransaction={handleOpenLauncher} />} />
+                  <Route path="/gastos" element={<Gastos userRole={userRole} user={user} onNewTransaction={handleOpenLauncher} />} />
+                  <Route
+                    path="/transactions"
+                    element={
+                      <TransactionList
+                        transactions={transactions}
+                        userRole={userRole}
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        user={user}
+                      />
+                    }
+                  />
+                  <Route path="/cashflow" element={<CashFlow user={user} />} />
+                  <Route path="/tesoreria" element={<Navigate to="/cashflow" replace />} />
+                  <Route path="/reportes" element={<ReportesUnified user={user} />} />
+                  <Route path="/configuracion" element={<ConfiguracionUnified user={user} transactions={filteredTransactions} />} />
+                  <Route path="/cxc" element={<CXCIndependiente user={user} userRole={userRole} />} />
+                  <Route path="/cxp" element={<CXPIndependiente user={user} userRole={userRole} />} />
+                  <Route path="/presupuesto" element={<BudgetVsActual user={user} userRole={userRole} />} />
+                  <Route path="/conciliacion" element={<Conciliacion user={user} userRole={userRole} />} />
+                  <Route path="/alertas" element={<Alertas user={user} userRole={userRole} />} />
+                  <Route path="/auditoria" element={<AuditLog user={user} userRole={userRole} />} />
+                  <Route path="/adjuntos" element={<Adjuntos user={user} userRole={userRole} />} />
+                  <Route path="/recurrencia" element={<Recurrencia user={user} userRole={userRole} />} />
+                  <Route path="/import-export" element={<ImportExport user={user} userRole={userRole} />} />
+                  <Route path="/balance" element={<BalanceGeneral user={user} userRole={userRole} />} />
+                  <Route path="/proyectos" element={<ProyectoDashboard user={user} userRole={userRole} />} />
+                  <Route path="/proyeccion" element={<ProyeccionCashflow user={user} userRole={userRole} />} />
+                  <Route path="/multi-moneda" element={<MultiMoneda user={user} userRole={userRole} />} />
+                  <Route path="/roles" element={<RolesManager user={user} userRole={userRole} />} />
+                  <Route path="/backup" element={<BackupManager user={user} userRole={userRole} />} />
+                  <Route path="/perfil" element={<UserProfile user={user} userRole={userRole} />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </Suspense>
             )}
           </div>
         </div>
       </main>
 
-      {/* Transaction Modal */}
-      <TransactionFormModal
-        isOpen={isModalOpen}
-        onClose={() => { setIsModalOpen(false); setModalDefaultType(null); }}
-        onSubmit={handleTransactionSubmit}
-        editingTransaction={null}
-        user={user}
-        expenseCategories={expenseCategories}
-        incomeCategories={incomeCategories}
-        costCenters={costCenters}
-        defaultType={modalDefaultType}
-      />
+      {isActionLauncherOpen && (
+        <Suspense fallback={null}>
+          <FinanceActionLauncher
+            isOpen={isActionLauncherOpen}
+            onClose={() => {
+              setIsActionLauncherOpen(false);
+              setLauncherDefaultAction(null);
+            }}
+            user={user}
+            defaultAction={launcherDefaultAction}
+          />
+        </Suspense>
+      )}
 
-      {/* Mobile Menu */}
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
         user={user}
         userRole={userRole}
         hasPermission={hasPermission}
-        onNewTransaction={handleNewTransaction}
+        onNewTransaction={handleOpenLauncher}
       />
     </div>
   );

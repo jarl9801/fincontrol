@@ -162,15 +162,14 @@ const CostCenters = ({ user }) => {
     const ytdPercent = ytdBudget > 0 ? (ytdExecuted / ytdBudget * 100) : 0;
 
     return (
-      <div className="bg-[#111111] p-4 rounded-xl mt-3 animate-fadeIn">
-        {/* Year selector and YTD summary */}
+      <div className="mt-3 rounded-[24px] border border-[#dce6f8] bg-[rgba(246,249,255,0.92)] p-4 animate-fadeIn shadow-[0_16px_42px_rgba(134,153,186,0.08)]">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Calendar className="text-[#8e8e93]" size={18} />
+            <Calendar className="text-[#6b7a99]" size={18} />
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="text-sm font-medium bg-[#1c1c1e] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-1.5"
+              className="rounded-xl border border-[#d8e3f7] bg-white/90 px-3 py-1.5 text-sm font-medium text-[#22304f] outline-none"
             >
               {[2024, 2025, 2026].map(year => (
                 <option key={year} value={year}>{year}</option>
@@ -178,23 +177,22 @@ const CostCenters = ({ user }) => {
             </select>
           </div>
           <div className="flex items-center gap-4 text-sm">
-            <div className="bg-[#1c1c1e] rounded-lg px-3 py-2 border border-[rgba(255,255,255,0.08)]">
-              <span className="text-[#8e8e93]">Ppto. Mensual: </span>
-              <span className="font-bold text-[#c7c7cc]">{formatCurrency(monthlyBudget)}</span>
+            <div className="rounded-xl border border-[#dce6f8] bg-white/92 px-3 py-2">
+              <span className="text-[#6b7a99]">Ppto. mensual: </span>
+              <span className="font-bold text-[#1f2a44]">{formatCurrency(monthlyBudget)}</span>
             </div>
-            <div className={`rounded-lg px-3 py-2 ${getProgressBgColor(ytdPercent)}`}>
-              <span className="text-[#8e8e93]">YTD: </span>
-              <span className={`font-bold ${ytdPercent > 100 ? 'text-[#ff453a]' : ytdPercent > 80 ? 'text-[#ff9f0a]' : 'text-[#30d158]'}`}>
+            <div className={`rounded-xl px-3 py-2 ${getProgressBgColor(ytdPercent)}`}>
+              <span className="text-[#6b7a99]">YTD: </span>
+              <span className={`font-bold ${ytdPercent > 100 ? 'text-[#d04c36]' : ytdPercent > 80 ? 'text-[#c98717]' : 'text-[#0f9f6e]'}`}>
                 {formatCurrency(ytdExecuted)} / {formatCurrency(ytdBudget)}
               </span>
-              <span className={`ml-2 text-xs font-medium ${ytdPercent > 100 ? 'text-[#ff453a]' : ytdPercent > 80 ? 'text-[#ff9f0a]' : 'text-[#30d158]'}`}>
+              <span className={`ml-2 text-xs font-medium ${ytdPercent > 100 ? 'text-[#d04c36]' : ytdPercent > 80 ? 'text-[#c98717]' : 'text-[#0f9f6e]'}`}>
                 ({ytdPercent.toFixed(0)}%)
               </span>
             </div>
           </div>
         </div>
 
-        {/* Monthly grid */}
         <div className="grid grid-cols-12 gap-2">
           {monthlyData.map((data, index) => {
             const percent = monthlyBudget > 0 ? (data.executed / monthlyBudget * 100) : 0;
@@ -205,19 +203,18 @@ const CostCenters = ({ user }) => {
               <div
                 key={index}
                 className={`relative rounded-xl p-2 transition-all ${
-                  isCurrentMonth ? 'ring-2 ring-blue-500 bg-[rgba(59,130,246,0.08)]' :
-                  isFutureMonth ? 'bg-[#2c2c2e] opacity-50' :
-                  'bg-[#1c1c1e] border border-[rgba(255,255,255,0.08)]'
+                  isCurrentMonth ? 'ring-2 ring-[#7aa2ff] bg-[rgba(59,130,246,0.08)]' :
+                  isFutureMonth ? 'bg-[rgba(225,232,245,0.62)] opacity-70' :
+                  'border border-[#dce6f8] bg-white/92'
                 }`}
               >
                 <div className="text-center mb-2">
-                  <p className={`text-xs font-bold ${isCurrentMonth ? 'text-[#0a84ff]' : 'text-[#98989d]'}`}>
+                  <p className={`text-xs font-bold ${isCurrentMonth ? 'text-[#2563eb]' : 'text-[#6b7a99]'}`}>
                     {data.month}
                   </p>
                 </div>
 
-                {/* Progress bar vertical */}
-                <div className="h-16 w-full bg-[#2c2c2e] rounded-lg overflow-hidden relative">
+                <div className="relative h-16 w-full overflow-hidden rounded-lg bg-[#edf3ff]">
                   <div
                     className={`absolute bottom-0 left-0 right-0 transition-all ${getProgressColor(percent)}`}
                     style={{ height: `${Math.min(percent, 100)}%` }}
@@ -232,14 +229,14 @@ const CostCenters = ({ user }) => {
 
                 <div className="mt-2 text-center">
                   <p className={`text-xs font-bold ${
-                    percent > 100 ? 'text-[#ff453a]' :
-                    percent > 80 ? 'text-[#ff9f0a]' :
-                    percent > 0 ? 'text-[#30d158]' :
-                    'text-[#636366]'
+                    percent > 100 ? 'text-[#d04c36]' :
+                    percent > 80 ? 'text-[#c98717]' :
+                    percent > 0 ? 'text-[#0f9f6e]' :
+                    'text-[#93a0b6]'
                   }`}>
                     {percent > 0 ? `${percent.toFixed(0)}%` : '-'}
                   </p>
-                  <p className="text-[10px] text-[#8e8e93] truncate">
+                  <p className="truncate text-[10px] text-[#70819f]">
                     {data.executed > 0 ? formatCurrency(data.executed).replace('€', '') : '-'}
                   </p>
                 </div>
@@ -248,19 +245,18 @@ const CostCenters = ({ user }) => {
           })}
         </div>
 
-        {/* Legend */}
         <div className="flex items-center justify-center gap-6 mt-4 text-xs">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-[rgba(48,209,88,0.12)]" />
-            <span className="text-[#98989d]">&lt;80% utilizado</span>
+            <div className="h-3 w-3 rounded bg-[#bde6d5]" />
+            <span className="text-[#6b7a99]">&lt;80% utilizado</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-[rgba(255,159,10,0.12)]" />
-            <span className="text-[#98989d]">80-100% utilizado</span>
+            <div className="h-3 w-3 rounded bg-[#f3cf8c]" />
+            <span className="text-[#6b7a99]">80-100% utilizado</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-[rgba(255,69,58,0.12)]" />
-            <span className="text-[#98989d]">&gt;100% sobrepasado</span>
+            <div className="h-3 w-3 rounded bg-[#f4a69b]" />
+            <span className="text-[#6b7a99]">&gt;100% sobrepasado</span>
           </div>
         </div>
       </div>
@@ -276,43 +272,43 @@ const CostCenters = ({ user }) => {
 
     return (
       <>
-        <tr className={`border-b border-[rgba(255,255,255,0.08)] hover:bg-[#111111] transition-colors ${isExpanded ? 'bg-[#111111]' : ''}`}>
-          <td className="px-4 py-4 text-sm font-medium text-[#98989d]">{center.code}</td>
-          <td className="px-4 py-4 text-sm font-medium text-[#e5e5ea]">{center.name}</td>
+        <tr className={`border-b border-[#edf1fb] transition-colors hover:bg-[rgba(241,246,255,0.8)] ${isExpanded ? 'bg-[rgba(241,246,255,0.68)]' : ''}`}>
+          <td className="px-4 py-4 text-sm font-medium text-[#6b7a99]">{center.code}</td>
+          <td className="px-4 py-4 text-sm font-medium text-[#1f2a44]">{center.name}</td>
           <td className="px-4 py-4">
-            <span className={`px-2 py-1 text-xs font-medium rounded ${
-              center.type === 'Costos' ? 'bg-[rgba(239,68,68,0.12)] text-[#ff453a]' : 'bg-[rgba(16,185,129,0.12)] text-[#30d158]'
+            <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+              center.type === 'Costos' ? 'bg-[rgba(208,76,54,0.1)] text-[#d04c36]' : 'bg-[rgba(15,159,110,0.1)] text-[#0f9f6e]'
             }`}>
               {center.type}
             </span>
           </td>
-          <td className="px-4 py-4 text-sm text-[#98989d]">{formatCurrency(center.budget)}</td>
-          <td className="px-4 py-4 text-sm text-[#8e8e93]">{formatCurrency(center.budget / 12)}/mes</td>
-          <td className="px-4 py-4 text-sm font-medium text-[#ff453a]">{formatCurrency(ytdExecuted)}</td>
+          <td className="px-4 py-4 text-sm text-[#5f6f8d]">{formatCurrency(center.budget)}</td>
+          <td className="px-4 py-4 text-sm text-[#70819f]">{formatCurrency(center.budget / 12)}/mes</td>
+          <td className={`px-4 py-4 text-sm font-medium ${center.type === 'Ingresos' ? 'text-[#0f9f6e]' : 'text-[#d04c36]'}`}>{formatCurrency(ytdExecuted)}</td>
           <td className="px-4 py-4">
             <div className="flex items-center gap-2">
-              <div className="w-20 h-2.5 bg-[#2c2c2e] rounded-full overflow-hidden">
+              <div className="h-2.5 w-20 overflow-hidden rounded-full bg-[#edf3ff]">
                 <div
                   className={`h-full rounded-full transition-all ${getProgressColor(utilization)}`}
                   style={{ width: `${Math.min(utilization, 100)}%` }}
                 />
               </div>
               <span className={`text-xs font-bold ${
-                utilization > 100 ? 'text-[#ff453a]' :
-                utilization > 80 ? 'text-[#ff9f0a]' :
-                'text-[#30d158]'
+                utilization > 100 ? 'text-[#d04c36]' :
+                utilization > 80 ? 'text-[#c98717]' :
+                'text-[#0f9f6e]'
               }`}>
                 {utilization.toFixed(0)}%
               </span>
             </div>
           </td>
-          <td className="px-4 py-4 text-sm text-[#98989d]">{center.responsible}</td>
+          <td className="px-4 py-4 text-sm text-[#5f6f8d]">{center.responsible}</td>
           <td className="px-4 py-4">
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setExpandedCenter(isExpanded ? null : center.id)}
                 className={`p-1.5 rounded transition-colors ${
-                  isExpanded ? 'text-[#0a84ff] bg-[rgba(59,130,246,0.08)]' : 'text-[#636366] hover:text-[#0a84ff] hover:bg-[rgba(59,130,246,0.08)]'
+                  isExpanded ? 'bg-[rgba(59,130,246,0.08)] text-[#2563eb]' : 'text-[#7a879d] hover:bg-[rgba(59,130,246,0.08)] hover:text-[#2563eb]'
                 }`}
                 title="Ver detalle mensual"
               >
@@ -320,13 +316,13 @@ const CostCenters = ({ user }) => {
               </button>
               <button
                 onClick={() => onEdit(center)}
-                className="p-1.5 text-[#636366] hover:text-[#0a84ff] hover:bg-[rgba(59,130,246,0.08)] rounded transition-colors"
+                className="rounded p-1.5 text-[#7a879d] transition-colors hover:bg-[rgba(59,130,246,0.08)] hover:text-[#2563eb]"
               >
                 <Edit2 size={14} />
               </button>
               <button
                 onClick={() => onDelete(center.id)}
-                className="p-1.5 text-[#636366] hover:text-[#ff453a] hover:bg-[rgba(239,68,68,0.08)] rounded transition-colors"
+                className="rounded p-1.5 text-[#7a879d] transition-colors hover:bg-[rgba(208,76,54,0.08)] hover:text-[#d04c36]"
               >
                 <Trash2 size={14} />
               </button>
@@ -348,7 +344,7 @@ const CostCenters = ({ user }) => {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 text-[#0a84ff] animate-spin" />
-        <span className="ml-3 text-[#8e8e93]">Cargando centros de costo...</span>
+        <span className="ml-3 text-[#6b7a99]">Preparando centros de costo...</span>
       </div>
     );
   }
@@ -362,54 +358,59 @@ const CostCenters = ({ user }) => {
 
   return (
     <div className="space-y-6">
-      {/* Summary Cards */}
+      <div className="rounded-[28px] border border-[#dbe7ff] bg-[rgba(255,255,255,0.82)] px-6 py-5 shadow-[0_22px_70px_rgba(128,150,196,0.12)] backdrop-blur-xl">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#5b7bd6]">Presupuesto operativo</p>
+        <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[#1f2a44]">Centros de costo</h2>
+        <p className="mt-1 text-sm text-[#6b7a99]">Organiza responsables, presupuesto anual y seguimiento mensual desde una sola mesa.</p>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/86 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-[rgba(239,68,68,0.12)] rounded-lg">
-              <TrendingDown className="text-[#ff453a]" size={20} />
+            <div className="rounded-2xl bg-[rgba(208,76,54,0.1)] p-2">
+              <TrendingDown className="text-[#d04c36]" size={20} />
             </div>
-            <h3 className="font-bold text-[#ff453a]">Centros de Costos</h3>
+            <h3 className="font-semibold text-[#1f2a44]">Centros de costos</h3>
           </div>
-          <p className="text-2xl font-bold text-[#ff453a]">{costCenters.length}</p>
-          <p className="text-xs text-[#8e8e93]">activos</p>
+          <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#d04c36]">{costCenters.length}</p>
+          <p className="text-xs text-[#70819f]">activos</p>
         </div>
 
-        <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/86 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-[rgba(59,130,246,0.12)] rounded-lg">
-              <BarChart3 className="text-[#0a84ff]" size={20} />
+            <div className="rounded-2xl bg-[rgba(59,130,246,0.12)] p-2">
+              <BarChart3 className="text-[#2563eb]" size={20} />
             </div>
-            <h3 className="font-bold text-[#0a84ff]">Presupuesto Anual</h3>
+            <h3 className="font-semibold text-[#1f2a44]">Presupuesto anual</h3>
           </div>
-          <p className="text-2xl font-bold text-[#0a84ff]">{formatCurrency(totalBudget)}</p>
-          <p className="text-xs text-[#8e8e93]">{formatCurrency(totalBudget / 12)}/mes</p>
+          <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#1f5fbf]">{formatCurrency(totalBudget)}</p>
+          <p className="text-xs text-[#70819f]">{formatCurrency(totalBudget / 12)}/mes</p>
         </div>
 
-        <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/86 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-[rgba(245,158,11,0.12)] rounded-lg">
-              <TrendingUpDown className="text-[#ff9f0a]" size={20} />
+            <div className="rounded-2xl bg-[rgba(245,158,11,0.12)] p-2">
+              <TrendingUpDown className="text-[#c98717]" size={20} />
             </div>
-            <h3 className="font-bold text-[#ff9f0a]">Ejecutado YTD</h3>
+            <h3 className="font-semibold text-[#1f2a44]">Ejecutado YTD</h3>
           </div>
-          <p className="text-2xl font-bold text-[#ff9f0a]">{formatCurrency(totalExecuted)}</p>
-          <p className="text-xs text-[#8e8e93]">de {formatCurrency(ytdBudget)} presupuestado</p>
+          <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#c98717]">{formatCurrency(totalExecuted)}</p>
+          <p className="text-xs text-[#70819f]">de {formatCurrency(ytdBudget)} presupuestado</p>
         </div>
 
-        <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
-          <div className="flex items-center gap-3 mb-3">
-            <div className={`p-2 rounded-lg ${getProgressBgColor(overallUtilization)}`}>
-              <Calendar className={`${overallUtilization > 100 ? 'text-[#ff453a]' : overallUtilization > 80 ? 'text-[#ff9f0a]' : 'text-[#30d158]'}`} size={20} />
+        <div className="rounded-[24px] border border-[#dce6f8] bg-white/86 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
+          <div className="mb-3 flex items-center gap-3">
+            <div className={`rounded-2xl p-2 ${getProgressBgColor(overallUtilization)}`}>
+              <Calendar className={`${overallUtilization > 100 ? 'text-[#d04c36]' : overallUtilization > 80 ? 'text-[#c98717]' : 'text-[#0f9f6e]'}`} size={20} />
             </div>
-            <h3 className={`font-bold ${overallUtilization > 100 ? 'text-[#ff453a]' : overallUtilization > 80 ? 'text-[#ff9f0a]' : 'text-[#30d158]'}`}>
+            <h3 className="font-semibold text-[#1f2a44]">
               Utilización YTD
             </h3>
           </div>
-          <p className={`text-2xl font-bold ${overallUtilization > 100 ? 'text-[#ff453a]' : overallUtilization > 80 ? 'text-[#ff9f0a]' : 'text-[#30d158]'}`}>
+          <p className={`text-[28px] font-semibold tracking-[-0.03em] ${overallUtilization > 100 ? 'text-[#d04c36]' : overallUtilization > 80 ? 'text-[#c98717]' : 'text-[#0f9f6e]'}`}>
             {overallUtilization.toFixed(1)}%
           </p>
-          <div className="w-full h-2 bg-[#2c2c2e] rounded-full overflow-hidden mt-2">
+          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-[#edf3ff]">
             <div
               className={`h-full rounded-full ${getProgressColor(overallUtilization)}`}
               style={{ width: `${Math.min(overallUtilization, 100)}%` }}
@@ -418,11 +419,10 @@ const CostCenters = ({ user }) => {
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="flex justify-end gap-3">
         <button
           onClick={handleLoadPredefined}
-          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors"
+          className="inline-flex items-center gap-2 rounded-2xl bg-[#0f9f6e] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0c875d]"
         >
           <Package size={18} /> Generar Predefinidos
         </button>
@@ -432,37 +432,36 @@ const CostCenters = ({ user }) => {
             setNewCenter({ name: '', type: 'Costos', budget: 0, responsible: '' });
             setShowNewModal(true);
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-[#2c2c2e] hover:bg-[#1c1c1e] text-white rounded-lg font-medium transition-colors"
+          className="inline-flex items-center gap-2 rounded-2xl bg-[#2563eb] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1f56cf]"
         >
           <Plus size={18} /> Nuevo Centro
         </button>
       </div>
 
-      {/* Cost Centers Table */}
-      <div className="bg-[rgba(239,68,68,0.08)] rounded-2xl p-6 border border-[rgba(239,68,68,0.2)]">
+      <div className="rounded-[28px] border border-[rgba(208,76,54,0.16)] bg-[rgba(255,252,250,0.88)] p-6 shadow-[0_20px_65px_rgba(134,153,186,0.12)]">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-[rgba(239,68,68,0.12)] rounded-lg">
-            <TrendingDown className="text-[#ff453a]" size={20} />
+          <div className="rounded-2xl bg-[rgba(208,76,54,0.1)] p-2">
+            <TrendingDown className="text-[#d04c36]" size={20} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#ff453a]">Centros de Costos</h3>
-            <p className="text-sm text-[#ff453a]">Click en la flecha para ver detalle mensual</p>
+            <h3 className="text-base font-semibold tracking-[-0.02em] text-[#1f2a44]">Centros de costos</h3>
+            <p className="text-sm text-[#8a6d66]">Abre cada fila para revisar el detalle mensual.</p>
           </div>
         </div>
 
-        <div className="bg-[#1c1c1e] rounded-xl overflow-hidden">
+        <div className="overflow-hidden rounded-[24px] border border-[#eddad5] bg-white/90">
           <table className="w-full text-left">
-            <thead className="bg-[#111111] border-b border-[rgba(255,255,255,0.08)]">
+            <thead className="border-b border-[#f0ded8] bg-[rgba(255,247,245,0.94)]">
               <tr>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Código</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Nombre</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Tipo</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Ppto. Anual</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Ppto. Mensual</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Ejecutado YTD</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Utilización</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Responsable</th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Acciones</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8a6d66]">Código</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8a6d66]">Nombre</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8a6d66]">Tipo</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8a6d66]">Ppto. anual</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8a6d66]">Ppto. mensual</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8a6d66]">Ejecutado YTD</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8a6d66]">Utilización</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8a6d66]">Responsable</th>
+                <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8a6d66]">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -471,7 +470,7 @@ const CostCenters = ({ user }) => {
               ))}
               {costCenters.length === 0 && (
                 <tr>
-                  <td colSpan="9" className="px-4 py-8 text-center text-[#636366]">
+                  <td colSpan="9" className="px-4 py-8 text-center text-[#8a6d66]">
                     No hay centros de costo definidos
                   </td>
                 </tr>
@@ -481,32 +480,31 @@ const CostCenters = ({ user }) => {
         </div>
       </div>
 
-      {/* Income Centers Table */}
       {incomeCenters.length > 0 && (
-        <div className="bg-[rgba(16,185,129,0.08)] rounded-2xl p-6 border border-[rgba(16,185,129,0.2)]">
+        <div className="rounded-[28px] border border-[rgba(15,159,110,0.16)] bg-[rgba(247,253,250,0.9)] p-6 shadow-[0_20px_65px_rgba(134,153,186,0.12)]">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-[rgba(16,185,129,0.12)] rounded-lg">
-              <TrendingUp className="text-[#30d158]" size={20} />
+            <div className="rounded-2xl bg-[rgba(15,159,110,0.1)] p-2">
+              <TrendingUp className="text-[#0f9f6e]" size={20} />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-[#30d158]">Centros de Ingresos</h3>
-              <p className="text-sm text-[#30d158]">Solo registra VENTAS</p>
+              <h3 className="text-base font-semibold tracking-[-0.02em] text-[#1f2a44]">Centros de ingresos</h3>
+              <p className="text-sm text-[#628173]">Usa esta mesa para metas y seguimiento comercial.</p>
             </div>
           </div>
 
-          <div className="bg-[#1c1c1e] rounded-xl overflow-hidden">
+          <div className="overflow-hidden rounded-[24px] border border-[#d7ebe2] bg-white/92">
             <table className="w-full text-left">
-              <thead className="bg-[#111111] border-b border-[rgba(255,255,255,0.08)]">
+              <thead className="border-b border-[#dcefe7] bg-[rgba(244,251,247,0.95)]">
                 <tr>
-                  <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Código</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Nombre</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Tipo</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Objetivo Anual</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Objetivo Mensual</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Logrado YTD</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Cumplimiento</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Responsable</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-[#8e8e93] uppercase">Acciones</th>
+                  <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#628173]">Código</th>
+                  <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#628173]">Nombre</th>
+                  <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#628173]">Tipo</th>
+                  <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#628173]">Objetivo anual</th>
+                  <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#628173]">Objetivo mensual</th>
+                  <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#628173]">Logrado YTD</th>
+                  <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#628173]">Cumplimiento</th>
+                  <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#628173]">Responsable</th>
+                  <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#628173]">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -519,30 +517,30 @@ const CostCenters = ({ user }) => {
         </div>
       )}
 
-      {/* Modal */}
       {showNewModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-[#1c1c1e] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-scaleIn">
-            <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] bg-gradient-to-r from-slate-50 to-white">
-              <h3 className="font-bold text-lg text-[#e5e5ea]">
-                {editingCenter ? 'Editar Centro de Costo' : 'Nuevo Centro de Costo'}
+          <div className="w-full max-w-md overflow-hidden rounded-[28px] border border-[#dce6f8] bg-[rgba(255,255,255,0.96)] shadow-[0_35px_120px_rgba(15,23,42,0.24)] animate-scaleIn">
+            <div className="border-b border-[#e2ebfb] bg-[rgba(245,248,255,0.94)] px-6 py-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5b7bd6]">Centro presupuestario</p>
+              <h3 className="text-lg font-semibold tracking-[-0.03em] text-[#1f2a44]">
+                {editingCenter ? 'Editar centro' : 'Nuevo centro'}
               </h3>
             </div>
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#c7c7cc] mb-1">Nombre</label>
+                <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">Nombre</label>
                 <input
                   type="text"
-                  className="w-full px-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-2.5 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                   value={newCenter.name}
                   onChange={(e) => setNewCenter({ ...newCenter, name: e.target.value })}
                   placeholder="Nombre del centro"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#c7c7cc] mb-1">Tipo</label>
+                <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">Tipo</label>
                 <select
-                  className="w-full px-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-2.5 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                   value={newCenter.type}
                   onChange={(e) => setNewCenter({ ...newCenter, type: e.target.value })}
                 >
@@ -551,51 +549,51 @@ const CostCenters = ({ user }) => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#c7c7cc] mb-1">
-                  Presupuesto Anual (se divide en 12 meses)
+                <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">
+                  Presupuesto anual
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#636366]">€</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7a879d]">€</span>
                   <input
                     type="number"
-                    className="w-full pl-8 pr-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] py-2.5 pl-8 pr-4 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                     value={newCenter.budget}
                     onChange={(e) => setNewCenter({ ...newCenter, budget: e.target.value })}
                     placeholder="0.00"
                   />
                 </div>
                 {newCenter.budget > 0 && (
-                  <p className="text-xs text-[#8e8e93] mt-1">
+                  <p className="mt-1 text-xs text-[#70819f]">
                     = {formatCurrency(newCenter.budget / 12)} por mes
                   </p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#c7c7cc] mb-1">Responsable</label>
+                <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">Responsable</label>
                 <input
                   type="text"
-                  className="w-full px-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-2.5 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                   value={newCenter.responsible}
                   onChange={(e) => setNewCenter({ ...newCenter, responsible: e.target.value })}
                   placeholder="Nombre del responsable"
                 />
               </div>
             </div>
-            <div className="px-6 py-4 border-t border-[rgba(255,255,255,0.08)] flex gap-3 justify-end bg-[#111111]">
+            <div className="flex justify-end gap-3 border-t border-[#e2ebfb] bg-[rgba(245,248,255,0.94)] px-6 py-4">
               <button
                 onClick={() => {
                   setShowNewModal(false);
                   setEditingCenter(null);
                 }}
-                className="px-4 py-2.5 text-[#98989d] hover:bg-[#2c2c2e] rounded-xl font-medium transition-colors"
+                className="rounded-2xl px-4 py-2.5 text-sm font-medium text-[#6b7a99] transition hover:bg-[rgba(94,115,159,0.08)]"
               >
                 Cancelar
               </button>
               <button
                 onClick={editingCenter ? handleUpdateCenter : handleAddCenter}
-                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+                className="rounded-2xl bg-[#2563eb] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1f56cf]"
               >
-                {editingCenter ? 'Guardar Cambios' : 'Crear Centro'}
+                {editingCenter ? 'Guardar cambios' : 'Crear centro'}
               </button>
             </div>
           </div>

@@ -1,61 +1,39 @@
 import { signOut } from 'firebase/auth';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { auth } from '../../services/firebase';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  Briefcase, LayoutDashboard, ArrowUpCircle, ArrowDownCircle,
-  ListFilter, DollarSign, BarChart3, Settings, Plus, LogOut, Menu, X,
-  FileText, Target, Scale, Bell, History, Paperclip, RefreshCw,
-  Upload, BookOpen, Folder, TrendingUp, Coins, Shield, Database
+  Briefcase,
+  FolderKanban,
+  Landmark,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Plus,
+  ReceiptText,
+  Scale,
+  Settings,
+  WalletCards,
+  X,
 } from 'lucide-react';
+import { auth } from '../../services/firebase';
 
-const NAV_SECTIONS = [
-  {
-    label: 'Principal',
-    items: [
-      { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
-      { path: '/alertas', label: 'Alertas', icon: Bell, permission: 'dashboard' },
-    ],
-  },
-  {
-    label: 'Operaciones',
-    items: [
-      { path: '/ingresos', label: 'Ingresos', icon: ArrowUpCircle, permission: 'cxc' },
-      { path: '/gastos', label: 'Gastos', icon: ArrowDownCircle, permission: 'cxp' },
-      { path: '/transactions', label: 'Transacciones', icon: ListFilter },
-      { path: '/recurrencia', label: 'Recurrentes', icon: RefreshCw },
-    ],
-  },
-  {
-    label: 'Cuentas',
-    items: [
-      { path: '/cxc', label: 'Ctas por Cobrar', icon: FileText, permission: 'cxc' },
-      { path: '/cxp', label: 'Ctas por Pagar', icon: FileText, permission: 'cxp' },
-    ],
-  },
-  {
-    label: 'Análisis',
-    items: [
-      { path: '/presupuesto', label: 'Presupuesto', icon: Target, permission: 'reports' },
-      { path: '/cashflow', label: 'Flujo de Caja', icon: DollarSign, permission: 'reports' },
-      { path: '/proyeccion', label: 'Proyección', icon: TrendingUp, permission: 'reports' },
-      { path: '/balance', label: 'Balance General', icon: BookOpen, permission: 'reports' },
-      { path: '/proyectos', label: 'Por Proyecto', icon: Folder, permission: 'reports' },
-      { path: '/reportes', label: 'Reportes', icon: BarChart3, permission: 'reports' },
-    ],
-  },
-  {
-    label: 'Administración',
-    items: [
-      { path: '/conciliacion', label: 'Conciliación', icon: Scale, permission: 'settings' },
-      { path: '/import-export', label: 'Import/Export', icon: Upload, permission: 'settings' },
-      { path: '/configuracion', label: 'Configuración', icon: Settings, permission: 'settings' },
-    ],
-  },
+const NAV_ITEMS = [
+  { path: '/', label: 'Inicio', icon: LayoutDashboard, permission: 'dashboard' },
+  { path: '/cashflow', label: 'Tesoreria', icon: WalletCards, permission: 'reports' },
+  { path: '/cxc', label: 'CXC', icon: ReceiptText, permission: 'cxc' },
+  { path: '/cxp', label: 'CXP', icon: ReceiptText, permission: 'cxp' },
+  { path: '/transactions', label: 'Transacciones', icon: Landmark, permission: 'dashboard' },
+  { path: '/proyectos', label: 'Proyectos', icon: FolderKanban, permission: 'reports' },
+  { path: '/presupuesto', label: 'Presupuesto', icon: Briefcase, permission: 'reports' },
+  { path: '/conciliacion', label: 'Conciliacion', icon: Scale, permission: 'settings' },
+  { path: '/reportes', label: 'Reportes', icon: Briefcase, permission: 'reports' },
+  { path: '/configuracion', label: 'Configuracion', icon: Settings, permission: 'settings' },
 ];
 
 const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, onNewTransaction }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  if (!isOpen) return null;
 
   const handleLogout = async () => {
     try {
@@ -65,111 +43,93 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, onNewTrans
     }
   };
 
-  const handleNavigation = (path) => {
-    navigate(path);
-    onClose();
-  };
-
-  const handleNewTransactionClick = () => {
-    onNewTransaction();
-    onClose();
-  };
-
-  if (!isOpen) return null;
-
-  const NavItem = ({ path, label, icon: Icon }) => {
-    const isActive = location.pathname === path;
-    return (
-      <button
-        onClick={() => handleNavigation(path)}
-        className={`
-          relative flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-all
-          ${isActive
-            ? 'bg-[rgba(10,132,255,0.1)] text-white'
-            : 'text-[#8e8e93] hover:bg-[rgba(255,255,255,0.05)] hover:text-white'}
-        `}
-      >
-        {isActive && (
-          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-[#30d158] rounded-r" />
-        )}
-        <Icon size={18} className={isActive ? 'text-[#0a84ff]' : 'text-[#636366]'} />
-        <span className="flex-1 text-left">{label}</span>
-      </button>
-    );
-  };
+  const visibleItems = NAV_ITEMS.filter((item) => !item.permission || hasPermission(item.permission));
 
   return (
-    <div className="fixed inset-0 z-50 md:hidden">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn" onClick={onClose} />
-      <div className="absolute left-0 top-0 bottom-0 w-80 shadow-2xl flex flex-col animate-slideIn" style={{ background: 'rgba(28, 28, 30, 0.95)' }}>
-        <div className="p-5 border-b border-[rgba(255,255,255,0.06)]">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 bg-gradient-to-br from-[#30d158] to-[#0a84ff] rounded-[10px] flex items-center justify-center shadow-lg">
-                <Briefcase className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h1 className="text-[15px] font-bold text-white">FinControl</h1>
-                <p className="text-[10px] text-[#636366] font-medium">UMTELKOMD GmbH</p>
-              </div>
+    <div className="fixed inset-0 z-[230] md:hidden">
+      <div className="absolute inset-0 bg-[rgba(18,29,54,0.18)] backdrop-blur-md" onClick={onClose} />
+      <div className="absolute left-0 top-0 bottom-0 flex w-[86vw] max-w-[340px] flex-col border-r border-[rgba(205,219,243,0.82)] bg-[radial-gradient(circle_at_top_right,rgba(185,248,238,0.32),transparent_26%),radial-gradient(circle_at_top_left,rgba(147,196,255,0.28),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.95),rgba(242,247,255,0.94))] px-4 py-5 text-[#16223f] shadow-[0_30px_100px_rgba(95,117,162,0.24)] backdrop-blur-2xl">
+        <div className="mb-5 flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[14px] bg-[linear-gradient(145deg,#1cd0ff,#36b8ff)] shadow-[0_14px_34px_rgba(0,162,255,0.24)]">
+              <Briefcase size={18} className="text-[#061224]" />
             </div>
-            <button onClick={onClose} className="p-2 text-[#636366] hover:text-white hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all">
-              <X size={22} />
-            </button>
+            <div>
+              <p className="text-[14px] font-semibold text-[#101938]">FinControl</p>
+              <p className="text-[11px] uppercase tracking-[0.22em] text-[#6980ac]">Operations Console</p>
+            </div>
           </div>
-          <button onClick={() => handleNavigation('/perfil')} className="mt-3 flex items-center gap-2 px-3 py-2 bg-[rgba(255,255,255,0.04)] rounded-lg hover:bg-[rgba(255,255,255,0.07)] transition-colors w-full text-left">
-            {user?.photoURL ? (
-              <img src={user.photoURL} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0" />
-            ) : (
-              <div className="w-7 h-7 rounded-full bg-[rgba(191,90,242,0.15)] flex items-center justify-center flex-shrink-0">
-                <span className="text-[11px] font-bold text-[#bf5af2]">{(user?.displayName || user?.email || '?')[0].toUpperCase()}</span>
-              </div>
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-[#c7c7cc] truncate">{user?.displayName || user?.email}</p>
-            </div>
-            <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${
-              userRole === 'admin' ? 'bg-[rgba(191,90,242,0.12)] text-[#bf5af2]' : 'bg-[rgba(10,132,255,0.12)] text-[#0a84ff]'
-            }`}>
-              {userRole === 'admin' ? 'Admin' : userRole === 'manager' ? 'Mgr' : 'Edit'}
-            </span>
+          <button type="button" onClick={onClose} className="rounded-2xl border border-[rgba(201,214,238,0.82)] bg-white/74 p-2 text-[#7b8cab]">
+            <X size={18} />
           </button>
         </div>
 
-        <nav className="flex-1 p-3 overflow-y-auto">
-          {NAV_SECTIONS.map((section) => {
-            const visibleItems = section.items.filter(item => !item.permission || hasPermission(item.permission));
-            if (visibleItems.length === 0) return null;
+        <button
+          type="button"
+          onClick={() => {
+            navigate('/perfil');
+            onClose();
+          }}
+          className="mb-5 flex w-full items-center gap-3 rounded-[20px] border border-[rgba(205,219,243,0.82)] bg-white/74 px-3 py-3 text-left shadow-[0_12px_28px_rgba(124,148,191,0.08)]"
+        >
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(90,141,221,0.12)] text-sm font-semibold text-[#3156d3]">
+            {(user?.displayName || user?.email || '?')[0].toUpperCase()}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[13px] font-medium text-[#101938]">{user?.displayName || user?.email}</p>
+            <p className="truncate text-xs uppercase tracking-[0.16em] text-[#6980ac]">{userRole === 'admin' ? 'Administrador' : userRole === 'manager' ? 'Manager' : 'Editor'}</p>
+          </div>
+        </button>
+
+        <div className="flex-1 space-y-1 overflow-y-auto">
+          {visibleItems.map((item) => {
+            const Icon = item.icon;
+            const active = location.pathname === item.path;
             return (
-              <div key={section.label} className="mb-2">
-                <p className="text-[9px] font-bold text-[#48484a] uppercase tracking-widest px-4 py-1.5">{section.label}</p>
-                <div className="space-y-0.5">
-                  {visibleItems.map(item => <NavItem key={item.path} {...item} />)}
-                </div>
-              </div>
+              <button
+                key={item.path}
+                type="button"
+                onClick={() => {
+                  navigate(item.path);
+                  onClose();
+                }}
+                className={`flex w-full items-center gap-3 rounded-[16px] px-3 py-3 text-left transition-all ${
+                  active
+                    ? 'border border-[rgba(90,141,221,0.26)] bg-[rgba(90,141,221,0.12)] text-[#101938]'
+                    : 'text-[#62718f] hover:bg-white/68 hover:text-[#101938]'
+                }`}
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-[14px] border border-[rgba(201,214,238,0.72)] bg-white/72">
+                  <Icon size={16} />
+                </span>
+                <span className="text-[13px] font-medium">{item.label}</span>
+              </button>
             );
           })}
-        </nav>
-
-        <div className="p-4 border-t border-[rgba(255,255,255,0.06)] space-y-2">
-          <button
-            onClick={handleNewTransactionClick}
-            className="flex items-center justify-center gap-2 w-full bg-[#30d158] hover:bg-[#28c74e] text-white px-4 py-3 rounded-xl font-semibold transition-all shadow-sm"
-          >
-            <Plus size={18} /> Nueva Transacción
-          </button>
-          <button
-            onClick={handleLogout}
-            className="flex items-center justify-center gap-2 w-full hover:bg-[rgba(255,255,255,0.05)] text-[#636366] hover:text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
-          >
-            <LogOut size={18} /> Cerrar Sesión
-          </button>
         </div>
 
-        <div className="px-4 py-2.5 border-t border-[rgba(255,255,255,0.04)] text-center">
-          <p className="text-[9px] text-[#3a3a3c]">
-            Desarrollado por <span className="font-semibold text-[#48484a]">HMR NEXUS</span>
-          </p>
+        <div className="mt-5 border-t border-[rgba(205,219,243,0.82)] pt-4">
+          <button
+            type="button"
+            onClick={() => {
+              onNewTransaction();
+              onClose();
+            }}
+            className="inline-flex w-full items-center justify-center gap-2.5 rounded-[20px] border border-[rgba(132,224,255,0.52)] bg-[linear-gradient(135deg,#1b68ff_0%,#1ab8ff_100%)] px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_38px_rgba(24,102,255,0.32)]"
+          >
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[rgba(255,255,255,0.18)]">
+              <Plus size={15} />
+            </span>
+            Crear registro
+          </button>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-[18px] border border-[rgba(205,219,243,0.82)] bg-white/72 px-4 py-3 text-sm font-medium text-[#62718f]"
+          >
+            <LogOut size={14} />
+            Cerrar sesion
+          </button>
         </div>
       </div>
     </div>
@@ -178,10 +138,11 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, onNewTrans
 
 export const MobileMenuButton = ({ onClick }) => (
   <button
+    type="button"
     onClick={onClick}
-    className="md:hidden p-2 text-[#98989d] hover:text-white hover:bg-[rgba(255,255,255,0.05)] rounded-lg transition-all"
+    className="rounded-2xl border border-[rgba(205,219,243,0.8)] bg-white/70 p-2 text-[#6b7a96] transition-colors hover:text-[#101938] md:hidden"
   >
-    <Menu size={22} />
+    <Menu size={20} />
   </button>
 );
 

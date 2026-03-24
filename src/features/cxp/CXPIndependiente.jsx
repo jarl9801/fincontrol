@@ -1,461 +1,329 @@
-import React, { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
-  TrendingDown, Clock, AlertCircle, DollarSign, CheckCircle2,
-  Circle, ArrowDownCircle, Plus, FileText
+  AlertTriangle,
+  ArrowDownLeft,
+  BadgeEuro,
+  Clock3,
+  Filter,
+  Search,
 } from 'lucide-react';
-import { formatCurrency, formatDate } from '../../utils/formatters';
-import { usePayables } from '../../hooks/usePayables';
-import { useTransactions } from '../../hooks/useTransactions';
-import { useProjects } from '../../hooks/useProjects';
 import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
 import { useToast } from '../../contexts/ToastContext';
+import { usePayables } from '../../hooks/usePayables';
+import { useTransactionActions } from '../../hooks/useTransactionActions';
+import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
+import { formatCurrency, formatDate } from '../../utils/formatters';
 
-const getDaysUntilDue = (dueDate) => {
-  if (!dueDate) return 0;
-  const due = new Date(dueDate);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  due.setHours(0, 0, 0, 0);
-  return Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+const statusLabels = {
+  issued: 'Emitida',
+  partial: 'Parcial',
+  overdue: 'Vencida',
+  settled: 'Liquidada',
+  cancelled: 'Cancelada',
 };
 
-const AGING_BUCKETS = ['0-30d', '30-60d', '60-90d', '>90d'];
+const filters = [
+  { id: 'all', label: 'Todas' },
+  { id: 'issued', label: 'Emitidas' },
+  { id: 'partial', label: 'Parciales' },
+  { id: 'overdue', label: 'Vencidas' },
+  { id: 'settled', label: 'Liquidadas' },
+];
 
-const AgingBar = ({ payables }) => {
-  const buckets = useMemo(() => {
-    const b = [0, 0, 0, 0];
-    payables.filter(r => r.status !== 'paid').forEach(r => {
-      const days = -getDaysUntilDue(r.dueDate);
-      if (days <= 0) return;
-      if (days <= 30) b[0] += r.pendingAmount;
-      else if (days <= 60) b[1] += r.pendingAmount;
-      else if (days <= 90) b[2] += r.pendingAmount;
-      else b[3] += r.pendingAmount;
-    });
-    return b;
-  }, [payables]);
+const bucketColor = ['#ff9f0a', '#ff6b35', '#ff453a', '#c81d25'];
 
-  const total = buckets.reduce((s, v) => s + v, 0);
-  if (total === 0) return null;
-
-  const colors = ['#ff9f0a', '#ff6723', '#ff453a', '#d70015'];
-
+const StatCard = ({ title, value, subtitle, accent, icon }) => {
+  const IconComponent = icon;
   return (
-    <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,255,255,0.06)]">
-      <h4 className="text-[13px] font-semibold text-[#c7c7cc] mb-3">Antigüedad de Deuda</h4>
-      <div className="flex rounded-lg overflow-hidden h-5 mb-3">
-        {buckets.map((val, i) => val > 0 && (
-          <div key={i} className="h-full transition-all" style={{ width: `${(val / total) * 100}%`, backgroundColor: colors[i] }} />
-        ))}
+    <div className="rounded-[26px] border border-[rgba(205,219,243,0.78)] bg-white/84 p-5 shadow-[0_18px_44px_rgba(126,147,190,0.1)]">
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#6980ac]">{title}</p>
+          <p className="mt-2 text-[28px] font-semibold tracking-tight text-[#101938]">{value}</p>
+        </div>
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl" style={{ backgroundColor: `${accent}20`, color: accent }}>
+          <IconComponent size={18} />
+        </div>
       </div>
-      <div className="grid grid-cols-4 gap-2">
-        {AGING_BUCKETS.map((label, i) => (
-          <div key={label} className="text-center">
-            <div className="w-2.5 h-2.5 rounded-full mx-auto mb-1" style={{ backgroundColor: colors[i] }} />
-            <p className="text-[10px] text-[#636366]">{label}</p>
-            <p className="text-[12px] font-semibold text-[#c7c7cc]">{formatCurrency(buckets[i])}</p>
-          </div>
-        ))}
-      </div>
+      <p className="text-sm text-[#6b7a96]">{subtitle}</p>
     </div>
   );
 };
 
-const CreatePayableModal = ({ isOpen, onClose, onSubmit, projects }) => {
-  const [form, setForm] = useState({
-    invoiceNumber: '', vendor: '', projectId: '', description: '',
-    amount: '', issueDate: new Date().toISOString().split('T')[0],
-    dueDate: '', paymentTerms: 'net30', notes: '',
-  });
-
-  if (!isOpen) return null;
-
-  const handleTermsChange = (terms) => {
-    setForm(prev => {
-      const days = parseInt(terms.replace('net', '')) || 30;
-      const issue = new Date(prev.issueDate);
-      issue.setDate(issue.getDate() + days);
-      return { ...prev, paymentTerms: terms, dueDate: issue.toISOString().split('T')[0] };
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!form.vendor || !form.amount || !form.dueDate) return;
-    onSubmit(form);
-    setForm({ invoiceNumber: '', vendor: '', projectId: '', description: '', amount: '', issueDate: new Date().toISOString().split('T')[0], dueDate: '', paymentTerms: 'net30', notes: '' });
-    onClose();
-  };
+const AgingBar = ({ buckets }) => {
+  const total = buckets.reduce((sum, bucket) => sum + bucket.total, 0);
+  if (total <= 0) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-[#1c1c1e] rounded-2xl border border-[rgba(255,255,255,0.1)] p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" style={{ boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }}>
-        <h3 className="text-lg font-bold text-white mb-5">Nueva Cuenta por Pagar</h3>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-[11px] font-semibold text-[#8e8e93] uppercase mb-1.5">Nro. Factura</label>
-              <input value={form.invoiceNumber} onChange={e => setForm(p => ({ ...p, invoiceNumber: e.target.value }))}
-                className="w-full bg-[#2c2c2e] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2.5 text-sm text-white focus:border-[#ff453a] focus:outline-none" placeholder="INV-001" />
+    <div className="rounded-[26px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-5 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#6980ac]">Antigüedad</p>
+          <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[#101938]">Deuda vencida por tramos</h3>
+        </div>
+        <span className="rounded-full border border-[rgba(201,214,238,0.82)] bg-white/84 px-2.5 py-1 text-xs font-semibold text-[#6b7a96]">
+          {formatCurrency(total)}
+        </span>
+      </div>
+      <div className="mb-4 flex h-3 overflow-hidden rounded-full bg-[rgba(201,214,238,0.74)]">
+        {buckets.map((bucket, index) =>
+          bucket.total > 0 ? (
+            <div key={bucket.label} style={{ width: `${(bucket.total / total) * 100}%`, backgroundColor: bucketColor[index] }} />
+          ) : null,
+        )}
+      </div>
+      <div className="grid gap-3 sm:grid-cols-4">
+        {buckets.map((bucket, index) => (
+          <div key={bucket.label} className="rounded-[20px] border border-[rgba(201,214,238,0.74)] bg-white/78 px-3 py-3">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: bucketColor[index] }} />
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6980ac]">{bucket.label}</span>
             </div>
-            <div>
-              <label className="block text-[11px] font-semibold text-[#8e8e93] uppercase mb-1.5">Proveedor *</label>
-              <input value={form.vendor} onChange={e => setForm(p => ({ ...p, vendor: e.target.value }))} required
-                className="w-full bg-[#2c2c2e] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2.5 text-sm text-white focus:border-[#ff453a] focus:outline-none" placeholder="Nombre del proveedor" />
-            </div>
+            <p className="text-sm font-semibold text-[#101938]">{formatCurrency(bucket.total)}</p>
           </div>
-          <div>
-            <label className="block text-[11px] font-semibold text-[#8e8e93] uppercase mb-1.5">Descripción</label>
-            <input value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
-              className="w-full bg-[#2c2c2e] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2.5 text-sm text-white focus:border-[#ff453a] focus:outline-none" placeholder="Concepto de la factura" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-[11px] font-semibold text-[#8e8e93] uppercase mb-1.5">Monto (EUR) *</label>
-              <input type="number" step="0.01" min="0" value={form.amount} onChange={e => setForm(p => ({ ...p, amount: e.target.value }))} required
-                className="w-full bg-[#2c2c2e] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2.5 text-sm text-white focus:border-[#ff453a] focus:outline-none" />
-            </div>
-            <div>
-              <label className="block text-[11px] font-semibold text-[#8e8e93] uppercase mb-1.5">Proyecto</label>
-              <select value={form.projectId} onChange={e => setForm(p => ({ ...p, projectId: e.target.value }))}
-                className="w-full bg-[#2c2c2e] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2.5 text-sm text-white focus:border-[#ff453a] focus:outline-none">
-                <option value="">Sin proyecto</option>
-                {projects.map(p => <option key={p.id} value={p.id}>{p.name || p.code}</option>)}
-              </select>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className="block text-[11px] font-semibold text-[#8e8e93] uppercase mb-1.5">Fecha Emisión</label>
-              <input type="date" value={form.issueDate} onChange={e => setForm(p => ({ ...p, issueDate: e.target.value }))}
-                className="w-full bg-[#2c2c2e] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2.5 text-sm text-white focus:border-[#ff453a] focus:outline-none" />
-            </div>
-            <div>
-              <label className="block text-[11px] font-semibold text-[#8e8e93] uppercase mb-1.5">Condiciones</label>
-              <select value={form.paymentTerms} onChange={e => handleTermsChange(e.target.value)}
-                className="w-full bg-[#2c2c2e] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2.5 text-sm text-white focus:border-[#ff453a] focus:outline-none">
-                <option value="net15">Neto 15</option>
-                <option value="net20">Neto 20</option>
-                <option value="net30">Neto 30</option>
-                <option value="net60">Neto 60</option>
-                <option value="net90">Neto 90</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-[11px] font-semibold text-[#8e8e93] uppercase mb-1.5">Vencimiento *</label>
-              <input type="date" value={form.dueDate} onChange={e => setForm(p => ({ ...p, dueDate: e.target.value }))} required
-                className="w-full bg-[#2c2c2e] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2.5 text-sm text-white focus:border-[#ff453a] focus:outline-none" />
-            </div>
-          </div>
-          <div>
-            <label className="block text-[11px] font-semibold text-[#8e8e93] uppercase mb-1.5">Notas</label>
-            <textarea value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} rows={2}
-              className="w-full bg-[#2c2c2e] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2.5 text-sm text-white focus:border-[#ff453a] focus:outline-none resize-none" />
-          </div>
-          <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose}
-              className="px-4 py-2.5 rounded-xl text-sm font-medium text-[#8e8e93] hover:bg-[rgba(255,255,255,0.05)] transition-colors">
-              Cancelar
-            </button>
-            <button type="submit"
-              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#0a84ff] hover:bg-[#0070d8] transition-colors shadow-sm">
-              Crear Cuenta
-            </button>
-          </div>
-        </form>
+        ))}
       </div>
     </div>
   );
 };
 
 const CXPIndependiente = ({ user, userRole }) => {
-  const { payables, loading: pxLoading, createPayable, registerPayment, markAsPaid } = usePayables(user);
-  const { transactions, loading: txLoading } = useTransactions(user);
-  const { projects } = useProjects(user);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const { showToast } = useToast();
+  const metrics = useTreasuryMetrics({ user });
+  const { registerPayment: registerPayablePayment, markAsPaid: settlePayable } = usePayables(user);
+  const { registerPayment: registerLegacyPayment, markAsCompleted: settleLegacyPayable } = useTransactionActions(user);
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [selectedRow, setSelectedRow] = useState(null);
   const [loadingId, setLoadingId] = useState(null);
-  const [filter, setFilter] = useState('all');
-  const loading = pxLoading || txLoading;
 
-  let toastCtx;
-  try { toastCtx = useToast(); } catch { toastCtx = null; }
-  const showToast = toastCtx?.showToast;
+  const rows = useMemo(() => {
+    const source = metrics.payables;
+    return source
+      .filter((entry) => {
+        if (statusFilter !== 'all' && entry.status !== statusFilter) return false;
+        if (!searchTerm.trim()) return true;
+        const query = searchTerm.toLowerCase();
+        return (
+          (entry.counterpartyName || '').toLowerCase().includes(query) ||
+          (entry.description || '').toLowerCase().includes(query) ||
+          (entry.documentNumber || '').toLowerCase().includes(query) ||
+          (entry.projectName || '').toLowerCase().includes(query)
+        );
+      })
+      .sort((left, right) => (right.dueDate || '').localeCompare(left.dueDate || ''));
+  }, [metrics.payables, searchTerm, statusFilter]);
 
-  // Merge payables collection + expense transactions with pending/partial status
-  const allPayables = useMemo(() => {
-    const linkedIds = new Set(
-      payables.filter(p => p.linkedTransactionId).map(p => p.linkedTransactionId)
-    );
-
-    const fromTx = transactions
-      .filter(t => t.type === 'expense' && (t.status === 'pending' || t.status === 'partial') && !linkedIds.has(t.id))
-      .map(t => ({
-        id: `tx_${t.id}`,
-        invoiceNumber: '',
-        vendor: t.description || 'Sin descripción',
-        description: t.category || '',
-        amount: parseFloat(t.amount) || 0,
-        pendingAmount: (parseFloat(t.amount) || 0) - (parseFloat(t.paidAmount) || 0),
-        issueDate: t.date,
-        dueDate: t.date,
-        status: t.status === 'partial' ? 'partial' : 'issued',
-        payments: t.payments || [],
-        source: 'transaction',
-      }));
-
-    return [
-      ...payables.map(p => ({ ...p, source: 'payable' })),
-      ...fromTx,
-    ];
-  }, [payables, transactions]);
-
-  const filtered = useMemo(() => {
-    let items = allPayables;
-    if (filter === 'overdue') items = items.filter(r => r.status !== 'paid' && getDaysUntilDue(r.dueDate) < 0);
-    else if (filter !== 'all') items = items.filter(r => r.status === filter);
-    return items;
-  }, [allPayables, filter]);
-
-  const activePayables = allPayables.filter(r => r.status !== 'paid');
-  const totalPending = activePayables.reduce((s, r) => s + r.pendingAmount, 0);
-  const totalOverdue = activePayables.filter(r => getDaysUntilDue(r.dueDate) < 0).reduce((s, r) => s + r.pendingAmount, 0);
-  const totalPartial = allPayables.filter(r => r.status === 'partial').reduce((s, r) => s + (r.amount - r.pendingAmount), 0);
-  const dueThisWeek = activePayables.filter(r => { const d = getDaysUntilDue(r.dueDate); return d >= 0 && d <= 7; });
-  const totalDueThisWeek = dueThisWeek.reduce((s, r) => s + r.pendingAmount, 0);
-
-  const handleMarkPagado = async (item) => {
-    if (loadingId) return;
-    setLoadingId(item.id);
-    const result = await markAsPaid(item);
-    if (result?.success) showToast?.('Factura marcada como pagada');
-    else showToast?.('Error al marcar como pagada', 'error');
-    setLoadingId(null);
-  };
-
-  const handlePaymentSubmit = async (transaction, paymentData) => {
-    const result = await registerPayment(transaction, paymentData);
-    if (result?.success) showToast?.('Abono registrado correctamente');
-    else showToast?.('Error al registrar abono', 'error');
-  };
+  const openRows = metrics.payables.filter((entry) => ['issued', 'partial', 'overdue'].includes(entry.status));
+  const totalOpen = openRows.reduce((sum, entry) => sum + entry.openAmount, 0);
+  const totalOverdue = metrics.overduePayables.reduce((sum, entry) => sum + entry.openAmount, 0);
+  const totalPartial = metrics.payables
+    .filter((entry) => entry.stage === 'partial')
+    .reduce((sum, entry) => sum + entry.paidAmount, 0);
+  const dueSoon = metrics.upcomingPayables.reduce((sum, entry) => sum + entry.openAmount, 0);
 
   const canAct = userRole === 'admin' || userRole === 'manager';
 
-  if (loading) {
-    return <div className="flex items-center justify-center py-20"><div className="w-6 h-6 border-2 border-[#ff453a] border-t-transparent rounded-full animate-spin" /></div>;
+  const handleSettle = async (row) => {
+    if (loadingId) return;
+    setLoadingId(row.id);
+    try {
+      let result = { success: false };
+      if (row.source === 'payable') result = await settlePayable(row);
+      if (row.source === 'legacy-transaction') {
+        result = await settleLegacyPayable({
+          id: row.legacyTransactionId,
+          amount: row.grossAmount,
+          type: 'expense',
+        });
+      }
+      if (result.success) showToast('Cuenta por pagar liquidada');
+      else showToast('No se pudo liquidar la cuenta', 'error');
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
+  const handlePartialPayment = async (_transaction, paymentData) => {
+    if (!selectedRow) return;
+    let result = { success: false };
+    if (selectedRow.source === 'payable') {
+      result = await registerPayablePayment(selectedRow, paymentData);
+    }
+    if (selectedRow.source === 'legacy-transaction') {
+      result = await registerLegacyPayment(
+        {
+          id: selectedRow.legacyTransactionId,
+          amount: selectedRow.grossAmount,
+          paidAmount: selectedRow.paidAmount,
+          type: 'expense',
+        },
+        paymentData,
+      );
+    }
+    if (result.success) showToast('Pago parcial registrado');
+    else showToast('No se pudo registrar el pago', 'error');
+  };
+
+  if (metrics.loading) {
+    return (
+      <div className="flex items-center justify-center py-28">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#ff9f0a] border-t-transparent" />
+          <p className="text-sm text-[#6b7a96]">Preparando cuentas por pagar...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6 animate-fadeIn">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Cuentas por Pagar</h2>
-          <p className="text-[13px] text-[#636366] mt-0.5">Gestión de facturas y pagos pendientes</p>
+    <div className="space-y-6 pb-12">
+      <section className="rounded-[34px] border border-[rgba(205,219,243,0.82)] bg-[radial-gradient(circle_at_top_right,rgba(255,236,210,0.28),transparent_22%),radial-gradient(circle_at_top_left,rgba(147,196,255,0.24),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.9),rgba(244,248,255,0.86))] px-6 py-7 shadow-[0_32px_90px_rgba(126,147,190,0.14)]">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div>
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#c46a19]">Cuentas por pagar</p>
+            <h2 className="text-[32px] font-semibold tracking-tight text-[#101938]">Control de pagos, deuda y vencimientos.</h2>
+            <p className="mt-3 max-w-2xl text-[15px] leading-7 text-[#5f7091]">
+              Revisa los compromisos abiertos y conviértelos en salida real solo cuando el pago se registra.
+            </p>
+          </div>
         </div>
-        {canAct && (
-          <button onClick={() => setIsCreateOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#0a84ff] hover:bg-[#0070d8] text-white rounded-xl text-[13px] font-semibold transition-all shadow-sm">
-            <Plus size={16} /> Nueva CXP
-          </button>
-        )}
+      </section>
+
+      <div className="grid gap-4 lg:grid-cols-4">
+        <StatCard title="Deuda abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="#ff9f0a" icon={BadgeEuro} />
+        <StatCard title="Pagado parcial" value={formatCurrency(totalPartial)} subtitle="Importe ya saldado sobre documentos abiertos" accent="#64d2ff" icon={ArrowDownLeft} />
+        <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overduePayables.length} documentos fuera de plazo`} accent="#ff453a" icon={AlertTriangle} />
+        <StatCard title="Ventana 14d" value={formatCurrency(dueSoon)} subtitle={`${metrics.upcomingPayables.length} pagos proximos`} accent="#ff9f0a" icon={Clock3} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,69,58,0.15)]" style={{ background: 'linear-gradient(135deg, rgba(255,69,58,0.08) 0%, #1c1c1e 55%)' }}>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Total por Pagar</p>
-            <TrendingDown size={18} className="text-[#ff453a]" />
-          </div>
-          <p className="text-[28px] font-bold text-[#ff453a]">{formatCurrency(totalPending)}</p>
-          <p className="text-[11px] text-[#636366] mt-1">{activePayables.length} facturas activas</p>
-        </div>
-        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,159,10,0.15)]" style={{ background: 'linear-gradient(135deg, rgba(255,159,10,0.08) 0%, #1c1c1e 55%)' }}>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Pagado Parcial</p>
-            <DollarSign size={18} className="text-[#ff9f0a]" />
-          </div>
-          <p className="text-[28px] font-bold text-[#ff9f0a]">{formatCurrency(totalPartial)}</p>
-          <p className="text-[11px] text-[#636366] mt-1">{allPayables.filter(r => r.status === 'partial').length} con abono</p>
-        </div>
-        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,69,58,0.15)]" style={{ background: 'linear-gradient(135deg, rgba(255,69,58,0.08) 0%, #1c1c1e 55%)' }}>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Vencido</p>
-            <AlertCircle size={18} className="text-[#ff453a]" />
-          </div>
-          <p className="text-[28px] font-bold text-[#ff453a]">{formatCurrency(totalOverdue)}</p>
-          <p className="text-[11px] text-[#636366] mt-1">{activePayables.filter(r => getDaysUntilDue(r.dueDate) < 0).length} vencidas</p>
-        </div>
-        <div className="bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(255,159,10,0.15)]" style={{ background: 'linear-gradient(135deg, rgba(255,159,10,0.08) 0%, #1c1c1e 55%)' }}>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider">Vence Esta Semana</p>
-            <Clock size={18} className="text-[#ff9f0a]" />
-          </div>
-          <p className="text-[28px] font-bold text-[#ff9f0a]">{formatCurrency(totalDueThisWeek)}</p>
-          <p className="text-[11px] text-[#636366] mt-1">{dueThisWeek.length} próximas</p>
-        </div>
-      </div>
+      <AgingBar buckets={metrics.payablesAging} />
 
-      <AgingBar payables={allPayables} />
+      <section className="rounded-[28px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-5 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
+        <div className="mb-4 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="relative w-full xl:max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b8dae]" size={16} />
+            <input
+              className="w-full rounded-2xl border border-[rgba(201,214,238,0.82)] bg-white/88 py-3 pl-10 pr-4 text-sm text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
+              placeholder="Buscar proveedor, documento o proyecto"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[rgba(201,214,238,0.82)] bg-white/82 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#6980ac]">
+              <Filter size={14} />
+              Estado
+            </div>
+            {filters.map((filter) => (
+              <button
+                key={filter.id}
+                type="button"
+                onClick={() => setStatusFilter(filter.id)}
+                className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
+                  statusFilter === filter.id
+                    ? 'border-[rgba(212,122,34,0.24)] bg-[rgba(212,122,34,0.1)] text-[#c46a19]'
+                    : 'border-[rgba(201,214,238,0.82)] bg-white/82 text-[#6b7a96] hover:bg-white hover:text-[#101938]'
+                }`}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-      <div className="flex gap-2">
-        {[
-          { id: 'all', label: 'Todas' },
-          { id: 'issued', label: 'Emitidas' },
-          { id: 'partial', label: 'Parciales' },
-          { id: 'overdue', label: 'Vencidas' },
-          { id: 'paid', label: 'Pagadas' },
-        ].map(tab => (
-          <button key={tab.id} onClick={() => setFilter(tab.id)}
-            className={`px-3.5 py-1.5 rounded-lg text-[12px] font-medium transition-all ${
-              filter === tab.id
-                ? 'bg-[rgba(10,132,255,0.15)] text-[#0a84ff] border border-[rgba(10,132,255,0.3)]'
-                : 'text-[#8e8e93] hover:bg-[rgba(255,255,255,0.05)] border border-transparent'
-            }`}>
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="bg-[#1c1c1e] rounded-2xl border border-[rgba(255,255,255,0.06)] overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-[rgba(255,255,255,0.02)] border-b border-[rgba(255,255,255,0.06)]">
-              <tr>
-                <th className="px-4 py-3.5 text-[11px] font-semibold text-[#636366] uppercase tracking-wider">Factura</th>
-                <th className="px-4 py-3.5 text-[11px] font-semibold text-[#636366] uppercase tracking-wider">Proveedor</th>
-                <th className="px-4 py-3.5 text-[11px] font-semibold text-[#636366] uppercase tracking-wider hidden lg:table-cell">Concepto</th>
-                <th className="px-4 py-3.5 text-[11px] font-semibold text-[#636366] uppercase tracking-wider text-right">Monto</th>
-                <th className="px-4 py-3.5 text-[11px] font-semibold text-[#636366] uppercase tracking-wider text-right">Pendiente</th>
-                <th className="px-4 py-3.5 text-[11px] font-semibold text-[#636366] uppercase tracking-wider text-center">Vencimiento</th>
-                <th className="px-4 py-3.5 text-[11px] font-semibold text-[#636366] uppercase tracking-wider text-center">Estado</th>
-                {canAct && <th className="px-4 py-3.5 text-[11px] font-semibold text-[#636366] uppercase tracking-wider text-center">Acciones</th>}
+          <table className="w-full min-w-[980px] text-left">
+            <thead>
+              <tr className="border-b border-[rgba(201,214,238,0.78)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">
+                <th className="px-4 py-3">Proveedor</th>
+                <th className="px-4 py-3">Documento</th>
+                <th className="px-4 py-3">Proyecto</th>
+                <th className="px-4 py-3 text-right">Importe</th>
+                <th className="px-4 py-3 text-right">Abierto</th>
+                <th className="px-4 py-3 text-center">Vence</th>
+                <th className="px-4 py-3 text-center">Estado</th>
+                <th className="px-4 py-3 text-center">Origen</th>
+                {canAct && <th className="px-4 py-3 text-right">Acciones</th>}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[rgba(255,255,255,0.04)]">
-              {filtered.map((r) => {
-                const daysUntil = getDaysUntilDue(r.dueDate);
-                const isOverdue = daysUntil < 0 && r.status !== 'paid';
-                const isPaid = r.status === 'paid';
-                const isPartial = r.status === 'partial';
-                const paidPct = r.amount > 0 ? ((r.amount - r.pendingAmount) / r.amount) * 100 : 0;
-                const isLoading = loadingId === r.id;
-
+            <tbody className="divide-y divide-[rgba(201,214,238,0.58)]">
+              {rows.map((row) => {
+                const canSettle = row.source !== 'legacy-opening' && row.status !== 'settled' && row.status !== 'cancelled';
                 return (
-                  <tr key={r.id} className={`transition-colors ${isOverdue ? 'bg-[rgba(255,69,58,0.04)]' : 'hover:bg-[rgba(255,255,255,0.02)]'}`}>
-                    <td className="px-4 py-3.5">
-                      <div className="flex items-center gap-2">
-                        <FileText size={14} className="text-[#636366]" />
-                        <span className="text-[13px] font-medium text-[#c7c7cc]">{r.invoiceNumber || '-'}</span>
-                        {r.source === 'transaction' ? (
-                          <span className="px-1.5 py-0.5 rounded text-[9px] font-medium bg-[rgba(255,159,10,0.12)] text-[#ff9f0a] border border-[rgba(255,159,10,0.25)]">TXN</span>
-                        ) : r.source === 'payable' ? (
-                          <span className="px-1.5 py-0.5 rounded text-[9px] font-medium bg-[rgba(10,132,255,0.12)] text-[#0a84ff] border border-[rgba(10,132,255,0.25)]">Factura</span>
-                        ) : null}
-                      </div>
+                  <tr key={row.id} className="hover:bg-[rgba(90,141,221,0.04)]">
+                    <td className="px-4 py-4">
+                      <p className="text-sm font-semibold text-[#101938]">{row.counterpartyName}</p>
+                      <p className="text-xs text-[#6b7a96]">{row.description || 'Sin descripción'}</p>
                     </td>
-                    <td className="px-4 py-3.5">
-                      <span className="text-[13px] font-semibold text-white">{r.vendor}</span>
-                      {r.description && <p className="text-[11px] text-[#636366] mt-0.5">{r.description}</p>}
-                    </td>
-                    <td className="px-4 py-3.5 hidden lg:table-cell">
-                      <span className="text-[12px] text-[#8e8e93]">{r.description || '-'}</span>
-                    </td>
-                    <td className="px-4 py-3.5 text-right">
-                      <span className="text-[13px] font-bold text-[#ff453a]">{formatCurrency(r.amount)}</span>
-                    </td>
-                    <td className="px-4 py-3.5 text-right">
-                      <span className={`text-[13px] font-bold ${isPaid ? 'text-[#636366]' : 'text-white'}`}>
-                        {formatCurrency(r.pendingAmount)}
+                    <td className="px-4 py-4 text-sm text-[#16223f]">{row.documentNumber || 'Sin documento'}</td>
+                    <td className="px-4 py-4 text-sm text-[#6b7a96]">{row.projectName || 'Sin proyecto'}</td>
+                    <td className="px-4 py-4 text-right text-sm font-semibold text-[#101938]">{formatCurrency(row.grossAmount)}</td>
+                    <td className="px-4 py-4 text-right text-sm font-semibold text-[#c46a19]">{formatCurrency(row.openAmount)}</td>
+                    <td className="px-4 py-4 text-center text-sm text-[#6b7a96]">{row.dueDate ? formatDate(row.dueDate) : 'Sin fecha'}</td>
+                    <td className="px-4 py-4 text-center">
+                      <span
+                        className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${
+                          row.status === 'settled'
+                            ? 'border-[rgba(48,209,88,0.2)] bg-[rgba(48,209,88,0.12)] text-[#30d158]'
+                            : row.status === 'overdue'
+                              ? 'border-[rgba(255,69,58,0.2)] bg-[rgba(255,69,58,0.12)] text-[#ff453a]'
+                              : row.status === 'partial'
+                                ? 'border-[rgba(255,159,10,0.2)] bg-[rgba(255,159,10,0.12)] text-[#ff9f0a]'
+                                : 'border-[rgba(100,210,255,0.2)] bg-[rgba(100,210,255,0.12)] text-[#64d2ff]'
+                        }`}
+                      >
+                        {statusLabels[row.status]}
                       </span>
-                      {isPartial && (
-                        <div className="mt-1">
-                          <div className="w-full max-w-[100px] h-1 bg-[#2c2c2e] rounded-full overflow-hidden ml-auto">
-                            <div className="h-full bg-[#0a84ff] rounded-full" style={{ width: `${paidPct}%` }} />
-                          </div>
-                        </div>
-                      )}
                     </td>
-                    <td className="px-4 py-3.5 text-center">
-                      <span className="text-[12px] text-[#c7c7cc]">{formatDate(r.dueDate)}</span>
-                      {isOverdue && <p className="text-[10px] text-[#ff453a] font-medium mt-0.5">{Math.abs(daysUntil)}d vencido</p>}
-                      {!isOverdue && !isPaid && daysUntil <= 7 && <p className="text-[10px] text-[#ff9f0a] font-medium mt-0.5">{daysUntil}d restantes</p>}
-                    </td>
-                    <td className="px-4 py-3.5 text-center">
-                      {isPaid ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-[rgba(10,132,255,0.12)] text-[#0a84ff] border border-[rgba(10,132,255,0.25)]">
-                          <CheckCircle2 size={12} /> Pagada
-                        </span>
-                      ) : isPartial ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-[rgba(255,159,10,0.12)] text-[#ff9f0a] border border-[rgba(255,159,10,0.25)]">
-                          <Circle size={12} /> Parcial
-                        </span>
-                      ) : isOverdue ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-[rgba(255,69,58,0.12)] text-[#ff453a] border border-[rgba(255,69,58,0.25)]">
-                          <AlertCircle size={12} /> Vencida
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-[rgba(10,132,255,0.12)] text-[#0a84ff] border border-[rgba(10,132,255,0.25)]">
-                          <Circle size={12} /> Emitida
-                        </span>
-                      )}
-                    </td>
+                    <td className="px-4 py-4 text-center text-xs text-[#6b7a96]">{row.source}</td>
                     {canAct && (
-                      <td className="px-4 py-3.5 text-center">
-                        {!isPaid && (
-                          <div className="flex items-center justify-center gap-2">
-                            <button onClick={() => handleMarkPagado(r)} disabled={isLoading}
-                              className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-white bg-[#0a84ff] hover:bg-[#0070d8] disabled:opacity-50 transition-all">
-                              {isLoading ? '...' : 'Pagar'}
-                            </button>
-                            <button onClick={() => { setSelectedItem(r); setIsPaymentModalOpen(true); }} disabled={isLoading}
-                              className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#ff9f0a] bg-[rgba(255,159,10,0.1)] hover:bg-[rgba(255,159,10,0.2)] border border-[rgba(255,159,10,0.25)] disabled:opacity-50 transition-all">
-                              Abono
-                            </button>
-                          </div>
-                        )}
+                      <td className="px-4 py-4">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            type="button"
+                            disabled={!canSettle}
+                            onClick={() => setSelectedRow(row)}
+                            className="rounded-full border border-[rgba(201,214,238,0.82)] bg-white/82 px-3 py-2 text-xs font-semibold text-[#6b7a96] transition-all hover:bg-white hover:text-[#101938] disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            Abono
+                          </button>
+                          <button
+                            type="button"
+                            disabled={!canSettle || loadingId === row.id}
+                            onClick={() => handleSettle(row)}
+                            className="rounded-full bg-[#3156d3] px-3 py-2 text-xs font-semibold text-white transition-all hover:bg-[#2748b6] disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            Liquidar
+                          </button>
+                        </div>
                       </td>
                     )}
                   </tr>
                 );
               })}
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={canAct ? 8 : 7} className="px-4 py-16 text-center">
-                    <div className="flex flex-col items-center gap-3 text-[#636366]">
-                      <div className="w-16 h-16 bg-[#2c2c2e] rounded-full flex items-center justify-center">
-                        <ArrowDownCircle className="w-8 h-8 text-[#636366]" />
-                      </div>
-                      <p className="text-sm">No hay cuentas por pagar</p>
-                    </div>
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
-      </div>
+      </section>
 
-      <CreatePayableModal
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-        onSubmit={async (data) => {
-          const result = await createPayable(data);
-          if (result?.success) showToast?.('Cuenta por pagar creada');
-          else showToast?.('Error al crear cuenta', 'error');
-        }}
-        projects={projects}
+      <PartialPaymentModal
+        isOpen={Boolean(selectedRow)}
+        onClose={() => setSelectedRow(null)}
+        transaction={
+          selectedRow
+            ? {
+                id: selectedRow.legacyTransactionId || selectedRow.id,
+                description: selectedRow.description || selectedRow.counterpartyName,
+                amount: selectedRow.grossAmount,
+                paidAmount: selectedRow.paidAmount,
+                type: 'expense',
+              }
+            : null
+        }
+        onSubmit={handlePartialPayment}
       />
-
-      {selectedItem && (
-        <PartialPaymentModal
-          isOpen={isPaymentModalOpen}
-          onClose={() => { setIsPaymentModalOpen(false); setSelectedItem(null); }}
-          transaction={{ ...selectedItem, paidAmount: selectedItem.amount - selectedItem.pendingAmount }}
-          onSubmit={handlePaymentSubmit}
-        />
-      )}
     </div>
   );
 };

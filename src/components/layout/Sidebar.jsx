@@ -1,67 +1,38 @@
 import { signOut } from 'firebase/auth';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { auth } from '../../services/firebase';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  Briefcase, LayoutDashboard, ArrowUpCircle, ArrowDownCircle,
-  ListFilter, DollarSign, BarChart3, Settings, Plus, LogOut,
-  FileText, Target, Scale, Bell, History, Paperclip, RefreshCw,
-  Upload, BookOpen, Folder, TrendingUp, Coins, Shield, Database, Landmark
+  BarChart3,
+  Briefcase,
+  FolderKanban,
+  Globe,
+  Landmark,
+  LayoutDashboard,
+  LogOut,
+  Plus,
+  ReceiptText,
+  Scale,
+  Settings,
+  ShieldCheck,
+  WalletCards,
 } from 'lucide-react';
+import { auth } from '../../services/firebase';
 import { formatCurrency } from '../../utils/formatters';
 
-const NAV_SECTIONS = [
-  {
-    label: 'Principal',
-    items: [
-      { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
-      { path: '/alertas', label: 'Alertas', icon: Bell, permission: 'dashboard', color: '#ff9f0a' },
-    ],
-  },
-  {
-    label: 'Operaciones',
-    items: [
-      { path: '/ingresos', label: 'Ingresos', icon: ArrowUpCircle, permission: 'cxc', color: '#30d158' },
-      { path: '/gastos', label: 'Gastos', icon: ArrowDownCircle, permission: 'cxp', color: '#ff453a' },
-      { path: '/transactions', label: 'Transacciones', icon: ListFilter },
-      { path: '/recurrencia', label: 'Recurrentes', icon: RefreshCw },
-    ],
-  },
-  {
-    label: 'Cuentas',
-    items: [
-      { path: '/cxc', label: 'Ctas por Cobrar', icon: FileText, permission: 'cxc', color: '#30d158' },
-      { path: '/cxp', label: 'Ctas por Pagar', icon: FileText, permission: 'cxp', color: '#ff453a' },
-    ],
-  },
-  {
-    label: 'Análisis',
-    items: [
-      { path: '/presupuesto', label: 'Presupuesto', icon: Target, permission: 'reports', color: '#0a84ff' },
-      { path: '/cashflow', label: 'Flujo de Caja', icon: DollarSign, permission: 'reports' },
-      { path: '/proyeccion', label: 'Proyección', icon: TrendingUp, permission: 'reports', color: '#bf5af2' },
-      { path: '/balance', label: 'Balance General', icon: BookOpen, permission: 'reports' },
-      { path: '/proyectos', label: 'Por Proyecto', icon: Folder, permission: 'reports' },
-      { path: '/reportes', label: 'Reportes', icon: BarChart3, permission: 'reports' },
-    ],
-  },
-  {
-    label: 'Administración',
-    items: [
-      { path: '/conciliacion', label: 'Conciliación', icon: Scale, permission: 'settings' },
-      { path: '/import-export', label: 'Import/Export', icon: Upload, permission: 'settings' },
-      { path: '/adjuntos', label: 'Adjuntos', icon: Paperclip, permission: 'settings' },
-      { path: '/multi-moneda', label: 'Multi-Moneda', icon: Coins, permission: 'settings' },
-      { path: '/roles', label: 'Roles', icon: Shield, permission: 'settings' },
-      { path: '/auditoria', label: 'Auditoría', icon: History, permission: 'settings' },
-      { path: '/backup', label: 'Backup', icon: Database, permission: 'settings' },
-      { path: '/configuracion', label: 'Configuración', icon: Settings, permission: 'settings' },
-    ],
-  },
+const NAV_ITEMS = [
+  { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
+  { path: '/cashflow', label: 'Tesoreria', icon: WalletCards, permission: 'reports' },
+  { path: '/transactions', label: 'Transacciones', icon: Landmark, permission: 'dashboard' },
+  { path: '/cxc', label: 'CXC', icon: ReceiptText, permission: 'cxc' },
+  { path: '/cxp', label: 'CXP', icon: ReceiptText, permission: 'cxp' },
+  { path: '/reportes', label: 'Reportes', icon: BarChart3, permission: 'reports' },
+  { path: '/proyectos', label: 'Proyectos', icon: FolderKanban, permission: 'reports' },
+  { path: '/configuracion', label: 'Configuracion', icon: Settings, permission: 'settings' },
 ];
 
 const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceData, bankAccount }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const visibleItems = NAV_ITEMS.filter((item) => !item.permission || hasPermission(item.permission));
 
   const handleLogout = async () => {
     try {
@@ -71,132 +42,97 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
     }
   };
 
-  const NavItem = ({ path, label, icon: Icon, color }) => {
-    const isActive = location.pathname === path;
-
-    return (
-      <button
-        onClick={() => navigate(path)}
-        className={`
-          relative flex items-center gap-2.5 w-full px-3 py-[7px] rounded-[10px] text-[13px] font-medium transition-all duration-150
-          ${isActive
-            ? 'bg-[rgba(255,255,255,0.08)] text-white'
-            : 'text-[#8e8e93] hover:bg-[rgba(255,255,255,0.05)] hover:text-[#c7c7cc]'}
-        `}
-      >
-        {isActive && (
-          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 bg-[#30d158] rounded-r-sm" />
-        )}
-        <Icon size={16} className={isActive ? (color || 'text-[#30d158]') : 'text-[#636366]'} style={isActive && color ? { color } : undefined} />
-        <span className="flex-1 text-left truncate">{label}</span>
-      </button>
-    );
-  };
-
   return (
-    <aside className="hidden md:flex flex-col w-[250px] h-screen sticky top-0" style={{ background: 'rgba(28, 28, 30, 0.92)', backdropFilter: 'blur(40px) saturate(180%)', WebkitBackdropFilter: 'blur(40px) saturate(180%)', borderRight: '0.5px solid rgba(255,255,255,0.06)' }}>
-      {/* Logo */}
-      <div className="px-5 pt-5 pb-4 border-b border-[rgba(255,255,255,0.06)]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-gradient-to-br from-[#30d158] to-[#0a84ff] rounded-[9px] flex items-center justify-center shadow-lg">
-            <Briefcase className="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <h1 className="text-[14px] font-bold text-white tracking-tight leading-tight">FinControl</h1>
-            <p className="text-[10px] text-[#636366] font-medium">UMTELKOMD GmbH</p>
+    <header className="hidden border-b border-[rgba(255,255,255,0.34)] bg-[linear-gradient(180deg,#24283a_0%,#22263a_100%)] text-white shadow-[0_10px_40px_rgba(24,28,50,0.22)] md:block">
+      <div className="mx-auto max-w-[1280px] px-5 py-4">
+        <div className="flex items-center justify-between gap-4">
+          <button type="button" onClick={() => navigate('/')} className="flex min-w-0 items-center gap-3">
+            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[16px] bg-[linear-gradient(145deg,#1cd0ff,#36b8ff)] shadow-[0_14px_34px_rgba(0,162,255,0.32)]">
+              <Briefcase size={18} className="text-[#061224]" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="truncate text-[15px] font-semibold tracking-tight text-white">FinControl</h1>
+              <p className="truncate text-[10px] uppercase tracking-[0.22em] text-[rgba(202,214,255,0.72)]">Operations Console</p>
+            </div>
+          </button>
+
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {bankBalanceData && (
+              <div className="rounded-full border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-3.5 py-2 text-right">
+                <p className="text-[9px] uppercase tracking-[0.18em] text-[rgba(202,214,255,0.68)]">Caja</p>
+                <p className={`text-[12px] font-semibold ${bankBalanceData.currentBalance >= 0 ? 'text-[#9ff5ae]' : 'text-[#ffb0aa]'}`}>
+                  €{formatCurrency(bankBalanceData.currentBalance)}
+                </p>
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => navigate('/perfil')}
+              className="inline-flex max-w-[220px] items-center gap-2.5 rounded-full border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-3.5 py-2 text-left transition-colors hover:bg-[rgba(255,255,255,0.08)]"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(255,255,255,0.08)] text-[12px] font-semibold text-[#8be3ff]">
+                {(user?.displayName || user?.email || '?')[0].toUpperCase()}
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-[12px] font-semibold text-white">{user?.displayName || user?.email}</p>
+                <p className="text-[9px] uppercase tracking-[0.16em] text-[#8be3ff]">{userRole === 'admin' ? 'Admin' : userRole === 'manager' ? 'Manager' : 'Editor'}</p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] text-[rgba(232,237,255,0.86)] transition-colors hover:bg-[rgba(255,255,255,0.08)]"
+              title={bankAccount?.name || bankAccount?.bankName || 'Cuenta principal'}
+            >
+              <Globe size={15} />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNewTransaction()}
+              className="inline-flex items-center gap-2.5 rounded-full border border-[rgba(132,224,255,0.52)] bg-[linear-gradient(135deg,#1b68ff_0%,#1ab8ff_100%)] px-4 py-2.5 text-[12px] font-semibold text-white shadow-[0_16px_36px_rgba(24,102,255,0.34)] transition hover:translate-y-[-1px] hover:shadow-[0_20px_40px_rgba(24,102,255,0.4)]"
+              title="Crear registro financiero"
+            >
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[rgba(255,255,255,0.18)]">
+                <Plus size={13} />
+              </span>
+              Crear registro
+            </button>
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] text-[rgba(232,237,255,0.86)] transition-colors hover:bg-[rgba(255,255,255,0.08)]"
+            >
+              <LogOut size={15} />
+            </button>
           </div>
         </div>
 
-        {/* User pill — clickeable */}
-        <button onClick={() => navigate('/perfil')} className="mt-3 flex items-center gap-2 px-2.5 py-2 bg-[rgba(255,255,255,0.04)] rounded-lg border border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] transition-colors w-full text-left">
-          {user?.photoURL ? (
-            <img src={user.photoURL} alt="" className="w-6 h-6 rounded-full object-cover flex-shrink-0" />
-          ) : (
-            <div className="w-6 h-6 rounded-full bg-[rgba(191,90,242,0.15)] flex items-center justify-center flex-shrink-0">
-              <span className="text-[10px] font-bold text-[#bf5af2]">
-                {(user?.displayName || user?.email || '?')[0].toUpperCase()}
-              </span>
-            </div>
-          )}
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-medium text-[#c7c7cc] truncate">{user?.displayName || user?.email}</p>
-          </div>
-          <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${
-            userRole === 'admin' ? 'bg-[rgba(191,90,242,0.12)] text-[#bf5af2]' : 'bg-[rgba(10,132,255,0.12)] text-[#0a84ff]'
-          }`}>
-            {userRole === 'admin' ? 'Admin' : userRole === 'manager' ? 'Mgr' : 'Edit'}
-          </span>
-        </button>
-
-        {/* Bank Balance Mini Badge */}
-        {bankBalanceData && bankAccount && (
-          <div className="mt-2 px-2.5 py-2 bg-[rgba(255,255,255,0.03)] rounded-lg border border-[rgba(255,255,255,0.04)]">
-            <div className="flex items-center gap-2 mb-1">
-              <Landmark size={12} className={bankBalanceData.currentBalance >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'} />
-              <span className={`text-[12px] font-bold tabular-nums ${bankBalanceData.currentBalance >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
-                €{formatCurrency(bankBalanceData.currentBalance)}
-              </span>
-            </div>
-            {bankBalanceData.creditLimit < 0 && (() => {
-              const pct = Math.min(100, Math.max(0, (bankBalanceData.creditUsed / Math.abs(bankBalanceData.creditLimit)) * 100));
-              return (
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 h-1.5 bg-[rgba(255,255,255,0.06)] rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${pct}%`,
-                        background: pct > 80 ? '#ff453a' : pct > 50 ? '#ff9f0a' : '#30d158',
-                      }}
-                    />
-                  </div>
-                  <span className="text-[9px] text-[#636366] whitespace-nowrap">{pct.toFixed(0)}%</span>
-                </div>
-              );
-            })()}
-          </div>
-        )}
+        <nav className="mt-4 flex flex-wrap items-center gap-2">
+          {visibleItems.map((item) => {
+            const Icon = item.icon;
+            const active = location.pathname === item.path;
+            return (
+              <button
+                key={item.path}
+                type="button"
+                onClick={() => navigate(item.path)}
+                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[12px] font-medium transition-all ${
+                  active
+                    ? 'border-[rgba(104,213,255,0.58)] bg-[rgba(88,110,173,0.28)] text-white shadow-[0_10px_24px_rgba(33,59,117,0.24)]'
+                    : 'border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.02)] text-[rgba(232,237,255,0.86)] hover:bg-[rgba(255,255,255,0.06)]'
+                }`}
+              >
+                <Icon size={14} />
+                {item.label}
+              </button>
+            );
+          })}
+        </nav>
       </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto">
-        {NAV_SECTIONS.map((section) => {
-          const visibleItems = section.items.filter(item => !item.permission || hasPermission(item.permission));
-          if (visibleItems.length === 0) return null;
-          return (
-            <div key={section.label} className="mb-2">
-              <p className="text-[9px] font-bold text-[#48484a] uppercase tracking-widest px-3 py-1.5">{section.label}</p>
-              <div className="space-y-0.5">
-                {visibleItems.map(item => <NavItem key={item.path} {...item} />)}
-              </div>
-            </div>
-          );
-        })}
-      </nav>
-
-      {/* Actions */}
-      <div className="px-3 pb-3 space-y-2 border-t border-[rgba(255,255,255,0.06)] pt-3">
-        <button
-          onClick={onNewTransaction}
-          className="flex items-center justify-center gap-2 w-full bg-[#30d158] hover:bg-[#28c74e] text-white px-4 py-2.5 rounded-[10px] text-[13px] font-semibold transition-all shadow-sm hover:shadow-md"
-        >
-          <Plus size={16} /> Nueva Transacción
-        </button>
-        <button
-          onClick={handleLogout}
-          className="flex items-center justify-center gap-2 w-full hover:bg-[rgba(255,255,255,0.05)] text-[#636366] hover:text-[#8e8e93] px-4 py-2 rounded-[10px] text-[12px] font-medium transition-all"
-        >
-          <LogOut size={14} /> Cerrar Sesión
-        </button>
-      </div>
-
-      {/* Footer */}
-      <div className="px-3 py-2 border-t border-[rgba(255,255,255,0.04)] text-center">
-        <p className="text-[9px] text-[#3a3a3c]">
-          Desarrollado por <span className="font-semibold text-[#48484a]">HMR NEXUS</span>
-        </p>
-      </div>
-    </aside>
+    </header>
   );
 };
 

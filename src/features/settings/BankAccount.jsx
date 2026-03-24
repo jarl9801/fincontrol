@@ -16,6 +16,7 @@ const BankAccount = ({ user, transactions }) => {
 
   useEffect(() => {
     if (bankAccount) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm({
         bankName: bankAccount.bankName || '',
         balance: String(bankAccount.balance ?? ''),
@@ -41,7 +42,7 @@ const BankAccount = ({ user, transactions }) => {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 text-[#0a84ff] animate-spin" />
-        <span className="ml-3 text-[#8e8e93]">Cargando datos bancarios...</span>
+        <span className="ml-3 text-[#6b7a99]">Preparando datos bancarios...</span>
       </div>
     );
   }
@@ -53,64 +54,65 @@ const BankAccount = ({ user, transactions }) => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="p-3 bg-[rgba(59,130,246,0.12)] rounded-xl">
-          <Landmark className="text-[#0a84ff]" size={24} />
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-[#e5e5ea]">Cuenta Bancaria</h2>
-          <p className="text-sm text-[#8e8e93]">Configura el saldo inicial y linea de credito para calcular el flujo de caja real</p>
+      <div className="rounded-[28px] border border-[#dbe7ff] bg-[rgba(255,255,255,0.82)] px-6 py-5 shadow-[0_22px_70px_rgba(128,150,196,0.12)] backdrop-blur-xl">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(59,130,246,0.12)]">
+            <Landmark className="text-[#2563eb]" size={22} />
+          </div>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#5b7bd6]">Tesorería</p>
+            <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-[#1f2a44]">Cuenta bancaria</h2>
+            <p className="text-sm text-[#6b7a99]">Define el saldo base y el límite operativo para medir la liquidez disponible.</p>
+          </div>
         </div>
       </div>
 
-      {/* Form */}
-      <div className="bg-[#1c1c1e] rounded-2xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
-        <h3 className="text-lg font-bold text-[#e5e5ea] mb-4">Datos de la Cuenta</h3>
+      <div className="rounded-[28px] border border-[#dce6f8] bg-white/88 p-6 shadow-[0_20px_65px_rgba(134,153,186,0.12)]">
+        <h3 className="mb-4 text-base font-semibold tracking-[-0.02em] text-[#1f2a44]">Datos de la cuenta</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[#c7c7cc] mb-1">Nombre del Banco</label>
+            <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">Nombre del banco</label>
             <input
               type="text"
-              className="w-full px-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-2.5 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
               value={form.bankName}
               onChange={(e) => setForm({ ...form, bankName: e.target.value })}
               placeholder="Ej: CaixaBank, Santander..."
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#c7c7cc] mb-1">Fecha del Saldo</label>
+            <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">Fecha del saldo</label>
             <input
               type="date"
-              className="w-full px-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-2.5 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
               value={form.balanceDate}
               onChange={(e) => setForm({ ...form, balanceDate: e.target.value })}
             />
-            <p className="text-xs text-[#636366] mt-1">Las transacciones pagadas despues de esta fecha se suman/restan al saldo</p>
+            <p className="mt-1 text-xs text-[#70819f]">Los movimientos posteriores a esta fecha ajustan el saldo base.</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#c7c7cc] mb-1">Saldo Bancario (EUR)</label>
+            <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">Saldo bancario (EUR)</label>
             <input
               type="number"
               step="0.01"
-              className="w-full px-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-2.5 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
               value={form.balance}
               onChange={(e) => setForm({ ...form, balance: e.target.value })}
               placeholder="Ej: 15000.00"
             />
-            <p className="text-xs text-[#636366] mt-1">El saldo real de tu cuenta a la fecha indicada</p>
+            <p className="mt-1 text-xs text-[#70819f]">Saldo confirmado por el banco en la fecha seleccionada.</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#c7c7cc] mb-1">Limite Linea de Credito (EUR)</label>
+            <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[#6f7f9e]">Límite de línea de crédito (EUR)</label>
             <input
               type="number"
               step="0.01"
-              className="w-full px-4 py-2.5 border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-2.5 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
               value={form.creditLineLimit}
               onChange={(e) => setForm({ ...form, creditLineLimit: e.target.value })}
               placeholder="-40000"
             />
-            <p className="text-xs text-[#636366] mt-1">Valor negativo. Ej: -40000 significa que puedes deber hasta 40.000 EUR</p>
+            <p className="mt-1 text-xs text-[#70819f]">Usa un valor negativo. Ejemplo: `-40000` equivale a 40.000 EUR disponibles.</p>
           </div>
         </div>
 
@@ -118,113 +120,110 @@ const BankAccount = ({ user, transactions }) => {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-2xl bg-[#2563eb] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1f56cf] disabled:opacity-50"
           >
             {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-            {saving ? 'Guardando...' : 'Guardar Configuracion'}
+            {saving ? 'Guardando...' : 'Guardar configuración'}
           </button>
           {saved && (
-            <span className="text-sm text-[#30d158] font-medium">Guardado correctamente</span>
+            <span className="text-sm font-medium text-[#0f9f6e]">Configuración guardada</span>
           )}
         </div>
       </div>
 
-      {/* Real Balance Cards */}
       {bankAccount && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
+          <div className="rounded-[24px] border border-[#dce6f8] bg-white/86 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Saldo Inicial</h3>
-              <Landmark className="text-[#0a84ff]" size={20} />
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Saldo inicial</h3>
+              <Landmark className="text-[#2563eb]" size={18} />
             </div>
-            <p className="text-2xl font-bold text-[#0a84ff]">{formatCurrency(realBalance.startingBalance)}</p>
-            <p className="text-xs text-[#636366] mt-1">Al {bankAccount.balanceDate}</p>
+            <p className="text-[28px] font-semibold tracking-[-0.03em] text-[#1f5fbf]">{formatCurrency(realBalance.startingBalance)}</p>
+            <p className="mt-1 text-xs text-[#70819f]">Al {bankAccount.balanceDate}</p>
           </div>
 
-          <div className="bg-[#1c1c1e] rounded-xl p-5 shadow-sm border border-[rgba(255,255,255,0.08)]">
+          <div className="rounded-[24px] border border-[#dce6f8] bg-white/86 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)]">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Movimiento Neto</h3>
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Movimiento neto</h3>
               {realBalance.netMovement >= 0
-                ? <TrendingUp className="text-[#30d158]" size={20} />
-                : <TrendingDown className="text-[#ff453a]" size={20} />
+                ? <TrendingUp className="text-[#0f9f6e]" size={18} />
+                : <TrendingDown className="text-[#d04c36]" size={18} />
               }
             </div>
-            <p className={`text-2xl font-bold ${realBalance.netMovement >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
+            <p className={`text-[28px] font-semibold tracking-[-0.03em] ${realBalance.netMovement >= 0 ? 'text-[#0f9f6e]' : 'text-[#d04c36]'}`}>
               {realBalance.netMovement >= 0 ? '+' : ''}{formatCurrency(realBalance.netMovement)}
             </p>
-            <p className="text-xs text-[#636366] mt-1">{realBalance.transactionsCount} transacciones pagadas</p>
+            <p className="mt-1 text-xs text-[#70819f]">{realBalance.transactionsCount} movimientos contabilizados</p>
           </div>
 
-          <div className={`bg-[#1c1c1e] rounded-xl p-5 shadow-sm border ${realBalance.currentBalance < 0 ? 'border-[rgba(239,68,68,0.25)]' : 'border-[rgba(255,255,255,0.08)]'}`}>
+          <div className={`rounded-[24px] bg-white/86 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)] ${realBalance.currentBalance < 0 ? 'border border-[rgba(208,76,54,0.24)]' : 'border border-[#dce6f8]'}`}>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Saldo Actual</h3>
-              <Landmark className={realBalance.currentBalance >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'} size={20} />
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Saldo actual</h3>
+              <Landmark className={realBalance.currentBalance >= 0 ? 'text-[#0f9f6e]' : 'text-[#d04c36]'} size={18} />
             </div>
-            <p className={`text-2xl font-bold ${realBalance.currentBalance >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
+            <p className={`text-[28px] font-semibold tracking-[-0.03em] ${realBalance.currentBalance >= 0 ? 'text-[#0f9f6e]' : 'text-[#d04c36]'}`}>
               {formatCurrency(realBalance.currentBalance)}
             </p>
-            <p className="text-xs text-[#636366] mt-1">Saldo proyectado hoy</p>
+            <p className="mt-1 text-xs text-[#70819f]">Saldo operativo proyectado al día de hoy</p>
           </div>
 
-          <div className={`bg-[#1c1c1e] rounded-xl p-5 shadow-sm border ${parseFloat(creditUtilizationPct) > 80 ? 'border-[rgba(239,68,68,0.25)]' : 'border-[rgba(255,255,255,0.08)]'}`}>
+          <div className={`rounded-[24px] bg-white/86 p-5 shadow-[0_18px_55px_rgba(134,153,186,0.12)] ${parseFloat(creditUtilizationPct) > 80 ? 'border border-[rgba(208,76,54,0.24)]' : 'border border-[#dce6f8]'}`}>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-[#8e8e93] uppercase tracking-wide">Credito Disponible</h3>
-              <CreditCard className={parseFloat(creditUtilizationPct) > 80 ? 'text-[#ff453a]' : 'text-[#0a84ff]'} size={20} />
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Crédito disponible</h3>
+              <CreditCard className={parseFloat(creditUtilizationPct) > 80 ? 'text-[#d04c36]' : 'text-[#2563eb]'} size={18} />
             </div>
-            <p className={`text-2xl font-bold ${parseFloat(creditUtilizationPct) > 80 ? 'text-[#ff453a]' : 'text-[#0a84ff]'}`}>
+            <p className={`text-[28px] font-semibold tracking-[-0.03em] ${parseFloat(creditUtilizationPct) > 80 ? 'text-[#d04c36]' : 'text-[#1f5fbf]'}`}>
               {formatCurrency(realBalance.availableCredit)}
             </p>
-            <p className="text-xs text-[#636366] mt-1">
-              Limite: {formatCurrency(Math.abs(creditLimit))} | Usado: {creditUtilizationPct}%
+            <p className="mt-1 text-xs text-[#70819f]">
+              Límite: {formatCurrency(Math.abs(creditLimit))} | Uso: {creditUtilizationPct}%
             </p>
           </div>
         </div>
       )}
 
-      {/* Credit Line Visualization */}
       {bankAccount && creditLimit < 0 && (
-        <div className="bg-[#1c1c1e] rounded-2xl p-6 shadow-sm border border-[rgba(255,255,255,0.08)]">
-          <h3 className="text-lg font-bold text-[#e5e5ea] mb-4">Utilizacion de Linea de Credito</h3>
+        <div className="rounded-[28px] border border-[#dce6f8] bg-white/88 p-6 shadow-[0_20px_65px_rgba(134,153,186,0.12)]">
+          <h3 className="mb-4 text-base font-semibold tracking-[-0.02em] text-[#1f2a44]">Utilización de línea de crédito</h3>
 
           <div className="mb-4">
             <div className="flex justify-between text-sm mb-2">
-              <span className="text-[#98989d]">Limite: {formatCurrency(Math.abs(creditLimit))}</span>
-              <span className={`font-medium ${parseFloat(creditUtilizationPct) > 80 ? 'text-[#ff453a]' : 'text-[#0a84ff]'}`}>
+              <span className="text-[#6f7f9e]">Límite: {formatCurrency(Math.abs(creditLimit))}</span>
+              <span className={`font-medium ${parseFloat(creditUtilizationPct) > 80 ? 'text-[#d04c36]' : 'text-[#1f5fbf]'}`}>
                 {creditUtilizationPct}% utilizado
               </span>
             </div>
-            <div className="w-full h-4 bg-[#2c2c2e] rounded-full overflow-hidden">
+            <div className="h-4 w-full overflow-hidden rounded-full bg-[#edf3ff]">
               <div
                 className={`h-full rounded-full transition-all ${
-                  parseFloat(creditUtilizationPct) > 80 ? 'bg-[rgba(255,69,58,0.12)]' :
-                  parseFloat(creditUtilizationPct) > 50 ? 'bg-[rgba(255,159,10,0.12)]' : 'bg-[rgba(10,132,255,0.12)]'
+                  parseFloat(creditUtilizationPct) > 80 ? 'bg-[#f4a69b]' :
+                  parseFloat(creditUtilizationPct) > 50 ? 'bg-[#f3cf8c]' : 'bg-[#8db6ff]'
                 }`}
                 style={{ width: `${Math.min(parseFloat(creditUtilizationPct), 100)}%` }}
               />
             </div>
           </div>
 
-          {/* Scale markers */}
-          <div className="flex justify-between text-xs text-[#636366]">
+          <div className="flex justify-between text-xs text-[#70819f]">
             <span>0 EUR</span>
             <span>{formatCurrency(Math.abs(creditLimit) * 0.5)}</span>
             <span>{formatCurrency(Math.abs(creditLimit))}</span>
           </div>
 
           {realBalance.currentBalance <= creditLimit && (
-            <div className="mt-4 p-3 bg-[rgba(239,68,68,0.08)] border border-[rgba(239,68,68,0.25)] rounded-lg flex items-center gap-2">
-              <AlertTriangle className="text-[#ff453a]" size={18} />
-              <span className="text-sm text-[#ff453a] font-medium">
-                Has excedido el limite de la linea de credito
+            <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[rgba(208,76,54,0.24)] bg-[rgba(255,244,241,0.92)] p-3">
+              <AlertTriangle className="text-[#d04c36]" size={18} />
+              <span className="text-sm font-medium text-[#d04c36]">
+                Has superado el límite de la línea de crédito
               </span>
             </div>
           )}
 
           {parseFloat(creditUtilizationPct) > 80 && realBalance.currentBalance > creditLimit && (
-            <div className="mt-4 p-3 bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.25)] rounded-lg flex items-center gap-2">
-              <AlertTriangle className="text-[#ff9f0a]" size={18} />
-              <span className="text-sm text-[#ff9f0a] font-medium">
-                Estas usando mas del 80% de tu linea de credito
+            <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[rgba(214,149,44,0.24)] bg-[rgba(255,248,234,0.94)] p-3">
+              <AlertTriangle className="text-[#c98717]" size={18} />
+              <span className="text-sm font-medium text-[#c98717]">
+                Estás usando más del 80% de la línea de crédito
               </span>
             </div>
           )}

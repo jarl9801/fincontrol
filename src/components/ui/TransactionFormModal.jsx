@@ -117,7 +117,7 @@ const TransactionFormModal = ({
       });
     }
     setShowSuggestions(false);
-  }, [editingTransaction, isOpen, projects, defaultType]);
+  }, [activeProjects, defaultType, editingTransaction, expenseCategories, incomeCategories, isOpen, projects]);
 
   const handleTypeChange = (newType) => {
     const categories = getCategoriesByType(newType);
@@ -207,36 +207,34 @@ const TransactionFormModal = ({
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
-      <div className="bg-[#1c1c1e] rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-scaleIn max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="px-6 py-5 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#2c2c2e]">
+      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[30px] border border-[#dce6f8] bg-[rgba(255,255,255,0.96)] shadow-[0_35px_120px_rgba(15,23,42,0.24)] animate-scaleIn">
+        <div className="flex items-center justify-between border-b border-[#e2ebfb] bg-[rgba(245,248,255,0.94)] px-6 py-5">
           <div>
-            <h3 className="font-bold text-xl text-[#e5e5ea]">
-              {editingTransaction ? 'Editar Transacción' : 'Nueva Transacción'}
+            <h3 className="text-xl font-semibold tracking-[-0.03em] text-[#1f2a44]">
+              {editingTransaction ? 'Editar transacción' : 'Nueva transacción'}
             </h3>
-            <p className="text-sm text-[#8e8e93] mt-0.5">
-              {editingTransaction ? 'Modifica los detalles de la transacción' : 'Ingresa los datos de la nueva transacción'}
+            <p className="mt-0.5 text-sm text-[#6b7a99]">
+              {editingTransaction ? 'Actualiza los datos del registro seleccionado' : 'Ingresa los datos del nuevo registro'}
             </p>
           </div>
           <button 
             onClick={onClose} 
-            className="p-2 text-[#636366] hover:text-[#98989d] hover:bg-[rgba(255,255,255,0.05)] rounded-xl transition-all"
+            className="rounded-2xl p-2 text-[#7a879d] transition hover:bg-[rgba(94,115,159,0.08)] hover:text-[#5f6f8d]"
           >
             <X size={20} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          {/* ── Tipo de transacción ── */}
-          <div className="grid grid-cols-2 gap-3 p-1.5 bg-[#2c2c2e] rounded-2xl">
+          <div className="grid grid-cols-2 gap-3 rounded-[22px] border border-[#dce6f8] bg-[rgba(245,248,255,0.94)] p-1.5">
             <button
               type="button"
               onClick={() => handleTypeChange('income')}
               className={`
                 flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
                 ${formData.type === 'income' 
-                  ? 'bg-[#1c1c1e] text-[#30d158] shadow-md' 
-                  : 'text-[#8e8e93] hover:text-[#c7c7cc]'}
+                  ? 'bg-white text-[#0f9f6e] shadow-sm' 
+                  : 'text-[#6b7a99] hover:text-[#1f2a44]'}
               `}
             >
               <ArrowUpCircle size={18} />
@@ -248,8 +246,8 @@ const TransactionFormModal = ({
               className={`
                 flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
                 ${formData.type === 'expense' 
-                  ? 'bg-[#1c1c1e] text-[#ff453a] shadow-md' 
-                  : 'text-[#8e8e93] hover:text-[#c7c7cc]'}
+                  ? 'bg-white text-[#d04c36] shadow-sm' 
+                  : 'text-[#6b7a99] hover:text-[#1f2a44]'}
               `}
             >
               <ArrowDownCircle size={18} />
@@ -257,39 +255,38 @@ const TransactionFormModal = ({
             </button>
           </div>
 
-          {/* ── Detalles ── */}
           <div className="flex items-center gap-2 pt-1">
-            <span className="text-[10px] font-bold text-[#636366] uppercase tracking-widest">Detalles</span>
-            <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#93a0b6]">Detalles</span>
+            <div className="h-px flex-1 bg-[#e2ebfb]" />
           </div>
 
           {/* Date & Amount */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
+              <label className="mb-2 block text-sm font-semibold text-[#4b5d83]">
                 Fecha <span className="text-[#ff453a]">*</span>
               </label>
               <input
                 type="date"
                 required
-                className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
+                className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                 value={formData.date}
                 onChange={e => setFormData({...formData, date: e.target.value})}
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
+              <label className="mb-2 block text-sm font-semibold text-[#4b5d83]">
                 Monto (EUR) <span className="text-[#ff453a]">*</span>
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#636366] font-medium">€</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-medium text-[#7a879d]">€</span>
                 <input
                   type="number"
                   step="0.01"
                   min="0.01"
                   required
                   placeholder="0.00"
-                  className="w-full pl-8 pr-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
+                  className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] py-3 pl-8 pr-4 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                   value={formData.amount}
                   onChange={e => setFormData({...formData, amount: e.target.value})}
                 />
@@ -297,9 +294,8 @@ const TransactionFormModal = ({
             </div>
           </div>
 
-          {/* Description with Autocomplete */}
           <div className="relative">
-            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
+            <label className="mb-2 block text-sm font-semibold text-[#4b5d83]">
               Descripción <span className="text-[#ff453a]">*</span>
             </label>
             <input
@@ -309,31 +305,30 @@ const TransactionFormModal = ({
               placeholder={formData.type === 'income' 
                 ? "ej. Venta de servicios, Factura #123..." 
                 : "ej. Compra de materiales, Pago proveedor..."}
-              className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all"
+              className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
               value={formData.description}
               onChange={handleDescriptionChange}
               onKeyDown={handleDescriptionKeyDown}
               onFocus={() => formData.description.trim().length >= 2 && setShowSuggestions(true)}
               autoComplete="off"
             />
-            {/* Suggestions Dropdown */}
             {showSuggestions && suggestions.length > 0 && (
               <div
                 ref={suggestionsRef}
-                className="absolute z-[300] left-0 right-0 mt-1 bg-[#2c2c2e] border border-[rgba(255,255,255,0.12)] rounded-xl overflow-hidden"
-                style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}
+                className="absolute left-0 right-0 z-[300] mt-1 overflow-hidden rounded-2xl border border-[#dce6f8] bg-white/98"
+                style={{ boxShadow: '0 18px 48px rgba(87, 112, 153, 0.18)' }}
               >
                 {suggestions.map((s, idx) => (
                   <button
                     key={s.id}
                     type="button"
                     onClick={() => handleSelectSuggestion(s)}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
-                      idx === activeSuggestionIndex ? 'bg-[#2c2c2e]' : 'hover:bg-[#111111]'
-                    } ${idx > 0 ? 'border-t border-[rgba(255,255,255,0.08)]' : ''}`}
+                    className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
+                      idx === activeSuggestionIndex ? 'bg-[rgba(59,130,246,0.08)]' : 'hover:bg-[rgba(241,246,255,0.86)]'
+                    } ${idx > 0 ? 'border-t border-[#eef2fb]' : ''}`}
                   >
-                    <span className="font-medium text-[#e5e5ea]">{s.description}</span>
-                    <span className="text-xs text-[#636366] ml-2">
+                    <span className="font-medium text-[#1f2a44]">{s.description}</span>
+                    <span className="ml-2 text-xs text-[#70819f]">
                       {s.category} · €{Number(s.amount).toFixed(2)}
                     </span>
                   </button>
@@ -342,7 +337,6 @@ const TransactionFormModal = ({
             )}
           </div>
 
-          {/* Recurring Transaction Toggle */}
           <div className="space-y-3">
             <label className="flex items-center gap-3 cursor-pointer group">
               <div className="relative">
@@ -352,21 +346,21 @@ const TransactionFormModal = ({
                   checked={formData.isRecurring}
                   onChange={(e) => setFormData({ ...formData, isRecurring: e.target.checked })}
                 />
-                <div className="w-10 h-5 bg-[#2c2c2e] rounded-full peer-checked:bg-[rgba(48,209,88,0.12)] transition-colors"></div>
-                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-[#1c1c1e] rounded-full shadow-sm transition-transform peer-checked:translate-x-5"></div>
+                <div className="h-5 w-10 rounded-full bg-[#d7e3f6] transition-colors peer-checked:bg-[rgba(15,159,110,0.24)]"></div>
+                <div className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5"></div>
               </div>
               <div className="flex items-center gap-2">
-                <RefreshCw size={16} className="text-[#8e8e93]" />
-                <span className="text-sm font-semibold text-[#c7c7cc]">Transacción recurrente</span>
+                <RefreshCw size={16} className="text-[#6b7a99]" />
+                <span className="text-sm font-semibold text-[#4b5d83]">Transacción recurrente</span>
               </div>
             </label>
 
             {formData.isRecurring && (
               <div className="grid grid-cols-2 gap-4 pl-1 animate-fadeIn">
                 <div>
-                  <label className="block text-xs font-medium text-[#98989d] mb-1.5">Frecuencia</label>
+                  <label className="mb-1.5 block text-xs font-medium text-[#70819f]">Frecuencia</label>
                   <select
-                    className="w-full px-3 py-2.5 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
+                    className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-3 py-2.5 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                     value={formData.recurringFrequency}
                     onChange={e => setFormData({ ...formData, recurringFrequency: e.target.value })}
                   >
@@ -376,10 +370,10 @@ const TransactionFormModal = ({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[#98989d] mb-1.5">Fecha fin (opcional)</label>
+                  <label className="mb-1.5 block text-xs font-medium text-[#70819f]">Fecha fin (opcional)</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2.5 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
+                    className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-3 py-2.5 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                     value={formData.recurringEndDate}
                     onChange={e => setFormData({ ...formData, recurringEndDate: e.target.value })}
                   />
@@ -388,31 +382,29 @@ const TransactionFormModal = ({
             )}
           </div>
 
-          {/* ── Clasificación ── */}
           <div className="flex items-center gap-2 pt-1">
-            <span className="text-[10px] font-bold text-[#636366] uppercase tracking-widest">Clasificación</span>
-            <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#93a0b6]">Clasificación</span>
+            <div className="h-px flex-1 bg-[#e2ebfb]" />
           </div>
 
-          {/* Project */}
           <div>
-            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
+            <label className="mb-2 block text-sm font-semibold text-[#4b5d83]">
               Proyecto <span className="text-[#ff453a]">*</span>
             </label>
             <div className="relative">
               {projectsLoading ? (
-                <div className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl flex items-center gap-2 text-[#8e8e93]">
+                <div className="flex w-full items-center gap-2 rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-[#6b7a99]">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   Cargando proyectos...
                 </div>
               ) : activeProjects.length === 0 ? (
-                <div className="w-full px-4 py-3 bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.25)] rounded-xl text-[#ff9f0a] text-sm">
+                <div className="w-full rounded-2xl border border-[rgba(214,149,44,0.24)] bg-[rgba(255,248,234,0.94)] px-4 py-3 text-sm text-[#c98717]">
                   No hay proyectos activos. Crea uno primero en Configuración → Proyectos.
                 </div>
               ) : (
                 <select
                   required
-                  className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
+                  className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                   value={formData.project}
                   onChange={e => setFormData({...formData, project: e.target.value})}
                 >
@@ -427,11 +419,10 @@ const TransactionFormModal = ({
             </div>
           </div>
 
-          {/* Category */}
           <div>
-            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Categoría</label>
+            <label className="mb-2 block text-sm font-semibold text-[#4b5d83]">Categoría</label>
             <select
-              className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
+              className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
               value={formData.category}
               onChange={e => setFormData({...formData, category: e.target.value})}
             >
@@ -439,12 +430,11 @@ const TransactionFormModal = ({
             </select>
           </div>
 
-          {/* Cost Center - Solo para gastos */}
           {formData.type === 'expense' && (
             <div>
-              <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Centro de Costo</label>
+              <label className="mb-2 block text-sm font-semibold text-[#4b5d83]">Centro de costo</label>
               <select
-                className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm"
+                className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
                 value={formData.costCenter}
                 onChange={e => setFormData({...formData, costCenter: e.target.value})}
               >
@@ -456,15 +446,13 @@ const TransactionFormModal = ({
             </div>
           )}
 
-          {/* ── Estado y notas ── */}
           <div className="flex items-center gap-2 pt-1">
-            <span className="text-[10px] font-bold text-[#636366] uppercase tracking-widest">Estado y Notas</span>
-            <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#93a0b6]">Estado y notas</span>
+            <div className="h-px flex-1 bg-[#e2ebfb]" />
           </div>
 
-          {/* Status */}
           <div>
-            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Estado de Pago</label>
+            <label className="mb-2 block text-sm font-semibold text-[#4b5d83]">Estado de pago</label>
             <div className="flex gap-3">
               <button
                 type="button"
@@ -472,8 +460,8 @@ const TransactionFormModal = ({
                 className={`
                   flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
                   ${formData.status === 'pending'
-                    ? 'border-amber-400 bg-[rgba(245,158,11,0.08)] text-[#ff9f0a]'
-                    : 'border-[rgba(255,255,255,0.08)] text-[#98989d] hover:border-[rgba(245,158,11,0.25)]'}
+                    ? 'border-[#e0b460] bg-[rgba(214,149,44,0.08)] text-[#c98717]'
+                    : 'border-[#d8e3f7] text-[#6b7a99] hover:border-[rgba(214,149,44,0.25)]'}
                 `}
               >
                 Pendiente
@@ -484,8 +472,8 @@ const TransactionFormModal = ({
                 className={`
                   flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
                   ${formData.status === 'paid'
-                    ? 'border-emerald-400 bg-[rgba(16,185,129,0.08)] text-[#30d158]'
-                    : 'border-[rgba(255,255,255,0.08)] text-[#98989d] hover:border-[rgba(16,185,129,0.25)]'}
+                    ? 'border-[#7fcfb5] bg-[rgba(15,159,110,0.08)] text-[#0f9f6e]'
+                    : 'border-[#d8e3f7] text-[#6b7a99] hover:border-[rgba(15,159,110,0.25)]'}
                 `}
               >
                 Pagado
@@ -493,9 +481,8 @@ const TransactionFormModal = ({
             </div>
           </div>
 
-          {/* Comment */}
           <div>
-            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">
+            <label className="mb-2 block text-sm font-semibold text-[#4b5d83]">
               Comentario {editingTransaction ? '(agregar nota)' : '(opcional)'}
             </label>
             <textarea
@@ -503,18 +490,17 @@ const TransactionFormModal = ({
               placeholder={editingTransaction 
                 ? "Agregar comentario sobre esta modificación..." 
                 : "Agregar comentario inicial (opcional)..."}
-              className="w-full px-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#1c1c1e] outline-none transition-all text-sm resize-none"
+              className="w-full resize-none rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
               value={formData.comment}
               onChange={e => setFormData({...formData, comment: e.target.value})}
             />
           </div>
 
-          {/* Action Buttons */}
           <div className="flex gap-3 pt-1">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3.5 rounded-xl font-semibold text-[#8e8e93] bg-[#2c2c2e] hover:bg-[rgba(255,255,255,0.08)] hover:text-[#c7c7cc] transition-all duration-200 border border-[rgba(255,255,255,0.06)]"
+              className="flex-1 rounded-2xl border border-[#d8e3f7] bg-[rgba(245,248,255,0.94)] py-3.5 font-semibold text-[#6b7a99] transition hover:bg-[rgba(94,115,159,0.08)] hover:text-[#5f6f8d]"
             >
               Cancelar
             </button>
@@ -525,13 +511,13 @@ const TransactionFormModal = ({
                 flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-white
                 transition-all duration-200 shadow-lg
                 ${formData.type === 'income'
-                  ? 'bg-[#30d158] hover:bg-[#28c74e]'
-                  : 'bg-[#0a84ff] hover:bg-[#0070e0]'}
+                  ? 'bg-[#0f9f6e] hover:bg-[#0c875d]'
+                  : 'bg-[#2563eb] hover:bg-[#1f56cf]'}
                 ${(submitting || projectsLoading || activeProjects.length === 0) ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl'}
               `}
             >
               {submitting ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-              {submitting ? 'Guardando...' : editingTransaction ? 'Guardar Cambios' : 'Crear Transacción'}
+              {submitting ? 'Guardando...' : editingTransaction ? 'Guardar cambios' : 'Crear transacción'}
             </button>
           </div>
         </form>

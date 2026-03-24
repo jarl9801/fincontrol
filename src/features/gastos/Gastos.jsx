@@ -1,316 +1,301 @@
-import React, { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
-  TrendingDown, Clock, AlertCircle, DollarSign, CheckCircle2,
-  Circle, ArrowDownCircle, RefreshCw, Plus, Search
+  AlertTriangle,
+  ArrowDownCircle,
+  BadgeEuro,
+  Plus,
+  Search,
+  Wallet,
 } from 'lucide-react';
-import { formatCurrency, formatDate, getDaysOverdue } from '../../utils/formatters';
-import { useTransactionActions } from '../../hooks/useTransactionActions';
 import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
 import { useToast } from '../../contexts/ToastContext';
+import { usePayables } from '../../hooks/usePayables';
+import { useTransactionActions } from '../../hooks/useTransactionActions';
+import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
+import { formatCurrency, formatDate } from '../../utils/formatters';
 
-const safe = (v) => (v == null ? '' : typeof v === 'object' ? JSON.stringify(v) : String(v));
+const statusOptions = [
+  { id: 'all', label: 'Todas' },
+  { id: 'issued', label: 'Emitidas' },
+  { id: 'partial', label: 'Parciales' },
+  { id: 'overdue', label: 'Vencidas' },
+  { id: 'settled', label: 'Liquidadas' },
+];
 
-const StatCard = ({ title, value, color, icon: Icon, subtitle }) => {
-  const palette = {
-    green:  { grad: 'rgba(48,209,88,0.09)',   border: 'rgba(48,209,88,0.2)',   iconBg: 'rgba(48,209,88,0.15)',   iconColor: '#30d158', valueColor: '#30d158' },
-    red:    { grad: 'rgba(255,69,58,0.09)',    border: 'rgba(255,69,58,0.2)',   iconBg: 'rgba(255,69,58,0.15)',   iconColor: '#ff453a', valueColor: '#ff453a' },
-    orange: { grad: 'rgba(255,159,10,0.09)',   border: 'rgba(255,159,10,0.2)',  iconBg: 'rgba(255,159,10,0.15)',  iconColor: '#ff9f0a', valueColor: '#ff9f0a' },
-  };
-  const c = palette[color] || palette.red;
+const statusLabels = {
+  issued: 'Emitida',
+  partial: 'Parcial',
+  overdue: 'Vencida',
+  settled: 'Liquidada',
+  cancelled: 'Cancelada',
+};
+
+const StatCard = ({ title, value, subtitle, accent, icon }) => {
+  const IconComponent = icon;
+
   return (
-    <div
-      className="rounded-xl p-5 border transition-all duration-200 hover:translate-y-[-1px] hover:shadow-lg"
-      style={{ background: `linear-gradient(135deg, ${c.grad} 0%, #1c1c1e 55%)`, borderColor: c.border }}
-    >
-      <div className="flex items-center gap-3 mb-3">
-        <div className="p-2.5 rounded-xl flex-shrink-0" style={{ background: c.iconBg }}>
-          <Icon size={18} style={{ color: c.iconColor }} />
+    <div className="rounded-[26px] border border-[rgba(255,255,255,0.08)] bg-[rgba(10,11,15,0.92)] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6e6e73]">{title}</p>
+          <p className="mt-2 text-[28px] font-semibold tracking-tight text-white">{value}</p>
         </div>
-        <p className="text-[11px] font-semibold text-[#8e8e93] uppercase tracking-wider leading-tight">{title}</p>
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl" style={{ backgroundColor: `${accent}1f`, color: accent }}>
+          <IconComponent size={18} />
+        </div>
       </div>
-      <p className="text-[30px] font-bold tracking-tight leading-none" style={{ color: c.valueColor }}>
-        €{formatCurrency(value)}
-      </p>
-      {subtitle && <p className="text-[11px] text-[#636366] mt-2">{subtitle}</p>}
+      <p className="text-sm text-[#8e8e93]">{subtitle}</p>
     </div>
   );
 };
 
-const Gastos = ({ transactions, allTransactions, userRole, user, onNewTransaction }) => {
-  const { registerPayment, markAsCompleted } = useTransactionActions(user);
+const toModalTransaction = (row) => ({
+  id: row.id,
+  amount: row.grossAmount,
+  paidAmount: row.paidAmount,
+  description: row.description || row.counterpartyName || 'Documento',
+});
+
+const Gastos = ({ userRole, user, onNewTransaction }) => {
   const { showToast } = useToast();
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [paymentTransaction, setPaymentTransaction] = useState(null);
-  const [loadingId, setLoadingId] = useState(null);
+  const metrics = useTreasuryMetrics({ user });
+  const { registerPayment: registerPayablePayment, markAsPaid: settlePayable } = usePayables(user);
+  const { registerPayment: registerLegacyPayment, markAsCompleted: settleLegacyPayable } = useTransactionActions(user);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-
-  const source = allTransactions && allTransactions.length > 0 ? allTransactions : transactions;
-
-  // All expense transactions
-  const allExpenses = useMemo(() => source.filter(t => t.type === 'expense'), [source]);
-  
-  // Pending payables (CXP)
-  const payables = useMemo(
-    () => allExpenses.filter(t => t.status === 'pending' || t.status === 'partial'),
-    [allExpenses]
-  );
-
-  // Completed/paid expenses
-  const completedExpenses = useMemo(
-    () => allExpenses.filter(t => t.status === 'paid' || t.status === 'completed'),
-    [allExpenses]
-  );
-
-  // Stats
-  const totalPayable = payables.reduce((sum, t) => sum + (t.amount - (t.paidAmount || 0)), 0);
-  const totalPaid = completedExpenses.reduce((sum, t) => sum + t.amount, 0);
-  const overduePayables = payables.filter(t => getDaysOverdue(t.date) > 15);
-  const totalOverdue = overduePayables.reduce((sum, t) => sum + (t.amount - (t.paidAmount || 0)), 0);
-  const partialPayables = payables.filter(t => t.status === 'partial');
-  const totalPartialPaid = partialPayables.reduce((sum, t) => sum + (t.paidAmount || 0), 0);
-
-  // Filter transactions for the table
-  const filteredTransactions = useMemo(() => {
-    let items;
-    if (statusFilter === 'pending') items = payables;
-    else if (statusFilter === 'completed') items = completedExpenses;
-    else if (statusFilter === 'overdue') items = overduePayables;
-    else items = allExpenses;
-
-    if (searchTerm.trim()) {
-      const q = searchTerm.toLowerCase();
-      items = items.filter(t =>
-        (t.description || '').toLowerCase().includes(q) ||
-        (t.project || '').toLowerCase().includes(q) ||
-        (t.counterparty || '').toLowerCase().includes(q) ||
-        (t.category || '').toLowerCase().includes(q)
-      );
-    }
-
-    return [...items].sort((a, b) => {
-      const aOv = (a.status === 'pending' || a.status === 'partial') && getDaysOverdue(a.date) > 15 ? 1 : 0;
-      const bOv = (b.status === 'pending' || b.status === 'partial') && getDaysOverdue(b.date) > 15 ? 1 : 0;
-      if (aOv !== bOv) return bOv - aOv;
-      return (b.date || '').localeCompare(a.date || '');
-    });
-  }, [allExpenses, payables, completedExpenses, overduePayables, statusFilter, searchTerm]);
-
-  const handleMarkPagado = async (t) => {
-    if (loadingId) return;
-    setLoadingId(t.id);
-    const result = await markAsCompleted(t);
-    if (result?.success) showToast('Gasto marcado como pagado ✅');
-    else showToast('Error al marcar como pagado', 'error');
-    setLoadingId(null);
-  };
-
-  const handlePaymentSubmit = async (transaction, paymentData) => {
-    const result = await registerPayment(transaction, paymentData);
-    if (result?.success) showToast('Abono registrado correctamente ✅');
-    else showToast('Error al registrar abono', 'error');
-  };
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [loadingId, setLoadingId] = useState(null);
 
   const canAct = userRole === 'admin' || userRole === 'manager';
 
-  const statusTabs = [
-    { key: 'all', label: 'Todos', count: allExpenses.length },
-    { key: 'pending', label: 'Por Pagar', count: payables.length },
-    { key: 'completed', label: 'Pagados', count: completedExpenses.length },
-    { key: 'overdue', label: 'Vencidos', count: overduePayables.length },
-  ];
+  const paymentMovements = useMemo(
+    () => metrics.postedMovements.filter((entry) => String(entry.kind || '').includes('payment')),
+    [metrics.postedMovements],
+  );
+
+  const rows = useMemo(() => {
+    return metrics.payables
+      .filter((entry) => {
+        if (statusFilter !== 'all' && entry.status !== statusFilter) return false;
+        if (!searchTerm.trim()) return true;
+        const query = searchTerm.toLowerCase();
+        return (
+          (entry.counterpartyName || '').toLowerCase().includes(query) ||
+          (entry.description || '').toLowerCase().includes(query) ||
+          (entry.documentNumber || '').toLowerCase().includes(query) ||
+          (entry.projectName || '').toLowerCase().includes(query)
+        );
+      })
+      .sort((left, right) => (right.dueDate || '').localeCompare(left.dueDate || ''));
+  }, [metrics.payables, searchTerm, statusFilter]);
+
+  const openRows = metrics.payables.filter((entry) => ['issued', 'partial', 'overdue'].includes(entry.status));
+  const totalOpen = openRows.reduce((sum, entry) => sum + entry.openAmount, 0);
+  const totalOverdue = metrics.overduePayables.reduce((sum, entry) => sum + entry.openAmount, 0);
+  const totalPartial = metrics.payables
+    .filter((entry) => entry.status === 'partial')
+    .reduce((sum, entry) => sum + entry.paidAmount, 0);
+  const paidReal = paymentMovements.reduce((sum, entry) => sum + entry.amount, 0);
+
+  const handleSettle = async (row) => {
+    if (loadingId) return;
+    setLoadingId(row.id);
+    try {
+      let result = { success: false };
+      if (row.source === 'payable') result = await settlePayable(row);
+      if (row.source === 'legacy-transaction') {
+        result = await settleLegacyPayable({
+          id: row.legacyTransactionId,
+          amount: row.grossAmount,
+          type: 'expense',
+        });
+      }
+      if (result.success) showToast('Gasto liquidado');
+      else showToast('No se pudo liquidar el gasto', 'error');
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
+  const handlePartialPayment = async (_transaction, paymentData) => {
+    if (!selectedRow) return;
+    let result = { success: false };
+    if (selectedRow.source === 'payable') result = await registerPayablePayment(selectedRow, paymentData);
+    if (selectedRow.source === 'legacy-transaction') {
+      result = await registerLegacyPayment(
+        {
+          id: selectedRow.legacyTransactionId,
+          amount: selectedRow.grossAmount,
+          paidAmount: selectedRow.paidAmount,
+          type: 'expense',
+        },
+        paymentData,
+      );
+    }
+    if (result.success) showToast('Pago parcial registrado');
+    else showToast('No se pudo registrar el pago', 'error');
+  };
+
+  if (metrics.loading) {
+    return (
+      <div className="flex items-center justify-center py-28">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#ff9f0a] border-t-transparent" />
+          <p className="text-sm text-[#8e8e93]">Consolidando gastos operativos...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6 animate-fadeIn">
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Pagado" value={totalPaid} color="red" icon={TrendingDown} subtitle={`${completedExpenses.length} gastos pagados`} />
-        <StatCard title="Por Pagar" value={totalPayable} color="orange" icon={Clock} subtitle={`${payables.length} facturas pendientes`} />
-        <StatCard title="Vencido" value={totalOverdue} color="red" icon={AlertCircle} subtitle={`${overduePayables.length} facturas vencidas (+15 días)`} />
-        <StatCard title="Pagos Parciales" value={totalPartialPaid} color="orange" icon={DollarSign} subtitle={`${partialPayables.length} con abono parcial`} />
-      </div>
-
-      {/* Toolbar */}
-      <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.06)] p-4">
-        <div className="flex flex-col md:flex-row gap-3 items-start md:items-center justify-between">
-          {/* Search */}
-          <div className="relative flex-1 w-full md:max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#636366]" size={16} />
-            <input
-              type="text"
-              placeholder="Buscar gastos..."
-              className="w-full pl-9 pr-4 py-2 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-lg text-sm focus:ring-2 focus:ring-[#ff453a] focus:border-transparent outline-none transition-all"
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-            />
+    <div className="space-y-6 pb-12">
+      <section className="rounded-[34px] border border-[rgba(255,255,255,0.08)] bg-[radial-gradient(circle_at_top_left,rgba(255,159,10,0.18),transparent_28%),linear-gradient(160deg,#17110b_0%,#090b10_100%)] px-6 py-7 shadow-[0_40px_120px_rgba(0,0,0,0.42)]">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div>
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#ffc773]">Gastos</p>
+            <h2 className="text-[32px] font-semibold tracking-tight text-white">Pagos reales y deuda operativa sin mezclar con caja futura.</h2>
+            <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[#a7a7ad]">
+              Las CXP abiertas permanecen fuera de caja hasta registrar una salida real en banco. Aquí ves deuda, abonos y pagos realizados sobre el mismo ledger.
+            </p>
           </div>
-
-          {/* Status Tabs */}
-          <div className="flex items-center gap-1 bg-[rgba(255,255,255,0.04)] rounded-xl p-1">
-            {statusTabs.map(tab => (
-              <button
-                key={tab.key}
-                onClick={() => setStatusFilter(tab.key)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-                  statusFilter === tab.key
-                    ? 'bg-[rgba(255,69,58,0.15)] text-[#ff453a] shadow-sm'
-                    : 'text-[#8e8e93] hover:text-[#c7c7cc] hover:bg-[rgba(255,255,255,0.06)]'
-                }`}
-              >
-                {tab.label}
-                <span className={`inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-bold transition-all duration-200 ${
-                  statusFilter === tab.key
-                    ? 'bg-[rgba(255,69,58,0.25)] text-[#ff453a]'
-                    : 'bg-[rgba(255,255,255,0.08)] text-[#636366]'
-                }`}>{tab.count}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* New Expense Button */}
           {canAct && onNewTransaction && (
             <button
+              type="button"
               onClick={() => onNewTransaction('expense')}
-              className="flex items-center gap-2 px-4 py-2 bg-[#ff453a] hover:bg-[#e63b31] text-white rounded-lg text-sm font-semibold transition-all shadow-sm"
+              className="inline-flex items-center gap-2 rounded-2xl bg-[#ff453a] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#e63b31]"
             >
-              <Plus size={16} /> Nuevo Gasto
+              <Plus size={16} />
+              Nueva factura CXP
             </button>
           )}
         </div>
+      </section>
+
+      <div className="grid gap-4 lg:grid-cols-4">
+        <StatCard title="Pagado real" value={formatCurrency(paidReal)} subtitle={`${paymentMovements.length} pagos bancarios registrados`} accent="#ff453a" icon={Wallet} />
+        <StatCard title="Deuda abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="#ff9f0a" icon={BadgeEuro} />
+        <StatCard title="Pago parcial" value={formatCurrency(totalPartial)} subtitle="Importe ya pagado sobre facturas aún abiertas" accent="#64d2ff" icon={ArrowDownCircle} />
+        <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overduePayables.length} documentos fuera de plazo`} accent="#ff453a" icon={AlertTriangle} />
       </div>
 
-      {/* Table */}
-      <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.06)] overflow-hidden">
+      <section className="rounded-[28px] border border-[rgba(255,255,255,0.08)] bg-[rgba(10,11,15,0.92)] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
+        <div className="mb-4 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="relative w-full xl:max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6e6e73]" size={16} />
+            <input
+              className="w-full rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#101115] py-3 pl-10 pr-4 text-sm text-white outline-none transition-all focus:border-[rgba(255,159,10,0.35)]"
+              placeholder="Buscar proveedor, documento o proyecto"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {statusOptions.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => setStatusFilter(option.id)}
+                className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
+                  statusFilter === option.id
+                    ? 'border-[rgba(255,159,10,0.28)] bg-[rgba(255,159,10,0.12)] text-[#ff9f0a]'
+                    : 'border-[rgba(255,255,255,0.08)] text-[#8e8e93] hover:bg-[rgba(255,255,255,0.04)] hover:text-white'
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-[#111111] border-b border-[rgba(255,255,255,0.08)] sticky top-0 z-10">
-              <tr>
-                <th className="px-5 py-4 text-[11px] font-semibold text-[#636366] uppercase tracking-wider">Fecha</th>
-                <th className="px-5 py-4 text-[11px] font-semibold text-[#636366] uppercase tracking-wider">Descripción</th>
-                <th className="px-5 py-4 text-[11px] font-semibold text-[#636366] uppercase tracking-wider hidden lg:table-cell">Proyecto</th>
-                <th className="px-5 py-4 text-[11px] font-semibold text-[#636366] uppercase tracking-wider hidden md:table-cell">Centro Costo</th>
-                <th className="px-5 py-4 text-[11px] font-semibold text-[#636366] uppercase tracking-wider text-right">Monto</th>
-                <th className="px-5 py-4 text-[11px] font-semibold text-[#636366] uppercase tracking-wider text-center">Estado</th>
-                {canAct && <th className="px-5 py-4 text-[11px] font-semibold text-[#636366] uppercase tracking-wider text-center">Acciones</th>}
+          <table className="w-full min-w-[980px] text-left">
+            <thead>
+              <tr className="border-b border-[rgba(255,255,255,0.06)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6e6e73]">
+                <th className="px-4 py-3">Proveedor</th>
+                <th className="px-4 py-3">Documento</th>
+                <th className="px-4 py-3">Proyecto</th>
+                <th className="px-4 py-3 text-right">Bruto</th>
+                <th className="px-4 py-3 text-right">Abierto</th>
+                <th className="px-4 py-3 text-center">Vence</th>
+                <th className="px-4 py-3 text-center">Estado</th>
+                <th className="px-4 py-3 text-center">Origen</th>
+                {canAct && <th className="px-4 py-3 text-right">Acciones</th>}
               </tr>
             </thead>
-            <tbody>
-              {filteredTransactions.map((t, rowIdx) => {
-                const isOverdue = (t.status === 'pending' || t.status === 'partial') && getDaysOverdue(t.date) > 15;
-                const isPartial = t.status === 'partial';
-                const isPaid = t.status === 'paid' || t.status === 'completed';
-                const paidAmount = t.paidAmount || 0;
-                const remaining = t.amount - paidAmount;
-                const paidPct = t.amount > 0 ? (paidAmount / t.amount) * 100 : 0;
-                const isLoading = loadingId === t.id;
-                const rowBg = isOverdue ? 'bg-[rgba(255,69,58,0.04)]' : rowIdx % 2 === 0 ? 'bg-transparent' : 'bg-[rgba(255,255,255,0.015)]';
-
+            <tbody className="divide-y divide-[rgba(255,255,255,0.04)]">
+              {rows.map((row) => {
+                const canSettle = row.source !== 'legacy-opening' && row.status !== 'settled' && row.status !== 'cancelled';
                 return (
-                  <tr key={t.id} className={`border-b border-[rgba(255,255,255,0.04)] last:border-0 transition-colors ${rowBg} hover:bg-[rgba(255,255,255,0.035)]`}>
-                    <td className="px-5 py-4 whitespace-nowrap">
-                      <span className="text-sm text-[#c7c7cc]">{formatDate(t.date)}</span>
-                      {isOverdue && <span className="block text-[10px] text-[#ff453a] font-medium mt-0.5">Vencido {getDaysOverdue(t.date)}d</span>}
+                  <tr key={row.id} className="hover:bg-[rgba(255,255,255,0.03)]">
+                    <td className="px-4 py-4">
+                      <p className="text-sm font-semibold text-white">{row.counterpartyName}</p>
+                      <p className="text-xs text-[#8e8e93]">{row.description || 'Sin descripción'}</p>
                     </td>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-[rgba(255,69,58,0.1)]">
-                          <ArrowDownCircle className="w-4.5 h-4.5 text-[#ff453a]" />
-                        </div>
-                        <div className="min-w-0">
-                          <span className="text-[13px] font-medium text-[#e5e5ea] block truncate">{safe(t.description)}</span>
-                          {t.counterparty && <span className="text-[11px] text-[#636366]">{safe(t.counterparty)}</span>}
-                          {t.isRecurring && (
-                            <span className="inline-flex items-center gap-1 text-[10px] text-[#8e8e93] mt-0.5">
-                              <RefreshCw size={10} /> Recurrente
-                            </span>
-                          )}
-                          {isPartial && (
-                            <div className="mt-1.5">
-                              <div className="w-28 h-1.5 bg-[#2c2c2e] rounded-full overflow-hidden">
-                                <div className="h-full bg-[#ff453a] rounded-full" style={{ width: `${paidPct}%` }} />
-                              </div>
-                              <span className="text-[10px] text-[#8e8e93] mt-0.5 block">€{formatCurrency(paidAmount)} / €{formatCurrency(t.amount)}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
+                    <td className="px-4 py-4 text-sm text-[#d6d6db]">{row.documentNumber || 'Sin documento'}</td>
+                    <td className="px-4 py-4 text-sm text-[#8e8e93]">{row.projectName || 'Sin proyecto'}</td>
+                    <td className="px-4 py-4 text-right text-sm font-semibold text-white">{formatCurrency(row.grossAmount)}</td>
+                    <td className="px-4 py-4 text-right text-sm font-semibold text-[#ff9f0a]">{formatCurrency(row.openAmount)}</td>
+                    <td className="px-4 py-4 text-center text-sm text-[#8e8e93]">{row.dueDate ? formatDate(row.dueDate) : 'Sin fecha'}</td>
+                    <td className="px-4 py-4 text-center">
+                      <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${
+                        row.status === 'settled'
+                          ? 'border-[rgba(48,209,88,0.2)] bg-[rgba(48,209,88,0.12)] text-[#30d158]'
+                          : row.status === 'overdue'
+                            ? 'border-[rgba(255,69,58,0.2)] bg-[rgba(255,69,58,0.12)] text-[#ff453a]'
+                            : row.status === 'partial'
+                              ? 'border-[rgba(255,159,10,0.2)] bg-[rgba(255,159,10,0.12)] text-[#ff9f0a]'
+                              : 'border-[rgba(100,210,255,0.2)] bg-[rgba(100,210,255,0.12)] text-[#64d2ff]'
+                      }`}>
+                        {statusLabels[row.status]}
+                      </span>
                     </td>
-                    <td className="px-5 py-4 hidden lg:table-cell">
-                      <span className="text-[12px] text-[#8e8e93]">{safe(t.project)}</span>
-                    </td>
-                    <td className="px-5 py-4 hidden md:table-cell">
-                      <span className="text-[12px] text-[#8e8e93]">{safe(t.costCenter || 'Sin asignar')}</span>
-                    </td>
-                    <td className="px-5 py-4 text-right whitespace-nowrap">
-                      <span className="text-[13px] font-semibold text-[#ff453a]">-€{formatCurrency(t.amount)}</span>
-                      {isPartial && <span className="block text-[11px] text-[#ff9f0a] mt-0.5">Resta: €{formatCurrency(remaining)}</span>}
-                    </td>
-                    <td className="px-5 py-4 text-center">
-                      {isPaid ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-[rgba(48,209,88,0.1)] text-[#30d158] border border-[rgba(48,209,88,0.2)]">
-                          <CheckCircle2 size={12} /> Pagado
-                        </span>
-                      ) : isPartial ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-[rgba(255,159,10,0.1)] text-[#ff9f0a] border border-[rgba(255,159,10,0.2)]">
-                          <Circle size={12} /> Parcial
-                        </span>
-                      ) : isOverdue ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-[rgba(255,69,58,0.1)] text-[#ff453a] border border-[rgba(255,69,58,0.2)]">
-                          <AlertCircle size={12} /> Vencido
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-[rgba(255,159,10,0.08)] text-[#ff9f0a] border border-[rgba(255,159,10,0.15)]">
-                          <Clock size={12} /> Pendiente
-                        </span>
-                      )}
-                    </td>
+                    <td className="px-4 py-4 text-center text-xs text-[#8e8e93]">{row.source}</td>
                     {canAct && (
-                      <td className="px-5 py-4 text-center">
-                        {!isPaid && (
-                          <div className="flex items-center justify-center gap-2">
-                            <button
-                              onClick={() => handleMarkPagado(t)}
-                              disabled={isLoading}
-                              className="px-3 py-1.5 rounded-lg text-[12px] font-semibold text-white bg-[#0a84ff] hover:bg-[#0070e0] disabled:opacity-50 transition-all duration-200 shadow-sm"
-                            >
-                              {isLoading ? '...' : '✓ Pagado'}
-                            </button>
-                            <button
-                              onClick={() => { setPaymentTransaction(t); setIsPaymentModalOpen(true); }}
-                              disabled={isLoading}
-                              className="px-3 py-1.5 rounded-lg text-[12px] font-semibold text-[#ff9f0a] bg-transparent hover:bg-[rgba(255,159,10,0.1)] border border-[rgba(255,159,10,0.3)] disabled:opacity-50 transition-all duration-200"
-                            >
-                              Abono
-                            </button>
-                          </div>
-                        )}
+                      <td className="px-4 py-4">
+                        <div className="flex justify-end gap-2">
+                          {canSettle && (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => setSelectedRow(row)}
+                                className="rounded-xl border border-[rgba(255,255,255,0.08)] px-3 py-2 text-xs font-semibold text-[#64d2ff] transition-colors hover:bg-[rgba(100,210,255,0.12)]"
+                              >
+                                Abono
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleSettle(row)}
+                                disabled={loadingId === row.id}
+                                className="rounded-xl bg-[#ff453a] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#e63b31] disabled:opacity-50"
+                              >
+                                {loadingId === row.id ? 'Procesando...' : 'Liquidar'}
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </td>
                     )}
                   </tr>
                 );
               })}
-              {filteredTransactions.length === 0 && (
+              {rows.length === 0 && (
                 <tr>
-                  <td colSpan={canAct ? 7 : 6} className="px-5 py-16 text-center">
-                    <div className="flex flex-col items-center gap-3 text-[#636366]">
-                      <div className="w-14 h-14 bg-[#2c2c2e] rounded-full flex items-center justify-center">
-                        <ArrowDownCircle className="w-7 h-7 text-[#636366]" />
-                      </div>
-                      <p className="text-sm">No hay gastos que mostrar</p>
-                    </div>
+                  <td colSpan={canAct ? 9 : 8} className="px-4 py-8 text-center text-sm text-[#6e6e73]">
+                    No hay gastos que coincidan con los filtros.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-      </div>
+      </section>
 
       <PartialPaymentModal
-        isOpen={isPaymentModalOpen}
-        onClose={() => { setIsPaymentModalOpen(false); setPaymentTransaction(null); }}
-        transaction={paymentTransaction}
-        onSubmit={handlePaymentSubmit}
+        isOpen={Boolean(selectedRow)}
+        onClose={() => setSelectedRow(null)}
+        transaction={selectedRow ? toModalTransaction(selectedRow) : null}
+        onSubmit={handlePartialPayment}
       />
     </div>
   );

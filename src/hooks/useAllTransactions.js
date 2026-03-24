@@ -9,25 +9,25 @@ import { transactions2025 as data2025 } from '../data/transactions2025';
 export const useAllTransactions = (user) => {
   const { transactions: firebaseTransactions, loading: fbLoading } = useTransactions(user);
 
-  const transactions2026 = useMemo(() => {
+  const liveTransactions = useMemo(() => {
     return firebaseTransactions.map((t) => ({
       ...t,
-      source: '2026-firebase',
-      year: 2026,
+      source: t.source || 'firebase-live',
+      year: t.date ? new Date(t.date).getFullYear() : null,
     }));
   }, [firebaseTransactions]);
 
   const allTransactions = useMemo(() => {
-    return [...data2025, ...transactions2026].sort(
+    return [...data2025, ...liveTransactions].sort(
       (a, b) => new Date(b.date) - new Date(a.date)
     );
-  }, [transactions2026]);
+  }, [liveTransactions]);
 
   return {
     allTransactions,
     loading: fbLoading,
     csvError: null,
     transactions2025: data2025,
-    transactions2026,
+    transactions2026: liveTransactions,
   };
 };

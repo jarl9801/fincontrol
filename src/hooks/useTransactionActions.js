@@ -1,5 +1,20 @@
 import { addDoc, updateDoc, deleteDoc, doc, collection, serverTimestamp, arrayUnion } from 'firebase/firestore';
 import { db, appId } from '../services/firebase';
+import { writeAuditLogEntry } from '../utils/auditLog';
+
+const buildLegacySnapshot = (transaction, override = {}) => ({
+  date: override.date ?? transaction?.date ?? null,
+  description: override.description ?? transaction?.description ?? '',
+  amount: override.amount ?? parseFloat(transaction?.amount || 0),
+  type: override.type ?? transaction?.type ?? '',
+  category: override.category ?? transaction?.category ?? '',
+  project: override.project ?? transaction?.project ?? '',
+  costCenter: override.costCenter ?? transaction?.costCenter ?? '',
+  status: override.status ?? transaction?.status ?? '',
+  paidAmount: override.paidAmount ?? parseFloat(transaction?.paidAmount || 0),
+  lastModifiedBy: override.lastModifiedBy ?? transaction?.lastModifiedBy ?? '',
+  lastModifiedAt: override.lastModifiedAt ?? transaction?.lastModifiedAt ?? null,
+});
 
 export const useTransactionActions = (user) => {
   const transactionsRef = collection(db, 'artifacts', appId, 'public', 'data', 'transactions');
@@ -46,7 +61,17 @@ export const useTransactionActions = (user) => {
         createdAt: serverTimestamp()
       };
 
-      await addDoc(transactionsRef, transactionData);
+      const docRef = await addDoc(transactionsRef, transactionData);
+      await writeAuditLogEntry({
+        action: 'create',
+        entityType: 'transaction',
+        entityId: docRef.id,
+        description: `Transacción legacy creada: ${formData.description || 'Sin descripción'}`,
+        userEmail: user.email,
+        after: buildLegacySnapshot(transactionData, {
+          lastModifiedAt: new Date().toISOString(),
+        }),
+      });
       return { success: true };
     } catch (error) {
       console.error("Error creating transaction:", error);
@@ -54,7 +79,7 @@ export const useTransactionActions = (user) => {
     }
   };
 
-  const updateTransaction = async (transactionId, formData, existingNotes = []) => {
+  const updateTransaction = async (transactionId, formData, existingNotes = [], existingTransaction = null) => {
     if (!user) return;
 
     try {
@@ -80,7 +105,7 @@ export const useTransactionActions = (user) => {
         });
       }
 
-      await updateDoc(transactionDoc, {
+      const payload = {
         date: formData.date,
         description: formData.description,
         amount: parseFloat(formData.amount),
@@ -96,6 +121,21 @@ export const useTransactionActions = (user) => {
         hasUnreadUpdates: true,
         lastModifiedBy: user.email,
         lastModifiedAt: serverTimestamp()
+      };
+
+      await updateDoc(transactionDoc, payload);
+      await writeAuditLogEntry({
+        action: 'update',
+        entityType: 'transaction',
+        entityId: transactionId,
+        description: `Transacción legacy editada: ${formData.description || existingTransaction?.description || 'Sin descripción'}`,
+        userEmail: user.email,
+        before: existingTransaction ? buildLegacySnapshot(existingTransaction) : null,
+        after: buildLegacySnapshot(existingTransaction, {
+          ...payload,
+          lastModifiedBy: user.email,
+          lastModifiedAt: new Date().toISOString(),
+        }),
       });
 
       return { success: true };
@@ -105,12 +145,20 @@ export const useTransactionActions = (user) => {
     }
   };
 
-  const deleteTransaction = async (transactionId) => {
+  const deleteTransaction = async (transactionId, transaction = null) => {
     if (!user) return;
 
     try {
       const transactionDoc = doc(db, 'artifacts', appId, 'public', 'data', 'transactions', transactionId);
       await deleteDoc(transactionDoc);
+      await writeAuditLogEntry({
+        action: 'delete',
+        entityType: 'transaction',
+        entityId: transactionId,
+        description: `Transacción legacy eliminada: ${transaction?.description || transactionId}`,
+        userEmail: user.email,
+        before: transaction ? buildLegacySnapshot(transaction) : null,
+      });
       return { success: true };
     } catch (error) {
       console.error("Error deleting transaction:", error);
@@ -137,6 +185,19 @@ export const useTransactionActions = (user) => {
         lastModifiedBy: user.email,
         lastModifiedAt: serverTimestamp()
       });
+      await writeAuditLogEntry({
+        action: 'status_change',
+        entityType: 'transaction',
+        entityId: transaction.id,
+        description: `Estado cambiado a ${newStatus} en transacción legacy: ${transaction.description || transaction.id}`,
+        userEmail: user.email,
+        before: buildLegacySnapshot(transaction),
+        after: buildLegacySnapshot(transaction, {
+          status: newStatus,
+          lastModifiedBy: user.email,
+          lastModifiedAt: new Date().toISOString(),
+        }),
+      });
       
       return { success: true };
     } catch (error) {
@@ -161,6 +222,17 @@ export const useTransactionActions = (user) => {
         hasUnreadUpdates: true,
         lastModifiedBy: user.email,
         lastModifiedAt: serverTimestamp()
+      });
+      await writeAuditLogEntry({
+        action: 'update',
+        entityType: 'transaction',
+        entityId: transaction.id,
+        description: `Comentario agregado a transacción legacy: ${transaction.description || transaction.id}`,
+        userEmail: user.email,
+        metadata: {
+          noteType: 'comment',
+          noteLength: noteText.trim().length,
+        },
       });
       
       return { success: true };
@@ -217,6 +289,26 @@ export const useTransactionActions = (user) => {
         lastModifiedBy: user.email,
         lastModifiedAt: serverTimestamp()
       });
+      await writeAuditLogEntry({
+        action: 'payment',
+        entityType: 'transaction',
+        entityId: transaction.id,
+        description: `Pago registrado en transacción legacy: ${transaction.description || transaction.id}`,
+        userEmail: user.email,
+        before: buildLegacySnapshot(transaction),
+        after: buildLegacySnapshot(transaction, {
+          paidAmount: newPaidAmount,
+          status: newStatus,
+          lastModifiedBy: user.email,
+          lastModifiedAt: new Date().toISOString(),
+        }),
+        metadata: {
+          amount: paymentData.amount,
+          method: paymentData.method,
+          date: paymentData.date,
+          note: paymentData.note || '',
+        },
+      });
 
       return { success: true };
     } catch (error) {
@@ -244,6 +336,20 @@ export const useTransactionActions = (user) => {
         hasUnreadUpdates: true,
         lastModifiedBy: user.email,
         lastModifiedAt: serverTimestamp()
+      });
+      await writeAuditLogEntry({
+        action: 'status_change',
+        entityType: 'transaction',
+        entityId: transaction.id,
+        description: `Transacción legacy marcada como ${label}: ${transaction.description || transaction.id}`,
+        userEmail: user.email,
+        before: buildLegacySnapshot(transaction),
+        after: buildLegacySnapshot(transaction, {
+          status: 'completed',
+          paidAmount: transaction.amount,
+          lastModifiedBy: user.email,
+          lastModifiedAt: new Date().toISOString(),
+        }),
       });
       return { success: true };
     } catch (error) {

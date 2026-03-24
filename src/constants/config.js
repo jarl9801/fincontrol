@@ -15,13 +15,12 @@ export const ADMIN_EMAIL = 'jromero@umtelkomd.com';
 // Role assignments by email
 export const USER_ROLES = {
   'jromero@umtelkomd.com': 'admin',
-  'bsandoval@umtelkomd.com': 'project_manager',  // Gerente de Proyecto — transacciones + CXP/CXC
+  'bsandoval@umtelkomd.com': 'manager',
 };
 
 // Permissions per role
 export const ROLE_PERMISSIONS = {
   admin: ['dashboard', 'transactions', 'cxp', 'cxc', 'reports', 'cashflow', 'settings', 'budget', 'audit', 'backup'],
-  project_manager: ['transactions', 'cxp', 'cxc'],
   manager: ['dashboard', 'transactions', 'cxp', 'cxc', 'reports'],
   editor: ['dashboard', 'transactions'],
 };

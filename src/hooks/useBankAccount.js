@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   doc,
   onSnapshot,
@@ -12,13 +12,13 @@ export const useBankAccount = (user) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const bankDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'bankAccount');
+  const bankDocRef = useMemo(
+    () => doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'bankAccount'),
+    [],
+  );
 
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
+    if (!user) return undefined;
 
     const unsubscribe = onSnapshot(
       bankDocRef,
@@ -38,7 +38,7 @@ export const useBankAccount = (user) => {
     );
 
     return () => unsubscribe();
-  }, [user]);
+  }, [bankDocRef, user]);
 
   const saveBankAccount = async (data) => {
     if (!user) return { success: false, error: 'No user' };

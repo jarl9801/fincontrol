@@ -1,33 +1,33 @@
-import React, { useState, useMemo } from 'react';
 import {
-  TrendingUp, TrendingDown, DollarSign, Landmark,
-  Flame, Activity, AlertTriangle, RefreshCw, Shield, ArrowUpRight, ArrowDownRight
+  ArrowDownLeft,
+  ArrowUpRight,
+  CheckCircle2,
+  Clock3,
+  Landmark,
+  ShieldAlert,
+  TrendingUp,
 } from 'lucide-react';
-import { formatCurrency } from '../../utils/formatters';
-import { useCashFlow } from '../../hooks/useCashFlow';
-import PeriodSelector, { usePeriodSelector } from '../../components/ui/PeriodSelector';
 import {
-  ComposedChart, Bar, Line, XAxis, YAxis,
-  CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  ReferenceLine, Cell, BarChart
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from 'recharts';
+import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
+import { formatCurrency, formatDate } from '../../utils/formatters';
 
-import { FINANCIAL_CONSTANTS } from '../../constants/config';
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-const formatAxis = (value) => {
-  if (Math.abs(value) >= 1000) return `€${(value / 1000).toFixed(0)}k`;
-  return `€${value}`;
-};
-
-const CustomTooltip = ({ active, payload, label }) => {
-  if (!active || !payload || !payload.length) return null;
+const TooltipCard = ({ active, payload, label }) => {
+  if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#1c1c1e] p-3 rounded-xl shadow-lg border border-[rgba(255,255,255,0.08)] min-w-[180px]">
-      <p className="text-xs font-semibold text-[#c7c7cc] mb-2">{label}</p>
-      {payload.map((entry, i) => (
-        <p key={i} className="text-xs mb-0.5" style={{ color: entry.color }}>
+    <div className="rounded-2xl border border-[rgba(201,214,238,0.82)] bg-white/96 px-3 py-3 shadow-[0_20px_50px_rgba(118,136,173,0.18)]">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#6980ac]">{label}</p>
+      {payload.map((entry) => (
+        <p key={entry.name} className="text-sm font-medium" style={{ color: entry.color }}>
           {entry.name}: {formatCurrency(entry.value)}
         </p>
       ))}
@@ -35,491 +35,244 @@ const CustomTooltip = ({ active, payload, label }) => {
   );
 };
 
-// ─── KPI Card ───────────────────────────────────────────────────────────────
-
-const KpiCard = ({ title, value, color, icon: Icon, subtitle, large = false }) => (
-  <div className="bg-[rgba(28,28,30,0.8)] rounded-xl p-5 border border-[rgba(255,255,255,0.06)]" style={{ backdropFilter: 'blur(40px)' }}>
-    <div className="flex items-center justify-between mb-2">
-      <h3 className="text-xs font-semibold text-[#8e8e93] uppercase tracking-wider">{title}</h3>
-      {Icon && <Icon size={16} className={color} />}
+const Section = ({ title, subtitle, children }) => (
+  <section className="rounded-[28px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-5 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
+    <div className="mb-5">
+      <h3 className="text-[18px] font-semibold tracking-tight text-[#101938]">{title}</h3>
+      {subtitle && <p className="mt-1 text-sm text-[#6b7a96]">{subtitle}</p>}
     </div>
-    <p className={`${large ? 'text-2xl' : 'text-xl'} font-bold ${color}`}>{value}</p>
-    {subtitle && <p className="text-xs text-[#636366] mt-1">{subtitle}</p>}
-  </div>
+    {children}
+  </section>
 );
 
-// ─── Main Component ─────────────────────────────────────────────────────────
-
 const CashFlow = ({ user }) => {
-  const { loading, csvError, monthlyData, kpis, fcfData, allMonths } = useCashFlow(user);
-  const period = usePeriodSelector('all');
+  const metrics = useTreasuryMetrics({ user });
 
-  // Bank Reconciliation state (session-only, not persisted)
-  const [bancoReal, setBancoReal] = useState('');
-  const [bancoRealInput, setBancoRealInput] = useState('');
-
-  const handleSaveBanco = () => {
-    setBancoReal(bancoRealInput);
-  };
-
-  const bancoRealNum = parseFloat((bancoReal || '').replace(',', '.')) || null;
-  const discrepancia = bancoRealNum !== null ? kpis.balance - bancoRealNum : null;
-  const discPercent = bancoRealNum && bancoRealNum !== 0 ? Math.abs((discrepancia / bancoRealNum) * 100) : 0;
-
-  // Filter monthly data by period
-  const filteredMonthly = useMemo(() => {
-    if (!monthlyData || monthlyData.length === 0) return [];
-    return monthlyData.filter((row) => {
-      const [y, m] = row.month.split('-').map(Number);
-      const yearMatch = period.year === 'all' || y === period.year;
-      if (!yearMatch) return false;
-      if (period.periodType === 'annual') return true;
-      if (period.periodType === 'month') return m === period.periodValue;
-      if (period.periodType === 'quarter') {
-        const qStart = (period.periodValue - 1) * 3 + 1;
-        return m >= qStart && m <= qStart + 2;
-      }
-      if (period.periodType === 'semester') {
-        return period.periodValue === 1 ? m >= 1 && m <= 6 : m >= 7 && m <= 12;
-      }
-      return true;
-    });
-  }, [monthlyData, period.year, period.periodType, period.periodValue]);
-
-  // Filtered KPIs
-  const filteredKpis = useMemo(() => {
-    const data = filteredMonthly;
-    const totalIngresos = data.reduce((s, r) => s + r.ingresos, 0);
-    const totalEgresos = data.reduce((s, r) => s + r.egresos, 0);
-    const flujoNeto = totalIngresos - totalEgresos;
-    const totalFCF = data.reduce((s, r) => s + (r.fcf || 0), 0);
-    const monthCount = data.length || 1;
-    const burnRate = totalEgresos / monthCount;
-    const latestAccum = data.length > 0 ? data[data.length - 1].acumulado : kpis.balance;
-    const runway = burnRate > 0 ? latestAccum / burnRate : Infinity;
-    const fcfMargin = totalIngresos > 0 ? (totalFCF / totalIngresos) * 100 : 0;
-
-    return {
-      totalIngresos,
-      totalEgresos,
-      flujoNeto,
-      fcf: totalFCF,
-      burnRate,
-      runway: Math.max(0, runway),
-      fcfMargin,
-      balance: latestAccum,
-    };
-  }, [filteredMonthly, kpis.balance]);
-
-  // Filtered chart data (actual + projection)
-  const filteredAllMonths = useMemo(() => {
-    if (period.year === 'all' && period.periodType === 'annual') return allMonths;
-    // When filtering, show only filtered actual data (no projection)
-    return filteredMonthly;
-  }, [allMonths, filteredMonthly, period.year, period.periodType]);
-
-  // FCF data filtered
-  const filteredFCF = useMemo(() => {
-    return filteredMonthly.map((b) => ({
-      ...b,
-      fcfMargin: b.ingresos > 0 ? (b.fcf / b.ingresos) * 100 : 0,
-    }));
-  }, [filteredMonthly]);
-
-  // Year-over-Year comparison
-  const yoyData = useMemo(() => {
-    if (period.year !== 'all') return null;
-    const byYear = {};
-    (monthlyData || []).forEach((row) => {
-      const y = parseInt(row.month.split('-')[0]);
-      if (!byYear[y]) byYear[y] = { ingresos: 0, egresos: 0, count: 0, fcf: 0 };
-      byYear[y].ingresos += row.ingresos;
-      byYear[y].egresos += row.egresos;
-      byYear[y].fcf += row.fcf || 0;
-      byYear[y].count++;
-    });
-    const years = Object.keys(byYear).map(Number).sort();
-    if (years.length < 2) return null;
-    return years.map((y) => ({
-      year: y,
-      avgIngresos: byYear[y].ingresos / byYear[y].count,
-      avgEgresos: byYear[y].egresos / byYear[y].count,
-      totalIngresos: byYear[y].ingresos,
-      totalEgresos: byYear[y].egresos,
-      totalFCF: byYear[y].fcf,
-      months: byYear[y].count,
-    }));
-  }, [monthlyData, period.year]);
-
-  if (loading) {
+  if (metrics.loading) {
     return (
-      <div className="flex items-center justify-center py-24">
+      <div className="flex items-center justify-center py-28">
         <div className="flex flex-col items-center gap-3">
-          <RefreshCw className="w-7 h-7 text-[#30d158] animate-spin" />
-          <p className="text-[#8e8e93] text-sm">Cargando datos históricos…</p>
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#64d2ff] border-t-transparent" />
+          <p className="text-sm text-[#6b7a96]">Preparando el panel de tesorería...</p>
         </div>
       </div>
     );
   }
 
-  const showProjection = period.year === 'all' && period.periodType === 'annual';
-  const actualData = filteredAllMonths.filter((d) => !d.isProjection);
-  const lastActualMonth = actualData.length > 0 ? actualData[actualData.length - 1].month : null;
+  const recentMovements = [...metrics.filteredMovements]
+    .sort((left, right) => (right.postedDate || '').localeCompare(left.postedDate || ''))
+    .slice(0, 12);
 
   return (
-    <div className="space-y-6">
-
-      {/* CSV error banner */}
-      {csvError && (
-        <div className="bg-[rgba(255,69,58,0.1)] border border-[rgba(255,69,58,0.3)] rounded-xl p-4 flex items-center gap-3">
-          <AlertTriangle className="text-[#ff453a]" size={18} />
-          <p className="text-sm text-[#ff453a]">
-            No se pudo cargar el historial 2025. Mostrando solo datos 2026.
-          </p>
-        </div>
-      )}
-
-      {/* Header: Period Selector */}
-      <div className="bg-[rgba(28,28,30,0.8)] rounded-xl p-4 border border-[rgba(255,255,255,0.06)]" style={{ backdropFilter: 'blur(40px)' }}>
-        <div className="flex items-center justify-between flex-wrap gap-3">
+    <div className="space-y-6 pb-12">
+      <section className="rounded-[34px] border border-[rgba(205,219,243,0.82)] bg-[radial-gradient(circle_at_top_right,rgba(185,248,238,0.26),transparent_24%),radial-gradient(circle_at_top_left,rgba(147,196,255,0.34),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.9),rgba(244,248,255,0.86))] px-6 py-7 shadow-[0_32px_90px_rgba(126,147,190,0.14)]">
+        <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
           <div>
-            <h3 className="text-lg font-bold text-white tracking-tight">Flujo de Caja</h3>
-            <p className="text-xs text-[#636366] mt-0.5">{period.periodLabel}</p>
-          </div>
-          <PeriodSelector {...period} />
-        </div>
-      </div>
-
-      {/* ── KPI Cards (6) ─────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-        <KpiCard
-          title="Total Ingresos"
-          value={formatCurrency(filteredKpis.totalIngresos)}
-          color="text-[#30d158]"
-          icon={TrendingUp}
-          subtitle={period.periodLabel}
-        />
-        <KpiCard
-          title="Total Egresos"
-          value={formatCurrency(filteredKpis.totalEgresos)}
-          color="text-[#ff453a]"
-          icon={TrendingDown}
-          subtitle={period.periodLabel}
-        />
-        <KpiCard
-          title="Flujo Neto"
-          value={`${filteredKpis.flujoNeto >= 0 ? '+' : ''}${formatCurrency(filteredKpis.flujoNeto)}`}
-          color={filteredKpis.flujoNeto >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}
-          icon={DollarSign}
-          subtitle="Ingresos − Egresos"
-        />
-        <KpiCard
-          title="FCF"
-          value={`${filteredKpis.fcf >= 0 ? '+' : ''}${formatCurrency(filteredKpis.fcf)}`}
-          color={filteredKpis.fcf >= 0 ? 'text-[#0a84ff]' : 'text-[#ff453a]'}
-          icon={Activity}
-          subtitle={`Margen: ${filteredKpis.fcfMargin.toFixed(1)}%`}
-        />
-        <KpiCard
-          title="Burn Rate"
-          value={formatCurrency(filteredKpis.burnRate)}
-          color="text-[#ff9f0a]"
-          icon={Flame}
-          subtitle="Prom. egresos/mes"
-        />
-        <KpiCard
-          title="Runway"
-          value={filteredKpis.runway === Infinity ? '∞' : `${filteredKpis.runway.toFixed(1)} meses`}
-          color={filteredKpis.runway > 6 ? 'text-[#30d158]' : filteredKpis.runway > 3 ? 'text-[#ff9f0a]' : 'text-[#ff453a]'}
-          icon={Shield}
-          subtitle="Meses de caja"
-        />
-      </div>
-
-      {/* ── Cash Flow Chart ────────────────────────────────────────── */}
-      <div className="bg-[#1c1c1e] rounded-xl p-6 border border-[rgba(255,255,255,0.08)]">
-        <div className="flex items-center justify-between mb-1">
-          <h3 className="text-sm font-semibold text-[#c7c7cc]">Flujo de Caja Histórico</h3>
-          <span className="text-xs text-[#636366]">{period.periodLabel}{showProjection ? ' + proyección 3 meses' : ''}</span>
-        </div>
-        <p className="text-xs text-[#636366] mb-4">Barras: ingresos/egresos mensuales · Línea azul: saldo acumulado</p>
-        <ResponsiveContainer width="100%" height={360}>
-          <ComposedChart data={filteredAllMonths} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <defs>
-              <linearGradient id="gradIngresos" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#30d158" stopOpacity={0.9} />
-                <stop offset="100%" stopColor="#30d158" stopOpacity={0.6} />
-              </linearGradient>
-              <linearGradient id="gradEgresos" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#ff453a" stopOpacity={0.9} />
-                <stop offset="100%" stopColor="#ff453a" stopOpacity={0.6} />
-              </linearGradient>
-              <linearGradient id="gradProjection" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#30d158" stopOpacity={0.4} />
-                <stop offset="100%" stopColor="#30d158" stopOpacity={0.2} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-            <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#636366' }} axisLine={{ stroke: 'rgba(255,255,255,0.08)' }} tickLine={false} />
-            <YAxis yAxisId="left" tickFormatter={formatAxis} tick={{ fontSize: 11, fill: '#636366' }} axisLine={false} tickLine={false} />
-            <YAxis yAxisId="right" orientation="right" tickFormatter={formatAxis} tick={{ fontSize: 11, fill: '#636366' }} axisLine={false} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend verticalAlign="bottom" iconType="circle" iconSize={8} wrapperStyle={{ paddingTop: 12, fontSize: 11 }} />
-            <ReferenceLine yAxisId="left" y={0} stroke="rgba(255,255,255,0.1)" strokeWidth={1} />
-            {showProjection && lastActualMonth && (
-              <ReferenceLine yAxisId="left" x={filteredAllMonths.find((d) => d.isProjection)?.label} stroke="rgba(255,255,255,0.2)" strokeDasharray="4 4" label={{ value: 'Proyección →', fill: '#636366', fontSize: 10 }} />
-            )}
-            <Bar yAxisId="left" dataKey="ingresos" name="Ingresos" maxBarSize={28} radius={[3, 3, 0, 0]}>
-              {filteredAllMonths.map((entry, index) => (
-                <Cell key={index} fill={entry.isProjection ? 'url(#gradProjection)' : 'url(#gradIngresos)'} />
-              ))}
-            </Bar>
-            <Bar yAxisId="left" dataKey="egresos" name="Egresos" maxBarSize={28} radius={[3, 3, 0, 0]}>
-              {filteredAllMonths.map((entry, index) => (
-                <Cell key={index} fill={entry.isProjection ? 'rgba(255,69,58,0.3)' : 'url(#gradEgresos)'} />
-              ))}
-            </Bar>
-            <Line yAxisId="right" type="monotone" dataKey="acumulado" name="Saldo Acumulado" stroke="#0a84ff" strokeWidth={2.5} dot={{ r: 3, fill: '#0a84ff', stroke: '#1c1c1e', strokeWidth: 2 }} activeDot={{ r: 5, fill: '#0a84ff', stroke: '#1c1c1e', strokeWidth: 2 }} />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* ── FCF Chart ─────────────────────────────────────────────── */}
-      <div className="bg-[#1c1c1e] rounded-xl p-6 border border-[rgba(255,255,255,0.08)]">
-        <div className="flex items-center justify-between mb-1">
-          <div>
-            <h3 className="text-sm font-semibold text-[#c7c7cc]">Flujo de Caja Libre (FCF)</h3>
-            <p className="text-xs text-[#636366]">FCF = Flujo operativo (sin financiamientos ni arriendos) − CapEx (equipos)</p>
-          </div>
-          <div className="text-right">
-            <p className="text-xs text-[#636366]">Margen FCF promedio</p>
-            <p className={`text-sm font-bold ${filteredKpis.fcfMargin >= 0 ? 'text-[#0a84ff]' : 'text-[#ff453a]'}`}>
-              {filteredKpis.fcfMargin.toFixed(1)}%
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#5a8ddd]">Tesorería</p>
+            <h2 className="text-[32px] font-semibold tracking-tight text-[#101938]">
+              Caja, vencimientos y seguimiento diario en una sola vista.
+            </h2>
+            <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[#5f7091]">
+              Consulta el saldo disponible, las próximas entradas y salidas y los movimientos pendientes de revisión sin mezclar compromisos con caja real.
             </p>
           </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-[24px] border border-[rgba(201,214,238,0.78)] bg-white/74 px-4 py-4">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Caja actual</p>
+              <p className="mt-2 text-[30px] font-semibold text-[#101938]">{formatCurrency(metrics.currentCash)}</p>
+            </div>
+            <div className="rounded-[24px] border border-[rgba(201,214,238,0.78)] bg-white/74 px-4 py-4">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Liquidez proyectada</p>
+              <p className="mt-2 text-[30px] font-semibold text-[#3156d3]">{formatCurrency(metrics.projectedLiquidity)}</p>
+            </div>
+            <div className="rounded-[24px] border border-[rgba(201,214,238,0.78)] bg-white/74 px-4 py-4">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Cobros próximos</p>
+              <p className="mt-2 text-[30px] font-semibold text-[#0f8f4b]">
+                {formatCurrency(metrics.upcomingReceivables.reduce((sum, entry) => sum + entry.openAmount, 0))}
+              </p>
+            </div>
+            <div className="rounded-[24px] border border-[rgba(201,214,238,0.78)] bg-white/74 px-4 py-4">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Pagos próximos</p>
+              <p className="mt-2 text-[30px] font-semibold text-[#c46a19]">
+                {formatCurrency(metrics.upcomingPayables.reduce((sum, entry) => sum + entry.openAmount, 0))}
+              </p>
+            </div>
+          </div>
         </div>
-        <ResponsiveContainer width="100%" height={220}>
-          <ComposedChart data={filteredFCF} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-            <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#636366' }} axisLine={{ stroke: 'rgba(255,255,255,0.08)' }} tickLine={false} />
-            <YAxis yAxisId="left" tickFormatter={formatAxis} tick={{ fontSize: 11, fill: '#636366' }} axisLine={false} tickLine={false} />
-            <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => `${v.toFixed(0)}%`} tick={{ fontSize: 11, fill: '#636366' }} axisLine={false} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} />
-            <ReferenceLine yAxisId="left" y={0} stroke="rgba(255,255,255,0.1)" strokeWidth={1} />
-            <Bar yAxisId="left" dataKey="fcf" name="FCF" maxBarSize={28} radius={[3, 3, 0, 0]}>
-              {filteredFCF.map((entry, index) => (
-                <Cell key={index} fill={entry.fcf >= 0 ? '#0a84ff' : '#ff453a'} fillOpacity={0.85} />
-              ))}
-            </Bar>
-            <Line yAxisId="right" type="monotone" dataKey="fcfMargin" name="Margen FCF %" stroke="#5e5ce6" strokeWidth={2} dot={{ r: 3, fill: '#5e5ce6' }} />
-          </ComposedChart>
-        </ResponsiveContainer>
+      </section>
+
+      <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
+        <Section title="Balance de caja semanal" subtitle="Historico reciente derivado de movimientos contabilizados.">
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={metrics.cashSeries}>
+                <CartesianGrid stroke="rgba(176,194,226,0.42)" vertical={false} />
+                <XAxis dataKey="label" stroke="#7b8dae" tickLine={false} axisLine={false} />
+                <YAxis stroke="#7b8dae" tickLine={false} axisLine={false} tickFormatter={(value) => `€${Math.round(value / 1000)}k`} />
+                <Tooltip content={<TooltipCard />} />
+                <Line type="monotone" dataKey="balance" name="Caja" stroke="#3156d3" strokeWidth={2.8} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Section>
+
+        <Section title="Compromisos por semana" subtitle="Entradas y salidas comprometidas en la siguiente ventana de 8 semanas.">
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={metrics.weeklyProjection}>
+                <CartesianGrid stroke="rgba(176,194,226,0.42)" vertical={false} />
+                <XAxis dataKey="week" stroke="#7b8dae" tickLine={false} axisLine={false} />
+                <YAxis stroke="#7b8dae" tickLine={false} axisLine={false} tickFormatter={(value) => `€${Math.round(value / 1000)}k`} />
+                <Tooltip content={<TooltipCard />} />
+                <Bar dataKey="committedIn" name="Cobros" fill="#0f8f4b" radius={[10, 10, 0, 0]} />
+                <Bar dataKey="committedOut" name="Pagos" fill="#d47a22" radius={[10, 10, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Section>
       </div>
 
-      {/* ── Monthly Detail Table ──────────────────────────────────── */}
-      {filteredMonthly.length > 0 && (
-        <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.08)] overflow-hidden">
-          <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.06)]">
-            <h3 className="text-sm font-semibold text-[#c7c7cc]">Detalle Mensual</h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-[#111111] text-[#636366] text-xs uppercase tracking-wider">
-                  <th className="text-left px-6 py-3 font-semibold">Mes</th>
-                  <th className="text-right px-6 py-3 font-semibold">Ingresos</th>
-                  <th className="text-right px-6 py-3 font-semibold">Egresos</th>
-                  <th className="text-right px-6 py-3 font-semibold">Neto</th>
-                  <th className="text-right px-6 py-3 font-semibold">FCF</th>
-                  <th className="text-right px-6 py-3 font-semibold">Margen FCF</th>
-                  <th className="text-right px-6 py-3 font-semibold">Acumulado</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[rgba(255,255,255,0.06)]">
-                {filteredMonthly.map((row, i) => {
-                  const fcfMargin = row.ingresos > 0 ? ((row.fcf || 0) / row.ingresos) * 100 : 0;
-                  return (
-                    <tr key={i} className="hover:bg-[#111111] transition-colors">
-                      <td className="px-6 py-3 font-medium text-[#c7c7cc]">{row.label}</td>
-                      <td className="px-6 py-3 text-right text-[#30d158]">{formatCurrency(row.ingresos)}</td>
-                      <td className="px-6 py-3 text-right text-[#ff453a]">{formatCurrency(row.egresos)}</td>
-                      <td className={`px-6 py-3 text-right font-medium ${row.neto >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
-                        {row.neto >= 0 ? '+' : ''}{formatCurrency(row.neto)}
-                      </td>
-                      <td className={`px-6 py-3 text-right ${(row.fcf || 0) >= 0 ? 'text-[#0a84ff]' : 'text-[#ff453a]'}`}>
-                        {(row.fcf || 0) >= 0 ? '+' : ''}{formatCurrency(row.fcf || 0)}
-                      </td>
-                      <td className={`px-6 py-3 text-right ${fcfMargin >= 0 ? 'text-[#5e5ce6]' : 'text-[#ff453a]'}`}>
-                        {fcfMargin.toFixed(1)}%
-                      </td>
-                      <td className={`px-6 py-3 text-right font-bold ${row.acumulado < 0 ? 'text-[#ff453a]' : 'text-[#c7c7cc]'}`}>
-                        {formatCurrency(row.acumulado)}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-              <tfoot>
-                <tr className="border-t-2 border-[rgba(255,255,255,0.12)] bg-[#111111]">
-                  <td className="px-6 py-3 font-bold text-[#c7c7cc]">Total</td>
-                  <td className="px-6 py-3 text-right font-bold text-[#30d158]">
-                    {formatCurrency(filteredKpis.totalIngresos)}
-                  </td>
-                  <td className="px-6 py-3 text-right font-bold text-[#ff453a]">
-                    {formatCurrency(filteredKpis.totalEgresos)}
-                  </td>
-                  <td className={`px-6 py-3 text-right font-bold ${filteredKpis.flujoNeto >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
-                    {filteredKpis.flujoNeto >= 0 ? '+' : ''}{formatCurrency(filteredKpis.flujoNeto)}
-                  </td>
-                  <td className={`px-6 py-3 text-right font-bold ${filteredKpis.fcf >= 0 ? 'text-[#0a84ff]' : 'text-[#ff453a]'}`}>
-                    {filteredKpis.fcf >= 0 ? '+' : ''}{formatCurrency(filteredKpis.fcf)}
-                  </td>
-                  <td className={`px-6 py-3 text-right font-bold ${filteredKpis.fcfMargin >= 0 ? 'text-[#5e5ce6]' : 'text-[#ff453a]'}`}>
-                    {filteredKpis.fcfMargin.toFixed(1)}%
-                  </td>
-                  <td className="px-6 py-3 text-right font-bold text-[#636366]">—</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* ── Bank Reconciliation ────────────────────────────────────── */}
-      <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.08)] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.06)] flex items-center gap-2">
-          <Landmark size={16} className="text-[#8e8e93]" />
-          <h3 className="text-sm font-semibold text-[#c7c7cc]">Conciliación Bancaria</h3>
-        </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-            <div className="bg-[#111111] rounded-lg p-4 border border-[rgba(255,255,255,0.06)]">
-              <p className="text-xs text-[#636366] mb-1">Saldo Calculado (sistema)</p>
-              <p className={`text-lg font-bold ${kpis.balance >= 0 ? 'text-[#c7c7cc]' : 'text-[#ff453a]'}`}>
-                {formatCurrency(kpis.balance)}
-              </p>
-              <p className="text-xs text-[#636366] mt-1">Base: €28,450 dic 2025</p>
-            </div>
-            <div className="bg-[#111111] rounded-lg p-4 border border-[rgba(255,255,255,0.06)]">
-              <p className="text-xs text-[#636366] mb-1">Saldo Banco Real</p>
-              {bancoRealNum !== null ? (
-                <p className={`text-lg font-bold ${bancoRealNum >= 0 ? 'text-[#c7c7cc]' : 'text-[#ff453a]'}`}>
-                  {formatCurrency(bancoRealNum)}
-                </p>
-              ) : (
-                <p className="text-sm text-[#8e8e93]">No ingresado</p>
-              )}
-            </div>
-            <div className="bg-[#111111] rounded-lg p-4 border border-[rgba(255,255,255,0.06)]">
-              <p className="text-xs text-[#636366] mb-1">Discrepancia</p>
-              {discrepancia !== null ? (
-                <>
-                  <p className={`text-lg font-bold ${Math.abs(discrepancia) < FINANCIAL_CONSTANTS.DISCREPANCY_SMALL_AMOUNT ? 'text-[#30d158]' : discPercent > FINANCIAL_CONSTANTS.DISCREPANCY_THRESHOLD_PERCENT ? 'text-[#ff453a]' : 'text-[#ff9f0a]'}`}>
-                    {discrepancia >= 0 ? '+' : ''}{formatCurrency(discrepancia)}
-                  </p>
-                  {discPercent > FINANCIAL_CONSTANTS.DISCREPANCY_THRESHOLD_PERCENT && (
-                    <p className="text-xs text-[#ff453a] mt-1 flex items-center gap-1">
-                      <AlertTriangle size={10} /> {discPercent.toFixed(1)}% — revisar registros
+      <div className="grid gap-6 xl:grid-cols-[1.05fr,0.95fr]">
+        <Section title="Movimientos recientes" subtitle="Ultimas entradas y salidas contabilizadas en la cuenta principal.">
+          <div className="space-y-3">
+            {recentMovements.map((movement) => {
+              const isInflow = movement.direction === 'in';
+              return (
+                <div
+                  key={movement.id}
+                  className="flex flex-wrap items-center justify-between gap-4 rounded-[22px] border border-[rgba(201,214,238,0.74)] bg-white/76 px-4 py-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="flex h-11 w-11 items-center justify-center rounded-2xl"
+                      style={{
+                        backgroundColor: isInflow ? 'rgba(48,209,88,0.14)' : 'rgba(255,159,10,0.16)',
+                        color: isInflow ? '#30d158' : '#ff9f0a',
+                      }}
+                    >
+                      {isInflow ? <ArrowUpRight size={18} /> : <ArrowDownLeft size={18} />}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[#101938]">{movement.description || 'Movimiento sin descripción'}</p>
+                      <p className="text-xs text-[#6b7a96]">
+                        {movement.counterpartyName || 'Sin contraparte'} · {formatDate(movement.postedDate)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className={`text-sm font-semibold ${isInflow ? 'text-[#30d158]' : 'text-[#ff9f0a]'}`}>
+                      {isInflow ? '+' : '-'}
+                      {formatCurrency(movement.amount)}
                     </p>
-                  )}
-                </>
-              ) : (
-                <p className="text-sm text-[#8e8e93]">—</p>
-              )}
-            </div>
+                    <p className="text-xs text-[#6b7a96]">{movement.kind}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <div className="flex items-center gap-3">
-            <div className="flex-1">
-              <label className="text-xs text-[#8e8e93] mb-1 block">Ingresar Saldo Banco Real (€)</label>
-              <input
-                type="number"
-                step="0.01"
-                value={bancoRealInput}
-                onChange={(e) => setBancoRealInput(e.target.value)}
-                placeholder="Ej: 32500.00"
-                className="w-full bg-[#111111] border border-[rgba(255,255,255,0.1)] rounded-lg px-4 py-2 text-sm text-[#c7c7cc] placeholder-[#636366] focus:outline-none focus:border-[rgba(255,255,255,0.2)]"
-              />
-            </div>
-            <button
-              onClick={handleSaveBanco}
-              className="mt-5 px-5 py-2 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.16)] text-white text-sm font-medium rounded-lg transition-colors"
-            >
-              Guardar
-            </button>
+        </Section>
+
+        <Section title="Pendiente de conciliacion" subtitle="Movimientos bancarios aun no vinculados a un cierre mensual.">
+          <div className="space-y-3">
+            {metrics.unreconciledMovements.length === 0 && (
+              <div className="rounded-[22px] border border-dashed border-[rgba(201,214,238,0.78)] px-4 py-10 text-center text-sm text-[#6b7a96]">
+                No hay movimientos pendientes de conciliación.
+              </div>
+            )}
+            {metrics.unreconciledMovements.slice(0, 10).map((movement) => (
+              <div
+                key={movement.id}
+                className="rounded-[22px] border border-[rgba(201,214,238,0.74)] bg-white/76 px-4 py-4"
+              >
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-[#101938]">
+                    <Landmark size={16} className="text-[#3156d3]" />
+                    <span className="text-sm font-semibold">{movement.description || 'Movimiento sin descripción'}</span>
+                  </div>
+                  <span className="text-sm font-semibold text-[#101938]">{formatCurrency(movement.amount)}</span>
+                </div>
+                <p className="text-xs text-[#6b7a96]">
+                  {movement.counterpartyName || 'Sin contraparte'} · {formatDate(movement.postedDate)}
+                </p>
+              </div>
+            ))}
           </div>
-        </div>
+        </Section>
       </div>
 
-      {/* ── Year-over-Year Comparison ──────────────────────────────── */}
-      {yoyData && (
-        <div className="bg-[#1c1c1e] rounded-xl border border-[rgba(255,255,255,0.08)] overflow-hidden">
-          <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.06)]">
-            <h3 className="text-sm font-semibold text-[#c7c7cc]">Comparación Interanual</h3>
-            <p className="text-xs text-[#636366]">Promedios mensuales y totales por año</p>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-[#111111] text-[#636366] text-xs uppercase tracking-wider">
-                  <th className="text-left px-6 py-3 font-semibold">Año</th>
-                  <th className="text-right px-6 py-3 font-semibold">Meses</th>
-                  <th className="text-right px-6 py-3 font-semibold">Ing. Total</th>
-                  <th className="text-right px-6 py-3 font-semibold">Egr. Total</th>
-                  <th className="text-right px-6 py-3 font-semibold">Ing. Prom/Mes</th>
-                  <th className="text-right px-6 py-3 font-semibold">Egr. Prom/Mes</th>
-                  <th className="text-right px-6 py-3 font-semibold">FCF Total</th>
-                  <th className="text-right px-6 py-3 font-semibold">Crecimiento</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[rgba(255,255,255,0.06)]">
-                {yoyData.map((row, i) => {
-                  const prevRow = i > 0 ? yoyData[i - 1] : null;
-                  const growth = prevRow ? ((row.totalIngresos - prevRow.totalIngresos) / prevRow.totalIngresos) * 100 : null;
-                  return (
-                    <tr key={row.year} className="hover:bg-[#111111] transition-colors">
-                      <td className="px-6 py-3 font-bold text-[#c7c7cc]">{row.year}</td>
-                      <td className="px-6 py-3 text-right text-[#8e8e93]">{row.months}</td>
-                      <td className="px-6 py-3 text-right text-[#30d158] font-medium">{formatCurrency(row.totalIngresos)}</td>
-                      <td className="px-6 py-3 text-right text-[#ff453a] font-medium">{formatCurrency(row.totalEgresos)}</td>
-                      <td className="px-6 py-3 text-right text-[#30d158]">{formatCurrency(row.avgIngresos)}</td>
-                      <td className="px-6 py-3 text-right text-[#ff453a]">{formatCurrency(row.avgEgresos)}</td>
-                      <td className={`px-6 py-3 text-right font-medium ${row.totalFCF >= 0 ? 'text-[#0a84ff]' : 'text-[#ff453a]'}`}>
-                        {formatCurrency(row.totalFCF)}
-                      </td>
-                      <td className="px-6 py-3 text-right">
-                        {growth !== null ? (
-                          <span className={`inline-flex items-center gap-1 text-xs font-medium ${growth >= 0 ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
-                            {growth >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
-                            {Math.abs(growth).toFixed(1)}%
-                          </span>
-                        ) : (
-                          <span className="text-[#636366]">—</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* ── Projection Note ────────────────────────────────────────── */}
-      {showProjection && (
-        <div className="bg-[rgba(10,132,255,0.07)] border border-[rgba(10,132,255,0.2)] rounded-xl p-4">
-          <div className="flex items-start gap-3">
-            <Activity size={16} className="text-[#0a84ff] mt-0.5 flex-shrink-0" />
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Section title="Runway" subtitle="Caja actual sobre el egreso promedio de 90 dias.">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(90,141,221,0.14)] text-[#3156d3]">
+              <TrendingUp size={18} />
+            </div>
             <div>
-              <p className="text-sm font-medium text-[#0a84ff]">Proyección 3 meses (área rayada en gráfico)</p>
-              <p className="text-xs text-[#636366] mt-1">
-                Basada en el promedio de los últimos 3 meses reales.
-                Los valores proyectados se muestran con opacidad reducida en el gráfico.
+              <p className="text-[32px] font-semibold tracking-tight text-[#101938]">
+                {metrics.runwayMonths == null ? 'N/A' : `${metrics.runwayMonths.toFixed(1)}m`}
+              </p>
+              <p className="text-sm text-[#6b7a96]">Egreso medio mensual: {formatCurrency(metrics.avgMonthlyOutflows)}</p>
+            </div>
+          </div>
+        </Section>
+
+        <Section title="Cobros vencidos" subtitle="Documentos abiertos con vencimiento pasado.">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(214,106,19,0.12)] text-[#d46a13]">
+              <ShieldAlert size={18} />
+            </div>
+            <div>
+              <p className="text-[32px] font-semibold tracking-tight text-[#101938]">
+                {metrics.overdueReceivables.length}
+              </p>
+              <p className="text-sm text-[#6b7a96]">
+                {formatCurrency(metrics.overdueReceivables.reduce((sum, entry) => sum + entry.openAmount, 0))}
               </p>
             </div>
           </div>
+        </Section>
+
+        <Section title="Pagos por salir" subtitle="Compromisos abiertos dentro de la siguiente ventana.">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(212,122,34,0.12)] text-[#c46a19]">
+              <Clock3 size={18} />
+            </div>
+            <div>
+              <p className="text-[32px] font-semibold tracking-tight text-[#101938]">
+                {metrics.upcomingPayables.length}
+              </p>
+              <p className="text-sm text-[#6b7a96]">
+                {formatCurrency(metrics.upcomingPayables.reduce((sum, entry) => sum + entry.openAmount, 0))}
+              </p>
+            </div>
+          </div>
+        </Section>
+      </div>
+
+      <Section title="Estado de control" subtitle="Referencia rápida para la operación diaria.">
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="rounded-[22px] border border-[rgba(15,143,75,0.14)] bg-[rgba(240,250,244,0.88)] px-4 py-4">
+            <div className="mb-2 flex items-center gap-2 text-[#0f8f4b]">
+              <CheckCircle2 size={16} />
+              <span className="text-sm font-semibold">Caja registrada</span>
+            </div>
+            <p className="text-sm leading-6 text-[#40644b]">Los movimientos confirmados alimentan el saldo disponible y la conciliación.</p>
+          </div>
+          <div className="rounded-[22px] border border-[rgba(90,141,221,0.14)] bg-[rgba(236,242,254,0.92)] px-4 py-4">
+            <div className="mb-2 flex items-center gap-2 text-[#3156d3]">
+              <Landmark size={16} />
+              <span className="text-sm font-semibold">Control por documento</span>
+            </div>
+            <p className="text-sm leading-6 text-[#4a5d84]">Las facturas abiertas se siguen por separado hasta que el cobro o el pago ocurre.</p>
+          </div>
+          <div className="rounded-[22px] border border-[rgba(212,122,34,0.14)] bg-[rgba(255,248,236,0.92)] px-4 py-4">
+            <div className="mb-2 flex items-center gap-2 text-[#c46a19]">
+              <Clock3 size={16} />
+              <span className="text-sm font-semibold">Disciplina semanal</span>
+            </div>
+            <p className="text-sm leading-6 text-[#7a5d34]">Revisar y conciliar cada semana mejora la calidad del cierre y de la proyección.</p>
+          </div>
         </div>
-      )}
+      </Section>
     </div>
   );
 };

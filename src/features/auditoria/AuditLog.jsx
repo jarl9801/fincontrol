@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
-  History, User, FileText, Edit3, Trash2, Plus, Filter, Search
+  History, User, FileText, Edit3, Trash2, Plus, Search, X
 } from 'lucide-react';
 import { useAuditLog } from '../../hooks/useAuditLog';
-import { useToast } from '../../contexts/ToastContext';
 
 const ACTION_STYLES = {
   create: { color: '#30d158', bg: 'rgba(48,209,88,0.12)', label: 'Creación', icon: Plus },
@@ -11,16 +11,25 @@ const ACTION_STYLES = {
   delete: { color: '#ff453a', bg: 'rgba(255,69,58,0.12)', label: 'Eliminación', icon: Trash2 },
   payment: { color: '#ff9f0a', bg: 'rgba(255,159,10,0.12)', label: 'Pago', icon: FileText },
   status_change: { color: '#bf5af2', bg: 'rgba(191,90,242,0.12)', label: 'Cambio Estado', icon: Edit3 },
+  cancel: { color: '#ff9f0a', bg: 'rgba(255,159,10,0.12)', label: 'Cancelación', icon: Trash2 },
+  void: { color: '#ff453a', bg: 'rgba(255,69,58,0.12)', label: 'Anulación', icon: Trash2 },
 };
 
-const AuditLog = ({ user, userRole }) => {
+const AuditLog = ({ user }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { logs, loading } = useAuditLog(user);
-  const [searchTerm, setSearchTerm] = useState('');
+  const presetSearch = searchParams.get('search') || '';
+  const presetEntityType = searchParams.get('entityType') || 'all';
+  const presetEntityId = searchParams.get('entityId') || '';
+  const presetLabel = searchParams.get('label') || '';
+  const [searchTerm, setSearchTerm] = useState(presetSearch);
   const [filterAction, setFilterAction] = useState('all');
   const [filterUser, setFilterUser] = useState('all');
 
   const filtered = useMemo(() => {
     let items = logs;
+    if (presetEntityType !== 'all') items = items.filter(l => l.entityType === presetEntityType);
+    if (presetEntityId) items = items.filter(l => l.entityId === presetEntityId);
     if (filterAction !== 'all') items = items.filter(l => l.action === filterAction);
     if (filterUser !== 'all') items = items.filter(l => l.user === filterUser);
     if (searchTerm) {
@@ -32,9 +41,10 @@ const AuditLog = ({ user, userRole }) => {
       );
     }
     return items;
-  }, [logs, filterAction, filterUser, searchTerm]);
+  }, [logs, filterAction, filterUser, presetEntityId, presetEntityType, searchTerm]);
 
   const uniqueUsers = useMemo(() => [...new Set(logs.map(l => l.user))], [logs]);
+  const clearContextFilter = () => setSearchParams({});
 
   if (loading) {
     return <div className="flex items-center justify-center py-20"><div className="w-6 h-6 border-2 border-[#bf5af2] border-t-transparent rounded-full animate-spin" /></div>;
@@ -46,6 +56,28 @@ const AuditLog = ({ user, userRole }) => {
         <h2 className="text-xl font-bold text-white tracking-tight">Registro de Auditoría</h2>
         <p className="text-[13px] text-[#636366] mt-0.5">Historial inmutable de todas las acciones</p>
       </div>
+
+      {presetEntityId && (
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-4 py-3">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8e8e93]">Contexto activo</p>
+            <p className="mt-1 text-[13px] font-medium text-white">
+              {presetLabel || presetEntityId}
+            </p>
+            <p className="mt-1 text-[11px] text-[#636366]">
+              {presetEntityType} #{presetEntityId.slice(0, 8)}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={clearContextFilter}
+            className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,255,255,0.08)] px-3 py-2 text-[12px] font-medium text-[#c7c7cc] transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+          >
+            <X size={14} />
+            Quitar filtro
+          </button>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

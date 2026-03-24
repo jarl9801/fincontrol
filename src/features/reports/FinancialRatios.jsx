@@ -1,19 +1,41 @@
-import React from 'react';
+import { useMemo, useState } from 'react';
 import {
-  TrendingUp, TrendingDown, DollarSign, Percent, Activity, Clock,
-  CreditCard, Wallet, Target, BarChart3, AlertTriangle, CheckCircle2, Info
+  Activity,
+  AlertTriangle,
+  BarChart3,
+  CheckCircle2,
+  Clock,
+  CreditCard,
+  DollarSign,
+  Info,
+  Percent,
+  Target,
+  TrendingDown,
+  TrendingUp,
+  Wallet,
 } from 'lucide-react';
-import { formatCurrency } from '../../utils/formatters';
-import { FINANCIAL_CONSTANTS } from '../../constants/config';
 import {
-  RadialBarChart, RadialBar, ResponsiveContainer, PolarAngleAxis,
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  PolarAngleAxis,
+  RadialBar,
+  RadialBarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from 'recharts';
+import { useFinanceLedger } from '../../hooks/useFinanceLedger';
+import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
+import { formatCurrency } from '../../utils/formatters';
+import { MONTH_NAMES, resolvePeriodRange } from '../../finance/reporting';
 
 const statusColors = {
-  good: { bg: 'bg-[rgba(16,185,129,0.12)]', text: 'text-[#30d158]', border: 'border-[rgba(16,185,129,0.25)]', icon: 'text-[#30d158]' },
-  warning: { bg: 'bg-[rgba(245,158,11,0.12)]', text: 'text-[#ff9f0a]', border: 'border-[rgba(245,158,11,0.25)]', icon: 'text-[#ff9f0a]' },
-  bad: { bg: 'bg-[rgba(239,68,68,0.12)]', text: 'text-[#ff453a]', border: 'border-[rgba(239,68,68,0.25)]', icon: 'text-[#ff453a]' }
+  good: { bg: 'bg-[rgba(48,209,88,0.12)]', text: 'text-[#30d158]', border: 'border-[rgba(48,209,88,0.22)]', icon: 'text-[#30d158]' },
+  warning: { bg: 'bg-[rgba(255,159,10,0.12)]', text: 'text-[#ff9f0a]', border: 'border-[rgba(255,159,10,0.22)]', icon: 'text-[#ff9f0a]' },
+  bad: { bg: 'bg-[rgba(255,69,58,0.12)]', text: 'text-[#ff453a]', border: 'border-[rgba(255,69,58,0.22)]', icon: 'text-[#ff453a]' },
 };
 
 const getStatus = (value, benchmark, inverse = false) => {
@@ -27,475 +49,285 @@ const getStatus = (value, benchmark, inverse = false) => {
   return 'bad';
 };
 
-const RatioCard = ({ title, value, unit = '', benchmark, inverse = false, description, icon: Icon }) => {
-  const status = getStatus(value, benchmark, inverse);
+const RatioCard = ({ title, value, unit = '', benchmark, inverse = false, description, icon }) => {
+  const IconComponent = icon;
+  const normalizedValue = Number.isFinite(value) ? value : 0;
+  const status = getStatus(normalizedValue, benchmark, inverse);
   const colors = statusColors[status];
-  const displayValue = typeof value === 'number' ? (value > 100 ? '>100' : value.toFixed(1)) : value;
-
-  const maxValue = inverse ? benchmark.warning * 2 : benchmark.good * 2;
-  const gaugePercent = Math.min(100, Math.max(0, (value / maxValue) * 100));
+  const displayValue = Math.abs(normalizedValue) > 999 ? normalizedValue.toFixed(0) : normalizedValue.toFixed(1);
+  const cap = inverse ? benchmark.warning * 1.8 : Math.max(benchmark.good * 1.8, 1);
+  const gaugePercent = Math.min(100, Math.max(0, (Math.abs(normalizedValue) / cap) * 100));
   const gaugeData = [{ name: 'value', value: gaugePercent, fill: status === 'good' ? '#30d158' : status === 'warning' ? '#ff9f0a' : '#ff453a' }];
 
   return (
-    <div className={`bg-[#1c1c1e] rounded-xl shadow-sm border ${colors.border} overflow-hidden`}>
+    <div className={`overflow-hidden rounded-[24px] border bg-white/84 shadow-[0_18px_44px_rgba(126,147,190,0.1)] ${colors.border}`}>
       <div className="p-4">
-        <div className="flex items-start justify-between mb-3">
+        <div className="mb-3 flex items-start justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className={`p-2 rounded-lg ${colors.bg}`}>
-              <Icon className={colors.icon} size={18} />
+            <div className={`rounded-xl p-2 ${colors.bg}`}>
+              <IconComponent className={colors.icon} size={18} />
             </div>
             <div>
-              <h4 className="font-semibold text-[#e5e5ea] text-sm">{title}</h4>
-              <p className="text-xs text-[#8e8e93]">{description}</p>
+              <h4 className="text-sm font-semibold text-[#101938]">{title}</h4>
+              <p className="text-xs text-[#6b7a96]">{description}</p>
             </div>
           </div>
-          {status === 'good' ? (
-            <CheckCircle2 className="text-[#30d158]" size={20} />
-          ) : (
-            <AlertTriangle className={status === 'warning' ? 'text-[#ff9f0a]' : 'text-[#ff453a]'} size={20} />
-          )}
+          {status === 'good' ? <CheckCircle2 className="text-[#30d158]" size={18} /> : <AlertTriangle className={colors.icon} size={18} />}
         </div>
-
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <div>
-            <p className={`text-3xl font-bold ${colors.text}`}>
-              {displayValue}{unit}
-            </p>
-            <p className="text-xs text-[#636366] mt-1">
-              Referencia: {inverse ? '<' : '>'}{benchmark.good}{unit}
+            <p className={`text-3xl font-bold ${colors.text}`}>{displayValue}{unit}</p>
+            <p className="mt-1 text-xs text-[#7b8dae]">
+              Referencia {inverse ? 'máx.' : 'mín.'}: {benchmark.good}{unit}
             </p>
           </div>
-          <div className="w-20 h-20">
+          <div className="h-20 w-20">
             <ResponsiveContainer width="100%" height="100%">
               <RadialBarChart cx="50%" cy="50%" innerRadius="60%" outerRadius="100%" data={gaugeData} startAngle={180} endAngle={0}>
                 <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
-                <RadialBar background={{ fill: '#000000' }} dataKey="value" cornerRadius={10} fill={gaugeData[0].fill} />
+                <RadialBar background={{ fill: '#e3eaf6' }} dataKey="value" cornerRadius={10} />
               </RadialBarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
-
-      <div className={`px-4 py-2 ${colors.bg} flex items-center gap-2`}>
-        <span className={`w-2 h-2 rounded-full ${status === 'good' ? 'bg-[#30d158]' : status === 'warning' ? 'bg-[#ff9f0a]' : 'bg-[#ff453a]'}`} />
-        <span className={`text-xs font-medium ${colors.text}`}>
-          {status === 'good' ? 'Saludable' : status === 'warning' ? 'Requiere atención' : 'Crítico'}
-        </span>
+      <div className={`px-4 py-2 text-xs font-semibold ${colors.bg} ${colors.text}`}>
+        {status === 'good' ? 'Saludable' : status === 'warning' ? 'Requiere atención' : 'Crítico'}
       </div>
     </div>
   );
 };
 
-const SummaryMetric = ({ label, value, subvalue, color = 'blue' }) => {
-  const colorClasses = {
-    blue: 'from-[#0a84ff] to-[#0070e0]',
-    emerald: 'from-[#30d158] to-[#28c74e]',
-    rose: 'from-[#ff453a] to-[#e63b31]',
-    amber: 'from-[#ff9f0a] to-[#e68f09]',
-    indigo: 'from-[#5e5ce6] to-[#4f4dd4]'
-  };
+const SummaryMetric = ({ label, value, subvalue, tone }) => (
+  <div className="rounded-[22px] border border-[rgba(205,219,243,0.78)] bg-white/84 p-4 shadow-[0_18px_44px_rgba(126,147,190,0.1)]">
+    <p className="text-sm text-[#6b7a96]">{label}</p>
+    <p className={`mt-1 text-2xl font-semibold ${tone}`}>{value}</p>
+    {subvalue && <p className="mt-1 text-xs text-[#7b8dae]">{subvalue}</p>}
+  </div>
+);
 
-  return (
-    <div className="bg-[#1c1c1e] rounded-xl shadow-sm border border-[rgba(255,255,255,0.08)] p-4">
-      <p className="text-sm text-[#8e8e93] mb-1">{label}</p>
-      <p className={`text-2xl font-bold bg-gradient-to-r ${colorClasses[color]} bg-clip-text text-transparent`}>
-        {value}
-      </p>
-      {subvalue && <p className="text-xs text-[#636366] mt-1">{subvalue}</p>}
-    </div>
-  );
-};
-
-const FinancialRatios = ({ transactions }) => {
+const FinancialRatios = ({ user }) => {
   const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
+  const defaultMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  const [selectedPeriod, setSelectedPeriod] = useState(`month:${defaultMonth}`);
 
-  // Helper functions
-  const getMonthTransactions = (month, year) => {
-    return transactions.filter(t => {
-      const d = new Date(t.date);
-      return d.getMonth() === month && d.getFullYear() === year && t.status === 'paid';
-    });
-  };
+  const globalMetrics = useTreasuryMetrics({ user });
+  const periodRange = resolvePeriodRange(selectedPeriod, now, 0);
+  const periodMetrics = useTreasuryMetrics({ user, from: periodRange.from, to: periodRange.to });
+  const ledger = useFinanceLedger(user);
 
-  // Current and previous periods
-  const currentMonthTx = getMonthTransactions(currentMonth, currentYear);
-  const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-  const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
-  const prevMonthTx = getMonthTransactions(prevMonth, prevYear);
+  const ratioData = useMemo(() => {
+    const receivables = globalMetrics.pendingReceivables;
+    const payables = globalMetrics.pendingPayables;
+    const currentCash = globalMetrics.currentCash;
+    const currentRatio = payables > 0 ? (currentCash + receivables) / payables : currentCash + receivables > 0 ? 999 : 1;
+    const quickRatio = payables > 0 ? currentCash / payables : currentCash > 0 ? 999 : 1;
+    const workingCapital = currentCash + receivables - payables;
+    const coverage14d = globalMetrics.upcomingPayables.length > 0
+      ? globalMetrics.upcomingReceivables.reduce((sum, entry) => sum + entry.openAmount, 0) /
+        globalMetrics.upcomingPayables.reduce((sum, entry) => sum + entry.openAmount, 0)
+      : globalMetrics.upcomingReceivables.length > 0
+        ? 999
+        : 1;
 
-  // YTD
-  const ytdTx = transactions.filter(t => {
-    const d = new Date(t.date);
-    return d.getFullYear() === currentYear && t.status === 'paid';
-  });
+    const monthlyIn = Math.max(periodMetrics.cashInflows || 0, 1);
+    const monthlyOut = Math.max(periodMetrics.cashOutflows || 0, 1);
+    const avgDaysReceivable = (receivables / (monthlyIn / 30));
+    const avgDaysPayable = (payables / (monthlyOut / 30));
+    const cashCycle = avgDaysReceivable - avgDaysPayable;
+    const receivablesTurnover = receivables > 0 ? (monthlyIn * 12) / receivables : 0;
+    const payablesTurnover = payables > 0 ? (monthlyOut * 12) / payables : 0;
 
-  // Calculate basic metrics
-  const currentIncome = currentMonthTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-  const currentExpenses = currentMonthTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-  const currentProfit = currentIncome - currentExpenses;
+    const cashMargin = periodMetrics.cashInflows > 0 ? (periodMetrics.netMovement / periodMetrics.cashInflows) * 100 : 0;
+    const projectedMargin = globalMetrics.projectedLiquidity !== 0
+      ? ((globalMetrics.projectedLiquidity - currentCash) / Math.max(Math.abs(currentCash), 1)) * 100
+      : 0;
+    const overdueShare = receivables > 0
+      ? (globalMetrics.overdueReceivables.reduce((sum, entry) => sum + entry.openAmount, 0) / receivables) * 100
+      : 0;
+    const payablePressure = payables > 0
+      ? (globalMetrics.overduePayables.reduce((sum, entry) => sum + entry.openAmount, 0) / payables) * 100
+      : 0;
 
-  const ytdIncome = ytdTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-  const ytdExpenses = ytdTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-  const ytdProfit = ytdIncome - ytdExpenses;
+    return {
+      currentRatio,
+      quickRatio,
+      workingCapital,
+      coverage14d,
+      avgDaysReceivable,
+      avgDaysPayable,
+      cashCycle,
+      receivablesTurnover,
+      payablesTurnover,
+      cashMargin,
+      projectedMargin,
+      overdueShare,
+      payablePressure,
+    };
+  }, [globalMetrics, periodMetrics]);
 
-  // Pending amounts
-  const cxc = transactions.filter(t => t.type === 'income' && t.status === 'pending').reduce((s, t) => s + t.amount, 0);
-  const cxp = transactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((s, t) => s + t.amount, 0);
-
-  // Overdue transactions
-  const overdueCXC = transactions.filter(t => {
-    if (t.type !== 'income' || t.status !== 'pending') return false;
-    const daysOverdue = Math.floor((now - new Date(t.date)) / (1000 * 60 * 60 * 24));
-    return daysOverdue > 0;
-  }).reduce((s, t) => s + t.amount, 0);
-
-  const overdueCXP = transactions.filter(t => {
-    if (t.type !== 'expense' || t.status !== 'pending') return false;
-    const daysOverdue = Math.floor((now - new Date(t.date)) / (1000 * 60 * 60 * 24));
-    return daysOverdue > 0;
-  }).reduce((s, t) => s + t.amount, 0);
-
-  // === RATIOS DE LIQUIDEZ ===
-  const currentRatio = cxp > 0 ? (cxc / cxp) : (cxc > 0 ? 999 : 1);
-  const quickRatio = cxp > 0 ? ((cxc - overdueCXC) / cxp) : 1; // Activo líquido / Pasivo corriente
-  const workingCapital = cxc - cxp;
-  const cashRatio = cxp > 0 ? (workingCapital / cxp) : 1;
-
-  // === RATIOS DE ACTIVIDAD ===
-  const avgDaysReceivable = cxc > 0 && currentIncome > 0 ? Math.round((cxc / (currentIncome / FINANCIAL_CONSTANTS.DAYS_PER_MONTH))) : 0;
-  const avgDaysPayable = cxp > 0 && currentExpenses > 0 ? Math.round((cxp / (currentExpenses / FINANCIAL_CONSTANTS.DAYS_PER_MONTH))) : 0;
-  const cashConversionCycle = avgDaysReceivable - avgDaysPayable;
-  const receivablesTurnover = currentIncome > 0 && cxc > 0 ? (currentIncome * 12 / cxc) : 0;
-  const payablesTurnover = currentExpenses > 0 && cxp > 0 ? (currentExpenses * 12 / cxp) : 0;
-
-  // === RATIOS DE RENTABILIDAD ===
-  const grossMargin = currentIncome > 0 ? (currentProfit / currentIncome * 100) : 0;
-  const operatingMargin = currentIncome > 0 ? ((currentProfit * 0.85) / currentIncome * 100) : 0; // Estimado
-  const netMargin = currentIncome > 0 ? ((currentProfit * (1 - FINANCIAL_CONSTANTS.ESTIMATED_TAX_RATE)) / currentIncome * 100) : 0; // Después de impuestos estimado
-  const ytdMargin = ytdIncome > 0 ? (ytdProfit / ytdIncome * 100) : 0;
-
-  // ROA y ROE simplificados (sin activos totales reales)
-  const totalAssets = cxc + (currentProfit > 0 ? currentProfit : 0); // Simplificado
-  const equity = totalAssets - cxp;
-  const roa = totalAssets > 0 ? ((ytdProfit) / totalAssets * 100) : 0;
-  const roe = equity > 0 ? ((ytdProfit) / equity * 100) : 0;
-
-  // === RATIOS DE EFICIENCIA ===
-  const expenseToIncomeRatio = currentIncome > 0 ? (currentExpenses / currentIncome * 100) : 0;
-  const operatingEfficiency = 100 - expenseToIncomeRatio;
-
-  // Benchmark values
-  const BENCHMARKS = {
-    currentRatio: { good: 1.5, warning: 1.0 },
-    quickRatio: { good: 1.0, warning: 0.5 },
-    avgDaysReceivable: { good: 30, warning: 45 },
-    avgDaysPayable: { good: 30, warning: 45 },
-    cashCycle: { good: 30, warning: 60 },
-    grossMargin: { good: 30, warning: 15 },
-    operatingMargin: { good: 20, warning: 10 },
-    roa: { good: 15, warning: 5 },
-    roe: { good: 20, warning: 10 },
-    operatingEfficiency: { good: 30, warning: 15 }
-  };
-
-  // Data for comparison chart
-  const ratioComparisonData = [
-    { name: 'Ratio Corriente', value: Math.min(currentRatio, 3), benchmark: 1.5 },
-    { name: 'Margen Bruto', value: Math.max(grossMargin, 0), benchmark: 30 },
-    { name: 'Margen Operativo', value: Math.max(operatingMargin, 0), benchmark: 20 },
-    { name: 'Eficiencia Op.', value: Math.max(operatingEfficiency, 0), benchmark: 30 },
-    { name: 'ROE', value: Math.max(roe, 0), benchmark: 20 }
+  const comparisonData = [
+    { name: 'Ratio corriente', value: Math.min(ratioData.currentRatio, 4), benchmark: 1.5 },
+    { name: 'Prueba ácida', value: Math.min(ratioData.quickRatio, 4), benchmark: 1.0 },
+    { name: 'Cobertura 14d', value: Math.min(ratioData.coverage14d, 4), benchmark: 1.1 },
+    { name: 'Margen caja', value: Math.max(ratioData.cashMargin, 0), benchmark: 15 },
+    { name: 'Runway', value: Math.min(globalMetrics.runwayMonths || 0, 12), benchmark: 3 },
   ];
 
+  if (globalMetrics.loading || periodMetrics.loading || ledger.loading) {
+    return (
+      <div className="flex items-center justify-center py-28">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#64d2ff] border-t-transparent" />
+          <p className="text-sm text-[#6b7a96]">Calculando indicadores financieros...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6 animate-fadeIn">
-      {/* Header */}
-      <div className="bg-[#2c2c2e] rounded-2xl p-6 text-white">
-        <div className="flex items-center justify-between">
+    <div className="space-y-6 pb-12">
+      <section className="rounded-[34px] border border-[rgba(205,219,243,0.82)] bg-[radial-gradient(circle_at_top_right,rgba(210,227,255,0.4),transparent_24%),radial-gradient(circle_at_top_left,rgba(147,196,255,0.34),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.92),rgba(244,248,255,0.88))] px-6 py-7 shadow-[0_32px_90px_rgba(126,147,190,0.14)]">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <h2 className="text-2xl font-bold">Ratios Financieros</h2>
-            <p className="text-[#5e5ce6] mt-1">Análisis de indicadores clave de rendimiento</p>
-          </div>
-          <div className="text-right">
-            <p className="text-sm text-[#5e5ce6]">Período</p>
-            <p className="text-lg font-semibold">
-              {now.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#5a8ddd]">Ratios financieros</p>
+            <h2 className="text-[32px] font-semibold tracking-tight text-[#101938]">Liquidez, cobertura y eficiencia operativa.</h2>
+            <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[#5f7091]">
+              Los indicadores se calculan desde caja real, facturas abiertas y ritmo de entradas y salidas para ofrecer una lectura útil de la operación.
             </p>
           </div>
+          <div className="flex flex-wrap gap-2">
+            {[0, 1, 2].map((offset) => {
+              const date = new Date(now.getFullYear(), now.getMonth() - offset, 1);
+              const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setSelectedPeriod(`month:${key}`)}
+                  className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
+                    selectedPeriod === `month:${key}`
+                      ? 'border-[rgba(90,141,221,0.28)] bg-[rgba(90,141,221,0.12)] text-[#3156d3]'
+                      : 'border-[rgba(201,214,238,0.82)] bg-white/78 text-[#6b7a96] hover:text-[#101938]'
+                  }`}
+                >
+                  {MONTH_NAMES[date.getMonth()]}
+                </button>
+              );
+            })}
+          </div>
         </div>
+      </section>
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+        <SummaryMetric label="Caja actual" value={formatCurrency(globalMetrics.currentCash)} tone={globalMetrics.currentCash >= 0 ? 'text-[#3156d3]' : 'text-[#d46a13]'} />
+        <SummaryMetric label="Liquidez proyectada" value={formatCurrency(globalMetrics.projectedLiquidity)} subvalue="Caja + CXC abiertas - CXP abiertas" tone={globalMetrics.projectedLiquidity >= 0 ? 'text-[#0f8f4b]' : 'text-[#d46a13]'} />
+        <SummaryMetric label="Próximos 14 días" value={formatCurrency(globalMetrics.next14Net)} subvalue={`${globalMetrics.upcomingReceivables.length} cobros y ${globalMetrics.upcomingPayables.length} pagos`} tone={globalMetrics.next14Net >= 0 ? 'text-[#0f8f4b]' : 'text-[#c46a19]'} />
+        <SummaryMetric label="Runway" value={globalMetrics.runwayMonths ? `${globalMetrics.runwayMonths.toFixed(1)}m` : 'N/A'} subvalue={`Burn mensual ${formatCurrency(globalMetrics.avgMonthlyOutflows)}`} tone="text-[#3156d3]" />
+        <SummaryMetric label="Período" value={formatCurrency(periodMetrics.netMovement)} subvalue={`Caja realizada ${periodRange.label}`} tone={periodMetrics.netMovement >= 0 ? 'text-[#0f8f4b]' : 'text-[#d46a13]'} />
       </div>
 
-      {/* Quick Summary */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <SummaryMetric
-          label="Ingresos del Mes"
-          value={formatCurrency(currentIncome)}
-          color="emerald"
-        />
-        <SummaryMetric
-          label="Gastos del Mes"
-          value={formatCurrency(currentExpenses)}
-          color="rose"
-        />
-        <SummaryMetric
-          label="Utilidad Neta"
-          value={formatCurrency(currentProfit)}
-          color={currentProfit >= 0 ? 'blue' : 'rose'}
-        />
-        <SummaryMetric
-          label="CXC Pendiente"
-          value={formatCurrency(cxc)}
-          subvalue={`${avgDaysReceivable} días promedio`}
-          color="amber"
-        />
-        <SummaryMetric
-          label="CXP Pendiente"
-          value={formatCurrency(cxp)}
-          subvalue={`${avgDaysPayable} días promedio`}
-          color="indigo"
-        />
-      </div>
-
-      {/* Liquidity Ratios */}
       <div>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-[rgba(59,130,246,0.12)] rounded-lg">
-            <Wallet className="text-[#0a84ff]" size={20} />
+        <div className="mb-4 flex items-center gap-3">
+          <div className="rounded-xl bg-[rgba(90,141,221,0.12)] p-2">
+            <Wallet className="text-[#3156d3]" size={18} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#e5e5ea]">Ratios de Liquidez</h3>
-            <p className="text-sm text-[#8e8e93]">Capacidad para cumplir obligaciones a corto plazo</p>
+            <h3 className="text-lg font-semibold text-[#101938]">Liquidez</h3>
+            <p className="text-sm text-[#6b7a96]">Capacidad de sostener obligaciones desde caja real y compromisos abiertos.</p>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <RatioCard
-            title="Ratio Corriente"
-            value={currentRatio}
-            unit="x"
-            benchmark={BENCHMARKS.currentRatio}
-            description="CXC / CXP"
-            icon={Activity}
-          />
-          <RatioCard
-            title="Prueba Ácida"
-            value={quickRatio}
-            unit="x"
-            benchmark={BENCHMARKS.quickRatio}
-            description="Activo líquido / Pasivo"
-            icon={Target}
-          />
-          <RatioCard
-            title="Capital de Trabajo"
-            value={workingCapital}
-            unit=""
-            benchmark={{ good: 0, warning: -5000 }}
-            description="CXC - CXP"
-            icon={DollarSign}
-          />
-          <RatioCard
-            title="Ratio de Efectivo"
-            value={cashRatio}
-            unit="x"
-            benchmark={{ good: 0.5, warning: 0.2 }}
-            description="Efectivo neto / Pasivo"
-            icon={CreditCard}
-          />
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <RatioCard title="Ratio corriente" value={ratioData.currentRatio} unit="x" benchmark={{ good: 1.5, warning: 1.0 }} description="(Caja + CXC) / CXP" icon={Activity} />
+          <RatioCard title="Prueba ácida" value={ratioData.quickRatio} unit="x" benchmark={{ good: 1.0, warning: 0.6 }} description="Caja / CXP" icon={CreditCard} />
+          <RatioCard title="Cobertura 14d" value={ratioData.coverage14d} unit="x" benchmark={{ good: 1.1, warning: 0.9 }} description="Cobros próximos / pagos próximos" icon={Target} />
+          <RatioCard title="Capital operativo" value={ratioData.workingCapital} benchmark={{ good: 0, warning: -5000 }} description="Caja + CXC - CXP" icon={DollarSign} />
         </div>
       </div>
 
-      {/* Activity Ratios */}
       <div>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-[rgba(245,158,11,0.12)] rounded-lg">
-            <Clock className="text-[#ff9f0a]" size={20} />
+        <div className="mb-4 flex items-center gap-3">
+          <div className="rounded-xl bg-[rgba(212,122,34,0.12)] p-2">
+            <Clock className="text-[#c46a19]" size={18} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#e5e5ea]">Ratios de Actividad</h3>
-            <p className="text-sm text-[#8e8e93]">Eficiencia en la gestión de cobros y pagos</p>
+            <h3 className="text-lg font-semibold text-[#101938]">Actividad</h3>
+            <p className="text-sm text-[#6b7a96]">Velocidad de cobro y pago sobre el saldo abierto actual.</p>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <RatioCard
-            title="Días de Cobro"
-            value={avgDaysReceivable}
-            unit=" días"
-            benchmark={BENCHMARKS.avgDaysReceivable}
-            inverse
-            description="Tiempo promedio de cobro"
-            icon={TrendingUp}
-          />
-          <RatioCard
-            title="Días de Pago"
-            value={avgDaysPayable}
-            unit=" días"
-            benchmark={BENCHMARKS.avgDaysPayable}
-            inverse
-            description="Tiempo promedio de pago"
-            icon={TrendingDown}
-          />
-          <RatioCard
-            title="Ciclo de Caja"
-            value={cashConversionCycle}
-            unit=" días"
-            benchmark={BENCHMARKS.cashCycle}
-            inverse
-            description="Cobro - Pago"
-            icon={Activity}
-          />
-          <RatioCard
-            title="Rotación CXC"
-            value={receivablesTurnover}
-            unit="x"
-            benchmark={{ good: 8, warning: 4 }}
-            description="Veces al año"
-            icon={BarChart3}
-          />
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <RatioCard title="Días de cobro" value={ratioData.avgDaysReceivable} unit=" d" benchmark={{ good: 30, warning: 45 }} inverse description="CXC / ritmo mensual de cobro" icon={TrendingUp} />
+          <RatioCard title="Días de pago" value={ratioData.avgDaysPayable} unit=" d" benchmark={{ good: 35, warning: 50 }} inverse description="CXP / ritmo mensual de pago" icon={TrendingDown} />
+          <RatioCard title="Ciclo de caja" value={ratioData.cashCycle} unit=" d" benchmark={{ good: 15, warning: 40 }} inverse description="Días cobro - días pago" icon={Activity} />
+          <RatioCard title="Rotación CXC" value={ratioData.receivablesTurnover} unit="x" benchmark={{ good: 8, warning: 4 }} description="Veces al año" icon={BarChart3} />
         </div>
       </div>
 
-      {/* Profitability Ratios */}
       <div>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-[rgba(16,185,129,0.12)] rounded-lg">
-            <Percent className="text-[#30d158]" size={20} />
+        <div className="mb-4 flex items-center gap-3">
+          <div className="rounded-xl bg-[rgba(15,143,75,0.12)] p-2">
+            <Percent className="text-[#0f8f4b]" size={18} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#e5e5ea]">Ratios de Rentabilidad</h3>
-            <p className="text-sm text-[#8e8e93]">Capacidad para generar utilidades</p>
+            <h3 className="text-lg font-semibold text-[#101938]">Rentabilidad y presión</h3>
+            <p className="text-sm text-[#6b7a96]">Indicadores gerenciales basados en caja y envejecimiento de cartera y deuda.</p>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <RatioCard
-            title="Margen Bruto"
-            value={grossMargin}
-            unit="%"
-            benchmark={BENCHMARKS.grossMargin}
-            description="Utilidad / Ingresos"
-            icon={TrendingUp}
-          />
-          <RatioCard
-            title="Margen Operativo"
-            value={operatingMargin}
-            unit="%"
-            benchmark={BENCHMARKS.operatingMargin}
-            description="EBIT / Ingresos"
-            icon={Target}
-          />
-          <RatioCard
-            title="ROA"
-            value={roa}
-            unit="%"
-            benchmark={BENCHMARKS.roa}
-            description="Retorno sobre activos"
-            icon={BarChart3}
-          />
-          <RatioCard
-            title="ROE"
-            value={roe}
-            unit="%"
-            benchmark={BENCHMARKS.roe}
-            description="Retorno sobre patrimonio"
-            icon={DollarSign}
-          />
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <RatioCard title="Margen de caja" value={ratioData.cashMargin} unit="%" benchmark={{ good: 15, warning: 5 }} description="Resultado del período / ingresos realizados" icon={TrendingUp} />
+          <RatioCard title="Margen proyectado" value={ratioData.projectedMargin} unit="%" benchmark={{ good: 5, warning: 0 }} description="Liquidez proyectada vs caja actual" icon={Target} />
+          <RatioCard title="Mora CXC" value={ratioData.overdueShare} unit="%" benchmark={{ good: 15, warning: 30 }} inverse description="Saldo vencido / CXC abiertas" icon={AlertTriangle} />
+          <RatioCard title="Presión CXP" value={ratioData.payablePressure} unit="%" benchmark={{ good: 20, warning: 35 }} inverse description="Saldo vencido / CXP abiertas" icon={TrendingDown} />
         </div>
       </div>
 
-      {/* Efficiency Ratios */}
-      <div>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-[rgba(99,102,241,0.12)] rounded-lg">
-            <Target className="text-[#5e5ce6]" size={20} />
+      <div className="rounded-[28px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-6 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
+        <div className="mb-6 flex items-center gap-3">
+          <div className="rounded-xl bg-[rgba(90,141,221,0.12)] p-2">
+            <BarChart3 className="text-[#3156d3]" size={18} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#e5e5ea]">Ratios de Eficiencia</h3>
-            <p className="text-sm text-[#8e8e93]">Optimización de recursos operativos</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <RatioCard
-            title="Eficiencia Operativa"
-            value={operatingEfficiency}
-            unit="%"
-            benchmark={BENCHMARKS.operatingEfficiency}
-            description="100% - Ratio gastos"
-            icon={Activity}
-          />
-          <RatioCard
-            title="Ratio Gastos/Ingresos"
-            value={expenseToIncomeRatio}
-            unit="%"
-            benchmark={{ good: 70, warning: 85 }}
-            inverse
-            description="Gastos / Ingresos"
-            icon={TrendingDown}
-          />
-          <RatioCard
-            title="Margen YTD"
-            value={ytdMargin}
-            unit="%"
-            benchmark={{ good: 25, warning: 10 }}
-            description="Utilidad acumulada del año"
-            icon={TrendingUp}
-          />
-        </div>
-      </div>
-
-      {/* Comparison Chart */}
-      <div className="bg-[#1c1c1e] rounded-xl shadow-sm border border-[rgba(255,255,255,0.08)] p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-[rgba(168,85,247,0.12)] rounded-lg">
-            <BarChart3 className="text-[#bf5af2]" size={20} />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-[#e5e5ea]">Comparativa vs Benchmark</h3>
-            <p className="text-sm text-[#8e8e93]">Indicadores principales vs valores de referencia</p>
+            <h3 className="text-lg font-semibold text-[#101938]">Comparativa frente a referencia</h3>
+            <p className="text-sm text-[#6b7a96]">Referencia rápida para liquidez y resistencia operativa.</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={ratioComparisonData} layout="vertical" margin={{ left: 100 }}>
-            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-            <XAxis type="number" domain={[0, 'auto']} />
-            <YAxis type="category" dataKey="name" tick={{ fontSize: 12 }} />
+          <BarChart data={comparisonData} layout="vertical" margin={{ left: 110 }}>
+            <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(176,194,226,0.42)" />
+            <XAxis type="number" tick={{ fill: '#7b8dae', fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis type="category" dataKey="name" tick={{ fill: '#16223f', fontSize: 12 }} axisLine={false} tickLine={false} />
             <Tooltip
-              formatter={(value, name) => [
-                name === 'value' ? `${value.toFixed(1)}` : `${value}`,
-                name === 'value' ? 'Actual' : 'Benchmark'
-              ]}
+              formatter={(value, name) => [Number(value).toFixed(1), name === 'value' ? 'Actual' : 'Benchmark']}
+              contentStyle={{ backgroundColor: '#ffffff', border: '1px solid rgba(201,214,238,0.82)', borderRadius: 18 }}
             />
-            <Bar dataKey="value" name="Actual" radius={[0, 4, 4, 0]} barSize={20}>
-              {ratioComparisonData.map((entry, index) => (
+            <Bar dataKey="value" name="Actual" radius={[0, 8, 8, 0]}>
+              {comparisonData.map((entry, index) => (
                 <Cell
-                  key={`cell-${index}`}
-                  fill={entry.value >= entry.benchmark ? '#30d158' : entry.value >= entry.benchmark * 0.7 ? '#ff9f0a' : '#ff453a'}
+                  key={`${entry.name}-${index}`}
+                  fill={entry.value >= entry.benchmark ? '#30d158' : entry.value >= entry.benchmark * 0.75 ? '#ff9f0a' : '#ff453a'}
                 />
               ))}
             </Bar>
-            <Bar dataKey="benchmark" name="Benchmark" fill="#94a3b8" radius={[0, 4, 4, 0]} barSize={20} opacity={0.5} />
+            <Bar dataKey="benchmark" name="Benchmark" fill="#8ea2c7" radius={[0, 8, 8, 0]} opacity={0.55} />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Info Card */}
-      <div className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] rounded-xl p-5">
+      <div className="rounded-[24px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(247,250,255,0.92),rgba(240,246,255,0.88))] p-5 shadow-[0_18px_44px_rgba(126,147,190,0.1)]">
         <div className="flex items-start gap-3">
-          <Info className="text-[#0a84ff] mt-0.5 flex-shrink-0" size={20} />
-          <div>
-            <h4 className="font-bold text-[#0a84ff] mb-2">Interpretación de Indicadores</h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-[#0a84ff]">
-              <div>
-                <p className="font-semibold mb-1">Liquidez</p>
-                <p>Un ratio corriente &gt;1.5 indica buena capacidad de pago. Valores muy altos pueden indicar recursos ociosos.</p>
-              </div>
-              <div>
-                <p className="font-semibold mb-1">Actividad</p>
-                <p>Días de cobro menores a 30 son ideales. Un ciclo de caja negativo significa que cobras antes de pagar.</p>
-              </div>
-              <div>
-                <p className="font-semibold mb-1">Rentabilidad</p>
-                <p>Márgenes &gt;20% indican buena rentabilidad. ROE debe superar el costo de oportunidad del capital.</p>
-              </div>
+          <Info className="mt-0.5 text-[#3156d3]" size={18} />
+          <div className="grid gap-3 md:grid-cols-3">
+            <div>
+              <p className="text-sm font-semibold text-[#3156d3]">Liquidez</p>
+              <p className="mt-1 text-sm text-[#5f7091]">El ratio corriente y la prueba ácida usan caja real más compromisos abiertos, sin adelantar cobros que aún no ocurrieron.</p>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-[#3156d3]">Actividad</p>
+              <p className="mt-1 text-sm text-[#5f7091]">Los días de cobro y pago se estiman con saldo abierto actual frente al ritmo del período seleccionado.</p>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-[#3156d3]">Rentabilidad</p>
+              <p className="mt-1 text-sm text-[#5f7091]">El margen mostrado corresponde a caja realizada. Una contabilidad completa requeriría un libro contable fuera del alcance de esta fase.</p>
             </div>
           </div>
         </div>
