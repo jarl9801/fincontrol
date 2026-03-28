@@ -1,3 +1,4 @@
+import { logError } from '../utils/logger';
 import { useState, useEffect, useMemo } from 'react';
 import {
   doc,
@@ -31,7 +32,7 @@ export const useBankAccount = (user) => {
         setLoading(false);
       },
       (err) => {
-        console.error("Error loading bank account:", err);
+        logError("Error loading bank account:", err);
         setError(err);
         setLoading(false);
       }
@@ -54,7 +55,7 @@ export const useBankAccount = (user) => {
       });
       return { success: true };
     } catch (err) {
-      console.error("Error saving bank account:", err);
+      logError("Error saving bank account:", err);
       return { success: false, error: err };
     }
   };
@@ -69,7 +70,7 @@ export const useBankAccount = (user) => {
 
     // Only consider PAID transactions after the balance date
     const transactionsAfterBalance = transactions.filter(t =>
-      t.date > balanceDate && t.status === 'paid'
+      (t.date || '').substring(0, 10) > balanceDate && (t.status === 'paid' || t.status === 'completed')
     );
 
     let netMovement = 0;

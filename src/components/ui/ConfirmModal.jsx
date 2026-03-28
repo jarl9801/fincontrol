@@ -52,11 +52,11 @@ const ConfirmModal = ({
   const style = variantStyles[variant] || variantStyles.danger;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn" role="dialog" aria-modal="true">
       <div className="bg-[#1c1c1e] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-scaleIn">
         <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center">
           <h3 className="font-bold text-lg text-[#e5e5ea]">{title}</h3>
-          <button onClick={handleClose} className="text-[#636366] hover:text-[#98989d] transition-colors">
+          <button onClick={handleClose} className="text-[#636366] hover:text-[#98989d] transition-colors" aria-label="Cerrar">
             <X size={20} />
           </button>
         </div>

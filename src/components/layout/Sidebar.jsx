@@ -21,14 +21,14 @@ import { formatCurrency } from '../../utils/formatters';
 
 const NAV_ITEMS = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
-  { path: '/cashflow', label: 'Tesoreria', icon: WalletCards, permission: 'reports' },
+  { path: '/cashflow', label: 'Tesorería', icon: WalletCards, permission: 'reports' },
   { path: '/transactions', label: 'Transacciones', icon: Landmark, permission: 'dashboard' },
   { path: '/cxc', label: 'CXC', icon: ReceiptText, permission: 'cxc' },
   { path: '/cxp', label: 'CXP', icon: ReceiptText, permission: 'cxp' },
   { path: '/reportes', label: 'Reportes', icon: BarChart3, permission: 'reports' },
   { path: '/proyectos', label: 'Proyectos', icon: FolderKanban, permission: 'reports' },
   { path: '/whatif', label: 'Simulador', icon: SlidersHorizontal, permission: 'reports' },
-  { path: '/configuracion', label: 'Configuracion', icon: Settings, permission: 'settings' },
+  { path: '/configuracion', label: 'Configuración', icon: Settings, permission: 'settings' },
 ];
 
 const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceData, bankAccount }) => {
@@ -37,10 +37,11 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
   const visibleItems = NAV_ITEMS.filter((item) => !item.permission || hasPermission(item.permission));
 
   const handleLogout = async () => {
+    if (!window.confirm('¿Estás seguro que deseas cerrar sesión?')) return;
     try {
       await signOut(auth);
     } catch (error) {
-      console.error('Error al cerrar sesion:', error);
+      console.error('Error al cerrar sesión:', error);
     }
   };
 
@@ -86,6 +87,7 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
               type="button"
               className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] text-[rgba(232,237,255,0.86)] transition-colors hover:bg-[rgba(255,255,255,0.08)]"
               title={bankAccount?.name || bankAccount?.bankName || 'Cuenta principal'}
+              aria-label="Cuenta bancaria"
             >
               <Globe size={15} />
             </button>
@@ -106,6 +108,7 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
               type="button"
               onClick={handleLogout}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] text-[rgba(232,237,255,0.86)] transition-colors hover:bg-[rgba(255,255,255,0.08)]"
+              aria-label="Cerrar sesión"
             >
               <LogOut size={15} />
             </button>

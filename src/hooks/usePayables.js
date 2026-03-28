@@ -1,3 +1,4 @@
+import { logError } from '../utils/logger';
 import { useEffect, useMemo, useState } from 'react';
 import {
   addDoc,
@@ -120,7 +121,7 @@ export const usePayables = (user) => {
         setLoading(false);
       },
       (error) => {
-        console.error('Error loading payables:', error);
+        logError('Error loading payables:', error);
         setLoading(false);
       },
     );
@@ -181,7 +182,7 @@ export const usePayables = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error('Error creating payable:', error);
+      logError('Error creating payable:', error);
       return { success: false, error };
     }
   };
@@ -259,7 +260,7 @@ export const usePayables = (user) => {
 
       return { success: true };
     } catch (error) {
-      console.error('Error registering payable payment:', error);
+      logError('Error registering payable payment:', error);
       return { success: false, error };
     }
   };
@@ -319,7 +320,7 @@ export const usePayables = (user) => {
 
       return { success: true };
     } catch (error) {
-      console.error('Error updating payable:', error);
+      logError('Error updating payable:', error);
       return { success: false, error };
     }
   };
@@ -360,7 +361,7 @@ export const usePayables = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error('Error cancelling payable:', error);
+      logError('Error cancelling payable:', error);
       return { success: false, error };
     }
   };
@@ -379,7 +380,7 @@ export const usePayables = (user) => {
         note: 'Marcado como pagado',
       });
     } catch (error) {
-      console.error('Error marking payable as paid:', error);
+      logError('Error marking payable as paid:', error);
       return { success: false, error };
     }
   };

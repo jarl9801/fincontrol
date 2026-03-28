@@ -24,8 +24,6 @@ export const ROLE_PERMISSIONS = {
   manager: ['dashboard', 'transactions', 'cxp', 'cxc', 'reports'],
   editor: ['dashboard', 'transactions'],
 };
-export const EDITOR_EMAIL = 'beatriz@umtelkomd.com';
-
 export const ALERT_THRESHOLDS = {
   overdueDays: 15,
   cxpLimit: 15000,

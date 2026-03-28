@@ -48,7 +48,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
     const amount = parseFloat(formData.amount);
     if (!amount || amount <= 0) return;
     if (amount > remaining + 0.01) {
-      alert(`El monto no puede exceder el saldo restante (${formatCurrency(remaining)})`);
+      // Validation: amount exceeds remaining balance
       return;
     }
     setSubmitting(true);
@@ -66,7 +66,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-[rgba(20,27,42,0.34)] p-4 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-[rgba(20,27,42,0.34)] p-4 backdrop-blur-sm animate-fadeIn" role="dialog" aria-modal="true">
       <div className="w-full max-w-md overflow-hidden rounded-3xl border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(244,248,255,0.94))] shadow-[0_36px_110px_rgba(93,117,161,0.22)] animate-scaleIn">
         <div className="flex items-center justify-between border-b border-[rgba(201,214,238,0.78)] px-6 py-5">
           <div>
@@ -108,7 +108,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
             />
           </div>
           <p className="mt-1 text-right text-[10px] text-[#6b7a96]">
-            {((paidAmount / transaction.amount) * 100).toFixed(0)}% pagado
+            {(transaction.amount > 0 ? (paidAmount / transaction.amount) * 100 : 0).toFixed(0)}% pagado
           </p>
         </div>
 

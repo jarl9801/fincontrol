@@ -1,3 +1,4 @@
+import { logError } from '../utils/logger';
 import { useEffect, useMemo, useState } from 'react';
 import {
   addDoc,
@@ -120,7 +121,7 @@ export const useReceivables = (user) => {
         setLoading(false);
       },
       (error) => {
-        console.error('Error loading receivables:', error);
+        logError('Error loading receivables:', error);
         setLoading(false);
       },
     );
@@ -181,7 +182,7 @@ export const useReceivables = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error('Error creating receivable:', error);
+      logError('Error creating receivable:', error);
       return { success: false, error };
     }
   };
@@ -259,7 +260,7 @@ export const useReceivables = (user) => {
 
       return { success: true };
     } catch (error) {
-      console.error('Error registering receivable payment:', error);
+      logError('Error registering receivable payment:', error);
       return { success: false, error };
     }
   };
@@ -319,7 +320,7 @@ export const useReceivables = (user) => {
 
       return { success: true };
     } catch (error) {
-      console.error('Error updating receivable:', error);
+      logError('Error updating receivable:', error);
       return { success: false, error };
     }
   };
@@ -360,7 +361,7 @@ export const useReceivables = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error('Error cancelling receivable:', error);
+      logError('Error cancelling receivable:', error);
       return { success: false, error };
     }
   };
@@ -379,7 +380,7 @@ export const useReceivables = (user) => {
         note: 'Marcado como cobrado',
       });
     } catch (error) {
-      console.error('Error marking receivable as paid:', error);
+      logError('Error marking receivable as paid:', error);
       return { success: false, error };
     }
   };

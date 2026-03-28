@@ -50,9 +50,9 @@ export const useFilters = (transactions) => {
 
     if (searchTerm) {
       filtered = filtered.filter(t =>
-        t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.project.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.category.toLowerCase().includes(searchTerm.toLowerCase())
+        (t.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (t.project || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (t.category || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 

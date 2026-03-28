@@ -1,3 +1,4 @@
+import { logError } from '../utils/logger';
 import { useState, useEffect, useMemo } from 'react';
 import { 
   collection, 
@@ -38,7 +39,7 @@ export const useProjects = (user) => {
         setLoading(false);
       },
       (err) => {
-        console.error("Error loading projects:", err);
+        logError("Error loading projects:", err);
         setError(err);
         setLoading(false);
       }
@@ -59,7 +60,7 @@ export const useProjects = (user) => {
       });
       return { success: true };
     } catch (err) {
-      console.error("Error creating project:", err);
+      logError("Error creating project:", err);
       return { success: false, error: err };
     }
   };
@@ -76,7 +77,7 @@ export const useProjects = (user) => {
       });
       return { success: true };
     } catch (err) {
-      console.error("Error updating project:", err);
+      logError("Error updating project:", err);
       return { success: false, error: err };
     }
   };
@@ -89,7 +90,7 @@ export const useProjects = (user) => {
       await deleteDoc(projectDoc);
       return { success: true };
     } catch (err) {
-      console.error("Error deleting project:", err);
+      logError("Error deleting project:", err);
       return { success: false, error: err };
     }
   };

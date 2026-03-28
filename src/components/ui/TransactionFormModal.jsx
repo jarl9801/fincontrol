@@ -42,7 +42,7 @@ const TransactionFormModal = ({
   const suggestionsRef = useRef(null);
 
   // Filtrar solo proyectos activos para el selector
-  const activeProjects = projects.filter(p => p.status === 'active');
+  const activeProjects = useMemo(() => projects.filter(p => p.status === 'active'), [projects]);
 
   const getCategoriesByType = (type) => {
     return type === 'income' ? incomeCategories : expenseCategories;
@@ -117,7 +117,7 @@ const TransactionFormModal = ({
       });
     }
     setShowSuggestions(false);
-  }, [activeProjects, defaultType, editingTransaction, expenseCategories, incomeCategories, isOpen, projects]);
+  }, [isOpen, editingTransaction]);
 
   const handleTypeChange = (newType) => {
     const categories = getCategoriesByType(newType);
@@ -173,15 +173,12 @@ const TransactionFormModal = ({
     const amount = parseFloat(formData.amount);
     if (!formData.description?.trim()) return;
     if (!amount || amount <= 0 || amount > 999999999) {
-      alert('El monto debe ser mayor a 0 y menor a 999.999.999');
       return;
     }
     if (formData.description.trim().length > 200) {
-      alert('La descripción no puede exceder 200 caracteres');
       return;
     }
     if (!formData.project) {
-      alert('Por favor selecciona un proyecto');
       return;
     }
 
@@ -206,7 +203,7 @@ const TransactionFormModal = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn" role="dialog" aria-modal="true">
       <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[30px] border border-[#dce6f8] bg-[rgba(255,255,255,0.96)] shadow-[0_35px_120px_rgba(15,23,42,0.24)] animate-scaleIn">
         <div className="flex items-center justify-between border-b border-[#e2ebfb] bg-[rgba(245,248,255,0.94)] px-6 py-5">
           <div>
@@ -217,9 +214,10 @@ const TransactionFormModal = ({
               {editingTransaction ? 'Actualiza los datos del registro seleccionado' : 'Ingresa los datos del nuevo registro'}
             </p>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="rounded-2xl p-2 text-[#7a879d] transition hover:bg-[rgba(94,115,159,0.08)] hover:text-[#5f6f8d]"
+            aria-label="Cerrar"
           >
             <X size={20} />
           </button>

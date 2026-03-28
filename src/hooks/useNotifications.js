@@ -1,7 +1,8 @@
+import { logError } from '../utils/logger';
 import { useState, useEffect, useCallback } from 'react';
 import {
   collection, query, onSnapshot, addDoc, updateDoc, doc,
-  serverTimestamp, orderBy, where, writeBatch
+  serverTimestamp, orderBy, writeBatch
 } from 'firebase/firestore';
 import { db, appId } from '../services/firebase';
 
@@ -27,7 +28,7 @@ export const useNotifications = (user) => {
       setNotifications(data);
       setLoading(false);
     }, (err) => {
-      console.error('Error loading notifications:', err);
+      logError('Error loading notifications:', err);
       setLoading(false);
     });
 
@@ -49,7 +50,7 @@ export const useNotifications = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error('Error creating notification:', error);
+      logError('Error creating notification:', error);
       return { success: false, error };
     }
   };
@@ -61,7 +62,7 @@ export const useNotifications = (user) => {
       await updateDoc(docRef, { read: true });
       return { success: true };
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      logError('Error marking notification as read:', error);
       return { success: false, error };
     }
   };
@@ -77,7 +78,7 @@ export const useNotifications = (user) => {
       await batch.commit();
       return { success: true };
     } catch (error) {
-      console.error('Error marking all as read:', error);
+      logError('Error marking all as read:', error);
       return { success: false, error };
     }
   }, [user, notifications]);

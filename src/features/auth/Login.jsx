@@ -6,14 +6,24 @@ import { Briefcase } from 'lucide-react';
 const Login = () => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [loginError, setLoginError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginError('');
+    setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, loginData.email, loginData.password);
     } catch (error) {
-      setLoginError('Email o contraseña incorrectos');
+      if (error.code === 'auth/network-request-failed') {
+        setLoginError('Error de conexión. Verifica tu internet.');
+      } else if (error.code === 'auth/too-many-requests') {
+        setLoginError('Demasiados intentos. Intenta de nuevo más tarde.');
+      } else {
+        setLoginError('Email o contraseña incorrectos');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -32,8 +42,9 @@ const Login = () => {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Email</label>
+            <label htmlFor="email" className="block text-sm font-semibold text-[#c7c7cc] mb-2">Email</label>
             <input
+              id="email"
               type="email"
               required
               className="w-full px-4 py-3 bg-[#2c2c2e] text-[#ffffff] border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-[#00C853] focus:border-transparent outline-none placeholder-[#636366]"
@@ -44,8 +55,9 @@ const Login = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-[#c7c7cc] mb-2">Contraseña</label>
+            <label htmlFor="password" className="block text-sm font-semibold text-[#c7c7cc] mb-2">Contraseña</label>
             <input
+              id="password"
               type="password"
               required
               className="w-full px-4 py-3 bg-[#2c2c2e] text-[#ffffff] border border-[rgba(255,255,255,0.14)] rounded-lg focus:ring-2 focus:ring-[#00C853] focus:border-transparent outline-none placeholder-[#636366]"
@@ -63,14 +75,15 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#30d158] hover:bg-[#28c74e] text-white font-semibold py-3 rounded-xl text-[14px] transition-all"
+            disabled={loading}
+            className={`w-full bg-[#30d158] text-white font-semibold py-3 rounded-xl text-[14px] transition-all ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#28c74e]'}`}
           >
-            Iniciar Sesión
+            {loading ? 'Cargando...' : 'Iniciar Sesión'}
           </button>
         </form>
 
         <p className="text-xs text-[#636366] text-center mt-6">
-          Sistema de Gestión Financiera 2025
+          Sistema de Gestión Financiera {new Date().getFullYear()}
         </p>
       </div>
     </div>

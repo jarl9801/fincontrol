@@ -63,6 +63,7 @@ const VIEW_TITLES = {
   '/roles': 'Roles',
   '/backup': 'Backup',
   '/perfil': 'Perfil',
+  '/whatif': 'Simulación',
 };
 
 const SkeletonCard = () => (

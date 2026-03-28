@@ -1,3 +1,4 @@
+import { logError } from '../utils/logger';
 import { addDoc, updateDoc, deleteDoc, doc, collection, serverTimestamp, arrayUnion } from 'firebase/firestore';
 import { db, appId } from '../services/firebase';
 import { writeAuditLogEntry } from '../utils/auditLog';
@@ -74,7 +75,7 @@ export const useTransactionActions = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error("Error creating transaction:", error);
+      logError("Error creating transaction:", error);
       return { success: false, error };
     }
   };
@@ -140,7 +141,7 @@ export const useTransactionActions = (user) => {
 
       return { success: true };
     } catch (error) {
-      console.error("Error updating transaction:", error);
+      logError("Error updating transaction:", error);
       return { success: false, error };
     }
   };
@@ -161,13 +162,18 @@ export const useTransactionActions = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error("Error deleting transaction:", error);
+      logError("Error deleting transaction:", error);
       return { success: false, error };
     }
   };
 
   const toggleStatus = async (transaction) => {
     if (!user) return;
+
+    // Don't toggle partial or completed transactions
+    if (transaction.status === 'partial' || transaction.status === 'completed') {
+      return { success: false, error: 'No se puede cambiar el estado de una transacción parcial o completada' };
+    }
 
     try {
       const transactionDoc = doc(db, 'artifacts', appId, 'public', 'data', 'transactions', transaction.id);
@@ -201,7 +207,7 @@ export const useTransactionActions = (user) => {
       
       return { success: true };
     } catch (error) {
-      console.error("Error toggling status:", error);
+      logError("Error toggling status:", error);
       return { success: false, error };
     }
   };
@@ -237,7 +243,7 @@ export const useTransactionActions = (user) => {
       
       return { success: true };
     } catch (error) {
-      console.error("Error adding note:", error);
+      logError("Error adding note:", error);
       return { success: false, error };
     }
   };
@@ -252,7 +258,7 @@ export const useTransactionActions = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error("Error marking as read:", error);
+      logError("Error marking as read:", error);
       return { success: false, error };
     }
   };
@@ -264,6 +270,12 @@ export const useTransactionActions = (user) => {
       const transactionDoc = doc(db, 'artifacts', appId, 'public', 'data', 'transactions', transaction.id);
       const currentPaid = transaction.paidAmount || 0;
       const newPaidAmount = currentPaid + paymentData.amount;
+
+      // Validate overpayment
+      if (newPaidAmount > transaction.amount + 0.01) {
+        return { success: false, error: 'El pago excede el monto pendiente' };
+      }
+
       const newStatus = newPaidAmount >= transaction.amount ? 'paid' : 'partial';
 
       const payment = {
@@ -312,7 +324,7 @@ export const useTransactionActions = (user) => {
 
       return { success: true };
     } catch (error) {
-      console.error("Error registering payment:", error);
+      logError("Error registering payment:", error);
       return { success: false, error };
     }
   };
@@ -353,7 +365,7 @@ export const useTransactionActions = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error("Error marking as completed:", error);
+      logError("Error marking as completed:", error);
       return { success: false, error };
     }
   };

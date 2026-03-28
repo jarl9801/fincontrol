@@ -79,7 +79,7 @@ const Categories = ({ user }) => {
             className="flex-1 rounded-xl border border-[#cfe0fb] bg-white/90 px-3 py-2 text-sm text-[#22304f] outline-none focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSaveEdit()}
+            onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
             autoFocus
           />
           <button
@@ -154,7 +154,7 @@ const Categories = ({ user }) => {
             className="flex-1 rounded-2xl border border-[rgba(208,76,54,0.18)] bg-white/90 px-4 py-2.5 text-sm text-[#22304f] outline-none transition focus:border-[rgba(208,76,54,0.34)] focus:ring-2 focus:ring-[rgba(208,76,54,0.12)]"
             value={newExpense}
             onChange={(e) => setNewExpense(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAddExpense()}
+            onKeyDown={(e) => e.key === 'Enter' && handleAddExpense()}
           />
           <button
             onClick={handleAddExpense}
@@ -189,7 +189,7 @@ const Categories = ({ user }) => {
             className="flex-1 rounded-2xl border border-[rgba(15,159,110,0.18)] bg-white/90 px-4 py-2.5 text-sm text-[#22304f] outline-none transition focus:border-[rgba(15,159,110,0.34)] focus:ring-2 focus:ring-[rgba(15,159,110,0.12)]"
             value={newIncome}
             onChange={(e) => setNewIncome(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAddIncome()}
+            onKeyDown={(e) => e.key === 'Enter' && handleAddIncome()}
           />
           <button
             onClick={handleAddIncome}

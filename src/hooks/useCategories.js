@@ -1,3 +1,4 @@
+import { logError } from '../utils/logger';
 import { useState, useEffect } from 'react';
 import {
   doc,
@@ -31,17 +32,21 @@ export const useCategories = (user) => {
           setIncomeCategories(data.incomeCategories || INCOME_CATEGORIES);
         } else {
           // Initialize with defaults if document doesn't exist
-          await setDoc(categoriesDocRef, {
-            expenseCategories: EXPENSE_CATEGORIES,
-            incomeCategories: INCOME_CATEGORIES,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
-          });
+          try {
+            await setDoc(categoriesDocRef, {
+              expenseCategories: EXPENSE_CATEGORIES,
+              incomeCategories: INCOME_CATEGORIES,
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp()
+            });
+          } catch (initErr) {
+            logError("Error initializing categories:", initErr);
+          }
         }
         setLoading(false);
       },
       (err) => {
-        console.error("Error loading categories:", err);
+        logError("Error loading categories:", err);
         setError(err);
         setLoading(false);
       }
@@ -62,7 +67,7 @@ export const useCategories = (user) => {
       });
       return { success: true };
     } catch (err) {
-      console.error("Error saving categories:", err);
+      logError("Error saving categories:", err);
       return { success: false, error: err };
     }
   };

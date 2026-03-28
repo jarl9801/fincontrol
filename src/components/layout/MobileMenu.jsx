@@ -17,16 +17,16 @@ import {
 import { auth } from '../../services/firebase';
 
 const NAV_ITEMS = [
-  { path: '/', label: 'Inicio', icon: LayoutDashboard, permission: 'dashboard' },
-  { path: '/cashflow', label: 'Tesoreria', icon: WalletCards, permission: 'reports' },
+  { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
+  { path: '/cashflow', label: 'Tesorería', icon: WalletCards, permission: 'reports' },
+  { path: '/transactions', label: 'Transacciones', icon: Landmark, permission: 'dashboard' },
   { path: '/cxc', label: 'CXC', icon: ReceiptText, permission: 'cxc' },
   { path: '/cxp', label: 'CXP', icon: ReceiptText, permission: 'cxp' },
-  { path: '/transactions', label: 'Transacciones', icon: Landmark, permission: 'dashboard' },
+  { path: '/reportes', label: 'Reportes', icon: Briefcase, permission: 'reports' },
   { path: '/proyectos', label: 'Proyectos', icon: FolderKanban, permission: 'reports' },
   { path: '/presupuesto', label: 'Presupuesto', icon: Briefcase, permission: 'reports' },
-  { path: '/conciliacion', label: 'Conciliacion', icon: Scale, permission: 'settings' },
-  { path: '/reportes', label: 'Reportes', icon: Briefcase, permission: 'reports' },
-  { path: '/configuracion', label: 'Configuracion', icon: Settings, permission: 'settings' },
+  { path: '/conciliacion', label: 'Conciliación', icon: Scale, permission: 'settings' },
+  { path: '/configuracion', label: 'Configuración', icon: Settings, permission: 'settings' },
 ];
 
 const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, onNewTransaction }) => {
@@ -36,10 +36,11 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, onNewTrans
   if (!isOpen) return null;
 
   const handleLogout = async () => {
+    if (!window.confirm('¿Estás seguro que deseas cerrar sesión?')) return;
     try {
       await signOut(auth);
     } catch (error) {
-      console.error('Error al cerrar sesion:', error);
+      console.error('Error al cerrar sesión:', error);
     }
   };
 
@@ -126,9 +127,10 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, onNewTrans
             type="button"
             onClick={handleLogout}
             className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-[18px] border border-[rgba(205,219,243,0.82)] bg-white/72 px-4 py-3 text-sm font-medium text-[#62718f]"
+            aria-label="Cerrar sesión"
           >
             <LogOut size={14} />
-            Cerrar sesion
+            Cerrar sesión
           </button>
         </div>
       </div>
@@ -141,6 +143,7 @@ export const MobileMenuButton = ({ onClick }) => (
     type="button"
     onClick={onClick}
     className="rounded-2xl border border-[rgba(205,219,243,0.8)] bg-white/70 p-2 text-[#6b7a96] transition-colors hover:text-[#101938] md:hidden"
+    aria-label="Abrir menú"
   >
     <Menu size={20} />
   </button>

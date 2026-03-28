@@ -1,3 +1,4 @@
+import { logError } from '../utils/logger';
 import { useEffect, useMemo, useState } from 'react';
 import {
   addDoc,
@@ -59,7 +60,7 @@ export const useBankMovements = (user) => {
         setLoading(false);
       },
       (snapshotError) => {
-        console.error('Error loading bank movements:', snapshotError);
+        logError('Error loading bank movements:', snapshotError);
         setError(snapshotError);
         setLoading(false);
       },
@@ -119,7 +120,7 @@ export const useBankMovements = (user) => {
 
       return { success: true };
     } catch (createError) {
-      console.error('Error creating bank movement:', createError);
+      logError('Error creating bank movement:', createError);
       return { success: false, error: createError };
     }
   };
@@ -165,7 +166,7 @@ export const useBankMovements = (user) => {
       });
       return { success: true };
     } catch (updateError) {
-      console.error('Error updating bank movement:', updateError);
+      logError('Error updating bank movement:', updateError);
       return { success: false, error: updateError };
     }
   };
@@ -206,7 +207,7 @@ export const useBankMovements = (user) => {
       });
       return { success: true };
     } catch (updateError) {
-      console.error('Error voiding bank movement:', updateError);
+      logError('Error voiding bank movement:', updateError);
       return { success: false, error: updateError };
     }
   };

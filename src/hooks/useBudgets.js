@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { logError } from '../utils/logger';
+import { useState, useEffect, useMemo } from 'react';
 import {
   collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, doc,
   serverTimestamp, orderBy
@@ -9,7 +10,7 @@ export const useBudgets = (user) => {
   const [budgets, setBudgets] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'budgets');
+  const colRef = useMemo(() => collection(db, 'artifacts', appId, 'public', 'data', 'budgets'), []);
 
   useEffect(() => {
     if (!user) { setLoading(false); return; }
@@ -27,7 +28,7 @@ export const useBudgets = (user) => {
       setBudgets(data);
       setLoading(false);
     }, (err) => {
-      console.error('Error loading budgets:', err);
+      logError('Error loading budgets:', err);
       setLoading(false);
     });
 
@@ -50,7 +51,7 @@ export const useBudgets = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error('Error creating budget:', error);
+      logError('Error creating budget:', error);
       return { success: false, error };
     }
   };
@@ -66,7 +67,7 @@ export const useBudgets = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error('Error updating budget:', error);
+      logError('Error updating budget:', error);
       return { success: false, error };
     }
   };
@@ -78,7 +79,7 @@ export const useBudgets = (user) => {
       await deleteDoc(docRef);
       return { success: true };
     } catch (error) {
-      console.error('Error deleting budget:', error);
+      logError('Error deleting budget:', error);
       return { success: false, error };
     }
   };

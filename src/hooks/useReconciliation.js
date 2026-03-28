@@ -1,3 +1,4 @@
+import { logError } from '../utils/logger';
 import { useEffect, useMemo, useState } from 'react';
 import {
   addDoc,
@@ -51,7 +52,7 @@ export const useReconciliation = (user) => {
         setLoading(false);
       },
       (error) => {
-        console.error('Error loading reconciliations:', error);
+        logError('Error loading reconciliations:', error);
         setLoading(false);
       },
     );
@@ -81,7 +82,7 @@ export const useReconciliation = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error('Error creating reconciliation:', error);
+      logError('Error creating reconciliation:', error);
       return { success: false, error };
     }
   };
@@ -108,7 +109,7 @@ export const useReconciliation = (user) => {
       });
       return { success: true };
     } catch (error) {
-      console.error('Error updating reconciliation:', error);
+      logError('Error updating reconciliation:', error);
       return { success: false, error };
     }
   };
@@ -148,7 +149,7 @@ export const useReconciliation = (user) => {
       await Promise.all(movementUpdates);
       return { success: true };
     } catch (error) {
-      console.error('Error marking reconciled:', error);
+      logError('Error marking reconciled:', error);
       return { success: false, error };
     }
   };

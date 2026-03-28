@@ -1,3 +1,4 @@
+import { logError } from '../utils/logger';
 import { useState, useEffect } from 'react';
 import { collection, query, onSnapshot } from 'firebase/firestore';
 import { db, appId } from '../services/firebase';
@@ -71,7 +72,7 @@ export const useTransactions = (user) => {
         setLoading(false);
       },
       (err) => {
-        console.error("Firestore error:", err);
+        logError("Firestore error:", err);
         setError(err);
         setLoading(false);
       }

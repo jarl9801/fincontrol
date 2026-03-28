@@ -42,7 +42,11 @@ const FinControlHubWidget = ({ onNavigate }) => {
         // Fallback: cargar desde localStorage (últimos datos conocidos)
         const cached = localStorage.getItem('fincontrol_hub_cache');
         if (cached) {
-          setSummary(JSON.parse(cached));
+          try {
+            setSummary(JSON.parse(cached));
+          } catch {
+            // Corrupted cache, ignore
+          }
         }
       }
     } catch (err) {

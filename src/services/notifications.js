@@ -119,7 +119,12 @@ class FinControlNotifications {
 
   // Guardar alerta en localStorage
   saveAlert(alert) {
-    const alerts = JSON.parse(localStorage.getItem('fincontrol_alerts') || '[]');
+    let alerts;
+    try {
+      alerts = JSON.parse(localStorage.getItem('fincontrol_alerts') || '[]');
+    } catch {
+      alerts = [];
+    }
     alerts.push({
       ...alert,
       id: Date.now(),
@@ -135,13 +140,23 @@ class FinControlNotifications {
 
   // Obtener alertas no leídas
   getUnreadAlerts() {
-    const alerts = JSON.parse(localStorage.getItem('fincontrol_alerts') || '[]');
+    let alerts;
+    try {
+      alerts = JSON.parse(localStorage.getItem('fincontrol_alerts') || '[]');
+    } catch {
+      alerts = [];
+    }
     return alerts.filter(a => !a.read);
   }
 
   // Marcar alerta como leída
   markAsRead(alertId) {
-    const alerts = JSON.parse(localStorage.getItem('fincontrol_alerts') || '[]');
+    let alerts;
+    try {
+      alerts = JSON.parse(localStorage.getItem('fincontrol_alerts') || '[]');
+    } catch {
+      return;
+    }
     const alert = alerts.find(a => a.id === alertId);
     if (alert) {
       alert.read = true;
@@ -151,7 +166,12 @@ class FinControlNotifications {
 
   // Limpiar alertas antiguas
   cleanOldAlerts(days = 7) {
-    const alerts = JSON.parse(localStorage.getItem('fincontrol_alerts') || '[]');
+    let alerts;
+    try {
+      alerts = JSON.parse(localStorage.getItem('fincontrol_alerts') || '[]');
+    } catch {
+      return;
+    }
     const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
     
     const filtered = alerts.filter(a => {

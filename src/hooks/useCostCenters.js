@@ -1,3 +1,4 @@
+import { logError } from '../utils/logger';
 import { useState, useEffect } from 'react';
 import {
   collection,
@@ -38,7 +39,7 @@ export const useCostCenters = (user) => {
         setLoading(false);
       },
       (err) => {
-        console.error("Error loading cost centers:", err);
+        logError("Error loading cost centers:", err);
         setError(err);
         setLoading(false);
       }
@@ -60,7 +61,7 @@ export const useCostCenters = (user) => {
       });
       return { success: true };
     } catch (err) {
-      console.error("Error creating cost center:", err);
+      logError("Error creating cost center:", err);
       return { success: false, error: err };
     }
   };
@@ -77,7 +78,7 @@ export const useCostCenters = (user) => {
       });
       return { success: true };
     } catch (err) {
-      console.error("Error updating cost center:", err);
+      logError("Error updating cost center:", err);
       return { success: false, error: err };
     }
   };
@@ -90,7 +91,7 @@ export const useCostCenters = (user) => {
       await deleteDoc(centerDoc);
       return { success: true };
     } catch (err) {
-      console.error("Error deleting cost center:", err);
+      logError("Error deleting cost center:", err);
       return { success: false, error: err };
     }
   };

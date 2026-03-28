@@ -1,3 +1,4 @@
+import { logError } from '../utils/logger';
 import { useEffect, useMemo, useState } from 'react';
 import {
   collection, query, onSnapshot, addDoc, serverTimestamp, orderBy
@@ -29,7 +30,7 @@ export const useAuditLog = (user) => {
       setLogs(data);
       setLoading(false);
     }, (err) => {
-      console.error('Error loading audit log:', err);
+      logError('Error loading audit log:', err);
       setLoading(false);
     });
 
@@ -50,7 +51,7 @@ export const useAuditLog = (user) => {
         timestamp: serverTimestamp(),
       });
     } catch (error) {
-      console.error('Error logging action:', error);
+      logError('Error logging action:', error);
     }
   };
 

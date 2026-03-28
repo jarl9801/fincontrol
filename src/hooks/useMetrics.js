@@ -26,21 +26,21 @@ export const useMetrics = (filteredTransactions) => {
       .filter(t => t.type === 'expense')
       .reduce((sum, t) => sum + t.amount, 0);
 
-    // COLLECTED income (paid/completed only — actual cash in)
+    // COLLECTED income (paid/completed only — actual cash in; partial uses paidAmount)
     const collectedIncome = filteredTransactions
       .filter(t => t.type === 'income' && t.status !== 'pending')
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + (t.status === 'partial' ? (t.paidAmount || 0) : t.amount), 0);
 
-    // PAID expenses (paid/completed only — actual cash out)
+    // PAID expenses (paid/completed only — actual cash out; partial uses paidAmount)
     const paidExpenses = filteredTransactions
       .filter(t => t.type === 'expense' && t.status !== 'pending')
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + (t.status === 'partial' ? (t.paidAmount || 0) : t.amount), 0);
 
     // 2026-only income/expenses (to calculate current real balance)
     const income2026 = txn2026.filter(t => t.type === 'income' && t.status !== 'pending')
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + (t.status === 'partial' ? (t.paidAmount || 0) : t.amount), 0);
     const expenses2026 = txn2026.filter(t => t.type === 'expense' && t.status !== 'pending')
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + (t.status === 'partial' ? (t.paidAmount || 0) : t.amount), 0);
 
     // Cash balance calculation:
     // If viewing only 2025: show known bank + IVA balances
@@ -127,7 +127,7 @@ export const useMetrics = (filteredTransactions) => {
     // Cash flow
     const cashFlowData = [];
     let cumulative = 0;
-    const sortedByDate = [...filteredTransactions].sort((a, b) => a.date.localeCompare(b.date));
+    const sortedByDate = [...filteredTransactions].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
     sortedByDate.forEach(t => {
       if (t.type === 'income') {
         cumulative += t.amount;
