@@ -420,6 +420,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
       sinLeer,
       conComentarios,
       pendientes,
+      duplicados: 0, // placeholder, computed separately
     };
   }, [unifiedRecords, sevenDaysAgo]);
 
@@ -430,6 +431,34 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
       movements: unifiedRecords.filter((entry) => entry.recordFamily === 'movement').length,
       openDocs: unifiedRecords.filter((entry) => ['receivable', 'payable'].includes(entry.recordFamily) && ['pending', 'partial', 'overdue'].includes(entry.status)).length,
     };
+  }, [unifiedRecords]);
+
+  // Detect possible duplicates: same amount + same type + date within 3 days + similar description
+  const duplicateIds = useMemo(() => {
+    const dupeSet = new Set();
+    const records = unifiedRecords;
+    for (let i = 0; i < records.length; i++) {
+      for (let j = i + 1; j < records.length; j++) {
+        const a = records[i];
+        const b = records[j];
+        // Same type and amount
+        if (a.type !== b.type || Math.abs(a.amount - b.amount) > 0.01) continue;
+        // Date within 3 days
+        if (a.date && b.date) {
+          const daysDiff = Math.abs((new Date(a.date) - new Date(b.date)) / (1000 * 60 * 60 * 24));
+          if (daysDiff > 3) continue;
+        }
+        // Similar description (at least one word > 3 chars in common)
+        const aWords = safeString(a.description).toLowerCase().split(/\s+/).filter(w => w.length > 3);
+        const bDesc = safeString(b.description).toLowerCase();
+        const hasCommon = aWords.some(w => bDesc.includes(w));
+        if (hasCommon || safeString(a.description).toLowerCase() === bDesc) {
+          dupeSet.add(a.id);
+          dupeSet.add(b.id);
+        }
+      }
+    }
+    return dupeSet;
   }, [unifiedRecords]);
 
   const filteredRecords = useMemo(() => {
@@ -456,6 +485,10 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
       }
 
       if (quickFilter === 'pendientes' && !['pending', 'partial', 'overdue'].includes(entry.status)) {
+        return false;
+      }
+
+      if (quickFilter === 'duplicados' && !duplicateIds.has(entry.id)) {
         return false;
       }
 
@@ -743,6 +776,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
     { key: 'nuevas', label: 'Nuevas', count: quickFilterCounts.nuevas, icon: Sparkles },
     { key: 'sinLeer', label: 'Sin leer', count: quickFilterCounts.sinLeer, icon: Eye },
     { key: 'conComentarios', label: 'Con comentarios', count: quickFilterCounts.conComentarios, icon: MessageSquare },
+    { key: 'duplicados', label: 'Posibles duplicados', count: duplicateIds.size, icon: RotateCcw },
   ];
 
   const loadingLedger = bankMovementsLoading || receivablesLoading || payablesLoading;
