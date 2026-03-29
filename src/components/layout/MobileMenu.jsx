@@ -1,6 +1,7 @@
 import { signOut } from 'firebase/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
+  ArrowLeftRight,
   Briefcase,
   FolderKanban,
   Landmark,
@@ -26,6 +27,7 @@ const NAV_ITEMS = [
   { path: '/proyectos', label: 'Proyectos', icon: FolderKanban, permission: 'reports' },
   { path: '/presupuesto', label: 'Presupuesto', icon: Briefcase, permission: 'reports' },
   { path: '/conciliacion', label: 'Conciliación', icon: Scale, permission: 'settings' },
+  { path: '/import-export', label: 'Importar', icon: ArrowLeftRight, permission: 'settings' },
   { path: '/configuracion', label: 'Configuración', icon: Settings, permission: 'settings' },
 ];
 

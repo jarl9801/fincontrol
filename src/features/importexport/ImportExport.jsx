@@ -5,8 +5,10 @@ import {
 } from 'lucide-react';
 import { useAllTransactions } from '../../hooks/useAllTransactions';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
+import { useBankMovements } from '../../hooks/useBankMovements';
 import { exportToExcel } from '../../utils/excelExport';
 import { useToast } from '../../contexts/ToastContext';
+import { Landmark } from 'lucide-react';
 
 const REQUIRED_COLUMNS = ['fecha', 'monto', 'descripcion', 'categoria', 'tipo'];
 
@@ -93,17 +95,67 @@ const normalizeAmount = (val) => {
   return Math.abs(parseFloat(str)) || 0;
 };
 
+// Parse German bank date DD.MM.YYYY to ISO YYYY-MM-DD
+const parseGermanDate = (val) => {
+  if (!val) return '';
+  const parts = val.trim().split('.');
+  if (parts.length === 3) {
+    const [day, month, year] = parts;
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
+  return val;
+};
+
+// Parse German amount: "1.234,56" or "-1.234,56" or "33.459,76"
+const parseGermanAmount = (val) => {
+  if (!val) return 0;
+  const str = String(val).replace(/\s/g, '');
+  // Remove thousand separators (.) and replace decimal comma with dot
+  const normalized = str.replace(/\./g, '').replace(',', '.');
+  return parseFloat(normalized) || 0;
+};
+
+// Extract clean description from Verwendungszweck
+const cleanDescription = (raw) => {
+  if (!raw) return '';
+  // Remove SEPA reference codes
+  let desc = raw
+    .replace(/EREF\+[^\s]*/g, '')
+    .replace(/KREF\+[^\s]*/g, '')
+    .replace(/MREF\+[^\s]*/g, '')
+    .replace(/CRED\+[^\s]*/g, '')
+    .replace(/DEBT\+[^\s]*/g, '')
+    .replace(/PURP\+[^\s]*/g, '')
+    .replace(/RCUR/g, '')
+    .replace(/ABWA\+/g, '')
+    .replace(/SVWZ\+/g, '')
+    .replace(/TAN:\s*\d+/g, '')
+    .replace(/NONREF/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  // Truncate to reasonable length
+  return desc.slice(0, 200) || 'Movimiento bancario';
+};
+
 const ImportExport = ({ user }) => {
   const { allTransactions, loading } = useAllTransactions(user);
   const { createTransaction } = useTransactionActions(user);
+  const { bankMovements, createBankMovement } = useBankMovements(user);
   const { showToast } = useToast();
   const fileInputRef = useRef(null);
+  const bankFileInputRef = useRef(null);
 
   const [importData, setImportData] = useState(null);
   const [columnMapping, setColumnMapping] = useState({});
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+
+  // Bank movements import state
+  const [bankImportData, setBankImportData] = useState(null);
+  const [bankImporting, setBankImporting] = useState(false);
+  const [bankImportResult, setBankImportResult] = useState(null);
+  const [bankIsDragging, setBankIsDragging] = useState(false);
 
   // Auto-map columns
   const autoMapColumns = (headers) => {
@@ -137,6 +189,13 @@ const ImportExport = ({ user }) => {
 
       if (rows.length === 0) {
         showToast('El archivo no contiene datos', 'error');
+        return;
+      }
+
+      // Detect German bank CSV and redirect to bank import
+      const isBankCSV = headers.some(h => h.includes('buchungsdatum')) && headers.some(h => h.includes('betrag'));
+      if (isBankCSV) {
+        showToast('Este archivo es un extracto bancario. Usa la sección "Importar movimientos bancarios" más abajo.', 'warning');
         return;
       }
 
@@ -316,6 +375,128 @@ const ImportExport = ({ user }) => {
     setImportData(null);
     setColumnMapping({});
     setImportResult(null);
+  };
+
+  // --- Bank movements import ---
+  const handleBankFileRead = (file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target.result;
+      const { headers, rows, error } = parseCSV(text);
+      if (error) { showToast(error, 'error'); return; }
+      if (rows.length === 0) { showToast('El archivo no contiene datos', 'error'); return; }
+
+      // Detect German bank CSV by known headers
+      const hasBookingDate = headers.some(h => h.includes('buchungsdatum'));
+      const hasAmount = headers.some(h => h.includes('betrag'));
+      if (!hasBookingDate || !hasAmount) {
+        showToast('Formato no reconocido. Se esperan columnas: Buchungsdatum, Betrag in EUR', 'error');
+        return;
+      }
+
+      // Map columns
+      const dateCol = headers.find(h => h.includes('buchungsdatum'));
+      const valueDateCol = headers.find(h => h.includes('valutadatum'));
+      const nameCol = headers.find(h => h.includes('empfangername') || h.includes('auftraggeber'));
+      const ibanCol = headers.find(h => h.includes('iban'));
+      const purposeCol = headers.find(h => h.includes('verwendungszweck'));
+      const amountCol = headers.find(h => h.includes('betrag'));
+
+      // Parse and dedupe
+      const movements = rows.map((row, idx) => {
+        const rawAmount = parseGermanAmount(row[amountCol]);
+        const postedDate = parseGermanDate(row[dateCol]);
+        const valueDate = parseGermanDate(row[valueDateCol]) || postedDate;
+        const counterparty = (row[nameCol] || '').trim();
+        const description = cleanDescription(row[purposeCol]);
+        const direction = rawAmount >= 0 ? 'in' : 'out';
+        const amount = Math.abs(rawAmount);
+
+        return { idx, postedDate, valueDate, counterparty, description, direction, amount, raw: row };
+      }).filter(m => m.amount > 0);
+
+      // Detect duplicates against existing bank movements
+      const dupes = new Set();
+      movements.forEach((m, i) => {
+        const isDupe = bankMovements.some(existing =>
+          existing.postedDate === m.postedDate &&
+          Math.abs(existing.amount - m.amount) < 0.01 &&
+          existing.direction === m.direction &&
+          (existing.counterpartyName || '').toLowerCase() === (m.counterparty || '').toLowerCase()
+        );
+        if (isDupe) dupes.add(i);
+      });
+
+      setBankImportData({ movements, dupes, fileName: file.name, dateRange: `${movements[movements.length - 1]?.postedDate} → ${movements[0]?.postedDate}` });
+      setBankImportResult(null);
+    };
+    reader.readAsText(file, 'UTF-8');
+  };
+
+  const handleBankFileSelect = (e) => {
+    handleBankFileRead(e.target.files?.[0]);
+    if (bankFileInputRef.current) bankFileInputRef.current.value = '';
+  };
+
+  const handleBankDragOver = (e) => { e.preventDefault(); setBankIsDragging(true); };
+  const handleBankDragLeave = () => setBankIsDragging(false);
+  const handleBankDrop = (e) => {
+    e.preventDefault();
+    setBankIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.name.endsWith('.csv')) {
+      handleBankFileRead(file);
+    } else {
+      showToast('Solo se aceptan archivos CSV', 'error');
+    }
+  };
+
+  const handleBankImport = async () => {
+    if (!bankImportData || bankImporting) return;
+    setBankImporting(true);
+
+    let imported = 0;
+    let skipped = 0;
+    let errors = 0;
+
+    try {
+      for (let i = 0; i < bankImportData.movements.length; i++) {
+        if (bankImportData.dupes.has(i)) {
+          skipped++;
+          continue;
+        }
+
+        const m = bankImportData.movements[i];
+        const result = await createBankMovement({
+          kind: m.direction === 'in' ? 'collection' : 'payment',
+          direction: m.direction,
+          amount: m.amount,
+          postedDate: m.postedDate,
+          valueDate: m.valueDate,
+          description: m.description,
+          counterpartyName: m.counterparty,
+        });
+
+        if (result?.success) {
+          imported++;
+        } else {
+          errors++;
+        }
+      }
+
+      setBankImportResult({ imported, skipped, errors, total: bankImportData.movements.length });
+      showToast(`Movimientos importados: ${imported} creados, ${skipped} duplicados, ${errors} errores`, imported > 0 ? 'success' : 'info');
+    } catch (err) {
+      showToast('Error durante la importación de movimientos', 'error');
+    } finally {
+      setBankImporting(false);
+    }
+  };
+
+  const handleClearBankImport = () => {
+    setBankImportData(null);
+    setBankImportResult(null);
   };
 
   if (loading) {
@@ -520,6 +701,166 @@ const ImportExport = ({ user }) => {
                   <Upload size={14} />
                 )}
                 {importing ? 'Importando...' : `Importar ${importData.rows.length - duplicates.size} transacciones`}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Bank Movements Import */}
+      <div className="rounded-[28px] border border-[#dce6f8] bg-white/88 p-6 shadow-[0_20px_65px_rgba(134,153,186,0.12)]">
+        <div className="flex items-center gap-2 mb-4">
+          <Landmark size={18} className="text-[#3156d3]" />
+          <h3 className="text-[15px] font-semibold text-[#1f2a44]">Importar movimientos bancarios</h3>
+          <span className="ml-auto text-[11px] text-[#6b7a99]">{bankMovements.length} movimientos en sistema</span>
+        </div>
+        <p className="mb-4 text-[12px] text-[#6b7a99]">
+          Importa el CSV de tu banco (formato alemán: Buchungsdatum, Empfängername, Betrag in EUR).
+          Los movimientos se usan para conciliación bancaria.
+        </p>
+
+        {!bankImportData ? (
+          <>
+            <div
+              onDragOver={handleBankDragOver}
+              onDragLeave={handleBankDragLeave}
+              onDrop={handleBankDrop}
+              onClick={() => bankFileInputRef.current?.click()}
+              className={`cursor-pointer rounded-xl border-2 border-dashed p-10 text-center transition-all ${
+                bankIsDragging
+                  ? 'border-[#3156d3] bg-[rgba(49,86,211,0.06)]'
+                  : 'border-[#d8e3f7] bg-[rgba(247,250,255,0.86)] hover:border-[#b7caef]'
+              }`}
+            >
+              <Landmark size={32} className={`mx-auto mb-3 ${bankIsDragging ? 'text-[#3156d3]' : 'text-[#7a879d]'}`} />
+              <p className="mb-1 text-[14px] font-medium text-[#1f2a44]">
+                {bankIsDragging ? 'Suelta el archivo aquí' : 'Arrastra el CSV del banco o haz clic para seleccionar'}
+              </p>
+              <p className="text-[12px] text-[#6b7a99]">Formato esperado: Kontobewegungen export (CSV con separador ;)</p>
+            </div>
+            <input
+              ref={bankFileInputRef}
+              type="file"
+              accept=".csv"
+              onChange={handleBankFileSelect}
+              className="hidden"
+            />
+          </>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between rounded-2xl border border-[rgba(49,86,211,0.22)] bg-[rgba(240,245,255,0.92)] px-4 py-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <Landmark size={16} className="text-[#3156d3]" />
+                <span className="text-[13px] font-medium text-[#1f2a44]">{bankImportData.fileName}</span>
+                <span className="text-[11px] text-[#6b7a99]">{bankImportData.movements.length} movimientos</span>
+                <span className="text-[11px] text-[#6b7a99]">{bankImportData.dateRange}</span>
+                {bankImportData.dupes.size > 0 && (
+                  <span className="rounded-full bg-[rgba(208,76,54,0.1)] px-2 py-0.5 text-[11px] text-[#d04c36]">
+                    {bankImportData.dupes.size} duplicados
+                  </span>
+                )}
+              </div>
+              <button onClick={handleClearBankImport} className="p-1.5 text-[#6b7a99] transition-colors hover:text-[#d04c36]">
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Preview table */}
+            <div className="overflow-x-auto rounded-[24px] border border-[#dce6f8] bg-white/92">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-[#e2ebfb] bg-[rgba(245,248,255,0.94)]">
+                    <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Fecha</th>
+                    <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Contrapartida</th>
+                    <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Descripción</th>
+                    <th className="px-3 py-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Monto</th>
+                    <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#70819f]">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {bankImportData.movements.slice(0, 15).map((m, idx) => {
+                    const isDupe = bankImportData.dupes.has(idx);
+                    return (
+                      <tr key={idx} className={`border-b border-[#eef2fb] ${isDupe ? 'opacity-55' : ''}`}>
+                        <td className="px-3 py-2 text-[12px] text-[#70819f]">{m.postedDate}</td>
+                        <td className="max-w-[160px] truncate px-3 py-2 text-[12px] text-[#1f2a44]">{m.counterparty || '—'}</td>
+                        <td className="max-w-[220px] truncate px-3 py-2 text-[12px] text-[#70819f]">{m.description}</td>
+                        <td className={`px-3 py-2 text-right font-mono text-[12px] ${m.direction === 'in' ? 'text-[#0f9f6e]' : 'text-[#d04c36]'}`}>
+                          {m.direction === 'in' ? '+' : '-'}€{m.amount.toLocaleString('de-DE', { minimumFractionDigits: 2 })}
+                        </td>
+                        <td className="px-3 py-2">
+                          {isDupe ? (
+                            <span className="rounded-full bg-[rgba(208,76,54,0.1)] px-1.5 py-0.5 text-[10px] text-[#d04c36]">Duplicado</span>
+                          ) : (
+                            <span className="rounded-full bg-[rgba(15,159,110,0.1)] px-1.5 py-0.5 text-[10px] text-[#0f9f6e]">Nuevo</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            {bankImportData.movements.length > 15 && (
+              <p className="text-center text-[11px] text-[#70819f]">
+                ... y {bankImportData.movements.length - 15} movimientos más
+              </p>
+            )}
+
+            {/* Summary stats */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="rounded-xl border border-[rgba(15,159,110,0.18)] bg-[rgba(244,252,248,0.94)] p-3 text-center">
+                <p className="text-[10px] font-semibold uppercase text-[#648277]">Entradas</p>
+                <p className="text-sm font-bold text-[#0f9f6e]">
+                  €{bankImportData.movements.filter(m => m.direction === 'in').reduce((s, m) => s + m.amount, 0).toLocaleString('de-DE', { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+              <div className="rounded-xl border border-[rgba(208,76,54,0.18)] bg-[rgba(255,248,246,0.94)] p-3 text-center">
+                <p className="text-[10px] font-semibold uppercase text-[#8a6d66]">Salidas</p>
+                <p className="text-sm font-bold text-[#d04c36]">
+                  €{bankImportData.movements.filter(m => m.direction === 'out').reduce((s, m) => s + m.amount, 0).toLocaleString('de-DE', { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+              <div className="rounded-xl border border-[rgba(49,86,211,0.18)] bg-[rgba(240,245,255,0.94)] p-3 text-center">
+                <p className="text-[10px] font-semibold uppercase text-[#5b7bd6]">Nuevos</p>
+                <p className="text-sm font-bold text-[#3156d3]">
+                  {bankImportData.movements.length - bankImportData.dupes.size} de {bankImportData.movements.length}
+                </p>
+              </div>
+            </div>
+
+            {bankImportResult && (
+              <div className="flex items-center gap-3 rounded-2xl border border-[rgba(15,159,110,0.22)] bg-[rgba(244,252,248,0.94)] px-4 py-3">
+                <CheckCircle2 size={18} className="text-[#0f9f6e]" />
+                <div className="text-[12px] text-[#1f2a44]">
+                  <span className="font-medium">Importación completada:</span>{' '}
+                  <span className="text-[#0f9f6e]">{bankImportResult.imported} creados</span>,{' '}
+                  <span className="text-[#c98717]">{bankImportResult.skipped} omitidos</span>
+                  {bankImportResult.errors > 0 && (
+                    <>, <span className="text-[#d04c36]">{bankImportResult.errors} errores</span></>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={handleClearBankImport}
+                className="rounded-2xl px-4 py-2 text-[12px] font-medium text-[#6b7a99] transition hover:bg-[rgba(94,115,159,0.08)]"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleBankImport}
+                disabled={bankImporting || !!bankImportResult}
+                className="inline-flex items-center gap-2 rounded-2xl border border-[rgba(49,86,211,0.24)] bg-[rgba(49,86,211,0.08)] px-5 py-2 text-[12px] font-medium text-[#3156d3] transition hover:bg-[rgba(49,86,211,0.14)] disabled:opacity-50"
+              >
+                {bankImporting ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Landmark size={14} />
+                )}
+                {bankImporting ? 'Importando...' : `Importar ${bankImportData.movements.length - bankImportData.dupes.size} movimientos`}
               </button>
             </div>
           </div>
