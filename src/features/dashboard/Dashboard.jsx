@@ -97,7 +97,6 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
     metrics.overduePayables.reduce((sum, entry) => sum + entry.openAmount, 0);
   const health = metrics.runwayMonths!=null && metrics.runwayMonths<3 ? {label:'CRÍTICA',color:'#dc2626'} : ((metrics.runwayMonths!=null && metrics.runwayMonths<6)||overdueExposure>10000) ? {label:'ALERTA',color:'#d97706'} : {label:'ESTABLE',color:'#16a34a'};
   const netMarginPct = metrics.cashInflows>0 ? ((metrics.cashInflows-metrics.avgMonthlyOutflows)/metrics.cashInflows*100).toFixed(1) : '0.0';
-  const breakEvenGap = metrics.avgMonthlyOutflows - metrics.cashInflows;
 
   const upcomingRows = [...metrics.upcomingReceivables, ...metrics.upcomingPayables]
     .sort((left, right) => (left.dueDate || '').localeCompare(right.dueDate || ''))

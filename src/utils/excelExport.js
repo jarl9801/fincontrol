@@ -1,7 +1,7 @@
 // Excel Export Utility
 // Genera archivos Excel-compatible (CSV con formato avanzado)
 
-import { formatCurrency, formatDate } from './formatters';
+import { formatDate } from './formatters';
 
 /**
  * Exporta transacciones a CSV compatible con Excel

@@ -4,7 +4,6 @@ import {
 } from 'lucide-react';
 import { collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db, appId } from '../../services/firebase';
-import { formatCurrency } from '../../utils/formatters';
 import { useToast } from '../../contexts/ToastContext';
 
 const CURRENCIES = [
@@ -20,7 +19,7 @@ const DEFAULT_RATES = {
 
 const CURRENCY_PAIRS = ['EUR/USD', 'EUR/COP', 'USD/COP'];
 
-const MultiMoneda = ({ user, userRole }) => {
+const MultiMoneda = ({ user }) => {
   const { showToast } = useToast();
   const [rates, setRates] = useState([]);
   const [loading, setLoading] = useState(true);

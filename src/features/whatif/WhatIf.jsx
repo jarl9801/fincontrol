@@ -196,7 +196,7 @@ export default function WhatIf({ user }) {
   const sim = useMemo(() => {
     if (metrics.loading) return null;
 
-    const { currentCash, cashInflows, cashOutflows, avgMonthlyOutflows, pendingReceivables, pendingPayables, netMovement } = metrics;
+    const { currentCash, cashInflows, avgMonthlyOutflows, pendingReceivables, pendingPayables } = metrics;
 
     const ingresosSim = cashInflows * (1 + varIngresos / 100) * (1 + subidaPrecios / 100);
     const gastosSim = avgMonthlyOutflows * (1 + varGastos / 100) + nuevasContrataciones * COST_PER_HIRE;

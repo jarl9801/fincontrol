@@ -312,7 +312,7 @@ const ImportExport = ({ user }) => {
 
       setImportResult({ imported, skipped, errors, total: importData.rows.length });
       showToast(`Importacion completa: ${imported} creadas, ${skipped} omitidas, ${errors} errores`, imported > 0 ? 'success' : 'info');
-    } catch (err) {
+    } catch {
       console.error('Import error:', err);
       showToast('Error durante la importacion', 'error');
     } finally {
@@ -399,7 +399,7 @@ const ImportExport = ({ user }) => {
       const dateCol = headers.find(h => h.includes('buchungsdatum'));
       const valueDateCol = headers.find(h => h.includes('valutadatum'));
       const nameCol = headers.find(h => h.includes('empfangername') || h.includes('auftraggeber'));
-      const ibanCol = headers.find(h => h.includes('iban'));
+      const _ibanCol = headers.find(h => h.includes('iban'));
       const purposeCol = headers.find(h => h.includes('verwendungszweck'));
       const amountCol = headers.find(h => h.includes('betrag'));
 
@@ -487,7 +487,7 @@ const ImportExport = ({ user }) => {
 
       setBankImportResult({ imported, skipped, errors, total: bankImportData.movements.length });
       showToast(`Movimientos importados: ${imported} creados, ${skipped} duplicados, ${errors} errores`, imported > 0 ? 'success' : 'info');
-    } catch (err) {
+    } catch {
       showToast('Error durante la importación de movimientos', 'error');
     } finally {
       setBankImporting(false);

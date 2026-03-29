@@ -13,7 +13,7 @@ import {
 import { useToast } from '../../contexts/ToastContext';
 import { useBankMovements } from '../../hooks/useBankMovements';
 import { useAllTransactions } from '../../hooks/useAllTransactions';
-import { formatCurrency, formatDate } from '../../utils/formatters';
+import { formatCurrency } from '../../utils/formatters';
 
 const currentMonth = () => {
   const now = new Date();
@@ -59,9 +59,9 @@ const scoreMatch = (movement, transaction) => {
   return score;
 };
 
-const Conciliacion = ({ user, userRole }) => {
+const Conciliacion = ({ user }) => {
   const { showToast } = useToast();
-  const { bankMovements, loading: movLoading, updateBankMovement } = useBankMovements(user);
+  const { bankMovements, loading: movLoading } = useBankMovements(user);
   const { allTransactions, loading: txLoading } = useAllTransactions(user);
 
   const [month, setMonth] = useState(currentMonth());

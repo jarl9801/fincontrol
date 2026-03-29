@@ -19,7 +19,7 @@ const COLLECTIONS = [
   'auditLog',
 ];
 
-const BackupManager = ({ user, userRole }) => {
+const BackupManager = ({ user }) => {
   const { showToast } = useToast();
   const fileInputRef = useRef(null);
 
@@ -60,7 +60,7 @@ const BackupManager = ({ user, userRole }) => {
             name: col,
             count: docs.length,
           });
-        } catch (err) {
+        } catch {
           console.warn(`No se pudo exportar ${col}:`, err.message);
           backupData.data[col] = [];
           backupData.metadata.collections.push({
@@ -88,7 +88,7 @@ const BackupManager = ({ user, userRole }) => {
 
       const totalDocs = backupData.metadata.collections.reduce((sum, c) => sum + c.count, 0);
       showToast(`Backup completado: ${totalDocs} documentos en ${COLLECTIONS.length} colecciones`, 'success');
-    } catch (err) {
+    } catch {
       console.error('Export error:', err);
       showToast('Error al generar el backup', 'error');
     }
@@ -131,7 +131,7 @@ const BackupManager = ({ user, userRole }) => {
         };
 
         setImportPreview(preview);
-      } catch (err) {
+      } catch {
         showToast('Error al leer el archivo JSON', 'error');
       }
     };

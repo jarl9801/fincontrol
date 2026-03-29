@@ -15,7 +15,7 @@ import {
 const FinControlHubWidget = ({ onNavigate }) => {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, _setError] = useState(null);
 
   useEffect(() => {
     fetchSummary();
@@ -220,7 +220,7 @@ const FinControlHubWidget = ({ onNavigate }) => {
 };
 
 // CSS para el widget (agregar al CSS del Hub)
-const widgetStyles = `
+const _widgetStyles = `
 .nexus-widget-fincontrol {
   min-height: 280px;
 }

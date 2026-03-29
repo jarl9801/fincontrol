@@ -1,7 +1,7 @@
 // FinControl Hub Widget API
 // Expone datos para el Nexus Hub
 
-import { collection, query, where, onSnapshot, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db, appId } from '../services/firebase';
 
 class FinControlWidgetAPI {
