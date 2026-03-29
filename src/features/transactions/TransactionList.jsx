@@ -290,7 +290,7 @@ const getSearchIndex = (record) => {
     .join(' ');
 };
 
-const MetricCard = ({ label, value, icon, tone = 'neutral' }) => {
+const MetricCard = ({ label, value, icon, tone = 'neutral', onClick }) => {
   const Icon = icon;
   const palette =
     tone === 'positive'
@@ -312,7 +312,13 @@ const MetricCard = ({ label, value, icon, tone = 'neutral' }) => {
           };
 
   return (
-    <div className={`rounded-[22px] border border-[rgba(201,214,238,0.72)] px-4 py-3 shadow-[0_12px_28px_rgba(124,148,191,0.08)] ${palette.card}`}>
+    <div
+      className={`rounded-[22px] border border-[rgba(201,214,238,0.72)] px-4 py-3 shadow-[0_12px_28px_rgba(124,148,191,0.08)] ${palette.card} ${onClick ? 'cursor-pointer hover:scale-[1.02] transition-transform duration-200' : ''}`}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
+    >
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#6980ac]">{label}</p>
@@ -816,10 +822,10 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
           </div>
 
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:min-w-[520px]">
-            <MetricCard label="Registros" value={formatCount(metrics.total)} icon={Landmark} />
-            <MetricCard label="Histórico" value={formatCount(metrics.legacy)} icon={ReceiptText} />
-            <MetricCard label="Movimientos" value={formatCount(metrics.movements)} icon={WalletCards} />
-            <MetricCard label="Documentos abiertos" value={formatCount(metrics.openDocs)} icon={Filter} tone="negative" />
+            <MetricCard label="Registros" value={formatCount(metrics.total)} icon={Landmark} onClick={() => { setQuickFilter('all'); setAdvancedFilters(FILTER_DEFAULTS); }} />
+            <MetricCard label="Histórico" value={formatCount(metrics.legacy)} icon={ReceiptText} onClick={() => { setQuickFilter('all'); setAdvancedFilters({ ...FILTER_DEFAULTS, family: 'legacy' }); }} />
+            <MetricCard label="Movimientos" value={formatCount(metrics.movements)} icon={WalletCards} onClick={() => { setQuickFilter('all'); setAdvancedFilters({ ...FILTER_DEFAULTS, family: 'movement' }); }} />
+            <MetricCard label="Documentos abiertos" value={formatCount(metrics.openDocs)} icon={Filter} tone="negative" onClick={() => { setQuickFilter('pendientes'); setAdvancedFilters(FILTER_DEFAULTS); }} />
           </div>
         </div>
       </section>
