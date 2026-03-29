@@ -49,10 +49,16 @@ const TooltipCard = ({ active, payload, label }) => {
   );
 };
 
-const HeroCard = ({ title, value, subtitle, accent, icon }) => {
+const HeroCard = ({ title, value, subtitle, accent, icon, onClick }) => {
   const IconComponent = icon;
   return (
-    <div className={kpiCardClassName}>
+    <div
+      className={`${kpiCardClassName} ${onClick ? 'cursor-pointer hover:scale-[1.02] hover:shadow-[0_22px_50px_rgba(126,147,190,0.16)] transition-transform duration-200' : ''}`}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
+    >
       <div
         className="absolute -right-10 top-[-28px] h-28 w-28 rounded-full blur-3xl"
         style={{ background: `${accent}35` }}
@@ -174,15 +180,33 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 xl:min-w-[460px]">
-            <div className="rounded-[24px] border border-[rgba(205,219,243,0.74)] bg-[rgba(255,255,255,0.84)] px-4 py-4">
+            <div
+              className="rounded-[24px] border border-[rgba(205,219,243,0.74)] bg-[rgba(255,255,255,0.84)] px-4 py-4 cursor-pointer hover:scale-[1.02] hover:shadow-[0_22px_50px_rgba(126,147,190,0.16)] transition-transform duration-200"
+              onClick={() => setView?.('cashflow')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setView?.('cashflow'); } }}
+            >
               <p className="text-[10px] uppercase tracking-[0.18em] text-[#7184a8]">Caja actual</p>
               <p className={`mt-2 text-[26px] font-semibold ${metrics.currentCash >= 0 ? 'text-[#1f4fd1]' : 'text-[#c25d42]'}`}>{formatCurrency(metrics.currentCash)}</p>
             </div>
-            <div className="rounded-[24px] border border-[rgba(205,219,243,0.74)] bg-[rgba(255,255,255,0.84)] px-4 py-4">
+            <div
+              className="rounded-[24px] border border-[rgba(205,219,243,0.74)] bg-[rgba(255,255,255,0.84)] px-4 py-4 cursor-pointer hover:scale-[1.02] hover:shadow-[0_22px_50px_rgba(126,147,190,0.16)] transition-transform duration-200"
+              onClick={() => setView?.('cxc')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setView?.('cxc'); } }}
+            >
               <p className="text-[10px] uppercase tracking-[0.18em] text-[#7184a8]">CXC abierta</p>
               <p className="mt-2 text-[26px] font-semibold text-[#3e68d9]">{formatCurrency(metrics.pendingReceivables)}</p>
             </div>
-            <div className="rounded-[24px] border border-[rgba(205,219,243,0.74)] bg-[rgba(255,255,255,0.84)] px-4 py-4">
+            <div
+              className="rounded-[24px] border border-[rgba(205,219,243,0.74)] bg-[rgba(255,255,255,0.84)] px-4 py-4 cursor-pointer hover:scale-[1.02] hover:shadow-[0_22px_50px_rgba(126,147,190,0.16)] transition-transform duration-200"
+              onClick={() => setView?.('cxp')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setView?.('cxp'); } }}
+            >
               <p className="text-[10px] uppercase tracking-[0.18em] text-[#7184a8]">CXP abierta</p>
               <p className="mt-2 text-[26px] font-semibold text-[#bd7a2f]">{formatCurrency(metrics.pendingPayables)}</p>
             </div>
@@ -218,6 +242,7 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
           subtitle="Suma de documentos vencidos por cobrar y por pagar."
           accent="#c25d42"
           icon={ShieldAlert}
+          onClick={() => setView?.('alertas')}
         />
         <HeroCard
           title="Margen Neto Mes"

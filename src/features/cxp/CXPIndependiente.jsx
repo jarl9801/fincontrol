@@ -32,10 +32,16 @@ const filters = [
 
 const bucketColor = ['#ff9f0a', '#ff6b35', '#ff453a', '#c81d25'];
 
-const StatCard = ({ title, value, subtitle, accent, icon }) => {
+const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
   const IconComponent = icon;
   return (
-    <div className="rounded-[26px] border border-[rgba(205,219,243,0.78)] bg-white/84 p-5 shadow-[0_18px_44px_rgba(126,147,190,0.1)]">
+    <div
+      className={`rounded-[26px] border border-[rgba(205,219,243,0.78)] bg-white/84 p-5 shadow-[0_18px_44px_rgba(126,147,190,0.1)] ${onClick ? 'cursor-pointer hover:scale-[1.02] hover:shadow-[0_22px_50px_rgba(126,147,190,0.16)] transition-transform duration-200' : ''}`}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
+    >
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#6980ac]">{title}</p>
@@ -192,10 +198,10 @@ const CXPIndependiente = ({ user, userRole }) => {
       </section>
 
       <div className="grid gap-4 lg:grid-cols-4">
-        <StatCard title="Deuda abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="#ff9f0a" icon={BadgeEuro} />
+        <StatCard title="Deuda abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="#ff9f0a" icon={BadgeEuro} onClick={() => setStatusFilter('all')} />
         <StatCard title="Pagado parcial" value={formatCurrency(totalPartial)} subtitle="Importe ya saldado sobre documentos abiertos" accent="#64d2ff" icon={ArrowDownLeft} />
-        <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overduePayables.length} documentos fuera de plazo`} accent="#ff453a" icon={AlertTriangle} />
-        <StatCard title="Ventana 14d" value={formatCurrency(dueSoon)} subtitle={`${metrics.upcomingPayables.length} pagos proximos`} accent="#ff9f0a" icon={Clock3} />
+        <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overduePayables.length} documentos fuera de plazo`} accent="#ff453a" icon={AlertTriangle} onClick={() => setStatusFilter('overdue')} />
+        <StatCard title="Ventana 14d" value={formatCurrency(dueSoon)} subtitle={`${metrics.upcomingPayables.length} pagos proximos`} accent="#ff9f0a" icon={Clock3} onClick={() => setStatusFilter('issued')} />
       </div>
 
       <AgingBar buckets={metrics.payablesAging} />

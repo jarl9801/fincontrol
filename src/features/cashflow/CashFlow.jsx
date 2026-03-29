@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ArrowDownLeft,
   ArrowUpRight,
@@ -47,6 +49,9 @@ const Section = ({ title, subtitle, children }) => (
 
 const CashFlow = ({ user }) => {
   const metrics = useTreasuryMetrics({ user });
+  const navigate = useNavigate();
+  const movementsRef = useRef(null);
+  const reconciliationRef = useRef(null);
 
   if (metrics.loading) {
     return (
@@ -85,13 +90,25 @@ const CashFlow = ({ user }) => {
               <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Liquidez proyectada</p>
               <p className="mt-2 text-[30px] font-semibold text-[#3156d3]">{formatCurrency(metrics.projectedLiquidity)}</p>
             </div>
-            <div className="rounded-[24px] border border-[rgba(201,214,238,0.78)] bg-white/74 px-4 py-4">
+            <div
+              className="rounded-[24px] border border-[rgba(201,214,238,0.78)] bg-white/74 px-4 py-4 cursor-pointer hover:scale-[1.02] hover:shadow-[0_22px_50px_rgba(126,147,190,0.16)] transition-transform duration-200"
+              onClick={() => movementsRef.current?.scrollIntoView({ behavior: 'smooth' })}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); movementsRef.current?.scrollIntoView({ behavior: 'smooth' }); } }}
+            >
               <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Cobros próximos</p>
               <p className="mt-2 text-[30px] font-semibold text-[#0f8f4b]">
                 {formatCurrency(metrics.upcomingReceivables.reduce((sum, entry) => sum + entry.openAmount, 0))}
               </p>
             </div>
-            <div className="rounded-[24px] border border-[rgba(201,214,238,0.78)] bg-white/74 px-4 py-4">
+            <div
+              className="rounded-[24px] border border-[rgba(201,214,238,0.78)] bg-white/74 px-4 py-4 cursor-pointer hover:scale-[1.02] hover:shadow-[0_22px_50px_rgba(126,147,190,0.16)] transition-transform duration-200"
+              onClick={() => reconciliationRef.current?.scrollIntoView({ behavior: 'smooth' })}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); reconciliationRef.current?.scrollIntoView({ behavior: 'smooth' }); } }}
+            >
               <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Pagos próximos</p>
               <p className="mt-2 text-[30px] font-semibold text-[#c46a19]">
                 {formatCurrency(metrics.upcomingPayables.reduce((sum, entry) => sum + entry.openAmount, 0))}
@@ -133,6 +150,7 @@ const CashFlow = ({ user }) => {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.05fr,0.95fr]">
+        <div ref={movementsRef}>
         <Section title="Movimientos recientes" subtitle="Ultimas entradas y salidas contabilizadas en la cuenta principal.">
           <div className="space-y-3">
             {recentMovements.map((movement) => {
@@ -171,7 +189,9 @@ const CashFlow = ({ user }) => {
             })}
           </div>
         </Section>
+        </div>
 
+        <div ref={reconciliationRef}>
         <Section title="Pendiente de conciliacion" subtitle="Movimientos bancarios aun no vinculados a un cierre mensual.">
           <div className="space-y-3">
             {metrics.unreconciledMovements.length === 0 && (
@@ -198,6 +218,7 @@ const CashFlow = ({ user }) => {
             ))}
           </div>
         </Section>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -215,6 +236,13 @@ const CashFlow = ({ user }) => {
           </div>
         </Section>
 
+        <div
+          className="cursor-pointer hover:scale-[1.02] hover:shadow-[0_22px_50px_rgba(126,147,190,0.16)] transition-transform duration-200 rounded-[28px]"
+          onClick={() => navigate('/cxc')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate('/cxc'); } }}
+        >
         <Section title="Cobros vencidos" subtitle="Documentos abiertos con vencimiento pasado.">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(214,106,19,0.12)] text-[#d46a13]">
@@ -230,7 +258,15 @@ const CashFlow = ({ user }) => {
             </div>
           </div>
         </Section>
+        </div>
 
+        <div
+          className="cursor-pointer hover:scale-[1.02] hover:shadow-[0_22px_50px_rgba(126,147,190,0.16)] transition-transform duration-200 rounded-[28px]"
+          onClick={() => navigate('/cxp')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate('/cxp'); } }}
+        >
         <Section title="Pagos por salir" subtitle="Compromisos abiertos dentro de la siguiente ventana.">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(212,122,34,0.12)] text-[#c46a19]">
@@ -246,6 +282,7 @@ const CashFlow = ({ user }) => {
             </div>
           </div>
         </Section>
+        </div>
       </div>
 
       <Section title="Estado de control" subtitle="Referencia rápida para la operación diaria.">

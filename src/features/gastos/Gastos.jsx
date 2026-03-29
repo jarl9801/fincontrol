@@ -30,11 +30,17 @@ const statusLabels = {
   cancelled: 'Cancelada',
 };
 
-const StatCard = ({ title, value, subtitle, accent, icon }) => {
+const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
   const IconComponent = icon;
 
   return (
-    <div className="rounded-[26px] border border-[rgba(255,255,255,0.08)] bg-[rgba(10,11,15,0.92)] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
+    <div
+      className={`rounded-[26px] border border-[rgba(255,255,255,0.08)] bg-[rgba(10,11,15,0.92)] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.32)] ${onClick ? 'cursor-pointer hover:scale-[1.02] hover:shadow-[0_28px_90px_rgba(0,0,0,0.44)] transition-transform duration-200' : ''}`}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
+    >
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6e6e73]">{title}</p>
@@ -173,10 +179,10 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
       </section>
 
       <div className="grid gap-4 lg:grid-cols-4">
-        <StatCard title="Pagado real" value={formatCurrency(paidReal)} subtitle={`${paymentMovements.length} pagos bancarios registrados`} accent="#ff453a" icon={Wallet} />
-        <StatCard title="Deuda abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="#ff9f0a" icon={BadgeEuro} />
+        <StatCard title="Pagado real" value={formatCurrency(paidReal)} subtitle={`${paymentMovements.length} pagos bancarios registrados`} accent="#ff453a" icon={Wallet} onClick={() => setStatusFilter('settled')} />
+        <StatCard title="Deuda abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="#ff9f0a" icon={BadgeEuro} onClick={() => setStatusFilter('all')} />
         <StatCard title="Pago parcial" value={formatCurrency(totalPartial)} subtitle="Importe ya pagado sobre facturas aún abiertas" accent="#64d2ff" icon={ArrowDownCircle} />
-        <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overduePayables.length} documentos fuera de plazo`} accent="#ff453a" icon={AlertTriangle} />
+        <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overduePayables.length} documentos fuera de plazo`} accent="#ff453a" icon={AlertTriangle} onClick={() => setStatusFilter('overdue')} />
       </div>
 
       <section className="rounded-[28px] border border-[rgba(255,255,255,0.08)] bg-[rgba(10,11,15,0.92)] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.32)]">

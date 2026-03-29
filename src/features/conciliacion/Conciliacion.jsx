@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   AlertTriangle,
   Check,
@@ -75,6 +75,8 @@ const Conciliacion = ({ user }) => {
   const [searchTx, setSearchTx] = useState('');
   const [selectedMovement, setSelectedMovement] = useState(null);
   const [showMatched, setShowMatched] = useState(false);
+  const bankColumnRef = useRef(null);
+  const systemColumnRef = useRef(null);
 
   // Derive matched pairs from Firestore state (persisted reconciliation)
   const matchedPairs = useMemo(() => {
@@ -329,11 +331,23 @@ const Conciliacion = ({ user }) => {
           <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#648277]">Conciliados</p>
           <p className="mt-1 text-[22px] font-semibold text-[#0f8f4b]">{matchedPairs.length}</p>
         </div>
-        <div className="rounded-[26px] border border-[rgba(208,76,54,0.18)] bg-[rgba(255,248,246,0.94)] p-4">
+        <div
+          className="rounded-[26px] border border-[rgba(208,76,54,0.18)] bg-[rgba(255,248,246,0.94)] p-4 cursor-pointer hover:scale-[1.02] hover:shadow-[0_22px_50px_rgba(126,147,190,0.16)] transition-transform duration-200"
+          onClick={() => bankColumnRef.current?.scrollIntoView({ behavior: 'smooth' })}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bankColumnRef.current?.scrollIntoView({ behavior: 'smooth' }); } }}
+        >
           <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a6d66]">Sin conciliar (banco)</p>
           <p className="mt-1 text-[22px] font-semibold text-[#d04c36]">{unmatchedMovements.length}</p>
         </div>
-        <div className="rounded-[26px] border border-[rgba(214,149,44,0.18)] bg-[rgba(255,248,234,0.94)] p-4">
+        <div
+          className="rounded-[26px] border border-[rgba(214,149,44,0.18)] bg-[rgba(255,248,234,0.94)] p-4 cursor-pointer hover:scale-[1.02] hover:shadow-[0_22px_50px_rgba(126,147,190,0.16)] transition-transform duration-200"
+          onClick={() => systemColumnRef.current?.scrollIntoView({ behavior: 'smooth' })}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); systemColumnRef.current?.scrollIntoView({ behavior: 'smooth' }); } }}
+        >
           <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a6d40]">Sin conciliar (sistema)</p>
           <p className="mt-1 text-[22px] font-semibold text-[#c98717]">{unmatchedTransactions.length}</p>
         </div>
@@ -427,7 +441,7 @@ const Conciliacion = ({ user }) => {
       {/* Two-column comparison */}
       <div className="grid gap-6 xl:grid-cols-2">
         {/* Bank movements */}
-        <section className="rounded-[28px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-5 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
+        <section ref={bankColumnRef} className="rounded-[28px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-5 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Landmark size={18} className="text-[#3156d3]" />
@@ -490,7 +504,7 @@ const Conciliacion = ({ user }) => {
         </section>
 
         {/* Transactions / Suggestions */}
-        <section className="rounded-[28px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-5 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
+        <section ref={systemColumnRef} className="rounded-[28px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-5 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
           {selectedMovement ? (
             <>
               <div className="mb-4">
