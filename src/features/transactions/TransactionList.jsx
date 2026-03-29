@@ -1138,14 +1138,12 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
                     <span className="flex-shrink-0 rounded-full border border-[rgba(201,214,238,0.6)] bg-white px-2 py-0.5 text-[10px] text-[#6b7a96]">
                       {record.statusLabel || record.status}
                     </span>
-                    {record.canDelete && (
-                      <button
-                        onClick={() => handleDelete(record)}
-                        className="flex-shrink-0 rounded-xl bg-[#d04c36] px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-[#b8412f]"
-                      >
-                        Eliminar duplicado
-                      </button>
-                    )}
+                    <button
+                      onClick={() => handleDelete(record)}
+                      className="flex-shrink-0 rounded-xl bg-[#d04c36] px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-[#b8412f]"
+                    >
+                      Eliminar
+                    </button>
                   </div>
                 ))}
               </div>
