@@ -6,6 +6,7 @@ import {
   ChevronDown,
   Landmark,
   Link2,
+  Plus,
   Scale,
   Search,
   X,
@@ -13,6 +14,7 @@ import {
 import { useToast } from '../../contexts/ToastContext';
 import { useBankMovements } from '../../hooks/useBankMovements';
 import { useAllTransactions } from '../../hooks/useAllTransactions';
+import { useTransactionActions } from '../../hooks/useTransactionActions';
 import { formatCurrency } from '../../utils/formatters';
 
 const currentMonth = () => {
@@ -36,15 +38,18 @@ const scoreMatch = (movement, transaction) => {
   if (movement.direction === txDirection) score += 50;
   else return 0; // Direction mismatch = not a match
 
-  // Date proximity
+  // Date proximity (bank payment can be days/weeks after work date)
   if (movement.postedDate && transaction.date) {
     const mDate = new Date(movement.postedDate);
     const tDate = new Date(transaction.date);
     const daysDiff = Math.abs((mDate - tDate) / (1000 * 60 * 60 * 24));
     if (daysDiff === 0) score += 30;
-    else if (daysDiff <= 3) score += 20;
-    else if (daysDiff <= 7) score += 10;
-    else if (daysDiff <= 30) score += 5;
+    else if (daysDiff <= 3) score += 25;
+    else if (daysDiff <= 7) score += 20;
+    else if (daysDiff <= 14) score += 15;
+    else if (daysDiff <= 30) score += 10;
+    else if (daysDiff <= 60) score += 5;
+    // Beyond 60 days: no date bonus but still matches by amount+direction
   }
 
   // Description similarity (basic)
@@ -61,22 +66,33 @@ const scoreMatch = (movement, transaction) => {
 
 const Conciliacion = ({ user }) => {
   const { showToast } = useToast();
-  const { bankMovements, loading: movLoading } = useBankMovements(user);
+  const { bankMovements, loading: movLoading, reconcileMovement, unreconcileMovement } = useBankMovements(user);
   const { allTransactions, loading: txLoading } = useAllTransactions(user);
+  const { markAsCompleted, createTransaction } = useTransactionActions(user);
 
   const [month, setMonth] = useState(currentMonth());
   const [searchBank, setSearchBank] = useState('');
   const [searchTx, setSearchTx] = useState('');
   const [selectedMovement, setSelectedMovement] = useState(null);
-  const [matchedPairs, setMatchedPairs] = useState([]); // [{movementId, transactionId}]
   const [showMatched, setShowMatched] = useState(false);
+
+  // Derive matched pairs from Firestore state (persisted reconciliation)
+  const matchedPairs = useMemo(() => {
+    return bankMovements
+      .filter(m => m.reconciledAt && m.linkedTransactionId)
+      .map(m => ({ movementId: m.id, transactionId: m.linkedTransactionId }));
+  }, [bankMovements]);
 
   const loading = movLoading || txLoading;
 
   // Filter bank movements by month
+  // Exclude legacy-tx- movements (these are duplicates of transactions created by the ledger)
+  // Exclude movements that were manually created (they are self-reconciled)
   const monthMovements = useMemo(() => {
     return bankMovements
       .filter(m => m.status === 'posted' && (m.postedDate || '').slice(0, 7) === month)
+      .filter(m => !m.id.startsWith('legacy-tx-')) // Exclude ledger-generated duplicates
+      .filter(m => !m.legacyTransactionId) // Exclude movements linked to legacy transactions
       .filter(m => {
         if (!searchBank) return true;
         const q = searchBank.toLowerCase();
@@ -86,10 +102,30 @@ const Conciliacion = ({ user }) => {
       });
   }, [bankMovements, month, searchBank]);
 
-  // Filter transactions by month
+  // Combine transactions + manual bank movements as "system records"
+  // Manual bank movements (created by users, not imported from CSV) are operational records
+  const allSystemRecords = useMemo(() => {
+    const manualMovements = bankMovements
+      .filter(m => m.status === 'posted')
+      .filter(m => m.id.startsWith('legacy-tx-') || m.legacyTransactionId || m.createdBy) // manually created
+      .filter(m => !m.id.startsWith('legacy-tx-')) // but not ledger duplicates — use the transaction instead
+      .map(m => ({
+        id: m.id,
+        description: m.counterpartyName || m.description,
+        amount: m.amount,
+        type: m.direction === 'in' ? 'income' : 'expense',
+        date: m.postedDate,
+        project: m.projectName || '',
+        category: m.kind || '',
+        status: m.reconciledAt ? 'reconciled' : 'posted',
+        source: 'manual-bankMovement',
+      }));
+    return [...allTransactions, ...manualMovements];
+  }, [allTransactions, bankMovements]);
+
+  // Filter system records by month
   const monthTransactions = useMemo(() => {
-    return allTransactions
-      .filter(t => t.source === '2026-firebase' || t.year === 2026 || t.year === 2025 || true)
+    return allSystemRecords
       .filter(t => (t.date || '').slice(0, 7) === month)
       .filter(t => {
         if (!searchTx) return true;
@@ -98,7 +134,7 @@ const Conciliacion = ({ user }) => {
           (t.project || '').toLowerCase().includes(q) ||
           String(t.amount).includes(q);
       });
-  }, [allTransactions, month, searchTx]);
+  }, [allSystemRecords, month, searchTx]);
 
   // Already matched IDs
   const matchedMovementIds = useMemo(() => new Set(matchedPairs.map(p => p.movementId)), [matchedPairs]);
@@ -108,18 +144,26 @@ const Conciliacion = ({ user }) => {
   const unmatchedMovements = monthMovements.filter(m => !matchedMovementIds.has(m.id) && !m.reconciledAt);
   const unmatchedTransactions = monthTransactions.filter(t => !matchedTransactionIds.has(t.id));
 
-  // Auto-suggestions for selected movement
+  // All unmatched system records (for suggestions — wider than just month)
+  const allUnmatchedTransactions = useMemo(() => {
+    return allSystemRecords.filter(t => !matchedTransactionIds.has(t.id));
+  }, [allSystemRecords, matchedTransactionIds]);
+
+  // Auto-suggestions for selected movement (search ALL transactions, not just month)
   const suggestions = useMemo(() => {
     if (!selectedMovement) return [];
-    return unmatchedTransactions
+
+    const results = allUnmatchedTransactions
       .map(t => ({ transaction: t, score: scoreMatch(selectedMovement, t) }))
       .filter(s => s.score > 0)
       .sort((a, b) => b.score - a.score)
-      .slice(0, 5);
-  }, [selectedMovement, unmatchedTransactions]);
+      .slice(0, 8);
+
+    return results;
+  }, [selectedMovement, allUnmatchedTransactions, allTransactions]);
 
   // Auto-match all: find best 1:1 matches
-  const autoMatch = () => {
+  const autoMatch = async () => {
     const pairs = [];
     const usedMovements = new Set(matchedMovementIds);
     const usedTransactions = new Set(matchedTransactionIds);
@@ -127,7 +171,7 @@ const Conciliacion = ({ user }) => {
     // Build all possible matches sorted by score
     const allMatches = [];
     unmatchedMovements.forEach(m => {
-      unmatchedTransactions.forEach(t => {
+      allUnmatchedTransactions.forEach(t => {
         const score = scoreMatch(m, t);
         if (score >= 150) { // High confidence only
           allMatches.push({ movementId: m.id, transactionId: t.id, score });
@@ -150,18 +194,61 @@ const Conciliacion = ({ user }) => {
       return;
     }
 
-    setMatchedPairs(prev => [...prev, ...pairs]);
+    // Persist all matches to Firestore
+    for (const pair of pairs) {
+      await reconcileMovement(pair.movementId, pair.transactionId);
+      const transaction = allTransactions.find(t => t.id === pair.transactionId);
+      if (transaction && transaction.source === '2026-firebase') {
+        await markAsCompleted(transaction);
+      }
+    }
+
     setSelectedMovement(null);
-    showToast(`${pairs.length} coincidencias encontradas`, 'success');
+    showToast(`${pairs.length} coincidencias conciliadas`, 'success');
   };
 
-  const manualMatch = (movementId, transactionId) => {
-    setMatchedPairs(prev => [...prev, { movementId, transactionId }]);
+  const manualMatch = async (movementId, transactionId) => {
+    const transaction = allTransactions.find(t => t.id === transactionId);
+
+    // Persist reconciliation to Firestore
+    await reconcileMovement(movementId, transactionId);
+
+    // Mark transaction as completed/paid (only for Firebase transactions)
+    if (transaction && transaction.source === '2026-firebase') {
+      await markAsCompleted(transaction);
+    }
+
     setSelectedMovement(null);
+    showToast('Movimiento conciliado', 'success');
   };
 
-  const removeMatch = (movementId) => {
-    setMatchedPairs(prev => prev.filter(p => p.movementId !== movementId));
+  const removeMatch = async (movementId) => {
+    await unreconcileMovement(movementId);
+    showToast('Conciliación deshecha', 'info');
+  };
+
+  // Create a new transaction from an unmatched bank movement
+  const handleCreateFromMovement = async (movement) => {
+    const result = await createTransaction({
+      date: movement.postedDate,
+      description: movement.counterpartyName || movement.description || 'Movimiento bancario',
+      amount: movement.amount,
+      type: movement.direction === 'in' ? 'income' : 'expense',
+      category: 'Sin categorizar',
+      project: '',
+      costCenter: 'Sin asignar',
+      status: 'paid',
+      comment: `Creado desde movimiento bancario del ${movement.postedDate}`,
+    });
+
+    if (result?.success && result.id) {
+      await reconcileMovement(movement.id, result.id);
+      showToast('Transacción creada y conciliada', 'success');
+    } else if (result?.success) {
+      showToast('Transacción creada. Vincúlala manualmente.', 'success');
+    } else {
+      showToast('Error al crear la transacción', 'error');
+    }
   };
 
   // Stats
@@ -367,28 +454,36 @@ const Conciliacion = ({ user }) => {
             {unmatchedMovements.map(m => {
               const isSelected = selectedMovement?.id === m.id;
               return (
-                <button
-                  key={m.id}
-                  type="button"
-                  onClick={() => setSelectedMovement(isSelected ? null : m)}
-                  className={`w-full rounded-[18px] border px-4 py-3 text-left transition-all ${
-                    isSelected
-                      ? 'border-[rgba(49,86,211,0.4)] bg-[rgba(49,86,211,0.08)] shadow-[0_0_0_2px_rgba(49,86,211,0.12)]'
-                      : 'border-[rgba(201,214,238,0.74)] bg-white/78 hover:bg-white'
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="truncate text-[12px] font-semibold text-[#101938]">
-                      {m.counterpartyName || m.description || 'Sin descripción'}
-                    </span>
-                    <span className={`flex-shrink-0 text-[13px] font-bold ${m.direction === 'in' ? 'text-[#0f8f4b]' : 'text-[#d04c36]'}`}>
-                      {m.direction === 'in' ? '+' : '-'}€{formatCurrency(m.amount)}
-                    </span>
-                  </div>
-                  <p className="mt-1 truncate text-[11px] text-[#6b7a96]">
-                    {m.postedDate} · {m.description?.slice(0, 60)}
-                  </p>
-                </button>
+                <div key={m.id} className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedMovement(isSelected ? null : m)}
+                    className={`flex-1 min-w-0 rounded-[18px] border px-4 py-3 text-left transition-all ${
+                      isSelected
+                        ? 'border-[rgba(49,86,211,0.4)] bg-[rgba(49,86,211,0.08)] shadow-[0_0_0_2px_rgba(49,86,211,0.12)]'
+                        : 'border-[rgba(201,214,238,0.74)] bg-white/78 hover:bg-white'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="truncate text-[12px] font-semibold text-[#101938]">
+                        {m.counterpartyName || m.description || 'Sin descripción'}
+                      </span>
+                      <span className={`flex-shrink-0 text-[13px] font-bold ${m.direction === 'in' ? 'text-[#0f8f4b]' : 'text-[#d04c36]'}`}>
+                        {m.direction === 'in' ? '+' : '-'}€{formatCurrency(m.amount)}
+                      </span>
+                    </div>
+                    <p className="mt-1 truncate text-[11px] text-[#6b7a96]">
+                      {m.postedDate} · {m.description?.slice(0, 60)}
+                    </p>
+                  </button>
+                  <button
+                    onClick={() => handleCreateFromMovement(m)}
+                    className="flex-shrink-0 rounded-xl border border-[rgba(201,214,238,0.74)] bg-white/78 p-2 text-[#6b7a96] transition hover:border-[rgba(49,86,211,0.4)] hover:bg-[rgba(49,86,211,0.06)] hover:text-[#3156d3]"
+                    title="Crear transacción desde este movimiento"
+                  >
+                    <Plus size={14} />
+                  </button>
+                </div>
               );
             })}
           </div>

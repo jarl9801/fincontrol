@@ -212,6 +212,73 @@ export const useBankMovements = (user) => {
     }
   };
 
+  const reconcileMovement = async (movementId, transactionId) => {
+    if (!user) return { success: false, error: 'No user' };
+
+    try {
+      const movementRef = doc(db, 'artifacts', appId, 'public', 'data', 'bankMovements', movementId);
+      await updateDoc(movementRef, {
+        linkedTransactionId: transactionId,
+        reconciledAt: serverTimestamp(),
+        updatedBy: user.email,
+        updatedAt: serverTimestamp(),
+        auditTrail: arrayUnion({
+          action: 'reconcile',
+          user: user.email,
+          timestamp: new Date().toISOString(),
+          detail: `Conciliado con transacción ${transactionId}`,
+        }),
+      });
+      const currentMovement = bankMovements.find((entry) => entry.id === movementId);
+      await writeAuditLogEntry({
+        action: 'reconcile',
+        entityType: 'bankMovement',
+        entityId: movementId,
+        description: `Movimiento bancario conciliado: ${currentMovement?.description || currentMovement?.documentNumber || movementId}`,
+        userEmail: user.email,
+        metadata: {
+          linkedTransactionId: transactionId,
+        },
+      });
+      return { success: true };
+    } catch (reconcileError) {
+      logError('Error reconciling movement:', reconcileError);
+      return { success: false, error: reconcileError };
+    }
+  };
+
+  const unreconcileMovement = async (movementId) => {
+    if (!user) return { success: false, error: 'No user' };
+
+    try {
+      const movementRef = doc(db, 'artifacts', appId, 'public', 'data', 'bankMovements', movementId);
+      await updateDoc(movementRef, {
+        linkedTransactionId: null,
+        reconciledAt: null,
+        updatedBy: user.email,
+        updatedAt: serverTimestamp(),
+        auditTrail: arrayUnion({
+          action: 'unreconcile',
+          user: user.email,
+          timestamp: new Date().toISOString(),
+          detail: 'Conciliación deshecha',
+        }),
+      });
+      const currentMovement = bankMovements.find((entry) => entry.id === movementId);
+      await writeAuditLogEntry({
+        action: 'unreconcile',
+        entityType: 'bankMovement',
+        entityId: movementId,
+        description: `Conciliación deshecha: ${currentMovement?.description || currentMovement?.documentNumber || movementId}`,
+        userEmail: user.email,
+      });
+      return { success: true };
+    } catch (unreconcileError) {
+      logError('Error unreconciling movement:', unreconcileError);
+      return { success: false, error: unreconcileError };
+    }
+  };
+
   return {
     bankMovements,
     loading,
@@ -219,6 +286,8 @@ export const useBankMovements = (user) => {
     createBankMovement,
     updateBankMovement,
     voidBankMovement,
+    reconcileMovement,
+    unreconcileMovement,
   };
 };
 

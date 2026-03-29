@@ -73,7 +73,7 @@ export const useTransactionActions = (user) => {
           lastModifiedAt: new Date().toISOString(),
         }),
       });
-      return { success: true };
+      return { success: true, id: docRef.id };
     } catch (error) {
       logError("Error creating transaction:", error);
       return { success: false, error };
