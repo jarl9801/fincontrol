@@ -1,19 +1,19 @@
 import React, { useMemo, useState } from 'react';
 import {
   CheckCircle,
-  Download,
   Eye,
   Filter,
   Landmark,
   MessageSquare,
   ReceiptText,
   RotateCcw,
-  Search,
   Sparkles,
   WalletCards,
   X,
 } from 'lucide-react';
-import TransactionRow from '../../components/ui/TransactionRow';
+import TransactionFilters, { FILTER_DEFAULTS } from './TransactionFilters';
+import TransactionTable from './TransactionTable';
+import DuplicateReviewPanel from './DuplicateReviewPanel';
 import TransactionFormModal from '../../components/ui/TransactionFormModal';
 import NotesModal from '../../components/ui/NotesModal';
 import ConfirmModal from '../../components/ui/ConfirmModal';
@@ -30,59 +30,6 @@ import { usePayables } from '../../hooks/usePayables';
 import { useProjects } from '../../hooks/useProjects';
 import { exportTransactionsToPDF } from '../../utils/pdfExport';
 import { formatCurrency } from '../../utils/formatters';
-
-const FILTER_DEFAULTS = {
-  dateFrom: '',
-  dateTo: '',
-  project: '',
-  category: '',
-  costCenter: '',
-  type: '',
-  status: '',
-  origin: '',
-  family: '',
-  year: '',
-  minAmount: '',
-  maxAmount: '',
-  notesMode: 'all',
-};
-
-const YEAR_OPTIONS = [
-  { value: '', label: 'Todos los años' },
-  { value: '2025', label: '2025 — Histórico' },
-  { value: '2026', label: '2026 — Operación actual' },
-];
-
-const TYPE_OPTIONS = [
-  { value: '', label: 'Todos los tipos' },
-  { value: 'income', label: 'Entradas' },
-  { value: 'expense', label: 'Salidas' },
-];
-
-const STATUS_OPTIONS = [
-  { value: '', label: 'Todos los estados' },
-  { value: 'pending', label: 'Pendiente' },
-  { value: 'partial', label: 'Parcial' },
-  { value: 'overdue', label: 'Vencido' },
-  { value: 'paid', label: 'Liquidado' },
-  { value: 'cancelled', label: 'Cancelado' },
-  { value: 'void', label: 'Anulado' },
-];
-
-const ORIGIN_OPTIONS = [
-  { value: '', label: 'Todos los orígenes' },
-  { value: 'legacy', label: 'Histórico' },
-  { value: 'canonical', label: 'Operación actual' },
-  { value: 'migrated', label: 'Integrado' },
-];
-
-const FAMILY_OPTIONS = [
-  { value: '', label: 'Todas las familias' },
-  { value: 'legacy', label: 'Registro histórico' },
-  { value: 'movement', label: 'Movimiento bancario' },
-  { value: 'receivable', label: 'Factura CXC' },
-  { value: 'payable', label: 'Factura CXP' },
-];
 
 const safeString = (value) => {
   if (value == null) return '';
@@ -983,283 +930,22 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-[rgba(205,219,243,0.78)] bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(247,250,255,0.78))] p-4 shadow-[0_22px_60px_rgba(126,147,190,0.12)] backdrop-blur-2xl">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#7390c7]" size={16} />
-            <input
-              type="text"
-              placeholder="Buscar por descripcion, proyecto, documento, contraparte o comentarios..."
-              className="w-full rounded-[20px] border border-[rgba(201,214,238,0.86)] bg-white/80 py-2.5 pl-10 pr-10 text-[13px] text-[#16223f] outline-none transition-all placeholder:text-[#7d8dac] focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-            />
-            {searchTerm && (
-              <button
-                type="button"
-                onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7d8dac] transition-colors hover:text-[#101938]"
-                aria-label="Limpiar busqueda"
-              >
-                <X size={15} />
-              </button>
-            )}
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setShowFilters((current) => !current)}
-              className={`inline-flex items-center gap-2 rounded-[16px] border px-4 py-2.5 text-[13px] font-medium transition-all ${
-                showFilters || activeFiltersCount > 0
-                  ? 'border-[rgba(90,141,221,0.34)] bg-[rgba(90,141,221,0.12)] text-[#3156d3] shadow-[0_10px_24px_rgba(90,141,221,0.12)]'
-                  : 'border-[rgba(201,214,238,0.82)] bg-white/72 text-[#32415f] hover:bg-white'
-              }`}
-            >
-              <Filter size={15} />
-              Filtros avanzados
-              {activeFiltersCount > 0 && (
-                <span className="rounded-full bg-[rgba(90,141,221,0.12)] px-2 py-0.5 text-[11px] text-[#3156d3]">
-                  {activeFiltersCount}
-                </span>
-              )}
-            </button>
-
-            {userRole === 'admin' && (
-              <button
-                type="button"
-                onClick={() => exportTransactionsToPDF(exportRows, 'Registros Unificados')}
-                className="inline-flex items-center gap-2 rounded-[16px] border border-[rgba(201,214,238,0.82)] bg-white/72 px-4 py-2.5 text-[13px] font-medium text-[#16223f] transition-colors hover:bg-white"
-              >
-                <Download size={15} />
-                Exportar PDF
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {quickFilterButtons.map(({ key, label, count, icon: Icon }) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setQuickFilter(key)}
-              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-medium transition-all ${
-                quickFilter === key
-                  ? 'border border-[rgba(90,141,221,0.22)] bg-[rgba(90,141,221,0.12)] text-[#3156d3]'
-                  : 'border border-[rgba(201,214,238,0.72)] bg-white/62 text-[#62718f] hover:bg-white hover:text-[#16223f]'
-              }`}
-            >
-              {Icon && <Icon size={13} />}
-              {label}
-              <span className="rounded-full bg-[rgba(255,255,255,0.72)] px-1.5 py-0.5 text-[10px] text-inherit">
-                {count}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {showFilters && (
-          <div className="mt-4 rounded-[24px] border border-[rgba(205,219,243,0.72)] bg-[linear-gradient(180deg,rgba(250,252,255,0.94),rgba(244,248,255,0.9))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.88)] animate-fadeIn">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div>
-                <h3 className="text-[14px] font-semibold text-[#101938]">Filtros de revision</h3>
-                <p className="mt-1 text-[12px] text-[#6b7a96]">Recorta por origen, tipo de registro, importe, estado y dimensión operativa.</p>
-              </div>
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="inline-flex items-center gap-2 text-[12px] font-medium text-[#3156d3] transition-colors hover:text-[#101938]"
-              >
-                <RotateCcw size={13} />
-                Limpiar todo
-              </button>
-            </div>
-
-            <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Desde</span>
-                <input
-                  type="date"
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.dateFrom}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, dateFrom: event.target.value }))}
-                />
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Hasta</span>
-                <input
-                  type="date"
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.dateTo}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, dateTo: event.target.value }))}
-                />
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Proyecto</span>
-                <select
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.project}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, project: event.target.value }))}
-                >
-                  <option value="">Todos los proyectos</option>
-                  {filterOptions.projects.map((project) => (
-                    <option key={project} value={project}>
-                      {project}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Categoría</span>
-                <select
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.category}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, category: event.target.value }))}
-                >
-                  <option value="">Todas las categorias</option>
-                  {filterOptions.categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Centro de costo</span>
-                <select
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.costCenter}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, costCenter: event.target.value }))}
-                >
-                  <option value="">Todos los centros</option>
-                  {filterOptions.centers.map((center) => (
-                    <option key={center} value={center}>
-                      {center}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Tipo</span>
-                <select
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.type}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, type: event.target.value }))}
-                >
-                  {TYPE_OPTIONS.map((option) => (
-                    <option key={option.value || 'all'} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Estado</span>
-                <select
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.status}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, status: event.target.value }))}
-                >
-                  {STATUS_OPTIONS.map((option) => (
-                    <option key={option.value || 'all'} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Origen</span>
-                <select
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.origin}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, origin: event.target.value }))}
-                >
-                  {ORIGIN_OPTIONS.map((option) => (
-                    <option key={option.value || 'all'} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Tipo de registro</span>
-                <select
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.family}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, family: event.target.value }))}
-                >
-                  {FAMILY_OPTIONS.map((option) => (
-                    <option key={option.value || 'all'} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Año fiscal</span>
-                <select
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.year}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, year: event.target.value }))}
-                >
-                  {YEAR_OPTIONS.map((option) => (
-                    <option key={option.value || 'all'} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Importe mínimo</span>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.minAmount}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, minAmount: event.target.value }))}
-                />
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Importe máximo</span>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.maxAmount}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, maxAmount: event.target.value }))}
-                />
-              </label>
-
-              <label className="block">
-                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Comentarios</span>
-                <select
-                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
-                  value={advancedFilters.notesMode}
-                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, notesMode: event.target.value }))}
-                >
-                  <option value="all">Todos</option>
-                  <option value="with-notes">Con comentarios</option>
-                  <option value="without-notes">Sin comentarios</option>
-                </select>
-              </label>
-            </div>
-          </div>
-        )}
-      </section>
+      <TransactionFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        showFilters={showFilters}
+        setShowFilters={setShowFilters}
+        advancedFilters={advancedFilters}
+        setAdvancedFilters={setAdvancedFilters}
+        quickFilter={quickFilter}
+        setQuickFilter={setQuickFilter}
+        quickFilterButtons={quickFilterButtons}
+        activeFiltersCount={activeFiltersCount}
+        filterOptions={filterOptions}
+        userRole={userRole}
+        onExportPDF={() => exportTransactionsToPDF(exportRows, 'Registros Unificados')}
+        onResetFilters={resetFilters}
+      />
 
       <div className="flex items-center justify-between px-1">
         <p className="text-[13px] text-[#6b7a96]">
@@ -1279,164 +965,25 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
         )}
       </div>
 
-      {/* Duplicate review panel */}
-      {quickFilter === 'duplicados' && duplicateGroups.length > 0 && (
-        <section className="space-y-4 rounded-[28px] border border-[rgba(208,76,54,0.18)] bg-[rgba(255,248,246,0.94)] p-5 shadow-[0_20px_65px_rgba(134,153,186,0.12)]">
-          <div className="flex items-center gap-2">
-            <RotateCcw size={18} className="text-[#d04c36]" />
-            <h3 className="text-[15px] font-semibold text-[#101938]">
-              {duplicateGroups.length} grupo{duplicateGroups.length !== 1 ? 's' : ''} de posibles duplicados
-            </h3>
-          </div>
-          <p className="text-[12px] text-[#6b7a96]">
-            Revisa cada grupo. Elige cuál registro conservar y elimina el duplicado.
-          </p>
-          {duplicateGroups.map((group, gIdx) => (
-            <div key={gIdx} className="rounded-2xl border border-[rgba(201,214,238,0.74)] bg-white/90 p-4">
-              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#d04c36]">
-                Grupo {gIdx + 1} — €{group.original.amount.toLocaleString('de-DE', { minimumFractionDigits: 2 })} · {group.original.type === 'income' ? 'Ingreso' : 'Gasto'}
-              </p>
-              <div className="space-y-2">
-                {[group.original, ...group.duplicates].map((record) => (
-                  <div key={record.id} className="flex items-center gap-3 rounded-xl border border-[rgba(201,214,238,0.6)] bg-[rgba(247,250,255,0.9)] px-4 py-3">
-                    <div className="flex-1 min-w-0">
-                      <p className="truncate text-[13px] font-medium text-[#101938]">{safeString(record.description)}</p>
-                      <p className="mt-0.5 text-[11px] text-[#6b7a96]">
-                        {record.date} · {record.project || 'Sin proyecto'} · {record.recordFamilyLabel || record.recordFamily}
-                        {record.lastEditor ? ` · ${record.lastEditor}` : ''}
-                      </p>
-                    </div>
-                    <span className={`flex-shrink-0 text-[13px] font-bold ${record.type === 'income' ? 'text-[#0f8f4b]' : 'text-[#d04c36]'}`}>
-                      €{record.amount.toLocaleString('de-DE', { minimumFractionDigits: 2 })}
-                    </span>
-                    <span className="flex-shrink-0 rounded-full border border-[rgba(201,214,238,0.6)] bg-white px-2 py-0.5 text-[10px] text-[#6b7a96]">
-                      {record.statusLabel || record.status}
-                    </span>
-                    <button
-                      onClick={() => handleDelete(record)}
-                      className="flex-shrink-0 rounded-xl bg-[#d04c36] px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-[#b8412f]"
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </section>
+      {quickFilter === 'duplicados' && (
+        <DuplicateReviewPanel duplicateGroups={duplicateGroups} onDelete={handleDelete} />
       )}
 
-      <section className="overflow-hidden rounded-[28px] border border-[rgba(205,219,243,0.78)] bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(247,250,255,0.8))] shadow-[0_24px_64px_rgba(126,147,190,0.12)] backdrop-blur-2xl">
-        <div className="border-b border-[rgba(201,214,238,0.72)] px-4 py-3 text-[12px] text-[#6b7a96]">
-          {loadingLedger
-            ? 'Sincronizando registros...'
-            : userRole === 'admin'
-              ? 'Vista unificada: los registros actuales se mantienen desde aquí y el histórico integrado queda protegido.'
-              : 'Mesa unificada de registros financieros.'}
-        </div>
-
-        {/* Desktop table */}
-        <div className="hidden lg:block">
-          <table className="w-full text-left">
-            <thead className="border-b border-[rgba(201,214,238,0.72)] bg-[rgba(244,248,255,0.88)]">
-              <tr>
-                <th className="px-4 py-3.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Fecha</th>
-                <th className="px-4 py-3.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Registro</th>
-                <th className="px-4 py-3.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Categoría</th>
-                <th className="px-4 py-3.5 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Monto</th>
-                <th className="px-4 py-3.5 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Estado</th>
-                <th className="px-4 py-3.5 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[rgba(201,214,238,0.58)]">
-              {filteredRecords.map((record) => (
-                <TransactionRow
-                  key={record.id}
-                  t={record}
-                  onDelete={handleDelete}
-                  onEdit={handleEdit}
-                  onViewNotes={handleViewNotes}
-                  onViewAuditTrail={handleViewAuditTrail}
-                  onRegisterPayment={handleRegisterPayment}
-                  onVoid={handleVoid}
-                  onChangeStatus={handleChangeStatus}
-                  onViewDetail={setDetailRecord}
-                  userRole={userRole}
-                  searchTerm={searchTerm}
-                />
-              ))}
-
-              {filteredRecords.length === 0 && (
-                <tr>
-                  <td colSpan="6" className="px-4 py-16 text-center">
-                    <div className="mx-auto max-w-md">
-                      <p className="text-[14px] font-semibold text-[#101938]">No se encontraron registros</p>
-                      <p className="mt-2 text-[13px] leading-6 text-[#6b7a96]">
-                        Ajusta la búsqueda o limpia los filtros para volver a la vista completa de registros.
-                      </p>
-                      <button
-                        type="button"
-                        onClick={resetFilters}
-                        className="mt-4 inline-flex items-center gap-2 rounded-[16px] border border-[rgba(201,214,238,0.82)] bg-white/80 px-4 py-2.5 text-[13px] font-medium text-[#3156d3] transition-colors hover:bg-white hover:text-[#101938]"
-                      >
-                        <RotateCcw size={14} />
-                        Limpiar filtros
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Mobile card list */}
-        <div className="lg:hidden divide-y divide-[rgba(201,214,238,0.58)]">
-          {filteredRecords.map((record) => {
-            const isIncome = record.type === 'income';
-            const normalizedStatus = (record.status || '').toLowerCase();
-            const statusColors = normalizedStatus === 'paid'
-              ? 'bg-[rgba(208,244,220,0.72)] text-[#0f8f4b]'
-              : normalizedStatus === 'partial'
-                ? 'bg-[rgba(255,239,209,0.82)] text-[#d46a13]'
-                : ['overdue'].includes(normalizedStatus)
-                  ? 'bg-[rgba(255,234,231,0.9)] text-[#cc4b3f]'
-                  : 'bg-[rgba(255,244,223,0.88)] text-[#c47a09]';
-            return (
-              <div key={record.id} className="px-4 py-4 hover:bg-[rgba(90,141,221,0.04)]">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[13px] font-semibold text-[#101938] leading-snug">{record.description}</p>
-                    <p className="mt-1 text-[11px] text-[#6b7a96]">
-                      {record.date ? new Date(record.date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }) : ''} · {record.categoryLabel || record.category}
-                    </p>
-                    {record.project && record.project !== 'Sin proyecto' && (
-                      <p className="mt-0.5 text-[10px] text-[#7b8cab]">{record.project}</p>
-                    )}
-                  </div>
-                  <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                    <span className={`text-[14px] font-bold ${isIncome ? 'text-[#0f8f4b]' : 'text-[#cc4b3f]'}`}>
-                      {isIncome ? '+' : '-'}{formatCurrency(record.amount)}
-                    </span>
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${statusColors}`}>
-                      {record.statusLabel || record.status}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-          {filteredRecords.length === 0 && (
-            <div className="px-4 py-16 text-center">
-              <p className="text-[14px] font-semibold text-[#101938]">No se encontraron registros</p>
-              <p className="mt-2 text-[13px] leading-6 text-[#6b7a96]">Ajusta la búsqueda o limpia los filtros.</p>
-              <button type="button" onClick={resetFilters} className="mt-4 inline-flex items-center gap-2 rounded-[16px] border border-[rgba(201,214,238,0.82)] bg-white/80 px-4 py-2.5 text-[13px] font-medium text-[#3156d3]">
-                <RotateCcw size={14} /> Limpiar filtros
-              </button>
-            </div>
-          )}
-        </div>
-      </section>
+      <TransactionTable
+        filteredRecords={filteredRecords}
+        loadingLedger={loadingLedger}
+        userRole={userRole}
+        searchTerm={searchTerm}
+        resetFilters={resetFilters}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+        onViewNotes={handleViewNotes}
+        onViewAuditTrail={handleViewAuditTrail}
+        onRegisterPayment={handleRegisterPayment}
+        onVoid={handleVoid}
+        onChangeStatus={handleChangeStatus}
+        onViewDetail={setDetailRecord}
+      />
 
       <TransactionFormModal
         isOpen={isFormModalOpen}
