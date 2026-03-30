@@ -8,6 +8,7 @@ import {
   Wallet,
 } from 'lucide-react';
 import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
+import RecordDetailModal from '../../components/ui/RecordDetailModal';
 import { useToast } from '../../contexts/ToastContext';
 import { useReceivables } from '../../hooks/useReceivables';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
@@ -72,6 +73,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedRow, setSelectedRow] = useState(null);
   const [loadingId, setLoadingId] = useState(null);
+  const [detailRecord, setDetailRecord] = useState(null);
 
   const canAct = userRole === 'admin' || userRole === 'manager';
 
@@ -233,7 +235,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
               {rows.map((row) => {
                 const canSettle = row.source !== 'legacy-opening' && row.status !== 'settled' && row.status !== 'cancelled';
                 return (
-                  <tr key={row.id} className="hover:bg-[rgba(255,255,255,0.03)]">
+                  <tr key={row.id} className="cursor-pointer hover:bg-[rgba(255,255,255,0.03)]" onClick={() => setDetailRecord(row)}>
                     <td className="px-4 py-4">
                       <p className="text-sm font-semibold text-white">{row.counterpartyName}</p>
                       <p className="text-xs text-[#8e8e93]">{row.description || 'Sin descripción'}</p>
@@ -258,7 +260,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
                     </td>
                     <td className="px-4 py-4 text-center text-xs text-[#8e8e93]">{row.source}</td>
                     {canAct && (
-                      <td className="px-4 py-4">
+                      <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
                         <div className="flex justify-end gap-2">
                           {canSettle && (
                             <>
@@ -303,6 +305,8 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
         transaction={selectedRow ? toModalTransaction(selectedRow) : null}
         onSubmit={handlePartialPayment}
       />
+
+      <RecordDetailModal record={detailRecord} onClose={() => setDetailRecord(null)} userRole={userRole} />
     </div>
   );
 };

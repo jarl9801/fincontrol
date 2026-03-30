@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   AlertTriangle,
   ArrowDownRight,
@@ -8,6 +9,12 @@ import {
 } from 'lucide-react';
 import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
 import { formatCurrency } from '../../utils/formatters';
+
+const YEAR_OPTIONS = [
+  { value: '2026', label: '2026 — Operación actual' },
+  { value: '2025', label: '2025 — Histórico' },
+  { value: 'all', label: 'Todos los años' },
+];
 
 const Card = ({ title, value, subtitle, accent, icon }) => {
   const IconComponent = icon;
@@ -28,7 +35,13 @@ const Card = ({ title, value, subtitle, accent, icon }) => {
 };
 
 const ExecutiveSummary = ({ user }) => {
-  const metrics = useTreasuryMetrics({ user });
+  const [selectedYear, setSelectedYear] = useState('2026');
+
+  const yearRange = selectedYear === 'all'
+    ? {}
+    : { from: `${selectedYear}-01-01`, to: `${selectedYear}-12-31` };
+
+  const metrics = useTreasuryMetrics({ user, ...yearRange });
 
   if (metrics.loading) {
     return (
@@ -70,6 +83,27 @@ const ExecutiveSummary = ({ user }) => {
 
   return (
     <div className="space-y-6">
+      {/* Year selector */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Año fiscal</span>
+        <div className="flex flex-wrap gap-2">
+          {YEAR_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setSelectedYear(opt.value)}
+              className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-all ${
+                selectedYear === opt.value
+                  ? 'border-[rgba(90,141,221,0.28)] bg-[rgba(90,141,221,0.12)] text-[#3156d3]'
+                  : 'border-[rgba(201,214,238,0.82)] bg-white/78 text-[#6b7a96] hover:text-[#101938]'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="grid gap-4 lg:grid-cols-4">
         <Card title="Caja actual" value={formatCurrency(metrics.currentCash)} subtitle="Saldo operativo real." accent="#30d158" icon={Landmark} />
         <Card title="Liquidez proyectada" value={formatCurrency(metrics.projectedLiquidity)} subtitle="Caja mas CXC menos CXP." accent="#64d2ff" icon={Target} />

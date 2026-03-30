@@ -459,12 +459,26 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
   }, [unifiedRecords]);
 
   // Detect possible duplicates: same amount + same type + date within 3 days + similar description
-  // Returns both a Set of IDs and grouped pairs for the duplicate review panel
+  // EXCLUDES cross-family pairs (e.g., a receivable + its collection movement = NOT a duplicate)
   const { duplicateIds, duplicateGroups } = useMemo(() => {
     const dupeSet = new Set();
     const groups = [];
     const records = unifiedRecords;
     const paired = new Set();
+
+    // A receivable/payable and its corresponding movement are NOT duplicates
+    const isNaturalPair = (a, b) => {
+      const families = [a.recordFamily, b.recordFamily];
+      // movement + receivable/payable = invoice + its payment (not a duplicate)
+      if (families.includes('movement') && (families.includes('receivable') || families.includes('payable'))) return true;
+      // legacy + movement with same legacyTransactionId = same record in two forms
+      if (families.includes('legacy') && families.includes('movement')) {
+        const mov = a.recordFamily === 'movement' ? a : b;
+        const leg = a.recordFamily === 'legacy' ? a : b;
+        if (mov.rawRecord?.legacyTransactionId === leg.rawRecord?.id) return true;
+      }
+      return false;
+    };
 
     for (let i = 0; i < records.length; i++) {
       if (paired.has(records[i].id)) continue;
@@ -473,6 +487,8 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
         const a = records[i];
         const b = records[j];
         if (a.type !== b.type || Math.abs(a.amount - b.amount) > 0.01) continue;
+        // Skip natural pairs (invoice + payment, legacy + its movement)
+        if (isNaturalPair(a, b)) continue;
         if (a.date && b.date) {
           const daysDiff = Math.abs((new Date(a.date) - new Date(b.date)) / (1000 * 60 * 60 * 24));
           if (daysDiff > 3) continue;
@@ -595,8 +611,15 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
   };
 
   const handleDelete = (record) => {
-    if (userRole !== 'admin') return;
-    if (record.recordFamily !== 'legacy') return;
+    if (userRole !== 'admin') {
+      showToast('Solo administradores pueden eliminar registros', 'error');
+      return;
+    }
+    if (record.recordFamily !== 'legacy') {
+      const familyLabels = { movement: 'movimiento bancario', receivable: 'factura CXC', payable: 'factura CXP' };
+      showToast(`No se puede eliminar un ${familyLabels[record.recordFamily] || 'registro'} — usa "Estado → Anular" en su lugar`, 'error');
+      return;
+    }
     setTransactionToDelete(record.rawRecord);
     setIsConfirmModalOpen(true);
   };
@@ -656,6 +679,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
   };
 
   const [statusChangeRecord, setStatusChangeRecord] = useState(null);
+  const [detailRecord, setDetailRecord] = useState(null);
 
   const handleChangeStatus = (record) => {
     if (userRole !== 'admin') return;
@@ -1336,6 +1360,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
                   onRegisterPayment={handleRegisterPayment}
                   onVoid={handleVoid}
                   onChangeStatus={handleChangeStatus}
+                  onViewDetail={setDetailRecord}
                   userRole={userRole}
                   searchTerm={searchTerm}
                 />
@@ -1545,6 +1570,121 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
         logs={auditLogs}
         loading={auditLogsLoading}
       />
+
+      {detailRecord && (() => {
+        const r = detailRecord;
+        const raw = r.rawRecord || {};
+        const familyLabels = { legacy: 'Registro histórico', movement: 'Movimiento bancario', receivable: 'Factura CXC', payable: 'Factura CXP' };
+        const statusLabels = { paid: 'Liquidado', pending: 'Pendiente', partial: 'Parcial', overdue: 'Vencido', void: 'Anulado', cancelled: 'Anulado', issued: 'Emitida', settled: 'Liquidada' };
+        const payments = raw.payments || r.payments || [];
+        const notes = (raw.notes || r.notes || []).filter((n) => typeof n === 'object');
+
+        const Field = ({ label, value }) => value ? (
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.14em] text-[#636366]">{label}</p>
+            <p className="mt-0.5 text-sm text-[#e5e5ea]">{value}</p>
+          </div>
+        ) : null;
+
+        return (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn" onClick={() => setDetailRecord(null)}>
+            <div className="bg-[#1c1c1e] rounded-2xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-hidden animate-scaleIn flex flex-col" onClick={(e) => e.stopPropagation()}>
+              <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-start shrink-0">
+                <div className="min-w-0 flex-1">
+                  <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${r.type === 'income' ? 'bg-[rgba(48,209,88,0.15)] text-[#30d158]' : 'bg-[rgba(255,69,58,0.15)] text-[#ff453a]'}`}>
+                    {r.type === 'income' ? 'Ingreso' : 'Egreso'} · {familyLabels[r.recordFamily] || r.recordFamily}
+                  </span>
+                  <h3 className="mt-2 text-lg font-bold text-[#e5e5ea] break-words">{r.description}</h3>
+                </div>
+                <button onClick={() => setDetailRecord(null)} className="ml-3 shrink-0 text-[#636366] hover:text-[#98989d] transition-colors">
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="overflow-y-auto px-6 py-5 space-y-5">
+                <div className="flex items-baseline justify-between">
+                  <span className={`text-[32px] font-bold tracking-tight ${r.type === 'income' ? 'text-[#30d158]' : 'text-[#ff453a]'}`}>
+                    {r.type === 'income' ? '+' : '-'}{formatCurrency(r.amount)}
+                  </span>
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                    r.status === 'paid' ? 'bg-[rgba(48,209,88,0.15)] text-[#30d158]' :
+                    r.status === 'void' || r.status === 'cancelled' ? 'bg-[rgba(142,142,147,0.15)] text-[#8e8e93]' :
+                    r.status === 'overdue' ? 'bg-[rgba(255,69,58,0.15)] text-[#ff453a]' :
+                    'bg-[rgba(255,159,10,0.15)] text-[#ff9f0a]'
+                  }`}>
+                    {statusLabels[r.status] || r.status}
+                  </span>
+                </div>
+
+                {r.status === 'partial' && (
+                  <div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-[#2c2c2e]">
+                      <div className="h-full rounded-full bg-[#30d158]" style={{ width: `${Number(r.amount) > 0 ? ((Number(r.paidAmount) || 0) / Number(r.amount)) * 100 : 0}%` }} />
+                    </div>
+                    <p className="mt-1 text-xs text-[#8e8e93]">Pagado: {formatCurrency(r.paidAmount || 0)} / {formatCurrency(r.amount)}</p>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-4 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#15161a] p-4">
+                  <Field label="Fecha" value={r.date} />
+                  <Field label="Origen" value={r.sourceLabel} />
+                  <Field label="Proyecto" value={r.project || raw.projectName} />
+                  <Field label="Centro de costo" value={r.costCenter || raw.costCenterId} />
+                  <Field label="Categoría" value={r.categoryLabel || r.category} />
+                  <Field label="Contraparte" value={r.counterpartyName || raw.counterpartyName} />
+                  <Field label="No. documento" value={r.documentNumber || raw.documentNumber} />
+                  <Field label="Familia" value={familyLabels[r.recordFamily]} />
+                  {raw.dueDate && <Field label="Vencimiento" value={raw.dueDate} />}
+                  {raw.createdBy && <Field label="Creado por" value={raw.createdBy} />}
+                  {r.lastEditor && <Field label="Última edición" value={r.lastEditor} />}
+                  {r.year && <Field label="Año fiscal" value={String(r.year)} />}
+                </div>
+
+                {payments.length > 0 && (
+                  <div>
+                    <p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-[#636366]">Pagos registrados ({payments.length})</p>
+                    <div className="space-y-1.5">
+                      {payments.map((p, idx) => (
+                        <div key={idx} className="flex items-center justify-between rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#15161a] px-3 py-2">
+                          <div>
+                            <p className="text-sm text-[#e5e5ea]">{p.method || 'Pago'}</p>
+                            <p className="text-[11px] text-[#636366]">{p.date} {p.user ? `· ${p.user}` : ''}</p>
+                          </div>
+                          <span className="text-sm font-semibold text-[#30d158]">{formatCurrency(p.amount)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {notes.length > 0 && (
+                  <div>
+                    <p className="mb-2 text-[10px] uppercase tracking-[0.14em] text-[#636366]">Notas ({notes.length})</p>
+                    <div className="space-y-1.5">
+                      {notes.map((n, idx) => (
+                        <div key={idx} className={`rounded-lg border px-3 py-2 text-sm ${n.type === 'system' ? 'border-[rgba(255,255,255,0.04)] bg-[#15161a] text-[#636366]' : 'border-[rgba(255,159,10,0.12)] bg-[rgba(255,159,10,0.06)] text-[#c7c7cc]'}`}>
+                          <p>{n.text}</p>
+                          <p className="mt-1 text-[10px] text-[#48484a]">{n.timestamp ? new Date(n.timestamp).toLocaleString('es-ES') : ''} {n.user ? `· ${n.user}` : ''}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="shrink-0 border-t border-[rgba(255,255,255,0.08)] px-6 py-3 flex gap-2">
+                {r.canEdit && userRole === 'admin' && (
+                  <button type="button" onClick={() => { setDetailRecord(null); handleEdit(r); }} className="flex-1 rounded-lg bg-[#2c2c2e] px-4 py-2.5 text-sm font-medium text-[#64d2ff] hover:bg-[#3a3a3c]">Editar</button>
+                )}
+                {r.canChangeStatus && userRole === 'admin' && (
+                  <button type="button" onClick={() => { setDetailRecord(null); handleChangeStatus(r); }} className="flex-1 rounded-lg bg-[#2c2c2e] px-4 py-2.5 text-sm font-medium text-[#ff9f0a] hover:bg-[#3a3a3c]">Cambiar estado</button>
+                )}
+                <button type="button" onClick={() => setDetailRecord(null)} className="flex-1 rounded-lg bg-[#2c2c2e] px-4 py-2.5 text-sm font-medium text-[#c7c7cc] hover:bg-[#3a3a3c]">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {statusChangeRecord && (() => {
         const family = statusChangeRecord.recordFamily;

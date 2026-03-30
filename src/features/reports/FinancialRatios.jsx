@@ -32,6 +32,12 @@ import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
 import { formatCurrency } from '../../utils/formatters';
 import { MONTH_NAMES, resolvePeriodRange } from '../../finance/reporting';
 
+const YEAR_OPTIONS = [
+  { value: '2026', label: '2026 — Operación actual' },
+  { value: '2025', label: '2025 — Histórico' },
+  { value: 'all', label: 'Todos los años' },
+];
+
 const statusColors = {
   good: { bg: 'bg-[rgba(48,209,88,0.12)]', text: 'text-[#30d158]', border: 'border-[rgba(48,209,88,0.22)]', icon: 'text-[#30d158]' },
   warning: { bg: 'bg-[rgba(255,159,10,0.12)]', text: 'text-[#ff9f0a]', border: 'border-[rgba(255,159,10,0.22)]', icon: 'text-[#ff9f0a]' },
@@ -110,8 +116,13 @@ const FinancialRatios = ({ user }) => {
   const now = new Date();
   const defaultMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   const [selectedPeriod, setSelectedPeriod] = useState(`month:${defaultMonth}`);
+  const [selectedYear, setSelectedYear] = useState('2026');
 
-  const globalMetrics = useTreasuryMetrics({ user });
+  const yearRange = selectedYear === 'all'
+    ? {}
+    : { from: `${selectedYear}-01-01`, to: `${selectedYear}-12-31` };
+
+  const globalMetrics = useTreasuryMetrics({ user, ...yearRange });
   const periodRange = resolvePeriodRange(selectedPeriod, now, 0);
   const periodMetrics = useTreasuryMetrics({ user, from: periodRange.from, to: periodRange.to });
   const ledger = useFinanceLedger(user);
@@ -196,25 +207,45 @@ const FinancialRatios = ({ user }) => {
               Los indicadores se calculan desde caja real, facturas abiertas y ritmo de entradas y salidas para ofrecer una lectura útil de la operación.
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {[0, 1, 2].map((offset) => {
-              const date = new Date(now.getFullYear(), now.getMonth() - offset, 1);
-              const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-              return (
+          <div className="flex flex-col gap-3">
+            {/* Year selector */}
+            <div className="flex flex-wrap gap-2">
+              {YEAR_OPTIONS.map((opt) => (
                 <button
-                  key={key}
+                  key={opt.value}
                   type="button"
-                  onClick={() => setSelectedPeriod(`month:${key}`)}
+                  onClick={() => setSelectedYear(opt.value)}
                   className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
-                    selectedPeriod === `month:${key}`
+                    selectedYear === opt.value
                       ? 'border-[rgba(90,141,221,0.28)] bg-[rgba(90,141,221,0.12)] text-[#3156d3]'
                       : 'border-[rgba(201,214,238,0.82)] bg-white/78 text-[#6b7a96] hover:text-[#101938]'
                   }`}
                 >
-                  {MONTH_NAMES[date.getMonth()]}
+                  {opt.label}
                 </button>
-              );
-            })}
+              ))}
+            </div>
+            {/* Month selector for period metrics */}
+            <div className="flex flex-wrap gap-2">
+              {[0, 1, 2].map((offset) => {
+                const date = new Date(now.getFullYear(), now.getMonth() - offset, 1);
+                const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setSelectedPeriod(`month:${key}`)}
+                    className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
+                      selectedPeriod === `month:${key}`
+                        ? 'border-[rgba(90,141,221,0.28)] bg-[rgba(90,141,221,0.12)] text-[#3156d3]'
+                        : 'border-[rgba(201,214,238,0.82)] bg-white/78 text-[#6b7a96] hover:text-[#101938]'
+                    }`}
+                  >
+                    {MONTH_NAMES[date.getMonth()]}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>

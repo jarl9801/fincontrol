@@ -9,6 +9,7 @@ import {
   ShieldAlert,
   TrendingUp,
 } from 'lucide-react';
+import HelpButton from '../../components/ui/HelpButton';
 import {
   Bar,
   BarChart,
@@ -37,10 +38,13 @@ const TooltipCard = ({ active, payload, label }) => {
   );
 };
 
-const Section = ({ title, subtitle, children }) => (
+const Section = ({ title, subtitle, children, help }) => (
   <section className="rounded-[28px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-5 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
     <div className="mb-5">
-      <h3 className="text-[18px] font-semibold tracking-tight text-[#101938]">{title}</h3>
+      <div className="flex items-center gap-2">
+        <h3 className="text-[18px] font-semibold tracking-tight text-[#101938]">{title}</h3>
+        {help}
+      </div>
       {subtitle && <p className="mt-1 text-sm text-[#6b7a96]">{subtitle}</p>}
     </div>
     {children}
@@ -105,11 +109,23 @@ const CashFlow = ({ user }) => {
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-[24px] border border-[rgba(201,214,238,0.78)] bg-white/74 px-4 py-4">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Caja actual</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Caja actual</p>
+                <HelpButton title="Caja actual" size={13}>
+                  <p>Saldo operativo real de la cuenta bancaria principal.</p>
+                  <p>Calculado desde el saldo de apertura (dic 2025) mas todos los movimientos bancarios registrados.</p>
+                </HelpButton>
+              </div>
               <p className="mt-2 text-[30px] font-semibold text-[#101938]">{formatCurrency(metrics.currentCash)}</p>
             </div>
             <div className="rounded-[24px] border border-[rgba(201,214,238,0.78)] bg-white/74 px-4 py-4">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Liquidez proyectada</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Liquidez proyectada</p>
+                <HelpButton title="Liquidez proyectada" size={13}>
+                  <p>Caja actual + CXC abiertas - CXP abiertas.</p>
+                  <p>Muestra cuanto tendria la empresa si se cobrara y pagara todo lo pendiente.</p>
+                </HelpButton>
+              </div>
               <p className="mt-2 text-[30px] font-semibold text-[#3156d3]">{formatCurrency(metrics.projectedLiquidity)}</p>
             </div>
             <div
@@ -119,7 +135,13 @@ const CashFlow = ({ user }) => {
               tabIndex={0}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); movementsRef.current?.scrollIntoView({ behavior: 'smooth' }); } }}
             >
-              <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Cobros próximos</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Cobros proximos</p>
+                <HelpButton title="Cobros proximos" size={13}>
+                  <p>Suma de documentos CXC abiertos con vencimiento en los proximos 14 dias.</p>
+                  <p>Representa el dinero que se espera recibir a corto plazo.</p>
+                </HelpButton>
+              </div>
               <p className="mt-2 text-[30px] font-semibold text-[#0f8f4b]">
                 {formatCurrency(metrics.upcomingReceivables.reduce((sum, entry) => sum + entry.openAmount, 0))}
               </p>
@@ -131,7 +153,13 @@ const CashFlow = ({ user }) => {
               tabIndex={0}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); reconciliationRef.current?.scrollIntoView({ behavior: 'smooth' }); } }}
             >
-              <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Pagos próximos</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-[#6980ac]">Pagos proximos</p>
+                <HelpButton title="Pagos proximos" size={13}>
+                  <p>Suma de documentos CXP abiertos con vencimiento en la siguiente ventana.</p>
+                  <p>Representa las obligaciones de pago mas inmediatas.</p>
+                </HelpButton>
+              </div>
               <p className="mt-2 text-[30px] font-semibold text-[#c46a19]">
                 {formatCurrency(metrics.upcomingPayables.reduce((sum, entry) => sum + entry.openAmount, 0))}
               </p>
@@ -140,7 +168,12 @@ const CashFlow = ({ user }) => {
         </div>
       </section>
 
-      <Section title="Estado de Resultados — Últimos 6 meses" subtitle="Ingresos vs gastos realizados, agrupados por mes.">
+      <Section title="Estado de Resultados" subtitle="Ingresos vs gastos realizados, agrupados por mes." help={
+        <HelpButton title="Estado de Resultados" size={14}>
+          <p>Resumen de ingresos y gastos reales de los ultimos 6 meses.</p>
+          <p>Solo incluye movimientos contabilizados (cobros y pagos ejecutados), no compromisos pendientes.</p>
+        </HelpButton>
+      }>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
@@ -182,7 +215,12 @@ const CashFlow = ({ user }) => {
       </Section>
 
       <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
-        <Section title="Balance de caja semanal" subtitle="Historico reciente derivado de movimientos contabilizados.">
+        <Section title="Balance de caja semanal" subtitle="Historico reciente derivado de movimientos contabilizados." help={
+          <HelpButton title="Balance de caja semanal" size={14}>
+            <p>Evolucion del saldo bancario semana a semana, basado en movimientos reales.</p>
+            <p>Permite detectar tendencias de consumo o acumulacion de liquidez.</p>
+          </HelpButton>
+        }>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={metrics.cashSeries}>
@@ -196,7 +234,12 @@ const CashFlow = ({ user }) => {
           </div>
         </Section>
 
-        <Section title="Compromisos por semana" subtitle="Entradas y salidas comprometidas en la siguiente ventana de 8 semanas.">
+        <Section title="Compromisos por semana" subtitle="Entradas y salidas comprometidas en la siguiente ventana de 8 semanas." help={
+          <HelpButton title="Compromisos por semana" size={14}>
+            <p>Cobros y pagos pendientes agrupados por semana de vencimiento.</p>
+            <p>Ayuda a anticipar semanas con alta presion de salida o entrada de caja.</p>
+          </HelpButton>
+        }>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={metrics.weeklyProjection}>
@@ -285,7 +328,12 @@ const CashFlow = ({ user }) => {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <Section title="Runway" subtitle="Caja actual sobre el egreso promedio de 90 dias.">
+        <Section title="Runway" subtitle="Caja actual sobre el egreso promedio de 90 dias." help={
+          <HelpButton title="Runway" size={14}>
+            <p>Meses de operacion que la caja actual puede cubrir al ritmo de gasto promedio de los ultimos 90 dias.</p>
+            <p>Un runway inferior a 3 meses se considera critico.</p>
+          </HelpButton>
+        }>
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(90,141,221,0.14)] text-[#3156d3]">
               <TrendingUp size={18} />

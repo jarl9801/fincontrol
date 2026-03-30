@@ -16,6 +16,7 @@ import {
   TrendingUp,
   Wallet,
 } from 'lucide-react';
+import HelpButton from '../../components/ui/HelpButton';
 import {
   Area,
   AreaChart,
@@ -49,7 +50,7 @@ const TooltipCard = ({ active, payload, label }) => {
   );
 };
 
-const HeroCard = ({ title, value, subtitle, accent, icon, onClick }) => {
+const HeroCard = ({ title, value, subtitle, accent, icon, onClick, help }) => {
   const IconComponent = icon;
   return (
     <div
@@ -66,7 +67,10 @@ const HeroCard = ({ title, value, subtitle, accent, icon, onClick }) => {
       <div className="relative">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#7184a8]">{title}</p>
+            <div className="flex items-center gap-1.5">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#7184a8]">{title}</p>
+              {help}
+            </div>
             <p className="mt-1 text-[25px] font-semibold tracking-tight text-[#15213c]">{value}</p>
           </div>
           <div
@@ -221,6 +225,11 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
           subtitle="Saldo operativo de la cuenta principal tras movimientos contabilizados."
           accent={metrics.currentCash >= 0 ? '#3e68d9' : '#c25d42'}
           icon={Landmark}
+          help={
+            <HelpButton title="Caja real" size={13}>
+              <p>Saldo operativo real. Calculado desde el saldo de apertura (dic 2025) mas todos los movimientos bancarios registrados.</p>
+            </HelpButton>
+          }
         />
         <HeroCard
           title="Liquidez proyectada"
@@ -228,6 +237,12 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
           subtitle="Caja actual mas CXC abierta menos CXP abierta."
           accent="#4d74ff"
           icon={Wallet}
+          help={
+            <HelpButton title="Liquidez proyectada" size={13}>
+              <p>Caja actual + CXC abiertas - CXP abiertas.</p>
+              <p>Muestra cuanto tendria la empresa si se cobrara y pagara todo lo pendiente.</p>
+            </HelpButton>
+          }
         />
         <HeroCard
           title="Siguiente ventana"
@@ -235,6 +250,12 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
           subtitle="Impacto neto esperado de vencimientos en los proximos 14 dias."
           accent={metrics.next14Net >= 0 ? '#4d74ff' : '#c25d42'}
           icon={CalendarRange}
+          help={
+            <HelpButton title="Siguiente ventana" size={13}>
+              <p>Impacto neto de vencimientos en los proximos 14 dias.</p>
+              <p>Positivo = mas cobros que pagos esperados.</p>
+            </HelpButton>
+          }
         />
         <HeroCard
           title="Exposicion vencida"
@@ -243,6 +264,11 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
           accent="#c25d42"
           icon={ShieldAlert}
           onClick={() => setView?.('alertas')}
+          help={
+            <HelpButton title="Exposicion vencida" size={13}>
+              <p>Suma de documentos CXC y CXP que ya pasaron su fecha de vencimiento sin liquidarse.</p>
+            </HelpButton>
+          }
         />
         <HeroCard
           title="Margen Neto Mes"
@@ -250,6 +276,12 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
           subtitle="Ingresos menos burn rate mensual sobre ingresos totales."
           accent={parseFloat(netMarginPct)>=0?'#16a34a':'#dc2626'}
           icon={parseFloat(netMarginPct)>=0?TrendingUp:TrendingDown}
+          help={
+            <HelpButton title="Margen Neto Mes" size={13}>
+              <p>(Ingresos - gastos promedio mensual) / ingresos.</p>
+              <p>Indica que porcentaje de los ingresos queda como ganancia operativa.</p>
+            </HelpButton>
+          }
         />
       </div>
 

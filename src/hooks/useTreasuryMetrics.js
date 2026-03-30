@@ -211,13 +211,22 @@ export const useTreasuryMetrics = (options = {}) => {
     const cashOutflows = sumMoney(filteredMovements.filter((entry) => entry.direction === 'out'), (entry) => entry.amount);
     const netMovement = clampMoney(cashInflows - cashOutflows);
 
+    const trailing90Start = toISODate(addDays(referenceDate, -90));
+    const trailing90End = toISODate(referenceDate);
     const trailingOutflows = ledger.postedMovements.filter(
       (entry) =>
         entry.direction === 'out' &&
-        compareIsoDate(entry.postedDate, toISODate(addDays(referenceDate, -90))) >= 0 &&
-        compareIsoDate(entry.postedDate, toISODate(referenceDate)) <= 0,
+        compareIsoDate(entry.postedDate, trailing90Start) >= 0 &&
+        compareIsoDate(entry.postedDate, trailing90End) <= 0,
+    );
+    const trailingInflows = ledger.postedMovements.filter(
+      (entry) =>
+        entry.direction === 'in' &&
+        compareIsoDate(entry.postedDate, trailing90Start) >= 0 &&
+        compareIsoDate(entry.postedDate, trailing90End) <= 0,
     );
     const avgMonthlyOutflows = clampMoney(sumMoney(trailingOutflows, (entry) => entry.amount) / 3);
+    const avgMonthlyInflows = clampMoney(sumMoney(trailingInflows, (entry) => entry.amount) / 3);
     const runwayMonths = avgMonthlyOutflows > 0 ? clampMoney(currentCash / avgMonthlyOutflows) : null;
 
     return {
@@ -241,6 +250,7 @@ export const useTreasuryMetrics = (options = {}) => {
           sumMoney(upcomingPayables, (entry) => entry.openAmount),
       ),
       runwayMonths,
+      avgMonthlyInflows,
       avgMonthlyOutflows,
       weeklyProjection: buildWeeklyProjection(currentCash, openReceivables, openPayables, referenceDate),
       cashSeries: buildCashSeries(ledger, referenceDate),

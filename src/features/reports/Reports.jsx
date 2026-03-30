@@ -23,6 +23,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import HelpButton from '../../components/ui/HelpButton';
 import { useFinanceLedger } from '../../hooks/useFinanceLedger';
 import { exportReportToPDF } from '../../utils/pdfExport';
 import { formatCurrency } from '../../utils/formatters';
@@ -72,6 +73,7 @@ const StatCard = ({ title, value, subtitle, accent, icon, delta }) => {
 const YEAR_OPTIONS = [
   { value: '2026', label: '2026 — Operación actual' },
   { value: '2025', label: '2025 — Histórico' },
+  { value: 'all', label: 'Todos los años' },
 ];
 
 const Reports = ({ user }) => {
@@ -84,7 +86,7 @@ const Reports = ({ user }) => {
   const defaultMonth = `${initialDate.year}-${String(initialDate.month + 1).padStart(2, '0')}`;
 
   const [selectedPeriod, setSelectedPeriod] = useState(`month:${defaultMonth}`);
-  const [selectedYear, setSelectedYear] = useState(String(initialDate.year));
+  const [selectedYear, setSelectedYear] = useState('2026');
   const [compareMode, setCompareMode] = useState(true);
   const [monthDropdownOpen, setMonthDropdownOpen] = useState(false);
 
@@ -99,6 +101,7 @@ const Reports = ({ user }) => {
   }, []);
 
   const yearFilteredMovements = useMemo(() => {
+    if (selectedYear === 'all') return ledger.postedMovements;
     return ledger.postedMovements.filter((entry) => {
       const date = entry.postedDate;
       if (!date) return false;
@@ -152,10 +155,12 @@ const Reports = ({ user }) => {
   const previousTotals = summarizeMovements(previousMovements);
 
   const yearFilteredReceivables = useMemo(() => {
+    if (selectedYear === 'all') return ledger.receivables;
     return ledger.receivables.filter((entry) => entry.issueDate?.startsWith(selectedYear));
   }, [ledger.receivables, selectedYear]);
 
   const yearFilteredPayables = useMemo(() => {
+    if (selectedYear === 'all') return ledger.payables;
     return ledger.payables.filter((entry) => entry.issueDate?.startsWith(selectedYear));
   }, [ledger.payables, selectedYear]);
 
@@ -215,7 +220,7 @@ const Reports = ({ user }) => {
     return Array.from(bucket.values()).sort((left, right) => right.net - left.net).slice(0, 6);
   })();
 
-  const trendYear = Number(selectedYear);
+  const trendYear = selectedYear === 'all' ? initialDate.year : Number(selectedYear);
   const trendEndMonth = trendYear === initialDate.year ? initialDate.month : 11;
   const trendStartMonth = Math.max(0, trendEndMonth - 5);
   const trendData = Array.from({ length: trendEndMonth - trendStartMonth + 1 }, (_, index) => {
@@ -274,7 +279,15 @@ const Reports = ({ user }) => {
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#5a8ddd]">Estado de resultados</p>
-            <h2 className="text-[32px] font-semibold tracking-tight text-[#101938]">Resultado realizado y compromisos abiertos del período.</h2>
+            <h2 className="text-[32px] font-semibold tracking-tight text-[#101938]">
+              Resultado realizado y compromisos abiertos del periodo.{' '}
+              <HelpButton title="Estado de resultados">
+                <p><strong>Ingresos realizados</strong> — Cobros reales registrados como movimientos bancarios en el periodo seleccionado. No incluye CXC pendientes.</p>
+                <p><strong>Gastos realizados</strong> — Pagos reales salidos de caja en el periodo. No incluye CXP pendientes.</p>
+                <p><strong>Resultado de caja</strong> — Ingresos menos gastos del periodo. Muestra si la operacion genero o consumio efectivo.</p>
+                <p><strong>Compromisos del periodo</strong> — CXC y CXP emitidas en este periodo que aun estan abiertas.</p>
+              </HelpButton>
+            </h2>
             <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[#5f7091]">
               Consulta los ingresos y gastos ya registrados, y mantén aparte los documentos que siguen pendientes de cobro o pago.
             </p>
@@ -368,9 +381,12 @@ const Reports = ({ user }) => {
             <select
               value={selectedYear}
               onChange={(e) => {
-                setSelectedYear(e.target.value);
-                const newDefault = `${e.target.value}-${String(initialDate.month + 1).padStart(2, '0')}`;
-                setSelectedPeriod(`month:${newDefault}`);
+                const yr = e.target.value;
+                setSelectedYear(yr);
+                if (yr !== 'all') {
+                  const newDefault = `${yr}-${String(initialDate.month + 1).padStart(2, '0')}`;
+                  setSelectedPeriod(`month:${newDefault}`);
+                }
               }}
               className="rounded-2xl border border-[rgba(201,214,238,0.82)] bg-white/84 px-4 py-3 text-sm font-medium text-[#6b7a96] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white"
             >

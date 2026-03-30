@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
 import { formatCurrency } from '../../utils/formatters';
+import HelpButton from '../../components/ui/HelpButton';
 
 const SCENARIOS = [
   { id: 'optimista', label: 'Optimista', emoji: '🟢', varIngresos: 20, varGastos: -5, retrasoCobros: 0, nuevasContrataciones: 0, subidaPrecios: 0 },
@@ -196,9 +197,10 @@ export default function WhatIf({ user }) {
   const sim = useMemo(() => {
     if (metrics.loading) return null;
 
-    const { currentCash, cashInflows, avgMonthlyOutflows, pendingReceivables, pendingPayables } = metrics;
+    const { currentCash, avgMonthlyInflows, avgMonthlyOutflows, pendingReceivables, pendingPayables } = metrics;
 
-    const ingresosSim = cashInflows * (1 + varIngresos / 100) * (1 + subidaPrecios / 100);
+    // Base: promedios mensuales reales (últimos 90 días / 3)
+    const ingresosSim = avgMonthlyInflows * (1 + varIngresos / 100) * (1 + subidaPrecios / 100);
     const gastosSim = avgMonthlyOutflows * (1 + varGastos / 100) + nuevasContrataciones * COST_PER_HIRE;
     const margenNeto = ingresosSim - gastosSim;
     const margenPct = gastosSim > 0 ? (margenNeto / gastosSim) * 100 : ingresosSim > 0 ? 100 : 0;
@@ -211,7 +213,7 @@ export default function WhatIf({ user }) {
 
     const puntoEquilibrio = gastosSim - ingresosSim;
 
-    const netActual = cashInflows - avgMonthlyOutflows;
+    const netActual = avgMonthlyInflows - avgMonthlyOutflows;
     const runwayActual = avgMonthlyOutflows > 0 ? currentCash / avgMonthlyOutflows : null;
 
     const dangerLevel = avgMonthlyOutflows * 2;
@@ -241,7 +243,7 @@ export default function WhatIf({ user }) {
       chartData,
       dangerLevel,
       actual: {
-        ingresos: cashInflows,
+        ingresos: avgMonthlyInflows,
         gastos: avgMonthlyOutflows,
         margenNeto: netActual,
         runway: runwayActual,
@@ -268,17 +270,27 @@ export default function WhatIf({ user }) {
       {/* Header */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[22px] font-bold tracking-tight text-[#101938]">Simulador What-If</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-[22px] font-bold tracking-tight text-[#101938]">Simulador What-If</h1>
+            <HelpButton title="Simulador What-If">
+              <p>Permite simular escenarios financieros modificando variables clave. Los resultados son estimaciones basadas en datos actuales y no representan proyecciones reales.</p>
+            </HelpButton>
+          </div>
           <p className="mt-1 text-[12px] text-[#5f7091]">Ajusta los parámetros y ve el impacto en tiempo real</p>
         </div>
-        <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50/80 px-3 py-1.5 text-[11px] font-semibold text-[#4d74ff]">
-          <Zap size={12} />
-          Basado en datos reales
-        </span>
+        <div className="flex items-center gap-2">
+          <HelpButton title="Aviso importante" size={14}>
+            <p>Los valores mostrados son simulaciones basadas en tendencias históricas y parámetros ajustables. No son predicciones — la realidad puede variar según condiciones del mercado, cobros, pagos inesperados, etc.</p>
+          </HelpButton>
+          <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50/80 px-3 py-1.5 text-[11px] font-semibold text-[#4d74ff]">
+            <Zap size={12} />
+            Basado en datos reales
+          </span>
+        </div>
       </div>
 
       {/* Scenarios */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         {SCENARIOS.map((s) => (
           <button
             key={s.id}
@@ -294,19 +306,64 @@ export default function WhatIf({ user }) {
             {s.label}
           </button>
         ))}
+        <HelpButton title="Escenarios predefinidos" size={14}>
+          <p><strong>Optimista:</strong> Ingresos +20%, gastos -5%. Simula un mes con buen rendimiento comercial y control de costos.</p>
+          <p><strong>Base:</strong> Sin cambios. Refleja la situación actual tal cual.</p>
+          <p><strong>Pesimista:</strong> Ingresos -20%, gastos +10%. Simula un escenario adverso con caída de facturación y aumento de costos.</p>
+        </HelpButton>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Controls */}
         <div className="space-y-5 lg:col-span-4">
           <div className="rounded-3xl border border-[rgba(196,214,255,0.38)] bg-[rgba(255,255,255,0.72)] p-5 shadow-[0_18px_46px_rgba(124,148,191,0.14)] backdrop-blur-xl">
-            <h3 className="mb-4 text-[13px] font-semibold text-[#101938]">Parámetros de simulación</h3>
+            <div className="mb-4 flex items-center gap-2">
+              <h3 className="text-[13px] font-semibold text-[#101938]">Parámetros de simulación</h3>
+              <HelpButton title="Parámetros" size={14}>
+                <p>Cada control modifica una variable financiera. Al mover un slider, los resultados se recalculan en tiempo real. Puedes combinar varios parámetros para simular escenarios complejos.</p>
+              </HelpButton>
+            </div>
             <div className="space-y-5">
-              <SliderControl label="Variación de ingresos" value={varIngresos} onChange={(v) => { setVarIngresos(v); setActiveScenario(null); }} min={-50} max={100} />
-              <SliderControl label="Variación de gastos" value={varGastos} onChange={(v) => { setVarGastos(v); setActiveScenario(null); }} min={-30} max={50} />
-              <SliderControl label="Retraso de cobros" value={retrasoCobros} onChange={(v) => { setRetrasoCobros(v); setActiveScenario(null); }} min={0} max={90} unit=" días" />
-              <SliderControl label="Nuevas contrataciones" value={nuevasContrataciones} onChange={(v) => { setNuevasContrataciones(v); setActiveScenario(null); }} min={0} max={5} unit="" />
-              <SliderControl label="Subida de precios" value={subidaPrecios} onChange={(v) => { setSubidaPrecios(v); setActiveScenario(null); }} min={0} max={30} />
+              <div className="flex items-start gap-1">
+                <div className="flex-1">
+                  <SliderControl label="Variación de ingresos" value={varIngresos} onChange={(v) => { setVarIngresos(v); setActiveScenario(null); }} min={-50} max={100} />
+                </div>
+                <HelpButton title="Variación de ingresos" size={13}>
+                  <p>Ajusta el porcentaje de cambio sobre los ingresos mensuales actuales. Un valor positivo simula mayor facturación; uno negativo, una caída en ventas o cobros.</p>
+                </HelpButton>
+              </div>
+              <div className="flex items-start gap-1">
+                <div className="flex-1">
+                  <SliderControl label="Variación de gastos" value={varGastos} onChange={(v) => { setVarGastos(v); setActiveScenario(null); }} min={-30} max={50} />
+                </div>
+                <HelpButton title="Variación de gastos" size={13}>
+                  <p>Ajusta el porcentaje de cambio sobre los gastos mensuales actuales. Un valor positivo aumenta los gastos (ej. nuevos proveedores); uno negativo simula recortes o ahorros.</p>
+                </HelpButton>
+              </div>
+              <div className="flex items-start gap-1">
+                <div className="flex-1">
+                  <SliderControl label="Retraso de cobros" value={retrasoCobros} onChange={(v) => { setRetrasoCobros(v); setActiveScenario(null); }} min={0} max={90} unit=" días" />
+                </div>
+                <HelpButton title="Retraso de cobros" size={13}>
+                  <p>Simula que los clientes tardan más en pagar. Cada día de retraso impacta el flujo de caja a corto plazo, reduciendo la liquidez disponible proporcionalmente a las cuentas por cobrar pendientes.</p>
+                </HelpButton>
+              </div>
+              <div className="flex items-start gap-1">
+                <div className="flex-1">
+                  <SliderControl label="Nuevas contrataciones" value={nuevasContrataciones} onChange={(v) => { setNuevasContrataciones(v); setActiveScenario(null); }} min={0} max={5} unit="" />
+                </div>
+                <HelpButton title="Nuevas contrataciones" size={13}>
+                  <p>Cada nueva contratación agrega un costo fijo mensual de {formatCurrency(COST_PER_HIRE)} EUR a los gastos. Útil para evaluar si la empresa puede soportar crecimiento de equipo.</p>
+                </HelpButton>
+              </div>
+              <div className="flex items-start gap-1">
+                <div className="flex-1">
+                  <SliderControl label="Subida de precios" value={subidaPrecios} onChange={(v) => { setSubidaPrecios(v); setActiveScenario(null); }} min={0} max={30} />
+                </div>
+                <HelpButton title="Subida de precios" size={13}>
+                  <p>Simula un aumento porcentual en los precios de venta. Se aplica sobre los ingresos junto con la variación de ingresos. Útil para evaluar el impacto de ajustes de tarifa.</p>
+                </HelpButton>
+              </div>
             </div>
           </div>
         </div>
@@ -314,6 +371,15 @@ export default function WhatIf({ user }) {
         {/* Results */}
         <div className="space-y-6 lg:col-span-8">
           {/* KPI cards */}
+          <div className="mb-1 flex items-center gap-2">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#5f7091]">Métricas simuladas</span>
+            <HelpButton title="Métricas simuladas" size={13}>
+              <p><strong>Ingresos sim.:</strong> Ingresos mensuales proyectados con los ajustes aplicados. El delta muestra la diferencia vs. el valor actual.</p>
+              <p><strong>Gastos sim.:</strong> Gastos mensuales proyectados incluyendo variaciones y contrataciones. Delta positivo = más gasto.</p>
+              <p><strong>Margen neto:</strong> Diferencia entre ingresos y gastos simulados. Si es negativo, la empresa pierde dinero cada mes.</p>
+              <p><strong>Runway sim.:</strong> Meses que la empresa puede operar con la caja actual al ritmo de gasto simulado. Menos de 3 meses es crítico.</p>
+            </HelpButton>
+          </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <MetricCard label="Ingresos sim." value={sim.ingresosSim} delta={sim.ingresosSim - sim.actual.ingresos} />
             <MetricCard label="Gastos sim." value={sim.gastosSim} delta={sim.gastosSim - sim.actual.gastos} />
@@ -331,6 +397,12 @@ export default function WhatIf({ user }) {
           </div>
 
           {/* Cash impact */}
+          <div className="mb-1 flex items-center gap-2">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#5f7091]">Impacto en caja</span>
+            <HelpButton title="Proyección de caja" size={13}>
+              <p>Muestra la caja estimada a 30, 60 y 90 días considerando el margen neto simulado y el impacto del retraso de cobros. Si algún valor es negativo (rojo), significa que la empresa necesitaría financiamiento externo.</p>
+            </HelpButton>
+          </div>
           <div className="grid grid-cols-3 gap-3">
             {[
               { label: 'Caja a 30 días', value: sim.caja30 },
@@ -347,6 +419,12 @@ export default function WhatIf({ user }) {
           </div>
 
           {/* Comparison table */}
+          <div className="mb-1 flex items-center gap-2">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#5f7091]">Comparación actual vs. simulado</span>
+            <HelpButton title="Tabla comparativa" size={13}>
+              <p>Compara lado a lado los valores reales actuales con los valores simulados. La columna delta (Δ) muestra la diferencia: verde indica mejora, rojo indica deterioro respecto a la situación actual.</p>
+            </HelpButton>
+          </div>
           <ComparisonTable
             rows={[
               { label: 'Ingresos mensuales', actual: sim.actual.ingresos, simulated: sim.ingresosSim },
@@ -360,7 +438,15 @@ export default function WhatIf({ user }) {
 
           {/* Chart */}
           <div className="rounded-3xl border border-[rgba(196,214,255,0.38)] bg-[rgba(255,255,255,0.72)] p-5 shadow-[0_18px_46px_rgba(124,148,191,0.14)] backdrop-blur-xl">
-            <h3 className="mb-4 text-[13px] font-semibold text-[#101938]">Proyección de caja — 12 meses</h3>
+            <div className="mb-4 flex items-center gap-2">
+              <h3 className="text-[13px] font-semibold text-[#101938]">Proyección de caja — 12 meses</h3>
+              <HelpButton title="Gráfico de proyección" size={14}>
+                <p><strong>Línea azul:</strong> Proyección de caja sin cambios (escenario actual mantenido 12 meses).</p>
+                <p><strong>Línea naranja:</strong> Proyección con los parámetros simulados aplicados.</p>
+                <p><strong>Línea roja punteada:</strong> Nivel de peligro — equivale a 2 meses de gastos actuales. Si la caja cae por debajo, la empresa está en riesgo.</p>
+                <p>Pasa el cursor sobre el gráfico para ver valores exactos por mes.</p>
+              </HelpButton>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={sim.chartData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(196,214,255,0.4)" />
@@ -375,6 +461,15 @@ export default function WhatIf({ user }) {
           </div>
 
           {/* Insight */}
+          <div className="mb-1 flex items-center gap-2">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#5f7091]">Diagnóstico</span>
+            <HelpButton title="Diagnóstico automático" size={13}>
+              <p>Evaluación automática basada en el runway simulado (meses de operación restantes):</p>
+              <p><strong>Crítico (rojo):</strong> Menos de 3 meses — acción urgente requerida.</p>
+              <p><strong>Alerta (ámbar):</strong> Entre 3 y 6 meses — margen ajustado, priorizar cobros.</p>
+              <p><strong>Estable (verde):</strong> Más de 6 meses — situación sostenible.</p>
+            </HelpButton>
+          </div>
           <InsightPanel runwayMonths={sim.runwaySim} />
         </div>
       </div>

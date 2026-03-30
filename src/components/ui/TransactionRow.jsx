@@ -15,7 +15,7 @@ import { ALERT_THRESHOLDS } from '../../constants/config';
 
 const safe = (value) => (value == null ? '' : typeof value === 'object' ? JSON.stringify(value) : String(value));
 
-const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, onVoid, onChangeStatus, onViewAuditTrail, userRole, searchTerm }) => {
+const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, onVoid, onChangeStatus, onViewAuditTrail, onViewDetail, userRole, searchTerm }) => {
   const normalizedStatus = safe(t.status).toLowerCase();
   const isOverdue = normalizedStatus === 'overdue' || (normalizedStatus === 'pending' && getDaysOverdue(t.date) > ALERT_THRESHOLDS.overdueDays);
   const isNew = t.hasUnreadUpdates === true;
@@ -101,10 +101,11 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
   return (
     <tr
       className={`
-        group border-b border-[rgba(201,214,238,0.58)] transition-all duration-200 last:border-0
+        group border-b border-[rgba(201,214,238,0.58)] transition-all duration-200 last:border-0 cursor-pointer
         ${isOverdue ? 'bg-[rgba(255,236,234,0.72)]' : 'hover:bg-[rgba(90,141,221,0.05)]'}
         ${isNew ? 'animate-pulse-glow' : ''}
       `}
+      onClick={() => onViewDetail?.(t)}
     >
       <td className="px-4 py-4 whitespace-nowrap">
         <div className="flex flex-col">
@@ -223,7 +224,7 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
         </span>
       </td>
 
-      <td className="px-4 py-4 text-center">
+      <td className="px-4 py-4 text-center" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-center gap-1 opacity-50 transition-opacity group-hover:opacity-100">
           {canRegisterPayment && (
             <button

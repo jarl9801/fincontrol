@@ -7,7 +7,9 @@ import {
   Filter,
   Search,
 } from 'lucide-react';
+import HelpButton from '../../components/ui/HelpButton';
 import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
+import RecordDetailModal from '../../components/ui/RecordDetailModal';
 import { useToast } from '../../contexts/ToastContext';
 import { useReceivables } from '../../hooks/useReceivables';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
@@ -103,12 +105,17 @@ const CXCIndependiente = ({ user, userRole }) => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedRow, setSelectedRow] = useState(null);
   const [loadingId, setLoadingId] = useState(null);
+  const [detailRecord, setDetailRecord] = useState(null);
 
   const rows = useMemo(() => {
     const source = metrics.receivables;
     return source
       .filter((entry) => {
-        if (statusFilter !== 'all' && entry.status !== statusFilter) return false;
+        if (statusFilter === 'partial') {
+          if (entry.stage !== 'partial' && !(entry.paidAmount > 0 && entry.openAmount > 0)) return false;
+        } else if (statusFilter !== 'all' && entry.status !== statusFilter) {
+          return false;
+        }
         if (!searchTerm.trim()) return true;
         const query = searchTerm.toLowerCase();
         return (
@@ -125,7 +132,7 @@ const CXCIndependiente = ({ user, userRole }) => {
   const totalOpen = openRows.reduce((sum, entry) => sum + entry.openAmount, 0);
   const totalOverdue = metrics.overdueReceivables.reduce((sum, entry) => sum + entry.openAmount, 0);
   const totalPartial = metrics.receivables
-    .filter((entry) => entry.status === 'partial')
+    .filter((entry) => entry.stage === 'partial' || (entry.paidAmount > 0 && entry.openAmount > 0))
     .reduce((sum, entry) => sum + entry.paidAmount, 0);
   const dueSoon = metrics.upcomingReceivables.reduce((sum, entry) => sum + entry.openAmount, 0);
 
@@ -189,7 +196,16 @@ const CXCIndependiente = ({ user, userRole }) => {
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#4f9b68]">Cuentas por cobrar</p>
-            <h2 className="text-[32px] font-semibold tracking-tight text-[#101938]">Seguimiento de cobros, abonos y vencimientos.</h2>
+            <h2 className="text-[32px] font-semibold tracking-tight text-[#101938]">
+              Seguimiento de cobros, abonos y vencimientos.{' '}
+              <HelpButton title="Cuentas por cobrar">
+                <p><strong>Cartera abierta</strong> — Total de facturas emitidas que aun no se han cobrado completamente.</p>
+                <p><strong>Cobrado parcial</strong> — Monto que ya se recibio en facturas que aun no estan 100% cobradas. Si es 0, todas las facturas estan pendientes o liquidadas.</p>
+                <p><strong>Vencido</strong> — Documentos cuya fecha de vencimiento ya paso sin haberse cobrado.</p>
+                <p><strong>Ventana 14d</strong> — Cobros que vencen en los proximos 14 dias.</p>
+                <p><strong>Antiguedad</strong> — Distribucion de la deuda vencida por tramos de tiempo (0-30d, 31-60d, etc.)</p>
+              </HelpButton>
+            </h2>
             <p className="mt-3 max-w-2xl text-[15px] leading-7 text-[#5f7091]">
               Controla la cartera abierta y convierte cada factura en caja solo cuando el cobro realmente ocurre.
             </p>
@@ -199,7 +215,7 @@ const CXCIndependiente = ({ user, userRole }) => {
 
       <div className="grid gap-4 lg:grid-cols-4">
         <StatCard title="Cartera abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="#30d158" icon={BadgeEuro} onClick={() => setStatusFilter('all')} />
-        <StatCard title="Cobrado parcial" value={formatCurrency(totalPartial)} subtitle="Importe ya ingresado sobre documentos abiertos" accent="#64d2ff" icon={ArrowUpRight} />
+        <StatCard title="Cobrado parcial" value={formatCurrency(totalPartial)} subtitle={totalPartial > 0 ? 'Abonos recibidos en facturas aún no cobradas' : 'Sin cobros parciales — todas pendientes o liquidadas'} accent="#64d2ff" icon={ArrowUpRight} onClick={() => setStatusFilter('partial')} />
         <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overdueReceivables.length} documentos fuera de plazo`} accent="#ff453a" icon={AlertTriangle} onClick={() => setStatusFilter('overdue')} />
         <StatCard title="Ventana 14d" value={formatCurrency(dueSoon)} subtitle={`${metrics.upcomingReceivables.length} cobros proximos`} accent="#ff9f0a" icon={Clock3} onClick={() => setStatusFilter('issued')} />
       </div>
@@ -258,7 +274,7 @@ const CXCIndependiente = ({ user, userRole }) => {
               {rows.map((row) => {
                 const canSettle = row.source !== 'legacy-opening' && row.status !== 'settled' && row.status !== 'cancelled';
                 return (
-                  <tr key={row.id} className="hover:bg-[rgba(90,141,221,0.04)]">
+                  <tr key={row.id} className="cursor-pointer hover:bg-[rgba(90,141,221,0.04)]" onClick={() => setDetailRecord(row)}>
                     <td className="px-4 py-4">
                       <p className="text-sm font-semibold text-[#101938]">{row.counterpartyName}</p>
                       <p className="text-xs text-[#6b7a96]">{row.description || 'Sin descripción'}</p>
@@ -285,7 +301,7 @@ const CXCIndependiente = ({ user, userRole }) => {
                     </td>
                     <td className="px-4 py-4 text-center text-xs text-[#6b7a96]">{row.source}</td>
                     {canAct && (
-                      <td className="px-4 py-4">
+                      <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
                         <div className="flex justify-end gap-2">
                           <button
                             type="button"
@@ -330,6 +346,8 @@ const CXCIndependiente = ({ user, userRole }) => {
         }
         onSubmit={handlePartialPayment}
       />
+
+      <RecordDetailModal record={detailRecord} onClose={() => setDetailRecord(null)} userRole={userRole} />
     </div>
   );
 };
