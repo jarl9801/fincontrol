@@ -8,7 +8,7 @@ import {
 
 const ReportCXP = ({ transactions }) => {
   // Filtrar solo gastos pendientes
-  const payables = transactions.filter(t => t.type === 'expense' && t.status === 'pending');
+  const payables = transactions.filter(t => t.type === 'expense' && ['pending', 'partial', 'overdue', 'issued'].includes(t.status));
 
   // Calcular métricas
   const totalPayable = payables.reduce((sum, t) => sum + t.amount, 0);
@@ -22,7 +22,7 @@ const ReportCXP = ({ transactions }) => {
   };
 
   payables.forEach(t => {
-    const daysOverdue = getDaysOverdue(t.date);
+    const daysOverdue = getDaysOverdue(t.dueDate || t.date);
     if (daysOverdue <= 30) {
       agingAnalysis.current.count++;
       agingAnalysis.current.amount += t.amount;
@@ -161,7 +161,7 @@ const ReportCXP = ({ transactions }) => {
             </thead>
             <tbody className="divide-y divide-[#eef2fb]">
               {payables.map(t => {
-                const days = getDaysOverdue(t.date);
+                const days = getDaysOverdue(t.dueDate || t.date);
                 return (
                   <tr key={t.id} className="transition-colors hover:bg-[rgba(241,246,255,0.8)]">
                     <td className="px-4 py-3 text-sm text-[#6b7a99]">{formatDate(t.date)}</td>

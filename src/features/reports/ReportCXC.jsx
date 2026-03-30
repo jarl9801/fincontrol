@@ -8,7 +8,7 @@ import {
 
 const ReportCXC = ({ transactions }) => {
   // Filtrar solo ingresos pendientes
-  const receivables = transactions.filter(t => t.type === 'income' && t.status === 'pending');
+  const receivables = transactions.filter(t => t.type === 'income' && ['pending', 'partial', 'overdue', 'issued'].includes(t.status));
 
   // Calcular métricas
   const totalReceivable = receivables.reduce((sum, t) => sum + t.amount, 0);
@@ -22,7 +22,7 @@ const ReportCXC = ({ transactions }) => {
   };
 
   receivables.forEach(t => {
-    const daysOverdue = getDaysOverdue(t.date);
+    const daysOverdue = getDaysOverdue(t.dueDate || t.date);
     if (daysOverdue <= 30) {
       agingAnalysis.current.count++;
       agingAnalysis.current.amount += t.amount;
@@ -161,7 +161,7 @@ const ReportCXC = ({ transactions }) => {
             </thead>
             <tbody className="divide-y divide-[#eef2fb]">
               {receivables.map(t => {
-                const days = getDaysOverdue(t.date);
+                const days = getDaysOverdue(t.dueDate || t.date);
                 return (
                   <tr key={t.id} className="transition-colors hover:bg-[rgba(241,246,255,0.8)]">
                     <td className="px-4 py-3 text-sm text-[#6b7a99]">{formatDate(t.date)}</td>

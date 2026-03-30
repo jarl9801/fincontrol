@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowDownLeft,
@@ -68,6 +68,28 @@ const CashFlow = ({ user }) => {
     .sort((left, right) => (right.postedDate || '').localeCompare(left.postedDate || ''))
     .slice(0, 12);
 
+  const SHORT_MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+  const monthlyPL = useMemo(() => {
+    const now = new Date();
+    const months = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      months.push({ ym, label: `${SHORT_MONTHS[d.getMonth()]} ${d.getFullYear()}`, inflows: 0, outflows: 0, net: 0 });
+    }
+    (metrics.postedMovements || []).forEach((m) => {
+      const ym = m.postedDate?.slice(0, 7);
+      if (!ym) return;
+      const bucket = months.find((b) => b.ym === ym);
+      if (!bucket) return;
+      if (m.direction === 'in') bucket.inflows += m.amount;
+      else bucket.outflows += m.amount;
+    });
+    months.forEach((b) => { b.net = b.inflows - b.outflows; });
+    return months;
+  }, [metrics.postedMovements]);
+
   return (
     <div className="space-y-6 pb-12">
       <section className="rounded-[34px] border border-[rgba(205,219,243,0.82)] bg-[radial-gradient(circle_at_top_right,rgba(185,248,238,0.26),transparent_24%),radial-gradient(circle_at_top_left,rgba(147,196,255,0.34),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.9),rgba(244,248,255,0.86))] px-6 py-7 shadow-[0_32px_90px_rgba(126,147,190,0.14)]">
@@ -117,6 +139,47 @@ const CashFlow = ({ user }) => {
           </div>
         </div>
       </section>
+
+      <Section title="Estado de Resultados — Últimos 6 meses" subtitle="Ingresos vs gastos realizados, agrupados por mes.">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-[rgba(201,214,238,0.58)]">
+                <th className="px-3 py-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Mes</th>
+                <th className="px-3 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Ingresos</th>
+                <th className="px-3 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Gastos</th>
+                <th className="px-3 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Resultado</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[rgba(201,214,238,0.42)]">
+              {monthlyPL.map((row) => (
+                <tr key={row.ym} className="hover:bg-[rgba(90,141,221,0.04)]">
+                  <td className="px-3 py-3 text-[13px] font-medium text-[#101938]">{row.label}</td>
+                  <td className="px-3 py-3 text-right text-[13px] font-medium text-[#0f8f4b]">{formatCurrency(row.inflows)}</td>
+                  <td className="px-3 py-3 text-right text-[13px] font-medium text-[#d46a13]">{formatCurrency(row.outflows)}</td>
+                  <td className={`px-3 py-3 text-right text-[13px] font-semibold ${row.net >= 0 ? 'text-[#0f8f4b]' : 'text-[#cc4b3f]'}`}>
+                    {row.net >= 0 ? '\u{1F7E2}' : '\u{1F534}'} {formatCurrency(row.net)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-5 h-[280px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={monthlyPL}>
+              <CartesianGrid stroke="rgba(176,194,226,0.42)" vertical={false} />
+              <XAxis dataKey="label" stroke="#7b8dae" tickLine={false} axisLine={false} />
+              <YAxis stroke="#7b8dae" tickLine={false} axisLine={false} tickFormatter={(v) => `€${Math.round(v / 1000)}k`} />
+              <Tooltip content={<TooltipCard />} />
+              <Bar dataKey="inflows" name="Ingresos" fill="#3156d3" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="outflows" name="Gastos" fill="#d47a22" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="net" name="Resultado" radius={[8, 8, 0, 0]} fill="#0f8f4b" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </Section>
 
       <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
         <Section title="Balance de caja semanal" subtitle="Historico reciente derivado de movimientos contabilizados.">

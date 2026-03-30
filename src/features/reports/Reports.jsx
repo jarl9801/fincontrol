@@ -69,6 +69,11 @@ const StatCard = ({ title, value, subtitle, accent, icon, delta }) => {
   );
 };
 
+const YEAR_OPTIONS = [
+  { value: '2026', label: '2026 — Operación actual' },
+  { value: '2025', label: '2025 — Histórico' },
+];
+
 const Reports = ({ user }) => {
   const ledger = useFinanceLedger(user);
   const dropdownRef = useRef(null);
@@ -78,6 +83,7 @@ const Reports = ({ user }) => {
   const defaultMonth = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
 
   const [selectedPeriod, setSelectedPeriod] = useState(`month:${defaultMonth}`);
+  const [selectedYear, setSelectedYear] = useState(String(currentYear));
   const [compareMode, setCompareMode] = useState(true);
   const [monthDropdownOpen, setMonthDropdownOpen] = useState(false);
 
@@ -91,16 +97,25 @@ const Reports = ({ user }) => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  const yearFilteredMovements = useMemo(() => {
+    return ledger.postedMovements.filter((entry) => {
+      const date = entry.postedDate;
+      if (!date) return false;
+      return date.startsWith(selectedYear);
+    });
+  }, [ledger.postedMovements, selectedYear]);
+
   const availableMonths = useMemo(() => {
     const keys = new Set(
-      ledger.postedMovements
+      yearFilteredMovements
         .map((entry) => entry.postedDate)
         .filter(Boolean)
         .map((date) => date.slice(0, 7)),
     );
-    keys.add(defaultMonth);
+    const yearDefaultMonth = `${selectedYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+    keys.add(yearDefaultMonth);
     return Array.from(keys).sort().reverse();
-  }, [defaultMonth, ledger.postedMovements]);
+  }, [yearFilteredMovements, selectedYear, currentMonth]);
 
   const monthsByYear = useMemo(() => {
     const groups = {};
@@ -122,12 +137,12 @@ const Reports = ({ user }) => {
   const previousRangeTo = previousRange.to;
 
   const currentMovements = filterRowsByRange(
-    ledger.postedMovements,
+    yearFilteredMovements,
     (entry) => entry.postedDate,
     { from: currentRangeFrom, to: currentRangeTo },
   );
   const previousMovements = filterRowsByRange(
-    ledger.postedMovements,
+    yearFilteredMovements,
     (entry) => entry.postedDate,
     { from: previousRangeFrom, to: previousRangeTo },
   );
@@ -135,13 +150,21 @@ const Reports = ({ user }) => {
   const currentTotals = summarizeMovements(currentMovements);
   const previousTotals = summarizeMovements(previousMovements);
 
+  const yearFilteredReceivables = useMemo(() => {
+    return ledger.receivables.filter((entry) => entry.issueDate?.startsWith(selectedYear));
+  }, [ledger.receivables, selectedYear]);
+
+  const yearFilteredPayables = useMemo(() => {
+    return ledger.payables.filter((entry) => entry.issueDate?.startsWith(selectedYear));
+  }, [ledger.payables, selectedYear]);
+
   const receivablesIssued = filterRowsByRange(
-    ledger.receivables,
+    yearFilteredReceivables,
     (entry) => entry.issueDate,
     { from: currentRangeFrom, to: currentRangeTo },
   );
   const payablesIssued = filterRowsByRange(
-    ledger.payables,
+    yearFilteredPayables,
     (entry) => entry.issueDate,
     { from: currentRangeFrom, to: currentRangeTo },
   );
@@ -191,16 +214,19 @@ const Reports = ({ user }) => {
     return Array.from(bucket.values()).sort((left, right) => right.net - left.net).slice(0, 6);
   })();
 
-  const trendData = Array.from({ length: 6 }, (_, index) => {
-      const target = new Date(currentYear, currentMonth - (5 - index), 1);
-      const from = `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, '0')}-01`;
-      const to = new Date(target.getFullYear(), target.getMonth() + 1, 0).toISOString().slice(0, 10);
-      const movements = ledger.postedMovements.filter(
+  const trendYear = Number(selectedYear);
+  const trendEndMonth = trendYear === currentYear ? currentMonth : 11;
+  const trendStartMonth = Math.max(0, trendEndMonth - 5);
+  const trendData = Array.from({ length: trendEndMonth - trendStartMonth + 1 }, (_, index) => {
+      const monthIndex = trendStartMonth + index;
+      const from = `${trendYear}-${String(monthIndex + 1).padStart(2, '0')}-01`;
+      const to = new Date(trendYear, monthIndex + 1, 0).toISOString().slice(0, 10);
+      const movements = yearFilteredMovements.filter(
         (entry) => entry.postedDate >= from && entry.postedDate <= to,
       );
       const totals = summarizeMovements(movements);
       return {
-        label: `${SHORT_MONTH_NAMES[target.getMonth()]} ${String(target.getFullYear()).slice(2)}`,
+        label: `${SHORT_MONTH_NAMES[monthIndex]} ${String(trendYear).slice(2)}`,
         ingresos: totals.inflows,
         gastos: totals.outflows,
         neto: totals.net,
@@ -323,7 +349,7 @@ const Reports = ({ user }) => {
               )}
             </div>
 
-            {['quarter', 'year', 'all'].map((value) => (
+            {['quarter', 'year'].map((value) => (
               <button
                 key={value}
                 type="button"
@@ -334,9 +360,23 @@ const Reports = ({ user }) => {
                     : 'border-[rgba(201,214,238,0.82)] bg-white/84 text-[#6b7a96] hover:bg-white hover:text-[#101938]'
                 }`}
               >
-                {value === 'quarter' ? 'Trimestre' : value === 'year' ? 'Año' : 'Todo'}
+                {value === 'quarter' ? 'Trimestre' : 'Año'}
               </button>
             ))}
+
+            <select
+              value={selectedYear}
+              onChange={(e) => {
+                setSelectedYear(e.target.value);
+                const newDefault = `${e.target.value}-${String(currentMonth + 1).padStart(2, '0')}`;
+                setSelectedPeriod(`month:${newDefault}`);
+              }}
+              className="rounded-2xl border border-[rgba(201,214,238,0.82)] bg-white/84 px-4 py-3 text-sm font-medium text-[#6b7a96] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white"
+            >
+              {YEAR_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -392,9 +432,9 @@ const Reports = ({ user }) => {
           delta={compareMode ? variation(currentTotals.net, previousTotals.net) : null}
         />
         <StatCard
-          title="Compromiso neto abierto"
+          title="Compromisos del período"
           value={formatCurrency(outstandingFromPeriod.net)}
-          subtitle={`${formatCurrency(outstandingFromPeriod.cxc)} CXC abiertas y ${formatCurrency(outstandingFromPeriod.cxp)} CXP abiertas`}
+          subtitle={`${formatCurrency(outstandingFromPeriod.cxc)} CXC y ${formatCurrency(outstandingFromPeriod.cxp)} CXP emitidas en este período`}
           accent={outstandingFromPeriod.net >= 0 ? '#ff9f0a' : '#bf5af2'}
           icon={Calendar}
         />
@@ -404,7 +444,7 @@ const Reports = ({ user }) => {
         <section className="rounded-[28px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-5 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
           <div className="mb-4">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Tendencia</p>
-            <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[#101938]">Últimos 6 meses de caja realizada</h3>
+            <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[#101938]">Caja realizada {trendYear}</h3>
           </div>
           <ResponsiveContainer width="100%" height={320}>
             <ComposedChart data={trendData}>

@@ -1,6 +1,7 @@
 import {
   ArrowDownCircle,
   ArrowUpCircle,
+  ArrowRightLeft,
   CheckCircle2,
   Circle,
   Edit2,
@@ -14,7 +15,7 @@ import { ALERT_THRESHOLDS } from '../../constants/config';
 
 const safe = (value) => (value == null ? '' : typeof value === 'object' ? JSON.stringify(value) : String(value));
 
-const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, onVoid, onViewAuditTrail, userRole, searchTerm }) => {
+const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, onVoid, onChangeStatus, onViewAuditTrail, userRole, searchTerm }) => {
   const normalizedStatus = safe(t.status).toLowerCase();
   const isOverdue = normalizedStatus === 'overdue' || (normalizedStatus === 'pending' && getDaysOverdue(t.date) > ALERT_THRESHOLDS.overdueDays);
   const isNew = t.hasUnreadUpdates === true;
@@ -94,6 +95,7 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
   const canEdit = Boolean(t.canEdit && onEdit && userRole === 'admin');
   const canDelete = Boolean(t.canDelete && onDelete && userRole === 'admin');
   const canVoid = Boolean(t.canVoid && onVoid && userRole === 'admin');
+  const canChangeStatus = Boolean(t.canChangeStatus && onChangeStatus && userRole === 'admin');
   const canViewAuditTrail = Boolean(onViewAuditTrail && userRole === 'admin');
 
   return (
@@ -104,14 +106,14 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
         ${isNew ? 'animate-pulse-glow' : ''}
       `}
     >
-      <td className="px-3 py-3 whitespace-nowrap">
+      <td className="px-4 py-4 whitespace-nowrap">
         <div className="flex flex-col">
           <span className="text-[13px] font-medium text-[#243251]">{formatDate(t.date)}</span>
           <span className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[#7b8cab]">{t.recordFamilyLabel}</span>
         </div>
       </td>
 
-      <td className="px-3 py-3">
+      <td className="px-4 py-4">
         <div className="flex items-start gap-3">
           <div
             className={`
@@ -162,34 +164,19 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
               )}
             </div>
 
-            <div className="mt-0.5 flex flex-wrap items-center gap-2 text-[11px] text-[#6b7a96]">
-              <span>{safe(t.secondaryMeta || t.project)}</span>
+            <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-[#6b7a96]">
+              <span>{safe(t.project || t.secondaryMeta)}</span>
+              {t.costCenter && (
+                <span className="rounded-full border border-[rgba(201,214,238,0.68)] bg-white/72 px-2 py-0.5 text-[10px] text-[#7b8cab]" title="Centro de costo">
+                  {safe(t.costCenter)}
+                </span>
+              )}
               {t.documentNumber && (
                 <span className="rounded-full border border-[rgba(201,214,238,0.68)] bg-white/72 px-2 py-0.5 text-[10px] text-[#7b8cab]">
                   {t.documentNumber}
                 </span>
               )}
-              {t.traceMeta && (
-                <span className="rounded-full border border-[rgba(201,214,238,0.68)] bg-white/72 px-2 py-0.5 text-[10px] text-[#7b8cab]">
-                  {safe(t.traceMeta)}
-                </span>
-              )}
             </div>
-
-            {(t.lastEditor || lastEditedLabel) && (
-              <div className="mt-1 flex flex-wrap items-center gap-2 text-[10px] text-[#7b8cab]">
-                {t.lastEditor && (
-                  <span className="rounded-full border border-[rgba(201,214,238,0.68)] bg-[rgba(244,248,255,0.84)] px-2 py-0.5">
-                    Ult. ed.: {safe(t.lastEditor)}
-                  </span>
-                )}
-                {lastEditedLabel && (
-                  <span className="rounded-full border border-[rgba(201,214,238,0.68)] bg-[rgba(244,248,255,0.84)] px-2 py-0.5">
-                    {lastEditedLabel}
-                  </span>
-                )}
-              </div>
-            )}
 
             {isPartial && (
               <div className="mt-1.5">
@@ -205,14 +192,7 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
         </div>
       </td>
 
-      <td className="px-3 py-3">
-        <div className="max-w-[180px]">
-          <p className="truncate text-[12px] font-medium text-[#243251]">{safe(t.project || 'Sin proyecto')}</p>
-          {t.costCenter && <p className="mt-0.5 truncate text-[10px] text-[#7b8cab]">{safe(t.costCenter)}</p>}
-        </div>
-      </td>
-
-      <td className="px-3 py-3">
+      <td className="px-4 py-4">
         <span
           className={`
             inline-flex items-center rounded-lg border px-2.5 py-1 text-[11px] font-medium
@@ -225,13 +205,13 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
         </span>
       </td>
 
-      <td className="px-3 py-3 text-right whitespace-nowrap">
+      <td className="px-4 py-4 text-right whitespace-nowrap">
         <span className={`text-[13px] font-bold ${isIncome ? 'text-[#0f8f4b]' : 'text-[#cc4b3f]'}`}>
           {isIncome ? '+' : '-'}{formatCurrency(t.amount)}
         </span>
       </td>
 
-      <td className="px-3 py-3 text-center">
+      <td className="px-4 py-4 text-center">
         <span
           className={`
             inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-medium
@@ -243,7 +223,7 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
         </span>
       </td>
 
-      <td className="px-3 py-3 text-center">
+      <td className="px-4 py-4 text-center">
         <div className="flex items-center justify-center gap-1 opacity-50 transition-opacity group-hover:opacity-100">
           {canRegisterPayment && (
             <button
@@ -252,6 +232,17 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
               title={t.paymentActionLabel || 'Abono'}
             >
               {t.paymentActionLabel || 'Abono'}
+            </button>
+          )}
+
+          {canChangeStatus && (
+            <button
+              onClick={() => onChangeStatus(t)}
+              className="rounded-lg border border-[rgba(90,141,221,0.22)] bg-[rgba(233,240,254,0.78)] px-2.5 py-1.5 text-[11px] font-semibold text-[#3156d3] transition-all duration-200 hover:bg-[rgba(233,240,254,0.96)]"
+              title="Cambiar estado de la transacción"
+            >
+              <ArrowRightLeft size={14} className="inline mr-1" />
+              Estado
             </button>
           )}
 

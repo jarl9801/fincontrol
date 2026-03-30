@@ -10,6 +10,7 @@ import { useTransactions } from '../../hooks/useTransactions';
 import { useBudgets } from '../../hooks/useBudgets';
 import { useAllTransactions } from '../../hooks/useAllTransactions';
 import { formatCurrency } from '../../utils/formatters';
+import { balances2025 } from '../../data/balances2025';
 import { useToast } from '../../contexts/ToastContext';
 
 const SEVERITY_STYLES = {
@@ -51,7 +52,7 @@ const Alertas = ({ user }) => {
           type: 'cxc_overdue',
           severity: 'critical',
           title: 'CXC Vencida >30 días',
-          message: `${r.client}: ${formatCurrency(r.pendingAmount)} — vencida hace ${Math.abs(days)} días`,
+          message: `${r.counterpartyName}: ${formatCurrency(r.openAmount)} — vencida hace ${Math.abs(days)} días`,
           auto: true,
         });
       }
@@ -66,7 +67,7 @@ const Alertas = ({ user }) => {
           type: 'cxc_due_soon',
           severity: 'warning',
           title: 'CXC por vencer',
-          message: `${r.client}: ${formatCurrency(r.pendingAmount)} — vence en ${days} días`,
+          message: `${r.counterpartyName}: ${formatCurrency(r.openAmount)} — vence en ${days} días`,
           auto: true,
         });
       }
@@ -81,7 +82,7 @@ const Alertas = ({ user }) => {
           type: 'cxp_overdue',
           severity: 'critical',
           title: 'CXP Vencida',
-          message: `${p.vendor}: ${formatCurrency(p.pendingAmount)} — vencida hace ${Math.abs(days)} días`,
+          message: `${p.counterpartyName}: ${formatCurrency(p.openAmount)} — vencida hace ${Math.abs(days)} días`,
           auto: true,
         });
       }
@@ -133,7 +134,8 @@ const Alertas = ({ user }) => {
       });
 
     // Budget exceeded (>80%)
-    budgets.filter(b => b.year === 2026).forEach(b => {
+    const currentYear = new Date().getFullYear();
+    budgets.filter(b => b.year === currentYear).forEach(b => {
       let actualExpense = 0;
       allTransactions.forEach(t => {
         if (t.type !== 'expense') return;
@@ -173,7 +175,7 @@ const Alertas = ({ user }) => {
     const cashBalance = allTransactions.reduce((sum, t) => {
       if (t.status === 'pending') return sum;
       return sum + (t.type === 'income' ? t.amount : -t.amount);
-    }, 28450);
+    }, balances2025.bancoDic2025);
     if (cashBalance < 0) {
       alerts.push({
         id: 'cashflow_negative',

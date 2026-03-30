@@ -167,22 +167,26 @@ export const useTransactionActions = (user) => {
     }
   };
 
-  const toggleStatus = async (transaction) => {
+  const toggleStatus = async (transaction, targetStatus = null) => {
     if (!user) return;
 
-    // Don't toggle partial or completed transactions
-    if (transaction.status === 'partial' || transaction.status === 'completed') {
-      return { success: false, error: 'No se puede cambiar el estado de una transacción parcial o completada' };
-    }
+    const STATUS_LABELS = {
+      pending: 'Pendiente (CXC)',
+      paid: 'Liquidado',
+      partial: 'Parcial',
+      cancelled: 'Anulado',
+    };
 
     try {
       const transactionDoc = doc(db, 'artifacts', appId, 'public', 'data', 'transactions', transaction.id);
-      const newStatus = transaction.status === 'paid' ? 'pending' : 'paid';
-      
-      await updateDoc(transactionDoc, {
+      const currentStatus = transaction.status === 'completed' ? 'paid' : transaction.status;
+      const newStatus = targetStatus || (currentStatus === 'paid' ? 'pending' : 'paid');
+      const newLabel = STATUS_LABELS[newStatus] || newStatus;
+
+      const updatePayload = {
         status: newStatus,
         notes: arrayUnion({
-          text: `Estado cambiado a ${newStatus === 'paid' ? 'Pagado' : 'Pendiente'} por ${user.email}`,
+          text: `Estado cambiado de ${STATUS_LABELS[currentStatus] || currentStatus} a ${newLabel} por ${user.email}`,
           timestamp: new Date().toISOString(),
           user: user.email,
           type: 'system'
@@ -190,24 +194,37 @@ export const useTransactionActions = (user) => {
         hasUnreadUpdates: true,
         lastModifiedBy: user.email,
         lastModifiedAt: serverTimestamp()
-      });
+      };
+
+      // If reverting to pending, reset paidAmount so the full amount counts as receivable
+      if (newStatus === 'pending' && (currentStatus === 'paid' || currentStatus === 'completed')) {
+        updatePayload.paidAmount = 0;
+      }
+
+      // If marking as paid, set paidAmount to full amount
+      if (newStatus === 'paid' && currentStatus !== 'paid') {
+        updatePayload.paidAmount = parseFloat(transaction.amount || 0);
+      }
+
+      await updateDoc(transactionDoc, updatePayload);
       await writeAuditLogEntry({
         action: 'status_change',
         entityType: 'transaction',
         entityId: transaction.id,
-        description: `Estado cambiado a ${newStatus} en transacción legacy: ${transaction.description || transaction.id}`,
+        description: `Estado cambiado de ${currentStatus} a ${newStatus}: ${transaction.description || transaction.id}`,
         userEmail: user.email,
         before: buildLegacySnapshot(transaction),
         after: buildLegacySnapshot(transaction, {
           status: newStatus,
+          paidAmount: updatePayload.paidAmount ?? transaction.paidAmount,
           lastModifiedBy: user.email,
           lastModifiedAt: new Date().toISOString(),
         }),
       });
-      
+
       return { success: true };
     } catch (error) {
-      logError("Error toggling status:", error);
+      logError("Error changing status:", error);
       return { success: false, error };
     }
   };

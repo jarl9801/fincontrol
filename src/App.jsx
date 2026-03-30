@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Landmark, Loader2 } from 'lucide-react';
 import ErrorBoundary from './components/ui/ErrorBoundary';
@@ -115,6 +115,21 @@ function AppContent() {
   const loading = authLoading || transactionsLoading;
   const currentTitle = VIEW_TITLES[location.pathname] || 'Inicio';
 
+  const contentRef = useRef(null);
+  const prevPathRef = useRef(location.pathname);
+  useEffect(() => {
+    if (prevPathRef.current !== location.pathname) {
+      prevPathRef.current = location.pathname;
+      const el = contentRef.current;
+      if (el) {
+        el.style.opacity = '0';
+        requestAnimationFrame(() => {
+          el.style.opacity = '1';
+        });
+      }
+    }
+  }, [location.pathname]);
+
   if (!user) {
     return <Login />;
   }
@@ -203,7 +218,7 @@ function AppContent() {
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 pb-8 pt-5 md:px-8 md:pb-10 md:pt-6">
-          <div className="mx-auto max-w-[1280px]">
+          <div ref={contentRef} className="mx-auto max-w-[1280px] transition-opacity duration-150">
             {loading ? (
               <LoadingState />
             ) : (

@@ -29,6 +29,7 @@ import { useReceivables } from '../../hooks/useReceivables';
 import { usePayables } from '../../hooks/usePayables';
 import { useProjects } from '../../hooks/useProjects';
 import { exportTransactionsToPDF } from '../../utils/pdfExport';
+import { formatCurrency } from '../../utils/formatters';
 
 const FILTER_DEFAULTS = {
   dateFrom: '',
@@ -40,10 +41,17 @@ const FILTER_DEFAULTS = {
   status: '',
   origin: '',
   family: '',
+  year: '',
   minAmount: '',
   maxAmount: '',
   notesMode: 'all',
 };
+
+const YEAR_OPTIONS = [
+  { value: '', label: 'Todos los años' },
+  { value: '2025', label: '2025 — Histórico' },
+  { value: '2026', label: '2026 — Operación actual' },
+];
 
 const TYPE_OPTIONS = [
   { value: '', label: 'Todos los tipos' },
@@ -132,6 +140,8 @@ const buildLegacyRows = (transactions) => {
       traceMeta: entry.lastModifiedBy || entry.createdBy || '',
       lastEditor: entry.lastModifiedBy || entry.createdBy || '',
       lastEditedAt: entry.lastModifiedAt || entry.createdAt || null,
+      year: entry.date ? new Date(entry.date).getFullYear() : null,
+      canChangeStatus: !['void', 'cancelled'].includes(normalizeDocumentStatus(entry.status)),
     }));
 };
 
@@ -164,17 +174,19 @@ const buildMovementRows = (movements) => {
     costCenterId: entry.costCenterId || '',
     documentNumber: entry.documentNumber || '',
     counterpartyName: entry.counterpartyName || '',
-    canEdit: !entry.legacyTransactionId && entry.status !== 'void',
+    canEdit: entry.status !== 'void',
     canDelete: false,
     canViewNotes: false,
     canRegisterPayment: false,
-    canVoid: !entry.legacyTransactionId && entry.status !== 'void',
+    canVoid: entry.status !== 'void',
+    canChangeStatus: true,
     voidActionLabel: 'Anular',
     notes: [],
     secondaryMeta: entry.documentNumber || entry.counterpartyName || 'Movimiento confirmado',
     traceMeta: entry.updatedBy || entry.createdBy || '',
     lastEditor: entry.updatedBy || entry.createdBy || '',
     lastEditedAt: entry.updatedAt || entry.createdAt || null,
+    year: (entry.postedDate || entry.valueDate) ? new Date(entry.postedDate || entry.valueDate).getFullYear() : null,
   }));
 };
 
@@ -209,11 +221,12 @@ const buildReceivableRows = (receivables) => {
     costCenterId: entry.costCenterId || '',
     documentNumber: entry.documentNumber || '',
     counterpartyName: entry.counterpartyName || '',
-    canEdit: !entry.legacyTransactionId && entry.status !== 'cancelled',
+    canEdit: entry.status !== 'cancelled',
     canDelete: false,
     canViewNotes: false,
     canRegisterPayment: ['pending', 'partial', 'overdue'].includes(normalizeDocumentStatus(entry.status)),
-    canVoid: !entry.legacyTransactionId && !entry.paidAmount && entry.status !== 'cancelled' && entry.status !== 'settled',
+    canVoid: !entry.paidAmount && entry.status !== 'cancelled' && entry.status !== 'settled',
+    canChangeStatus: entry.status !== 'cancelled',
     voidActionLabel: 'Cancelar',
     paymentActionLabel: 'Cobro',
     notes: [],
@@ -221,6 +234,7 @@ const buildReceivableRows = (receivables) => {
     traceMeta: entry.updatedBy || entry.createdBy || '',
     lastEditor: entry.updatedBy || entry.createdBy || '',
     lastEditedAt: entry.updatedAt || entry.createdAt || null,
+    year: (entry.issueDate || entry.dueDate) ? new Date(entry.issueDate || entry.dueDate).getFullYear() : null,
   }));
 };
 
@@ -255,11 +269,12 @@ const buildPayableRows = (payables) => {
     costCenterId: entry.costCenterId || '',
     documentNumber: entry.documentNumber || '',
     counterpartyName: entry.counterpartyName || '',
-    canEdit: !entry.legacyTransactionId && entry.status !== 'cancelled',
+    canEdit: entry.status !== 'cancelled',
     canDelete: false,
     canViewNotes: false,
     canRegisterPayment: ['pending', 'partial', 'overdue'].includes(normalizeDocumentStatus(entry.status)),
-    canVoid: !entry.legacyTransactionId && !entry.paidAmount && entry.status !== 'cancelled' && entry.status !== 'settled',
+    canVoid: !entry.paidAmount && entry.status !== 'cancelled' && entry.status !== 'settled',
+    canChangeStatus: entry.status !== 'cancelled',
     voidActionLabel: 'Cancelar',
     paymentActionLabel: 'Pago',
     notes: [],
@@ -267,6 +282,7 @@ const buildPayableRows = (payables) => {
     traceMeta: entry.updatedBy || entry.createdBy || '',
     lastEditor: entry.updatedBy || entry.createdBy || '',
     lastEditedAt: entry.updatedAt || entry.createdAt || null,
+    year: (entry.issueDate || entry.dueDate) ? new Date(entry.issueDate || entry.dueDate).getFullYear() : null,
   }));
 };
 
@@ -357,6 +373,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
     deleteTransaction,
     addNote,
     markAsRead,
+    toggleStatus,
     registerPayment: registerLegacyPayment,
   } = useTransactionActions(user);
   const { logs: auditLogs, loading: auditLogsLoading } = useAuditLog(user);
@@ -367,6 +384,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
   const {
     receivables,
     loading: receivablesLoading,
+    createReceivable,
     registerPayment: registerReceivablePayment,
     updateReceivable,
     cancelReceivable,
@@ -543,6 +561,10 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
         return false;
       }
 
+      if (advancedFilters.year && String(entry.year) !== advancedFilters.year) {
+        return false;
+      }
+
       if (minAmount != null && Number(entry.amount) < minAmount) {
         return false;
       }
@@ -631,6 +653,113 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
     if (userRole !== 'admin') return;
     if (!record.canVoid) return;
     setRecordToVoid(record);
+  };
+
+  const [statusChangeRecord, setStatusChangeRecord] = useState(null);
+
+  const handleChangeStatus = (record) => {
+    if (userRole !== 'admin') return;
+    if (!record.canChangeStatus) return;
+    setStatusChangeRecord(record);
+  };
+
+  const confirmStatusChange = async (targetStatus) => {
+    if (!statusChangeRecord) return;
+    const raw = statusChangeRecord.rawRecord;
+    const family = statusChangeRecord.recordFamily;
+
+    try {
+      if (family === 'legacy') {
+        const result = await toggleStatus(raw, targetStatus);
+        if (!result?.success) {
+          showToast(result?.error || 'No se pudo cambiar el estado', 'error');
+          setStatusChangeRecord(null);
+          return;
+        }
+      } else if (family === 'movement') {
+        const isVirtual = raw.source === 'legacy-transaction';
+        const legacyTx = raw.legacyTransactionId
+          ? transactions.find((t) => t.id === raw.legacyTransactionId)
+          : null;
+
+        if (isVirtual && legacyTx) {
+          // Virtual movement (adapted from legacy tx) — change the underlying transaction
+          const newStatus = targetStatus === 'void' ? 'cancelled' : targetStatus;
+          await toggleStatus(legacyTx, newStatus);
+        } else if (!isVirtual) {
+          // Canonical bank movement (stored in Firestore bankMovements collection)
+          const alreadyVoided = raw.status === 'void';
+          if (!alreadyVoided) {
+            await voidBankMovement(raw.id);
+          }
+          if (legacyTx && targetStatus === 'pending') {
+            await toggleStatus(legacyTx, 'pending');
+          }
+          // If reverting to CXC, create a receivable
+          if (targetStatus === 'pending') {
+            const movementName = raw.counterpartyName || raw.description || statusChangeRecord.description || 'Revertido de movimiento';
+            const movementAmount = raw.amount || statusChangeRecord.amount || 0;
+            const movementDate = raw.postedDate || raw.valueDate || statusChangeRecord.date;
+            try {
+              const cxcResult = await createReceivable({
+                client: movementName,
+                description: `${movementName} (revertido de mov. bancario)`,
+                amount: movementAmount,
+                issueDate: movementDate,
+                dueDate: movementDate,
+                projectName: raw.projectName || statusChangeRecord.project || '',
+                projectId: raw.projectId || '',
+                costCenterId: raw.costCenterId || statusChangeRecord.costCenter || '',
+                documentNumber: raw.documentNumber || '',
+              });
+              if (!cxcResult?.success) {
+                showToast('No se pudo crear la CXC: ' + JSON.stringify(cxcResult?.error || 'error desconocido'), 'error');
+                setStatusChangeRecord(null);
+                return;
+              }
+              showToast(`CXC creada por ${formatCurrency(movementAmount)} — revisa en Cuentas por Cobrar`);
+            } catch (cxcErr) {
+              showToast('Error al crear CXC: ' + (cxcErr?.message || 'desconocido'), 'error');
+              setStatusChangeRecord(null);
+              return;
+            }
+          }
+        } else {
+          showToast('No se puede modificar este registro — no tiene transacción editable vinculada', 'error');
+          setStatusChangeRecord(null);
+          return;
+        }
+      } else if (family === 'receivable') {
+        if (targetStatus === 'paid') {
+          await registerReceivablePayment(raw.id, {
+            amount: raw.openAmount || raw.grossAmount,
+            date: new Date().toISOString().slice(0, 10),
+            method: 'Ajuste manual',
+            note: 'Liquidado manualmente desde cambio de estado',
+          });
+        } else if (targetStatus === 'cancelled') {
+          await cancelReceivable(raw.id);
+        }
+      } else if (family === 'payable') {
+        if (targetStatus === 'paid') {
+          await registerPayablePayment(raw.id, {
+            amount: raw.openAmount || raw.grossAmount,
+            date: new Date().toISOString().slice(0, 10),
+            method: 'Ajuste manual',
+            note: 'Liquidado manualmente desde cambio de estado',
+          });
+        } else if (targetStatus === 'cancelled') {
+          await cancelPayable(raw.id);
+        }
+      }
+
+      const labels = { pending: 'Pendiente (CXC)', paid: 'Liquidado', cancelled: 'Anulado', void: 'Anulado' };
+      const extra = targetStatus === 'pending' && family === 'movement' ? ' — movimiento anulado y CXC creada' : '';
+      showToast(`${labels[targetStatus] || targetStatus}${extra}`);
+    } catch (err) {
+      showToast('Error al cambiar estado: ' + (err?.message || 'desconocido'), 'error');
+    }
+    setStatusChangeRecord(null);
   };
 
   const handleFormSubmit = async (formData) => {
@@ -1053,6 +1182,21 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
               </label>
 
               <label className="block">
+                <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Año fiscal</span>
+                <select
+                  className="w-full rounded-[14px] border border-[rgba(201,214,238,0.82)] bg-white/84 px-3 py-2.5 text-[13px] text-[#16223f] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white focus:shadow-[0_0_0_4px_rgba(90,141,221,0.12)]"
+                  value={advancedFilters.year}
+                  onChange={(event) => setAdvancedFilters((current) => ({ ...current, year: event.target.value }))}
+                >
+                  {YEAR_OPTIONS.map((option) => (
+                    <option key={option.value || 'all'} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block">
                 <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Importe mínimo</span>
                 <input
                   type="number"
@@ -1167,17 +1311,17 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
               : 'Mesa unificada de registros financieros.'}
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[1120px] text-left">
+        {/* Desktop table */}
+        <div className="hidden lg:block">
+          <table className="w-full text-left">
             <thead className="border-b border-[rgba(201,214,238,0.72)] bg-[rgba(244,248,255,0.88)]">
               <tr>
-                <th className="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Fecha</th>
-                <th className="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Registro</th>
-                <th className="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Proyecto</th>
-                <th className="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Categoría</th>
-                <th className="px-3 py-3 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Monto</th>
-                <th className="px-3 py-3 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Estado</th>
-                <th className="px-3 py-3 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Acciones</th>
+                <th className="px-4 py-3.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Fecha</th>
+                <th className="px-4 py-3.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Registro</th>
+                <th className="px-4 py-3.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Categoría</th>
+                <th className="px-4 py-3.5 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Monto</th>
+                <th className="px-4 py-3.5 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Estado</th>
+                <th className="px-4 py-3.5 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[rgba(201,214,238,0.58)]">
@@ -1191,6 +1335,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
                   onViewAuditTrail={handleViewAuditTrail}
                   onRegisterPayment={handleRegisterPayment}
                   onVoid={handleVoid}
+                  onChangeStatus={handleChangeStatus}
                   userRole={userRole}
                   searchTerm={searchTerm}
                 />
@@ -1198,7 +1343,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
 
               {filteredRecords.length === 0 && (
                 <tr>
-                  <td colSpan="7" className="px-4 py-16 text-center">
+                  <td colSpan="6" className="px-4 py-16 text-center">
                     <div className="mx-auto max-w-md">
                       <p className="text-[14px] font-semibold text-[#101938]">No se encontraron registros</p>
                       <p className="mt-2 text-[13px] leading-6 text-[#6b7a96]">
@@ -1218,6 +1363,53 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="lg:hidden divide-y divide-[rgba(201,214,238,0.58)]">
+          {filteredRecords.map((record) => {
+            const isIncome = record.type === 'income';
+            const normalizedStatus = (record.status || '').toLowerCase();
+            const statusColors = normalizedStatus === 'paid'
+              ? 'bg-[rgba(208,244,220,0.72)] text-[#0f8f4b]'
+              : normalizedStatus === 'partial'
+                ? 'bg-[rgba(255,239,209,0.82)] text-[#d46a13]'
+                : ['overdue'].includes(normalizedStatus)
+                  ? 'bg-[rgba(255,234,231,0.9)] text-[#cc4b3f]'
+                  : 'bg-[rgba(255,244,223,0.88)] text-[#c47a09]';
+            return (
+              <div key={record.id} className="px-4 py-4 hover:bg-[rgba(90,141,221,0.04)]">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[13px] font-semibold text-[#101938] leading-snug">{record.description}</p>
+                    <p className="mt-1 text-[11px] text-[#6b7a96]">
+                      {record.date ? new Date(record.date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }) : ''} · {record.categoryLabel || record.category}
+                    </p>
+                    {record.project && record.project !== 'Sin proyecto' && (
+                      <p className="mt-0.5 text-[10px] text-[#7b8cab]">{record.project}</p>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                    <span className={`text-[14px] font-bold ${isIncome ? 'text-[#0f8f4b]' : 'text-[#cc4b3f]'}`}>
+                      {isIncome ? '+' : '-'}{formatCurrency(record.amount)}
+                    </span>
+                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${statusColors}`}>
+                      {record.statusLabel || record.status}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          {filteredRecords.length === 0 && (
+            <div className="px-4 py-16 text-center">
+              <p className="text-[14px] font-semibold text-[#101938]">No se encontraron registros</p>
+              <p className="mt-2 text-[13px] leading-6 text-[#6b7a96]">Ajusta la búsqueda o limpia los filtros.</p>
+              <button type="button" onClick={resetFilters} className="mt-4 inline-flex items-center gap-2 rounded-[16px] border border-[rgba(201,214,238,0.82)] bg-white/80 px-4 py-2.5 text-[13px] font-medium text-[#3156d3]">
+                <RotateCcw size={14} /> Limpiar filtros
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
@@ -1353,6 +1545,102 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
         logs={auditLogs}
         loading={auditLogsLoading}
       />
+
+      {statusChangeRecord && (() => {
+        const family = statusChangeRecord.recordFamily;
+        const status = statusChangeRecord.status;
+        const isMovement = family === 'movement';
+        const isReceivable = family === 'receivable';
+        const isPayable = family === 'payable';
+        const isLegacy = family === 'legacy';
+        const hasLegacyLink = Boolean(statusChangeRecord.rawRecord?.legacyTransactionId);
+        const familyLabels = { legacy: 'Registro', movement: 'Mov. bancario', receivable: 'Factura CXC', payable: 'Factura CXP' };
+        const statusLabels = { paid: 'Liquidado', pending: 'Pendiente', partial: 'Parcial', overdue: 'Vencido', void: 'Anulado', cancelled: 'Anulado' };
+
+        const showPending = status !== 'pending' && (isLegacy || isMovement);
+        const showPaid = status !== 'paid' && (isLegacy || isReceivable || isPayable);
+        const showCancel = status !== 'cancelled' && status !== 'void';
+
+        return (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn" role="dialog" aria-modal="true" onClick={() => setStatusChangeRecord(null)}>
+            <div className="bg-[#1c1c1e] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-scaleIn" onClick={(e) => e.stopPropagation()}>
+              <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center">
+                <h3 className="font-bold text-lg text-[#e5e5ea]">Cambiar estado</h3>
+                <button onClick={() => setStatusChangeRecord(null)} className="text-[#636366] hover:text-[#98989d] transition-colors">
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="p-6">
+                <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#15161a] p-3 mb-5">
+                  <p className="text-sm font-medium text-white">{statusChangeRecord.description}</p>
+                  <p className="mt-1 text-xs text-[#8e8e93]">
+                    {familyLabels[family]} · {statusLabels[status] || status} · {formatCurrency(statusChangeRecord.amount)}
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  {showPending && (
+                    <button
+                      type="button"
+                      onClick={() => confirmStatusChange('pending')}
+                      className="flex w-full items-center gap-3 rounded-xl border border-[rgba(255,159,10,0.2)] bg-[rgba(255,159,10,0.08)] px-4 py-3 text-left transition-all hover:bg-[rgba(255,159,10,0.14)]"
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,159,10,0.16)]">
+                        <span className="text-[#ff9f0a] text-sm font-bold">CXC</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-[#e5e5ea]">Revertir a Pendiente</p>
+                        <p className="text-xs text-[#8e8e93]">
+                          {isMovement ? 'Revierte el cobro — vuelve a cuenta por cobrar' : 'Pasa a CXC abierta'}
+                        </p>
+                      </div>
+                    </button>
+                  )}
+                  {showPaid && (
+                    <button
+                      type="button"
+                      onClick={() => confirmStatusChange('paid')}
+                      className="flex w-full items-center gap-3 rounded-xl border border-[rgba(48,209,88,0.2)] bg-[rgba(48,209,88,0.08)] px-4 py-3 text-left transition-all hover:bg-[rgba(48,209,88,0.14)]"
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[rgba(48,209,88,0.16)]">
+                        <span className="text-[#30d158] text-lg font-bold">&#10003;</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-[#e5e5ea]">Marcar como Liquidado</p>
+                        <p className="text-xs text-[#8e8e93]">Confirma cobro/pago completo</p>
+                      </div>
+                    </button>
+                  )}
+                  {showCancel && (
+                    <button
+                      type="button"
+                      onClick={() => confirmStatusChange(isMovement ? 'void' : 'cancelled')}
+                      className="flex w-full items-center gap-3 rounded-xl border border-[rgba(255,69,58,0.2)] bg-[rgba(255,69,58,0.06)] px-4 py-3 text-left transition-all hover:bg-[rgba(255,69,58,0.12)]"
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[rgba(255,69,58,0.12)]">
+                        <span className="text-[#ff453a] text-lg font-bold">&#10005;</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-[#e5e5ea]">Anular</p>
+                        <p className="text-xs text-[#8e8e93]">Cancela — no afecta caja ni compromisos</p>
+                      </div>
+                    </button>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setStatusChangeRecord(null)}
+                  className="mt-5 w-full rounded-lg bg-[#2c2c2e] px-4 py-2.5 text-sm font-medium text-[#c7c7cc] transition-colors hover:bg-[#3a3a3c]"
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };

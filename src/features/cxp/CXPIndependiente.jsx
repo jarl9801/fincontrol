@@ -125,7 +125,7 @@ const CXPIndependiente = ({ user, userRole }) => {
   const totalOpen = openRows.reduce((sum, entry) => sum + entry.openAmount, 0);
   const totalOverdue = metrics.overduePayables.reduce((sum, entry) => sum + entry.openAmount, 0);
   const totalPartial = metrics.payables
-    .filter((entry) => entry.stage === 'partial')
+    .filter((entry) => entry.status === 'partial')
     .reduce((sum, entry) => sum + entry.paidAmount, 0);
   const dueSoon = metrics.upcomingPayables.reduce((sum, entry) => sum + entry.openAmount, 0);
 
