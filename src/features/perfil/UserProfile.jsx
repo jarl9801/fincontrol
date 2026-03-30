@@ -26,8 +26,11 @@ const InputField = ({ label, value, onChange, type = 'text', disabled = false, p
 );
 
 const UserProfile = ({ user, userRole }) => {
+  const toastCtx = useToast();
+  const showToast = toastCtx?.showToast;
+
   const [displayName, setDisplayName] = useState(user?.displayName || '');
-  const [photoFile, setPhotoFile] = useState(null);
+  const [_photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(user?.photoURL || null);
   const [saving, setSaving] = useState(false);
 
@@ -37,10 +40,6 @@ const UserProfile = ({ user, userRole }) => {
   const [showCurrentPw, setShowCurrentPw] = useState(false);
   const [showNewPw, setShowNewPw] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
-
-  let toastCtx;
-  try { toastCtx = useToast(); } catch { toastCtx = null; }
-  const showToast = toastCtx?.showToast;
 
   const initials = (user?.displayName || user?.email || '?')
     .split(/[\s@]/)

@@ -46,7 +46,7 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
   const isPartial = normalizedStatus === 'partial';
   const paidAmount = Number(t.paidAmount) || 0;
   const paidPct = Number(t.amount) > 0 ? (paidAmount / Number(t.amount)) * 100 : 0;
-  const lastEditedLabel = t.lastEditedAt ? formatDateTime(t.lastEditedAt) : '';
+  const _lastEditedLabel = t.lastEditedAt ? formatDateTime(t.lastEditedAt) : '';
 
   const getStatusConfig = () => {
     if (normalizedStatus === 'paid') {

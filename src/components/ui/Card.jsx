@@ -1,7 +1,8 @@
 import { AlertTriangle, TrendingUp, TrendingDown } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 
-const Card = ({ title, amount, icon: Icon, subtext, alert, trend }) => {
+const Card = ({ title, amount, icon, subtext, alert, trend }) => {
+  const Icon = icon;
   const isNegative = amount < 0;
 
   const getTrendIcon = () => {

@@ -312,7 +312,7 @@ const ImportExport = ({ user }) => {
 
       setImportResult({ imported, skipped, errors, total: importData.rows.length });
       showToast(`Importacion completa: ${imported} creadas, ${skipped} omitidas, ${errors} errores`, imported > 0 ? 'success' : 'info');
-    } catch {
+    } catch (err) {
       console.error('Import error:', err);
       showToast('Error durante la importacion', 'error');
     } finally {

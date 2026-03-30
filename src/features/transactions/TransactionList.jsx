@@ -92,7 +92,7 @@ const safeString = (value) => {
 
 const formatCount = (value) => new Intl.NumberFormat('es-ES').format(value || 0);
 
-const getCreatedDate = (record) => {
+const _getCreatedDate = (record) => {
   const raw = record.createdAt?.toDate ? record.createdAt.toDate() : record.createdAt;
   const date = raw ? new Date(raw) : null;
   return date && !Number.isNaN(date.getTime()) ? date : null;
@@ -1553,7 +1553,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
         const isReceivable = family === 'receivable';
         const isPayable = family === 'payable';
         const isLegacy = family === 'legacy';
-        const hasLegacyLink = Boolean(statusChangeRecord.rawRecord?.legacyTransactionId);
+        const _hasLegacyLink = Boolean(statusChangeRecord.rawRecord?.legacyTransactionId);
         const familyLabels = { legacy: 'Registro', movement: 'Mov. bancario', receivable: 'Factura CXC', payable: 'Factura CXP' };
         const statusLabels = { paid: 'Liquidado', pending: 'Pendiente', partial: 'Parcial', overdue: 'Vencido', void: 'Anulado', cancelled: 'Anulado' };
 

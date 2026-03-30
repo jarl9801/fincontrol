@@ -35,7 +35,7 @@ const KNOWN_USERS = [
   { email: 'bsandoval@umtelkomd.com', name: 'Beatriz Sandoval', role: USER_ROLES['bsandoval@umtelkomd.com'] || 'manager' },
 ];
 
-const RolesManager = ({ user, userRole }) => {
+const RolesManager = ({ userRole }) => {
   const { showToast } = useToast();
   const [permissions, setPermissions] = useState(DEFAULT_PERMISSION_MATRIX);
   const [inviteForm, setInviteForm] = useState({ email: '', role: 'viewer' });

@@ -77,13 +77,14 @@ const YEAR_OPTIONS = [
 const Reports = ({ user }) => {
   const ledger = useFinanceLedger(user);
   const dropdownRef = useRef(null);
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth();
-  const defaultMonth = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+  const [initialDate] = useState(() => {
+    const d = new Date();
+    return { year: d.getFullYear(), month: d.getMonth() };
+  });
+  const defaultMonth = `${initialDate.year}-${String(initialDate.month + 1).padStart(2, '0')}`;
 
   const [selectedPeriod, setSelectedPeriod] = useState(`month:${defaultMonth}`);
-  const [selectedYear, setSelectedYear] = useState(String(currentYear));
+  const [selectedYear, setSelectedYear] = useState(String(initialDate.year));
   const [compareMode, setCompareMode] = useState(true);
   const [monthDropdownOpen, setMonthDropdownOpen] = useState(false);
 
@@ -112,10 +113,10 @@ const Reports = ({ user }) => {
         .filter(Boolean)
         .map((date) => date.slice(0, 7)),
     );
-    const yearDefaultMonth = `${selectedYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+    const yearDefaultMonth = `${selectedYear}-${String(initialDate.month + 1).padStart(2, '0')}`;
     keys.add(yearDefaultMonth);
     return Array.from(keys).sort().reverse();
-  }, [yearFilteredMovements, selectedYear, currentMonth]);
+  }, [yearFilteredMovements, selectedYear, initialDate.month]);
 
   const monthsByYear = useMemo(() => {
     const groups = {};
@@ -129,8 +130,8 @@ const Reports = ({ user }) => {
 
   const periodType = selectedPeriod.startsWith('month:') ? 'month' : selectedPeriod;
   const selectedMonthKey = periodType === 'month' ? selectedPeriod.slice(6) : null;
-  const currentRange = resolvePeriodRange(selectedPeriod, currentDate, 0);
-  const previousRange = resolvePeriodRange(selectedPeriod, currentDate, 1);
+  const currentRange = resolvePeriodRange(selectedPeriod, new Date(), 0);
+  const previousRange = resolvePeriodRange(selectedPeriod, new Date(), 1);
   const currentRangeFrom = currentRange.from;
   const currentRangeTo = currentRange.to;
   const previousRangeFrom = previousRange.from;
@@ -215,7 +216,7 @@ const Reports = ({ user }) => {
   })();
 
   const trendYear = Number(selectedYear);
-  const trendEndMonth = trendYear === currentYear ? currentMonth : 11;
+  const trendEndMonth = trendYear === initialDate.year ? initialDate.month : 11;
   const trendStartMonth = Math.max(0, trendEndMonth - 5);
   const trendData = Array.from({ length: trendEndMonth - trendStartMonth + 1 }, (_, index) => {
       const monthIndex = trendStartMonth + index;
@@ -368,7 +369,7 @@ const Reports = ({ user }) => {
               value={selectedYear}
               onChange={(e) => {
                 setSelectedYear(e.target.value);
-                const newDefault = `${e.target.value}-${String(currentMonth + 1).padStart(2, '0')}`;
+                const newDefault = `${e.target.value}-${String(initialDate.month + 1).padStart(2, '0')}`;
                 setSelectedPeriod(`month:${newDefault}`);
               }}
               className="rounded-2xl border border-[rgba(201,214,238,0.82)] bg-white/84 px-4 py-3 text-sm font-medium text-[#6b7a96] outline-none transition-all focus:border-[rgba(90,141,221,0.56)] focus:bg-white"

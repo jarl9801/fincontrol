@@ -15,16 +15,13 @@ import { db, appId } from '../services/firebase';
 
 export const useCostCenters = (user) => {
   const [costCenters, setCostCenters] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !!user);
   const [error, setError] = useState(null);
 
   const costCentersRef = collection(db, 'artifacts', appId, 'public', 'data', 'costCenters');
 
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
+    if (!user) return;
 
     const q = query(costCentersRef, orderBy('createdAt', 'desc'));
 

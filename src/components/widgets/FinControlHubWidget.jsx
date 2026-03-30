@@ -12,7 +12,7 @@ import {
   Bell
 } from 'lucide-react';
 
-const FinControlHubWidget = ({ onNavigate }) => {
+const FinControlHubWidget = () => {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, _setError] = useState(null);

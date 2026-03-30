@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 export const useFilters = (transactions) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -13,8 +13,8 @@ export const useFilters = (transactions) => {
   });
   const [appliedFilters, setAppliedFilters] = useState({ ...filters });
 
-  // Apply quick filters
-  useEffect(() => {
+  // Compute quick filter dates
+  const quickFilterDates = useMemo(() => {
     const today = new Date();
     let dateFrom = '';
     let dateTo = '';
@@ -24,11 +24,12 @@ export const useFilters = (transactions) => {
         dateFrom = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
         dateTo = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
         break;
-      case 'quarter':
+      case 'quarter': {
         const quarter = Math.floor(today.getMonth() / 3);
         dateFrom = new Date(today.getFullYear(), quarter * 3, 1).toISOString().split('T')[0];
         dateTo = new Date(today.getFullYear(), quarter * 3 + 3, 0).toISOString().split('T')[0];
         break;
+      }
       case 'year':
         dateFrom = new Date(today.getFullYear(), 0, 1).toISOString().split('T')[0];
         dateTo = new Date(today.getFullYear(), 11, 31).toISOString().split('T')[0];
@@ -38,11 +39,18 @@ export const useFilters = (transactions) => {
         dateTo = '';
     }
 
-    setFilters(prev => ({ ...prev, dateFrom, dateTo }));
+    return { dateFrom, dateTo };
   }, [filters.quickFilter]);
 
+  // Merge quick filter dates into filters
+  const effectiveFilters = useMemo(() => ({
+    ...filters,
+    dateFrom: quickFilterDates.dateFrom || filters.dateFrom,
+    dateTo: quickFilterDates.dateTo || filters.dateTo,
+  }), [filters, quickFilterDates]);
+
   const applyFilters = () => {
-    setAppliedFilters({ ...filters });
+    setAppliedFilters({ ...effectiveFilters });
   };
 
   const filteredTransactions = useMemo(() => {
@@ -81,7 +89,7 @@ export const useFilters = (transactions) => {
   return {
     searchTerm,
     setSearchTerm,
-    filters,
+    filters: effectiveFilters,
     setFilters,
     appliedFilters,
     applyFilters,

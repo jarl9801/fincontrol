@@ -20,7 +20,7 @@ const toLabel = (ym) => {
  * Anchors cumulative balance so end of Dec 2025 = €35,782.94 (bank + IVA).
  */
 export const useCashFlow = (user) => {
-  const { allTransactions, loading, transactions2025, transactions2026 } = useAllTransactions(user);
+  const { allTransactions, loading } = useAllTransactions(user);
 
   const result = useMemo(() => {
     if (loading) {

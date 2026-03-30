@@ -47,28 +47,13 @@ const Section = ({ title, subtitle, children }) => (
   </section>
 );
 
+const SHORT_MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
 const CashFlow = ({ user }) => {
   const metrics = useTreasuryMetrics({ user });
   const navigate = useNavigate();
   const movementsRef = useRef(null);
   const reconciliationRef = useRef(null);
-
-  if (metrics.loading) {
-    return (
-      <div className="flex items-center justify-center py-28">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#64d2ff] border-t-transparent" />
-          <p className="text-sm text-[#6b7a96]">Preparando el panel de tesorería...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const recentMovements = [...metrics.filteredMovements]
-    .sort((left, right) => (right.postedDate || '').localeCompare(left.postedDate || ''))
-    .slice(0, 12);
-
-  const SHORT_MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
   const monthlyPL = useMemo(() => {
     const now = new Date();
@@ -89,6 +74,21 @@ const CashFlow = ({ user }) => {
     months.forEach((b) => { b.net = b.inflows - b.outflows; });
     return months;
   }, [metrics.postedMovements]);
+
+  if (metrics.loading) {
+    return (
+      <div className="flex items-center justify-center py-28">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#64d2ff] border-t-transparent" />
+          <p className="text-sm text-[#6b7a96]">Preparando el panel de tesorería...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const recentMovements = [...metrics.filteredMovements]
+    .sort((left, right) => (right.postedDate || '').localeCompare(left.postedDate || ''))
+    .slice(0, 12);
 
   return (
     <div className="space-y-6 pb-12">

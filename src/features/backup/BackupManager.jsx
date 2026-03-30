@@ -60,7 +60,7 @@ const BackupManager = ({ user }) => {
             name: col,
             count: docs.length,
           });
-        } catch {
+        } catch (err) {
           console.warn(`No se pudo exportar ${col}:`, err.message);
           backupData.data[col] = [];
           backupData.metadata.collections.push({
@@ -88,7 +88,7 @@ const BackupManager = ({ user }) => {
 
       const totalDocs = backupData.metadata.collections.reduce((sum, c) => sum + c.count, 0);
       showToast(`Backup completado: ${totalDocs} documentos en ${COLLECTIONS.length} colecciones`, 'success');
-    } catch {
+    } catch (err) {
       console.error('Export error:', err);
       showToast('Error al generar el backup', 'error');
     }

@@ -12,16 +12,13 @@ import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../constants/categories';
 export const useCategories = (user) => {
   const [expenseCategories, setExpenseCategories] = useState(EXPENSE_CATEGORIES);
   const [incomeCategories, setIncomeCategories] = useState(INCOME_CATEGORIES);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !!user);
   const [error, setError] = useState(null);
 
   const categoriesDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'categories');
 
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
+    if (!user) return;
 
     const unsubscribe = onSnapshot(
       categoriesDocRef,

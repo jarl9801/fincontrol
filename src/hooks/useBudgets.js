@@ -8,12 +8,12 @@ import { db, appId } from '../services/firebase';
 
 export const useBudgets = (user) => {
   const [budgets, setBudgets] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !!user);
 
   const colRef = useMemo(() => collection(db, 'artifacts', appId, 'public', 'data', 'budgets'), []);
 
   useEffect(() => {
-    if (!user) { setLoading(false); return; }
+    if (!user) return;
 
     const q = query(colRef, orderBy('year', 'desc'));
     const unsub = onSnapshot(q, (snap) => {

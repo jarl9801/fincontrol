@@ -8,12 +8,12 @@ import { db, appId } from '../services/firebase';
 
 export const useNotifications = (user) => {
   const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !!user);
 
   const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'notifications');
 
   useEffect(() => {
-    if (!user) { setLoading(false); return; }
+    if (!user) return;
 
     const q = query(colRef, orderBy('createdAt', 'desc'));
     const unsub = onSnapshot(q, (snap) => {
