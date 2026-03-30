@@ -54,12 +54,12 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, onNewTrans
       <div className="absolute left-0 top-0 bottom-0 flex w-[86vw] max-w-[340px] flex-col border-r border-[rgba(205,219,243,0.82)] bg-[radial-gradient(circle_at_top_right,rgba(185,248,238,0.32),transparent_26%),radial-gradient(circle_at_top_left,rgba(147,196,255,0.28),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.95),rgba(242,247,255,0.94))] px-4 py-5 text-[#16223f] shadow-[0_30px_100px_rgba(95,117,162,0.24)] backdrop-blur-2xl">
         <div className="mb-5 flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-[10px]" style={{ background: 'linear-gradient(135deg, #30d158, #0a84ff)', boxShadow: '0 2px 8px rgba(48, 209, 88, 0.25)' }}>
-              <span className="text-[16px]">💰</span>
+            <div className="flex h-11 w-11 items-center justify-center rounded-[16px] bg-[linear-gradient(145deg,#1cd0ff,#36b8ff)] shadow-[0_14px_34px_rgba(0,162,255,0.24)]">
+              <Briefcase size={18} className="text-[#061224]" />
             </div>
             <div>
-              <p className="text-[15px] font-bold text-[#101938]" style={{ letterSpacing: '-0.02em' }}>FinControl</p>
-              <p className="text-[11px] font-medium text-[#6980ac]">Operations Console</p>
+              <p className="text-[15px] font-extrabold text-[#101938]" style={{ letterSpacing: '-0.02em' }}>FinControl</p>
+              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-[#6980ac]">Operations Console</p>
             </div>
           </div>
           <button type="button" onClick={onClose} className="rounded-2xl border border-[rgba(201,214,238,0.82)] bg-white/74 p-2 text-[#7b8cab]">

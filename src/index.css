@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap");
 @import "tailwindcss";
 
 /* ===== FINCONTROL — Apple-Inspired Design System ===== */
@@ -76,7 +77,8 @@
   --radius-full: 9999px;
 
   /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Syne', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* Transitions — Apple motion */
@@ -553,4 +555,12 @@ input:focus, select:focus, textarea:focus {
 button:focus-visible, input:focus-visible, select:focus-visible {
   outline: 2px solid rgba(10,132,255,0.5) !important;
   outline-offset: 2px;
+}
+
+/* Typography — IBM Plex Sans + Syne (same as NE4 Work Manager) */
+h1, h2, h3, .font-display {
+  font-family: 'Syne', system-ui, sans-serif;
+}
+body, p, span, input, button, select {
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
 }

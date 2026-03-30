@@ -53,14 +53,12 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
       <div className="mx-auto max-w-[1280px] px-5 py-4">
         <div className="flex items-center justify-between gap-4">
           <button type="button" onClick={() => navigate('/')} className="flex min-w-0 items-center gap-3">
-            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px]" style={{ background: 'linear-gradient(135deg, #30d158, #0a84ff)', boxShadow: '0 2px 8px rgba(48, 209, 88, 0.25)' }}>
-              <span className="text-[16px]">💰</span>
+            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[16px] bg-[linear-gradient(145deg,#1cd0ff,#36b8ff)] shadow-[0_14px_34px_rgba(0,162,255,0.32)]">
+              <Briefcase size={18} className="text-[#061224]" />
             </div>
             <div className="min-w-0">
-              <h1 className="truncate text-[15px] font-bold text-white" style={{ letterSpacing: '-0.02em' }}>
-                FinControl
-              </h1>
-              <p className="truncate text-[11px] font-medium text-[rgba(202,214,255,0.58)]">Operations Console</p>
+              <h1 className="truncate text-[15px] font-extrabold text-white" style={{ letterSpacing: '-0.02em' }}>FinControl</h1>
+              <p className="truncate text-[11px] font-medium uppercase tracking-[0.22em] text-[rgba(202,214,255,0.58)]">Operations Console</p>
             </div>
           </button>
 
