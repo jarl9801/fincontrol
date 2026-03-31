@@ -506,7 +506,14 @@ const BudgetVsActual = ({ user, userRole }) => {
       .filter((line) => {
         if (activeTab === 'summary') {
           const totalBudget = line.monthlyBudget.reduce((s, v) => s + v, 0);
-          return totalBudget > 0;
+          // Also show lines that have actuals even if budget=0
+          const totalActual = line.monthlyBudget.map((_, mi) => {
+            const dir = line.type;
+            const key = `${line.categoryName}|${dir}|${mi}`;
+            const a = actuals.get(key) || { income: 0, expense: 0 };
+            return line.type === 'income' ? a.income : a.expense;
+          }).reduce((s, v) => s + v, 0);
+          return totalBudget > 0 || totalActual > 0;
         }
         return true;
       })
