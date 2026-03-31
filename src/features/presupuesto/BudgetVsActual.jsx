@@ -498,6 +498,16 @@ const BudgetVsActual = ({ user, userRole }) => {
     );
   }, [budgets, selectedYear, selectedProject]);
 
+  // Legacy costCenter codes → new CC names
+  const LEGACY_CC_MAP = {
+    'OPE': 'Despliegue', 'CC-OPE': 'Despliegue',
+    'ADM': 'Administrativo', 'CC-ADM': 'Administrativo',
+    'LOG': 'Instalaciones y Reparaciones', 'CC-LOG': 'Instalaciones y Reparaciones',
+    'FIN': 'Financiero', 'CC-FIN': 'Financiero',
+    'VEN': 'NE4', 'CC-VEN': 'NE4',
+  };
+  const normCC = (cc) => LEGACY_CC_MAP[cc] || cc || '';
+
   // Build actuals: aggregate real amounts per budget category + month
   const actuals = useMemo(() => {
     const map = new Map(); // key: "budgetCat|income|monthIndex"
@@ -532,7 +542,7 @@ const BudgetVsActual = ({ user, userRole }) => {
     // These are the manually entered income/expense records with category field
     allTransactions.forEach((t) => {
       if (Number(t.date?.slice(0, 4)) !== Number(selectedYear)) return;
-      if (selectedCostCenter && (t.costCenter || '') !== selectedCostCenter) return;
+      if (selectedCostCenter && normCC(t.costCenter || '') !== selectedCostCenter) return;
 
       const status = String(t.status || '').toLowerCase();
       const settled = ['paid','completed','settled'].includes(status);
@@ -556,7 +566,7 @@ const BudgetVsActual = ({ user, userRole }) => {
     ledger.postedMovements.forEach((m) => {
       if (Number(m.postedDate?.slice(0, 4)) !== Number(selectedYear)) return;
       if (!m.categoryName) return; // skip uncategorized bank imports
-      if (selectedCostCenter && (m.costCenterId || '') !== selectedCostCenter) return;
+      if (selectedCostCenter && normCC(m.costCenterId || '') !== selectedCostCenter) return;
       // Skip if this movement is linked to a transaction already counted above
       if (m.legacyTransactionId && txIds.has(m.legacyTransactionId)) return;
 

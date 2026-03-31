@@ -402,6 +402,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
       legacy: unifiedRecords.filter((entry) => entry.recordFamily === 'legacy').length,
       movements: unifiedRecords.filter((entry) => entry.recordFamily === 'movement').length,
       openDocs: unifiedRecords.filter((entry) => ['receivable', 'payable'].includes(entry.recordFamily) && ['pending', 'partial', 'overdue'].includes(entry.status)).length,
+      noCC: unifiedRecords.filter((entry) => !entry.costCenter && (entry.type === 'expense' || entry.type === 'income')).length,
     };
   }, [unifiedRecords]);
 
@@ -536,6 +537,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
         return false;
       }
 
+      if (advancedFilters.noCostCenter && (entry.costCenter || '').trim() !== '') return false;
       if (advancedFilters.notesMode === 'with-notes' && !entry.notes?.some((note) => note.type === 'comment')) {
         return false;
       }
@@ -926,6 +928,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
             <MetricCard label="Histórico" value={formatCount(metrics.legacy)} icon={ReceiptText} onClick={() => { setQuickFilter('all'); setAdvancedFilters(prev => prev.family === 'legacy' ? FILTER_DEFAULTS : { ...FILTER_DEFAULTS, family: 'legacy' }); }} />
             <MetricCard label="Movimientos" value={formatCount(metrics.movements)} icon={WalletCards} onClick={() => { setQuickFilter('all'); setAdvancedFilters(prev => prev.family === 'movement' ? FILTER_DEFAULTS : { ...FILTER_DEFAULTS, family: 'movement' }); }} />
             <MetricCard label="Documentos abiertos" value={formatCount(metrics.openDocs)} icon={Filter} tone="negative" onClick={() => { setAdvancedFilters(FILTER_DEFAULTS); setQuickFilter(prev => prev === 'pendientes' ? 'all' : 'pendientes'); }} />
+            {metrics.noCC > 0 && <MetricCard label="Sin CC" value={formatCount(metrics.noCC)} icon={AlertTriangle} tone="negative" onClick={() => { setQuickFilter('all'); setAdvancedFilters(prev => ({ ...FILTER_DEFAULTS, noCostCenter: !prev.noCostCenter })); }} />}
           </div>
         </div>
       </section>

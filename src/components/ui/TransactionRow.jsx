@@ -167,9 +167,13 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
 
             <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-[#6b7a96]">
               <span>{safe(t.project || t.secondaryMeta)}</span>
-              {t.costCenter && (
+              {t.costCenter ? (
                 <span className="rounded-full border border-[rgba(201,214,238,0.68)] bg-white/72 px-2 py-0.5 text-[10px] text-[#7b8cab]" title="Centro de costo">
                   {safe(t.costCenter)}
+                </span>
+              ) : (t.type === 'expense' || t.type === 'income') && (
+                <span className="rounded-full border border-[rgba(255,159,10,0.4)] bg-[rgba(255,159,10,0.08)] px-2 py-0.5 text-[10px] font-medium text-[#c47a09]" title="Sin centro de costo — asignar para el presupuesto">
+                  ⚠ Sin CC
                 </span>
               )}
               {t.documentNumber && (

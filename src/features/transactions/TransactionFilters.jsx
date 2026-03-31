@@ -15,6 +15,7 @@ const FILTER_DEFAULTS = {
   minAmount: '',
   maxAmount: '',
   notesMode: 'all',
+  noCostCenter: false,
 };
 
 const YEAR_OPTIONS = [
@@ -329,6 +330,18 @@ const TransactionFilters = ({
                 <option value="with-notes">Con comentarios</option>
                 <option value="without-notes">Sin comentarios</option>
               </select>
+            </label>
+
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={advancedFilters.noCostCenter || false}
+                onChange={(e) => setAdvancedFilters((current) => ({ ...current, noCostCenter: e.target.checked }))}
+                className="h-4 w-4 rounded border-[#d8e3f7] accent-[#3156d3]"
+              />
+              <span className="text-sm font-medium text-[#4b5d83]">
+                Solo sin Centro de Costo <span className="text-[#c47a09]">⚠</span>
+              </span>
             </label>
           </div>
         </div>
