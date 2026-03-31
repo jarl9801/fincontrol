@@ -15,9 +15,10 @@ const buildInitialFormData = (record) => ({
   documentNumber: record?.rawRecord?.documentNumber || record?.documentNumber || '',
   projectId: record?.rawRecord?.projectId || '',
   costCenterId: record?.rawRecord?.costCenterId || '',
+  categoryName: record?.rawRecord?.categoryName || record?.categoryLabel || '',
 });
 
-const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = [], costCenters = [], submitting = false }) => {
+const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = [], costCenters = [], categories = [], submitting = false }) => {
   const [formData, setFormData] = useState(() => buildInitialFormData(record));
 
   if (!isOpen || !record) return null;
@@ -155,19 +156,17 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
             />
           </label>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-3">
             <label className="block">
-              <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6980ac]">Proyecto</span>
+              <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6980ac]">Categoría</span>
               <select
                 className={fieldClassName}
-                value={formData.projectId}
-                onChange={(event) => setFormData((current) => ({ ...current, projectId: event.target.value }))}
+                value={formData.categoryName}
+                onChange={(event) => setFormData((current) => ({ ...current, categoryName: event.target.value }))}
               >
-                <option value="">Sin proyecto</option>
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.name || project.displayName || project.code}
-                  </option>
+                <option value="">Sin categoría</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
             </label>
@@ -183,6 +182,22 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
                 {costCenters.map((center) => (
                   <option key={center.id || center.name} value={center.name || center.id}>
                     {center.name || center.id}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="block">
+              <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6980ac]">Proyecto</span>
+              <select
+                className={fieldClassName}
+                value={formData.projectId}
+                onChange={(event) => setFormData((current) => ({ ...current, projectId: event.target.value }))}
+              >
+                <option value="">Sin proyecto</option>
+                {projects.map((project) => (
+                  <option key={project.id} value={project.id}>
+                    {project.name || project.displayName || project.code}
                   </option>
                 ))}
               </select>

@@ -1008,6 +1008,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
         onSubmit={handleCanonicalEditSubmit}
         projects={projects}
         costCenters={costCenters}
+        categories={[...expenseCategories, ...incomeCategories]}
         submitting={submittingCanonicalEdit}
       />
 

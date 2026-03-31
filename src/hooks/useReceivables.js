@@ -293,6 +293,7 @@ export const useReceivables = (user) => {
         projectId: data.projectId || '',
         projectName: data.projectName || '',
         costCenterId: data.costCenterId || '',
+        categoryName: data.categoryName || '',
         status: nextStatus,
         updatedAt: serverTimestamp(),
         updatedBy: user.email,

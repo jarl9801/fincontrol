@@ -682,21 +682,19 @@ const TransactionFormModal = ({
             </select>
           </div>
 
-          {formData.type === 'expense' && (
-            <div>
-              <label className="mb-2 block text-sm font-semibold text-[#4b5d83]">Centro de costo</label>
-              <select
-                className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
-                value={formData.costCenter}
-                onChange={e => setFormData({...formData, costCenter: e.target.value})}
-              >
-                <option value="Sin asignar">Sin asignar</option>
-                {costCenters.map(cc => (
-                  <option key={cc.id} value={cc.name}>{cc.name}</option>
-                ))}
-              </select>
-            </div>
-          )}
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-[#4b5d83]">Centro de costo</label>
+            <select
+              className="w-full rounded-2xl border border-[#d8e3f7] bg-[rgba(247,250,255,0.95)] px-4 py-3 text-sm text-[#22304f] outline-none transition focus:border-[#7aa2ff] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)]"
+              value={formData.costCenter}
+              onChange={e => setFormData({...formData, costCenter: e.target.value})}
+            >
+              <option value="">Sin asignar</option>
+              {costCenters.map(cc => (
+                <option key={cc.id} value={cc.name}>{cc.name}</option>
+              ))}
+            </select>
+          </div>
 
           <div className="flex items-center gap-2 pt-1">
             <span className="text-[10px] font-bold uppercase tracking-widest text-[#93a0b6]">Estado y notas</span>

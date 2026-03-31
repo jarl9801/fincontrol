@@ -141,6 +141,7 @@ export const useBankMovements = (user) => {
         projectId: data.projectId || '',
         projectName: data.projectName || '',
         costCenterId: data.costCenterId || '',
+        categoryName: data.categoryName || '',
         updatedBy: user.email,
         updatedAt: serverTimestamp(),
         auditTrail: arrayUnion({
