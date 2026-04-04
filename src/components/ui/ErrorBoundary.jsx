@@ -1,48 +1,48 @@
 import React from 'react';
 
 class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
-  }
+ constructor(props) {
+ super(props);
+ this.state = { hasError: false, error: null, errorInfo: null };
+ }
 
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
+ static getDerivedStateFromError(error) {
+ return { hasError: true, error };
+ }
 
-  componentDidCatch(error, errorInfo) {
-    console.error('ErrorBoundary caught:', error, errorInfo);
-    this.setState({ errorInfo });
-  }
+ componentDidCatch(error, errorInfo) {
+ console.error('ErrorBoundary caught:', error, errorInfo);
+ this.setState({ errorInfo });
+ }
 
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div style={{ padding: 20, color: '#ff453a', background: '#1c1c1e', borderRadius: 12, margin: 20, fontFamily: 'monospace' }}>
-          <h2 style={{ color: '#e5e5ea' }}>Error en la aplicación</h2>
-          {import.meta.env.DEV ? (
-            <>
-              <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12 }}>
-                {this.state.error?.toString()}
-              </pre>
-              <pre style={{ whiteSpace: 'pre-wrap', fontSize: 11, color: '#8e8e93', marginTop: 10 }}>
-                {this.state.errorInfo?.componentStack}
-              </pre>
-            </>
-          ) : (
-            <p style={{ color: '#e5e5ea', fontSize: 14 }}>Ha ocurrido un error inesperado. Por favor, recarga la página.</p>
-          )}
-          <button
-            onClick={() => window.location.reload()}
-            style={{ marginTop: 10, padding: '8px 16px', background: '#0a84ff', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer' }}
-          >
-            Reintentar
-          </button>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
+ render() {
+ if (this.state.hasError) {
+ return (
+ <div style={{ padding: 20, color: 'var(--accent)', background: '#111', border: '1px solid #333', borderRadius: 8, margin: 20, fontFamily: "'Space Mono', monospace" }}>
+ <h2 style={{ color: 'var(--text-primary)', fontFamily: "'Space Mono', monospace", fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.08em' }}>[ERROR] Application Error</h2>
+ {import.meta.env.DEV ? (
+ <>
+ <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12, marginTop: 12 }}>
+ {this.state.error?.toString()}
+ </pre>
+ <pre style={{ whiteSpace: 'pre-wrap', fontSize: 11, color: 'var(--text-disabled)', marginTop: 10 }}>
+ {this.state.errorInfo?.componentStack}
+ </pre>
+ </>
+ ) : (
+ <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 12 }}>Ha ocurrido un error inesperado. Por favor, recarga la página.</p>
+ )}
+ <button
+ onClick={() => window.location.reload()}
+ style={{ marginTop: 16, padding: '12px 24px', background: 'var(--text-primary)', color: '#000', border: 'none', borderRadius: 999, cursor: 'pointer', fontFamily: "'Space Mono', monospace", fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em' }}
+ >
+ Reintentar
+ </button>
+ </div>
+ );
+ }
+ return this.props.children;
+ }
 }
 
 export default ErrorBoundary;

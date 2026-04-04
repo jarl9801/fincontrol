@@ -27,7 +27,7 @@ const APP_ID = '1:597712756560:web:ad12cd9794f11992641655';   // From .env VITE_
 // Add your users here (UID from Firebase Auth, role: admin|manager|editor)
 const BOOTSTRAP_USERS = [
   { uid: 't1AjgeNg5adTiDqbL6dG96ebyeM2', email: 'jromero@umtelkomd.com', role: 'admin' },
-  // { uid: 'REPLACE_WITH_ACTUAL_UID', email: 'bsandoval@umtelkomd.com', role: 'manager' },
+  { uid: 'jfa8GxndR2dSuIjsEILFUpz3TRB2', email: 'bsandoval@umtelkomd.com', role: 'manager' },
 ];
 // ───────────────────────────────────────────────────────────────
 

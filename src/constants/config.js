@@ -1,13 +1,13 @@
-// HMR NEXUS Color Palette for Charts
+// Nothing Design System — Monochrome Chart Palette
 export const COLORS = [
-  '#3b82f6', // Primary Blue
-  '#10b981', // Success Green
-  '#f59e0b', // Warning Amber
-  '#ef4444', // Error Red
-  '#8b5cf6', // Purple
-  '#06b6d4', // Cyan
-  '#ec4899', // Pink
-  '#84cc16', // Lime
+  '#E8E8E8', // Primary white
+  '#999999', // Secondary gray
+  '#666666', // Tertiary gray
+  '#444444', // Quaternary gray
+  '#333333', // Quinary gray
+  '#D71921', // Accent red (sparingly)
+  '#4A9E5C', // Success green (sparingly)
+  '#D4A843', // Warning amber (sparingly)
 ];
 
 export const ADMIN_EMAIL = 'jromero@umtelkomd.com';

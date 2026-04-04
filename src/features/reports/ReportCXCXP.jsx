@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import { AlertCircle, Clock, Download, TrendingDown, TrendingUp } from 'lucide-react';
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
+ Bar,
+ BarChart,
+ CartesianGrid,
+ ResponsiveContainer,
+ Tooltip,
+ XAxis,
+ YAxis,
 } from 'recharts';
 import { exportCXCToPDF, exportCXPToPDF } from '../../utils/pdfExport';
 import { formatCurrency, formatDate } from '../../utils/formatters';
@@ -15,239 +15,239 @@ import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
 import { toPdfTransaction } from '../../finance/reporting';
 
 const CONFIG = {
-  cxc: {
-    title: 'Reporte de Cuentas por Cobrar',
-    detailTitle: 'Detalle de cartera abierta',
-    totalLabel: 'Total por Cobrar',
-    primaryColor: '#30d158',
-    accentClass: 'text-[#30d158]',
-    TrendIcon: TrendingUp,
-    exportFn: exportCXCToPDF,
-    emptyMessage: 'No hay cuentas por cobrar abiertas',
-  },
-  cxp: {
-    title: 'Reporte de Cuentas por Pagar',
-    detailTitle: 'Detalle de deuda abierta',
-    totalLabel: 'Total por Pagar',
-    primaryColor: '#ff453a',
-    accentClass: 'text-[#ff453a]',
-    TrendIcon: TrendingDown,
-    exportFn: exportCXPToPDF,
-    emptyMessage: 'No hay cuentas por pagar abiertas',
-  },
+ cxc: {
+ title: 'Reporte de Cuentas por Cobrar',
+ detailTitle: 'Detalle de cartera abierta',
+ totalLabel: 'Total por Cobrar',
+ primaryColor: 'var(--success)',
+ accentClass: 'text-[var(--success)]',
+ TrendIcon: TrendingUp,
+ exportFn: exportCXCToPDF,
+ emptyMessage: 'No hay cuentas por cobrar abiertas',
+ },
+ cxp: {
+ title: 'Reporte de Cuentas por Pagar',
+ detailTitle: 'Detalle de deuda abierta',
+ totalLabel: 'Total por Pagar',
+ primaryColor: 'var(--accent)',
+ accentClass: 'text-[var(--accent)]',
+ TrendIcon: TrendingDown,
+ exportFn: exportCXPToPDF,
+ emptyMessage: 'No hay cuentas por pagar abiertas',
+ },
 };
 
 const buildAging = (rows) => {
-  const buckets = [
-    { name: '0-30d', amount: 0, count: 0 },
-    { name: '31-60d', amount: 0, count: 0 },
-    { name: '61-90d', amount: 0, count: 0 },
-    { name: '>90d', amount: 0, count: 0 },
-  ];
+ const buckets = [
+ { name: '0-30d', amount: 0, count: 0 },
+ { name: '31-60d', amount: 0, count: 0 },
+ { name: '61-90d', amount: 0, count: 0 },
+ { name: '>90d', amount: 0, count: 0 },
+ ];
 
-  rows.forEach((entry) => {
-    const bucketIndex = entry.daysOverdue <= 30 ? 0 : entry.daysOverdue <= 60 ? 1 : entry.daysOverdue <= 90 ? 2 : 3;
-    buckets[bucketIndex].amount += entry.openAmount;
-    buckets[bucketIndex].count += 1;
-  });
+ rows.forEach((entry) => {
+ const bucketIndex = entry.daysOverdue <= 30 ? 0 : entry.daysOverdue <= 60 ? 1 : entry.daysOverdue <= 90 ? 2 : 3;
+ buckets[bucketIndex].amount += entry.openAmount;
+ buckets[bucketIndex].count += 1;
+ });
 
-  return buckets;
+ return buckets;
 };
 
 const ReportCXCXP = ({ user, type = 'cxc' }) => {
-  const cfg = CONFIG[type];
-  const metrics = useTreasuryMetrics({ user });
-  const referenceTime = useMemo(() => {
-    const today = new Date();
-    return new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
-  }, []);
+ const cfg = CONFIG[type];
+ const metrics = useTreasuryMetrics({ user });
+ const referenceTime = useMemo(() => {
+ const today = new Date();
+ return new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+ }, []);
 
-  const rows = useMemo(() => {
-    const source = type === 'cxc' ? metrics.receivables : metrics.payables;
-    return source
-      .filter((entry) => ['issued', 'partial', 'overdue'].includes(entry.status))
-      .map((entry) => {
-        const dueDate = entry.dueDate ? new Date(`${entry.dueDate}T00:00:00`) : null;
-        const daysOverdue = dueDate ? Math.max(0, Math.floor((referenceTime - dueDate.getTime()) / (1000 * 60 * 60 * 24))) : 0;
-        return { ...entry, daysOverdue };
-      })
-      .sort((left, right) => right.daysOverdue - left.daysOverdue);
-  }, [metrics.payables, metrics.receivables, referenceTime, type]);
+ const rows = useMemo(() => {
+ const source = type === 'cxc' ? metrics.receivables : metrics.payables;
+ return source
+ .filter((entry) => ['issued', 'partial', 'overdue'].includes(entry.status))
+ .map((entry) => {
+ const dueDate = entry.dueDate ? new Date(`${entry.dueDate}T00:00:00`) : null;
+ const daysOverdue = dueDate ? Math.max(0, Math.floor((referenceTime - dueDate.getTime()) / (1000 * 60 * 60 * 24))) : 0;
+ return { ...entry, daysOverdue };
+ })
+ .sort((left, right) => right.daysOverdue - left.daysOverdue);
+ }, [metrics.payables, metrics.receivables, referenceTime, type]);
 
-  const totals = useMemo(() => {
-    const totalAmount = rows.reduce((sum, entry) => sum + entry.openAmount, 0);
-    const critical = rows.filter((entry) => entry.daysOverdue > 90);
-    const overdue = rows.filter((entry) => entry.daysOverdue > 0);
-    const current = rows.filter((entry) => entry.daysOverdue === 0);
-    return {
-      totalAmount,
-      criticalAmount: critical.reduce((sum, entry) => sum + entry.openAmount, 0),
-      overdueAmount: overdue.reduce((sum, entry) => sum + entry.openAmount, 0),
-      currentAmount: current.reduce((sum, entry) => sum + entry.openAmount, 0),
-      currentCount: current.length,
-      criticalCount: critical.length,
-      overdueCount: overdue.length,
-    };
-  }, [rows]);
+ const totals = useMemo(() => {
+ const totalAmount = rows.reduce((sum, entry) => sum + entry.openAmount, 0);
+ const critical = rows.filter((entry) => entry.daysOverdue > 90);
+ const overdue = rows.filter((entry) => entry.daysOverdue > 0);
+ const current = rows.filter((entry) => entry.daysOverdue === 0);
+ return {
+ totalAmount,
+ criticalAmount: critical.reduce((sum, entry) => sum + entry.openAmount, 0),
+ overdueAmount: overdue.reduce((sum, entry) => sum + entry.openAmount, 0),
+ currentAmount: current.reduce((sum, entry) => sum + entry.openAmount, 0),
+ currentCount: current.length,
+ criticalCount: critical.length,
+ overdueCount: overdue.length,
+ };
+ }, [rows]);
 
-  const agingData = useMemo(() => buildAging(rows), [rows]);
+ const agingData = useMemo(() => buildAging(rows), [rows]);
 
-  const exportRows = rows.map((entry) =>
-    toPdfTransaction({
-      ...entry,
-      date: entry.dueDate || entry.issueDate,
-      amount: entry.openAmount,
-      type: type === 'cxc' ? 'income' : 'expense',
-      status: 'pending',
-      category: entry.source,
-    }),
-  );
+ const exportRows = rows.map((entry) =>
+ toPdfTransaction({
+ ...entry,
+ date: entry.dueDate || entry.issueDate,
+ amount: entry.openAmount,
+ type: type === 'cxc' ? 'income' : 'expense',
+ status: 'pending',
+ category: entry.source,
+ }),
+ );
 
-  if (metrics.loading) {
-    return (
-      <div className="flex items-center justify-center py-24">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#64d2ff] border-t-transparent" />
-          <p className="text-sm text-[#6b7a96]">Armando reporte operativo...</p>
-        </div>
-      </div>
-    );
-  }
+ if (metrics.loading) {
+ return (
+ <div className="flex items-center justify-center py-24">
+ <div className="flex flex-col items-center gap-3">
+ <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--text-secondary)] border-t-transparent" />
+ <p className="text-sm text-[var(--text-secondary)]">Armando reporte operativo...</p>
+ </div>
+ </div>
+ );
+ }
 
-  const TrendIcon = cfg.TrendIcon;
+ const TrendIcon = cfg.TrendIcon;
 
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-[#101938]">{cfg.title}</h2>
-          <p className="mt-1 text-sm text-[#6b7a96]">Documentos abiertos pendientes de cobro o pago.</p>
-        </div>
-        <button
-          type="button"
-          onClick={() => cfg.exportFn(exportRows)}
-          className="inline-flex items-center gap-2 rounded-2xl border border-[rgba(201,214,238,0.82)] bg-white/84 px-4 py-3 text-sm font-semibold text-[#16223f] transition-colors hover:bg-white"
-        >
-          <Download size={16} />
-          Exportar PDF
-        </button>
-      </div>
+ return (
+ <div className="space-y-6">
+ <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+ <div>
+ <h2 className="text-xl font-bold text-[var(--text-primary)]">{cfg.title}</h2>
+ <p className="mt-1 text-sm text-[var(--text-secondary)]">Documentos abiertos pendientes de cobro o pago.</p>
+ </div>
+ <button
+ type="button"
+ onClick={() => cfg.exportFn(exportRows)}
+ className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm font-semibold text-[var(--text-primary)] transition-colors hover:bg-[var(--surface)]"
+ >
+ <Download size={16} />
+ Exportar PDF
+ </button>
+ </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
-        <div className="rounded-[24px] border border-[rgba(205,219,243,0.78)] bg-white/84 p-5 shadow-[0_18px_44px_rgba(126,147,190,0.1)]">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-semibold text-[#6b7a96]">{cfg.totalLabel}</span>
-            <TrendIcon size={18} style={{ color: cfg.primaryColor }} />
-          </div>
-          <p className={`text-2xl font-semibold ${cfg.accentClass}`}>{formatCurrency(totals.totalAmount)}</p>
-          <p className="mt-1 text-xs text-[#7b8dae]">{rows.length} documentos abiertos</p>
-        </div>
-        <div className="rounded-[24px] border border-[rgba(205,219,243,0.78)] bg-white/84 p-5 shadow-[0_18px_44px_rgba(126,147,190,0.1)]">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-semibold text-[#6b7a96]">Vencido</span>
-            <AlertCircle size={18} className="text-[#d46a13]" />
-          </div>
-          <p className="text-2xl font-semibold text-[#d46a13]">{formatCurrency(totals.overdueAmount)}</p>
-          <p className="mt-1 text-xs text-[#7b8dae]">{totals.overdueCount} documentos</p>
-        </div>
-        <div className="rounded-[24px] border border-[rgba(205,219,243,0.78)] bg-white/84 p-5 shadow-[0_18px_44px_rgba(126,147,190,0.1)]">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-semibold text-[#6b7a96]">Crítico (+90d)</span>
-            <Clock size={18} className="text-[#c46a19]" />
-          </div>
-          <p className="text-2xl font-semibold text-[#c46a19]">{formatCurrency(totals.criticalAmount)}</p>
-          <p className="mt-1 text-xs text-[#7b8dae]">{totals.criticalCount} documentos</p>
-        </div>
-        <div className="rounded-[24px] border border-[rgba(205,219,243,0.78)] bg-white/84 p-5 shadow-[0_18px_44px_rgba(126,147,190,0.1)]">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-semibold text-[#6b7a96]">Al corriente</span>
-            <TrendIcon size={18} className="text-[#3156d3]" />
-          </div>
-          <p className="text-2xl font-semibold text-[#3156d3]">{formatCurrency(totals.currentAmount)}</p>
-          <p className="mt-1 text-xs text-[#7b8dae]">{totals.currentCount} documentos</p>
-        </div>
-      </div>
+ <div className="grid gap-4 md:grid-cols-4">
+ <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="mb-2 flex items-center justify-between">
+ <span className="text-sm font-semibold text-[var(--text-secondary)]">{cfg.totalLabel}</span>
+ <TrendIcon size={18} style={{ color: cfg.primaryColor }} />
+ </div>
+ <p className={`text-2xl font-semibold ${cfg.accentClass}`}>{formatCurrency(totals.totalAmount)}</p>
+ <p className="mt-1 text-xs text-[var(--text-disabled)]">{rows.length} documentos abiertos</p>
+ </div>
+ <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="mb-2 flex items-center justify-between">
+ <span className="text-sm font-semibold text-[var(--text-secondary)]">Vencido</span>
+ <AlertCircle size={18} className="text-[var(--warning)]" />
+ </div>
+ <p className="text-2xl font-semibold text-[var(--warning)]">{formatCurrency(totals.overdueAmount)}</p>
+ <p className="mt-1 text-xs text-[var(--text-disabled)]">{totals.overdueCount} documentos</p>
+ </div>
+ <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="mb-2 flex items-center justify-between">
+ <span className="text-sm font-semibold text-[var(--text-secondary)]">Crítico (+90d)</span>
+ <Clock size={18} className="text-[var(--warning)]" />
+ </div>
+ <p className="text-2xl font-semibold text-[var(--warning)]">{formatCurrency(totals.criticalAmount)}</p>
+ <p className="mt-1 text-xs text-[var(--text-disabled)]">{totals.criticalCount} documentos</p>
+ </div>
+ <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="mb-2 flex items-center justify-between">
+ <span className="text-sm font-semibold text-[var(--text-secondary)]">Al corriente</span>
+ <TrendIcon size={18} className="text-[var(--text-primary)]" />
+ </div>
+ <p className="text-2xl font-semibold text-[var(--text-primary)]">{formatCurrency(totals.currentAmount)}</p>
+ <p className="mt-1 text-xs text-[var(--text-disabled)]">{totals.currentCount} documentos</p>
+ </div>
+ </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-[26px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-5 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
-          <h3 className="mb-4 text-lg font-semibold text-[#101938]">Antigüedad</h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={agingData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(176,194,226,0.42)" vertical={false} />
-              <XAxis dataKey="name" tick={{ fill: '#7b8dae', fontSize: 11 }} tickLine={false} axisLine={false} />
-              <YAxis tick={{ fill: '#7b8dae', fontSize: 11 }} tickFormatter={(value) => `${Math.round(value / 1000)}k`} tickLine={false} axisLine={false} />
-              <Tooltip
-                formatter={(value) => formatCurrency(value)}
-                contentStyle={{ backgroundColor: '#ffffff', border: '1px solid rgba(201,214,238,0.82)', borderRadius: 18 }}
-              />
-              <Bar dataKey="amount" fill={cfg.primaryColor} radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+ <div className="grid gap-6 lg:grid-cols-2">
+ <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <h3 className="mb-4 text-lg font-semibold text-[var(--text-primary)]">Antigüedad</h3>
+ <ResponsiveContainer width="100%" height={260}>
+ <BarChart data={agingData}>
+ <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+ <XAxis dataKey="name" tick={{ fill: 'var(--text-disabled)', fontSize: 11 }} tickLine={false} axisLine={false} />
+ <YAxis tick={{ fill: 'var(--text-disabled)', fontSize: 11 }} tickFormatter={(value) => `${Math.round(value / 1000)}k`} tickLine={false} axisLine={false} />
+ <Tooltip
+ formatter={(value) => formatCurrency(value)}
+ contentStyle={{ backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)', border: '1px solid #222', borderRadius: 18 }}
+ />
+ <Bar dataKey="amount" fill={cfg.primaryColor} radius={0} />
+ </BarChart>
+ </ResponsiveContainer>
+ </div>
 
-        <div className="rounded-[26px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] p-5 shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
-          <h3 className="mb-4 text-lg font-semibold text-[#101938]">Resumen por antigüedad</h3>
-          <div className="space-y-3">
-            {agingData.map((bucket) => (
-              <div key={bucket.name} className="flex items-center justify-between rounded-[20px] border border-[rgba(201,214,238,0.74)] bg-white/78 px-4 py-3">
-                <div>
-                  <p className="text-sm font-semibold text-[#101938]">{bucket.name}</p>
-                  <p className="text-xs text-[#6b7a96]">{bucket.count} documentos</p>
-                </div>
-                <span className={`text-sm font-semibold ${cfg.accentClass}`}>{formatCurrency(bucket.amount)}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+ <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <h3 className="mb-4 text-lg font-semibold text-[var(--text-primary)]">Resumen por antigüedad</h3>
+ <div className="space-y-3">
+ {agingData.map((bucket) => (
+ <div key={bucket.name} className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
+ <div>
+ <p className="text-sm font-semibold text-[var(--text-primary)]">{bucket.name}</p>
+ <p className="text-xs text-[var(--text-secondary)]">{bucket.count} documentos</p>
+ </div>
+ <span className={`text-sm font-semibold ${cfg.accentClass}`}>{formatCurrency(bucket.amount)}</span>
+ </div>
+ ))}
+ </div>
+ </div>
+ </div>
 
-      <div className="overflow-hidden rounded-[26px] border border-[rgba(205,219,243,0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(245,249,255,0.9))] shadow-[0_24px_72px_rgba(126,147,190,0.12)]">
-        <div className="border-b border-[rgba(201,214,238,0.78)] px-5 py-4">
-          <h3 className="text-lg font-semibold text-[#101938]">{cfg.detailTitle}</h3>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[860px] text-left">
-            <thead>
-              <tr className="border-b border-[rgba(201,214,238,0.78)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6980ac]">
-                <th className="px-4 py-3">Vence</th>
-                <th className="px-4 py-3">Contraparte</th>
-                <th className="px-4 py-3">Documento</th>
-                <th className="px-4 py-3">Proyecto</th>
-                <th className="px-4 py-3 text-right">Abierto</th>
-                <th className="px-4 py-3 text-center">Días</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[rgba(201,214,238,0.58)]">
-              {rows.map((entry) => (
-                <tr key={entry.id} className="hover:bg-[rgba(90,141,221,0.04)]">
-                  <td className="px-4 py-3 text-sm text-[#6b7a96]">{entry.dueDate ? formatDate(entry.dueDate) : 'Sin fecha'}</td>
-                  <td className="px-4 py-3">
-                    <p className="text-sm font-semibold text-[#101938]">{entry.counterpartyName}</p>
-                    <p className="text-xs text-[#6b7a96]">{entry.description || 'Sin descripción'}</p>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-[#16223f]">{entry.documentNumber || 'Sin documento'}</td>
-                  <td className="px-4 py-3 text-sm text-[#6b7a96]">{entry.projectName || 'Sin proyecto'}</td>
-                  <td className={`px-4 py-3 text-right text-sm font-semibold ${cfg.accentClass}`}>{formatCurrency(entry.openAmount)}</td>
-                  <td className="px-4 py-3 text-center">
-                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${entry.daysOverdue > 90 ? 'bg-[rgba(214,106,19,0.12)] text-[#d46a13]' : entry.daysOverdue > 30 ? 'bg-[rgba(212,122,34,0.12)] text-[#c46a19]' : 'bg-[rgba(15,143,75,0.12)] text-[#0f8f4b]'}`}>
-                      {entry.daysOverdue} d
-                    </span>
-                  </td>
-                </tr>
-              ))}
-              {rows.length === 0 && (
-                <tr>
-                  <td colSpan="6" className="px-4 py-8 text-center text-sm text-[#6b7a96]">
-                    {cfg.emptyMessage}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
+ <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="border-b border-[var(--border)] px-5 py-4">
+ <h3 className="text-lg font-semibold text-[var(--text-primary)]">{cfg.detailTitle}</h3>
+ </div>
+ <div className="overflow-x-auto">
+ <table className="w-full min-w-[860px] text-left">
+ <thead>
+ <tr className="border-b border-[var(--border)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">
+ <th className="px-4 py-3">Vence</th>
+ <th className="px-4 py-3">Contraparte</th>
+ <th className="px-4 py-3">Documento</th>
+ <th className="px-4 py-3">Proyecto</th>
+ <th className="px-4 py-3 text-right">Abierto</th>
+ <th className="px-4 py-3 text-center">Días</th>
+ </tr>
+ </thead>
+ <tbody className="divide-y divide-[var(--border)]">
+ {rows.map((entry) => (
+ <tr key={entry.id} className="hover:bg-[var(--surface)]">
+ <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">{entry.dueDate ? formatDate(entry.dueDate) : 'Sin fecha'}</td>
+ <td className="px-4 py-3">
+ <p className="text-sm font-semibold text-[var(--text-primary)]">{entry.counterpartyName}</p>
+ <p className="text-xs text-[var(--text-secondary)]">{entry.description || 'Sin descripción'}</p>
+ </td>
+ <td className="px-4 py-3 text-sm text-[var(--text-primary)]">{entry.documentNumber || 'Sin documento'}</td>
+ <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">{entry.projectName || 'Sin proyecto'}</td>
+ <td className={`px-4 py-3 text-right text-sm font-semibold ${cfg.accentClass}`}>{formatCurrency(entry.openAmount)}</td>
+ <td className="px-4 py-3 text-center">
+ <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${entry.daysOverdue > 90 ? 'bg-transparent text-[var(--warning)]' : entry.daysOverdue > 30 ? 'bg-transparent text-[var(--warning)]' : 'bg-transparent text-[var(--success)]'}`}>
+ {entry.daysOverdue} d
+ </span>
+ </td>
+ </tr>
+ ))}
+ {rows.length === 0 && (
+ <tr>
+ <td colSpan="6" className="px-4 py-8 text-center text-sm text-[var(--text-secondary)]">
+ {cfg.emptyMessage}
+ </td>
+ </tr>
+ )}
+ </tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+ );
 };
 
 export default ReportCXCXP;

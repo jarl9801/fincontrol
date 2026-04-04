@@ -47,9 +47,10 @@ export const useFinanceLedger = (user) => {
     const canonicalReceivables = receivables.map((entry) => adaptReceivableDoc(entry, 'receivable'));
     const canonicalPayables = payables.map((entry) => adaptPayableDoc(entry, 'payable'));
 
+    // Include ALL movements (any status) to prevent double-counting when a
+    // movement is voided — the legacy transaction must not be re-converted.
     const movementLegacyIds = new Set(
       bankMovements
-        .filter((entry) => entry.status === MOVEMENT_STATUS.POSTED)
         .map((entry) => entry.legacyTransactionId)
         .filter(Boolean),
     );

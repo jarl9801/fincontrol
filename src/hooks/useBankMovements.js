@@ -280,12 +280,47 @@ export const useBankMovements = (user) => {
     }
   };
 
+  const bulkUpdateCategory = async (movementIds, categoryName, costCenterId = '') => {
+    if (!user || !movementIds?.length) return { success: false, error: 'No ids' };
+
+    try {
+      const promises = movementIds.map((id) => {
+        const ref = doc(db, 'artifacts', appId, 'public', 'data', 'bankMovements', id);
+        return updateDoc(ref, {
+          categoryName,
+          ...(costCenterId !== undefined ? { costCenterId } : {}),
+          updatedBy: user.email,
+          updatedAt: serverTimestamp(),
+          auditTrail: arrayUnion({
+            action: 'bulk-categorize',
+            user: user.email,
+            timestamp: new Date().toISOString(),
+            detail: `Categoría asignada en lote: ${categoryName}`,
+          }),
+        });
+      });
+      await Promise.all(promises);
+      await writeAuditLogEntry({
+        action: 'bulk-categorize',
+        entityType: 'bankMovement',
+        entityId: movementIds.join(','),
+        description: `${movementIds.length} movimientos categorizados como "${categoryName}"`,
+        userEmail: user.email,
+      });
+      return { success: true, count: movementIds.length };
+    } catch (bulkError) {
+      logError('Error bulk categorizing:', bulkError);
+      return { success: false, error: bulkError };
+    }
+  };
+
   return {
     bankMovements,
     loading,
     error,
     createBankMovement,
     updateBankMovement,
+    bulkUpdateCategory,
     voidBankMovement,
     reconcileMovement,
     unreconcileMovement,

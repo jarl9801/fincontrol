@@ -5,6 +5,9 @@
  * Sources:
  * - 2025 static: EGR-*, ING-*, EGR-CXP
  * - 2026 Firebase: Spanish names from categories.js
+ *
+ * Categories that match a budget line name exactly are resolved via identity
+ * check in resolve() — they don't need to appear here.
  */
 export const CATEGORY_MAPPING = {
   // ─── Expense groups ────────────────────────────────────────────
@@ -67,12 +70,22 @@ export const INCOME_CATEGORY_MAPPING = {
   'Por Venta': [
     'Por Venta',
   ],
+  'Financiero': [
+    'Financiero',
+  ],
+  'Otros': [
+    'Otros',
+  ],
 };
 
 /**
  * Reverse lookup maps (direction-aware)
- * txToBudgetMap: expense category → budget category  
+ * txToBudgetMap: expense category → budget category
  * incToBudgetMap: income category → budget category
+ *
+ * Identity mappings (budget line name = tx category name) are handled
+ * by the resolve() function's identity check, so they don't need
+ * to appear here. Only cross-name mappings are needed.
  */
 export const txToBudgetMap = (() => {
   const map = new Map();

@@ -2,128 +2,126 @@ import { useState } from 'react';
 import { X, AlertTriangle } from 'lucide-react';
 
 const ConfirmModal = ({
-  isOpen,
-  onClose,
-  onConfirm,
-  title,
-  message,
-  confirmText = 'Eliminar',
-  cancelText = 'Cancelar',
-  variant = 'danger',
-  details = [],
-  confirmKeyword = '',
-  confirmKeywordLabel = 'Confirmación',
-  confirmKeywordPlaceholder = '',
-  warning = '',
+ isOpen,
+ onClose,
+ onConfirm,
+ title,
+ message,
+ confirmText = 'Eliminar',
+ cancelText = 'Cancelar',
+ variant = 'danger',
+ details = [],
+ confirmKeyword = '',
+ confirmKeywordLabel = 'Confirmación',
+ confirmKeywordPlaceholder = '',
+ warning = '',
 }) => {
-  const [confirmationValue, setConfirmationValue] = useState('');
+ const [confirmationValue, setConfirmationValue] = useState('');
 
-  if (!isOpen) return null;
+ if (!isOpen) return null;
 
-  const requiresKeyword = Boolean(confirmKeyword);
-  const keywordMatches = !requiresKeyword || confirmationValue.trim().toUpperCase() === confirmKeyword.trim().toUpperCase();
+ const requiresKeyword = Boolean(confirmKeyword);
+ const keywordMatches = !requiresKeyword || confirmationValue.trim().toUpperCase() === confirmKeyword.trim().toUpperCase();
 
-  const handleClose = () => {
-    setConfirmationValue('');
-    onClose();
-  };
+ const handleClose = () => {
+ setConfirmationValue('');
+ onClose();
+ };
 
-  const handleConfirm = async () => {
-    if (!keywordMatches) return;
-    const shouldClose = await onConfirm();
-    if (shouldClose !== false) {
-      handleClose();
-    }
-  };
+ const handleConfirm = async () => {
+ if (!keywordMatches) return;
+ const shouldClose = await onConfirm();
+ if (shouldClose !== false) {
+ handleClose();
+ }
+ };
 
-  const variantStyles = {
-    danger: {
-      icon: 'text-[#ff453a]',
-      bg: 'bg-[rgba(239,68,68,0.08)]',
-      button: 'bg-rose-600 hover:bg-rose-700 text-white'
-    },
-    warning: {
-      icon: 'text-[#ff9f0a]',
-      bg: 'bg-[rgba(245,158,11,0.08)]',
-      button: 'bg-amber-600 hover:bg-amber-700 text-white'
-    }
-  };
+ const variantStyles = {
+ danger: {
+ icon: 'text-[var(--accent)]',
+ button: 'border border-[var(--accent)] text-[var(--accent)] hover:bg-transparent'
+ },
+ warning: {
+ icon: 'text-[var(--warning)]',
+ button: 'border border-[var(--warning)] text-[var(--warning)] hover:bg-transparent'
+ }
+ };
 
-  const style = variantStyles[variant] || variantStyles.danger;
+ const style = variantStyles[variant] || variantStyles.danger;
 
-  return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn" role="dialog" aria-modal="true">
-      <div className="bg-[#1c1c1e] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-scaleIn">
-        <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center">
-          <h3 className="font-bold text-lg text-[#e5e5ea]">{title}</h3>
-          <button onClick={handleClose} className="text-[#636366] hover:text-[#98989d] transition-colors" aria-label="Cerrar">
-            <X size={20} />
-          </button>
-        </div>
+ return (
+ <div className="fixed inset-0 z-[200] flex items-center justify-center bg-[var(--surface)] p-4 animate-fadeIn" role="dialog" aria-modal="true">
+ <div className="bg-[var(--surface)] border border-[var(--border-visible)] rounded-xl w-full max-w-md overflow-hidden animate-scaleIn">
+ <div className="px-6 py-4 border-b border-[var(--border)] flex justify-between items-center">
+ <h3 className="font-[Space_Mono] text-[13px] uppercase tracking-[0.06em] text-[var(--text-primary)]">{title}</h3>
+ <button onClick={handleClose} className="text-[var(--text-disabled)] hover:text-[var(--text-secondary)] transition-colors" aria-label="Cerrar">
+ <X size={20} />
+ </button>
+ </div>
 
-        <div className="p-6">
-          <div className="flex items-start gap-4">
-            <div className={`p-3 rounded-full ${style.bg} flex-shrink-0`}>
-              <AlertTriangle className={style.icon} size={24} />
-            </div>
-            <div className="flex-1">
-              <p className="text-[#c7c7cc] text-sm leading-relaxed">{message}</p>
+ <div className="p-6">
+ <div className="flex items-start gap-4">
+ <div className="flex-shrink-0">
+ <AlertTriangle className={style.icon} size={24} />
+ </div>
+ <div className="flex-1">
+ <p className="text-[var(--text-secondary)] text-sm leading-relaxed">{message}</p>
 
-              {details.length > 0 && (
-                <div className="mt-4 space-y-2 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#15161a] p-3">
-                  {details.map((detail) => (
-                    <div key={`${detail.label}-${detail.value}`} className="flex items-center justify-between gap-3 text-[12px]">
-                      <span className="text-[#8e8e93]">{detail.label}</span>
-                      <span className={`text-right font-medium ${detail.emphasis ? 'text-white' : 'text-[#c7c7cc]'}`}>
-                        {detail.value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
+ {details.length > 0 && (
+ <div className="mt-4 space-y-2 rounded-lg border border-[var(--border)] bg-[var(--black)] p-3">
+ {details.map((detail) => (
+ <div key={`${detail.label}-${detail.value}`} className="flex items-center justify-between gap-3 text-[12px]">
+ <span className="font-[Space_Mono] text-[11px] uppercase tracking-[0.06em] text-[var(--text-disabled)]">{detail.label}</span>
+ <span className={`text-right font-[Space_Mono] ${detail.emphasis ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}>
+ {detail.value}
+ </span>
+ </div>
+ ))}
+ </div>
+ )}
 
-              {warning && (
-                <p className="mt-4 rounded-lg border border-[rgba(255,159,10,0.16)] bg-[rgba(255,159,10,0.08)] px-3 py-2 text-[12px] leading-relaxed text-[#ffcc80]">
-                  {warning}
-                </p>
-              )}
+ {warning && (
+ <p className="mt-4 rounded-lg border border-[var(--warning)] px-3 py-2 text-[12px] leading-relaxed text-[var(--warning)]">
+ {warning}
+ </p>
+ )}
 
-              {requiresKeyword && (
-                <label className="mt-4 block">
-                  <span className="mb-1.5 block text-[11px] font-medium text-[#8e8e93]">
-                    {confirmKeywordLabel}: escribe <span className="text-white">{confirmKeyword}</span>
-                  </span>
-                  <input
-                    type="text"
-                    value={confirmationValue}
-                    onChange={(event) => setConfirmationValue(event.target.value)}
-                    placeholder={confirmKeywordPlaceholder || confirmKeyword}
-                    className="w-full rounded-lg border border-[rgba(255,255,255,0.08)] bg-[#2c2c2e] px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[rgba(255,255,255,0.16)]"
-                  />
-                </label>
-              )}
-            </div>
-          </div>
+ {requiresKeyword && (
+ <label className="mt-4 block">
+ <span className="mb-1.5 block font-[Space_Mono] text-[11px] uppercase tracking-[0.06em] text-[var(--text-disabled)]">
+ {confirmKeywordLabel}: escribe <span className="text-[var(--text-primary)]">{confirmKeyword}</span>
+ </span>
+ <input
+ type="text"
+ value={confirmationValue}
+ onChange={(event) => setConfirmationValue(event.target.value)}
+ placeholder={confirmKeywordPlaceholder || confirmKeyword}
+ className="w-full rounded-lg border border-[var(--border-visible)] bg-transparent px-3 py-2.5 text-sm font-[Space_Mono] text-[var(--text-primary)] focus:outline-none focus:border-[var(--text-primary)]"
+ />
+ </label>
+ )}
+ </div>
+ </div>
 
-          <div className="flex gap-3 mt-6">
-            <button
-              onClick={handleClose}
-              className="flex-1 px-4 py-2.5 bg-[#2c2c2e] hover:bg-[#2c2c2e] text-[#c7c7cc] font-medium rounded-lg transition-colors"
-            >
-              {cancelText}
-            </button>
-            <button
-              onClick={handleConfirm}
-              disabled={!keywordMatches}
-              className={`flex-1 px-4 py-2.5 font-medium rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${style.button}`}
-            >
-              {confirmText}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+ <div className="flex gap-3 mt-6">
+ <button
+ onClick={handleClose}
+ className="flex-1 px-4 py-2.5 border border-[var(--border-visible)] text-[var(--text-secondary)] font-[Space_Mono] text-[13px] uppercase tracking-[0.06em] rounded-full transition-colors hover:border-[var(--text-primary)] hover:text-[var(--text-primary)]"
+ >
+ {cancelText}
+ </button>
+ <button
+ onClick={handleConfirm}
+ disabled={!keywordMatches}
+ className={`flex-1 px-4 py-2.5 font-[Space_Mono] text-[13px] uppercase tracking-[0.06em] rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${style.button}`}
+ >
+ {confirmText}
+ </button>
+ </div>
+ </div>
+ </div>
+ </div>
+ );
 };
 
 export default ConfirmModal;
