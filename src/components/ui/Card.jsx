@@ -1,63 +1,56 @@
-import { AlertTriangle, TrendingUp, TrendingDown } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 
 const Card = ({ title, amount, icon, subtext, alert, trend }) => {
-  const Icon = icon;
-  const isNegative = amount < 0;
+ const Icon = icon;
+ const isNegative = amount < 0;
 
-  const getTrendIcon = () => {
-    if (trend === 'up') return <TrendingUp className="w-3.5 h-3.5" />;
-    if (trend === 'down') return <TrendingDown className="w-3.5 h-3.5" />;
-    return null;
-  };
+ const trendSymbol = trend === 'up' ? '↑' : trend === 'down' ? '↓' : null;
+ const trendColor =
+ trend === 'up' ? 'text-[var(--success)]' : trend === 'down' ? 'text-[var(--negative)]' : '';
 
-  const getTrendColor = () => {
-    if (trend === 'up') return 'text-[#30d158]';
-    if (trend === 'down') return 'text-[#ff453a]';
-    return 'text-[#636366]';
-  };
+ return (
+ <div
+ className={`px-5 py-4 border transition-colors ${
+ alert
+ ? 'border-l-2 border-l-[var(--accent)] border-[var(--border)] bg-[var(--surface)]'
+ : 'border-[var(--border)] bg-[var(--surface)] hover:border-[var(--border-visible)]'
+ } rounded-lg`}
+ >
+ <div className="flex items-start justify-between">
+ <div className="flex-1 min-w-0">
+ <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)] mb-2">
+ {title}
+ </p>
+ <p
+ className={`font-[Space_Mono] text-[22px] tabular-nums tracking-tight ${
+ isNegative ? 'text-[var(--negative)]' : 'text-[var(--text-primary)]'
+ }`}
+ >
+ {formatCurrency(amount)}
+ </p>
+ {(subtext || trendSymbol) && (
+ <div className="flex items-center gap-1.5 mt-2">
+ {trendSymbol && (
+ <span className={`font-[Space_Mono] text-[11px] ${trendColor}`}>{trendSymbol}</span>
+ )}
+ {subtext && (
+ <p className="font-[Space_Mono] text-[11px] text-[var(--text-disabled)]">{subtext}</p>
+ )}
+ </div>
+ )}
+ </div>
+ <Icon size={16} className="text-[var(--text-disabled)] flex-shrink-0 mt-0.5" />
+ </div>
 
-  return (
-    <div className={`
-      relative p-5 rounded-2xl border transition-all duration-200
-      ${alert
-        ? 'border-l-4 border-l-[#ff453a] border-[rgba(255,255,255,0.08)] shadow-sm'
-        : 'border-[rgba(255,255,255,0.08)] shadow-sm hover:shadow-md'
-      }
-    `}>
-      <div className="flex items-start justify-between">
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-[#8e8e93] uppercase tracking-wide mb-2">{title}</p>
-
-          <h3 className={`text-2xl font-semibold tracking-tight ${isNegative ? 'text-[#ff453a]' : 'text-[#e5e5ea]'}`}>
-            {formatCurrency(amount)}
-          </h3>
-
-          {(subtext || trend) && (
-            <div className="flex items-center gap-1.5 mt-2">
-              {trend && (
-                <span className={`flex items-center ${getTrendColor()}`}>
-                  {getTrendIcon()}
-                </span>
-              )}
-              {subtext && <p className="text-xs text-[#636366]">{subtext}</p>}
-            </div>
-          )}
-        </div>
-
-        <div className="p-2.5 rounded-lg bg-[#2c2c2e]">
-          <Icon className="w-5 h-5 text-[#98989d]" />
-        </div>
-      </div>
-
-      {alert && (
-        <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-[rgba(255,255,255,0.08)]">
-          <AlertTriangle className="w-3.5 h-3.5 text-[#ff453a]" />
-          <span className="text-xs font-medium text-[#ff453a]">Requiere atención</span>
-        </div>
-      )}
-    </div>
-  );
+ {alert && (
+ <div className="mt-3 pt-3 border-t border-[var(--border)]">
+ <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--negative)]">
+ [ATENCION]
+ </p>
+ </div>
+ )}
+ </div>
+ );
 };
 
 export default Card;
