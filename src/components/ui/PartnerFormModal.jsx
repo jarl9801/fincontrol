@@ -152,7 +152,7 @@ const PartnerFormModal = ({
  className={`
  flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
  ${formData.type === value
- ? 'bg-white text-[var(--text-primary)] '
+ ? 'bg-[var(--surface-raised)] text-[var(--text-primary)] '
  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}
  `}
  >

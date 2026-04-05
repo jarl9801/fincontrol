@@ -368,7 +368,7 @@ const TransactionFormModal = ({
  className={`
  flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
  ${formData.type === 'income' 
- ? 'bg-white text-[var(--success)] ' 
+ ? 'bg-[var(--surface-raised)] text-[var(--success)] ' 
  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}
  `}
  >
@@ -381,7 +381,7 @@ const TransactionFormModal = ({
  className={`
  flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
  ${formData.type === 'expense' 
- ? 'bg-white text-[var(--accent)] ' 
+ ? 'bg-[var(--surface-raised)] text-[var(--accent)] ' 
  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}
  `}
  >
@@ -502,7 +502,7 @@ const TransactionFormModal = ({
  {showPartnerSuggestions && (partnerSuggestions.length > 0 || typedPartnerNotInList) && (
  <div
  ref={partnerSuggestionsRef}
- className="absolute left-0 right-0 z-[300] mt-1 overflow-hidden rounded-lg border border-[var(--border)] bg-white/98"
+ className="absolute left-0 right-0 z-[300] mt-1 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface-raised)]"
  style={{ boxShadow: 'none' }}
  >
  {partnerSuggestions.map((p, idx) => (
@@ -567,7 +567,7 @@ const TransactionFormModal = ({
  {showSuggestions && suggestions.length > 0 && (
  <div
  ref={suggestionsRef}
- className="absolute left-0 right-0 z-[300] mt-1 overflow-hidden rounded-lg border border-[var(--border)] bg-white/98"
+ className="absolute left-0 right-0 z-[300] mt-1 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface-raised)]"
  style={{ boxShadow: 'none' }}
  >
  {suggestions.map((s, idx) => (

@@ -275,7 +275,7 @@ const Partners = ({ user, userRole }) => {
  isInactive
  ? 'bg-[var(--surface-raised)]'
  : idx % 2 === 0
- ? 'bg-white'
+ ? 'bg-[var(--surface)]'
  : 'bg-[var(--surface-raised)]'
  } hover:bg-[var(--surface-raised)]`}
  >

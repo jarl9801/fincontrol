@@ -138,7 +138,7 @@ const TransactionFilters = ({
  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-medium transition-all ${
  quickFilter === key
  ? 'border border-[var(--border-visible)] bg-[var(--surface)] text-[var(--text-primary)]'
- : 'border border-[var(--border)] bg-white/62 text-[var(--text-disabled)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]'
+ : 'border border-[var(--border)] bg-[var(--surface)] text-[var(--text-disabled)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]'
  }`}
  >
  {Icon && <Icon size={13} />}

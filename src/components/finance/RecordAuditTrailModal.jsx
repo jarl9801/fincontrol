@@ -228,7 +228,7 @@ const RecordAuditTrailModal = ({ isOpen, onClose, record, logs = [], loading = f
  {entry.metadata && (
  <div className="mt-3 grid gap-2 md:grid-cols-2">
  {Object.entries(entry.metadata).map(([key, value]) => (
- <div key={key} className="rounded-lg border border-[var(--border)] bg-white/64 px-3 py-2 text-[11px] text-[var(--text-disabled)]">
+ <div key={key} className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-[11px] text-[var(--text-disabled)]">
  <span className="font-medium text-[var(--text-disabled)]">{key}: </span>
  <span className="text-[var(--text-primary)]">{safeString(value) || '—'}</span>
  </div>
