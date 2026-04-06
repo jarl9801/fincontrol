@@ -15,9 +15,9 @@ import { formatCurrency } from '../../utils/formatters';
 import HelpButton from '../../components/ui/HelpButton';
 
 const SCENARIOS = [
- { id: 'optimista', label: 'Optimista', emoji: '🟢', varIngresos: 20, varGastos: -5, retrasoCobros: 0, nuevasContrataciones: 0, subidaPrecios: 0 },
- { id: 'base', label: 'Base', emoji: '🟡', varIngresos: 0, varGastos: 0, retrasoCobros: 0, nuevasContrataciones: 0, subidaPrecios: 0 },
- { id: 'pesimista', label: 'Pesimista', emoji: '🔴', varIngresos: -20, varGastos: 10, retrasoCobros: 0, nuevasContrataciones: 0, subidaPrecios: 0 },
+ { id: 'optimista', label: 'Optimista', emoji: '●', emojiColor: 'var(--success)', varIngresos: 20, varGastos: -5, retrasoCobros: 0, nuevasContrataciones: 0, subidaPrecios: 0 },
+ { id: 'base', label: 'Base', emoji: '●', emojiColor: 'var(--warning)', varIngresos: 0, varGastos: 0, retrasoCobros: 0, nuevasContrataciones: 0, subidaPrecios: 0 },
+ { id: 'pesimista', label: 'Pesimista', emoji: '●', emojiColor: 'var(--negative)', varIngresos: -20, varGastos: 10, retrasoCobros: 0, nuevasContrataciones: 0, subidaPrecios: 0 },
 ];
 
 const MONTH_LABELS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
@@ -41,8 +41,8 @@ function SliderControl({ label, value, onChange, min, max, step = 1, unit = '%' 
  step={step}
  value={value}
  onChange={(e) => onChange(Number(e.target.value))}
- className="w-full accent-blue-500"
- style={{ background: `linear-gradient(to right, var(--text-primary) ${pct}%, #222 ${pct}%)` }}
+ className="w-full accent-[var(--text-primary)]"
+        style={{ background: 'var(--surface)' }}
  />
  <div className="flex justify-between text-[10px] text-[var(--text-secondary)]">
  <span>{min}{unit}</span>
@@ -57,7 +57,7 @@ function MetricCard({ label, value, delta, prefix = '€' }) {
  const isNegative = delta < 0;
  return (
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 ">
- <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--text-disabled)]">{label}</p>
+ <p className="nd-label text-[var(--text-disabled)]">{label}</p>
  <p className={`mt-1 text-[18px] font-bold tabular-nums ${isNegative ? 'text-[var(--negative)]' : 'text-[var(--text-primary)]'}`}>
  {prefix}{formatCurrency(value)}
  </p>
@@ -167,7 +167,7 @@ const CustomTooltip = ({ active, payload, label }) => {
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 ">
  <p className="mb-1 text-[11px] font-semibold text-[var(--text-secondary)]">{label}</p>
  {payload.map((entry) => (
- <p key={entry.dataKey} className="text-[11px] tabular-nums" style={{ color: entry.color }}>
+ <p key={entry.dataKey} className="nd-mono text-[11px] tabular-nums" style={{ color: entry.color }}>
  {entry.name}: €{formatCurrency(entry.value)}
  </p>
  ))}
@@ -305,7 +305,7 @@ export default function WhatIf({ user }) {
  : 'border-[var(--border)] bg-[var(--surface)] text-[var(--text-secondary)] hover:bg-[var(--surface)]'
  }`}
  >
- <span>{s.emoji}</span>
+ <span style={{ color: s.emojiColor }}>{s.emoji}</span>
  {s.label}
  </button>
  ))}
@@ -356,7 +356,7 @@ export default function WhatIf({ user }) {
  step={500}
  value={gastoBaseManual !== null ? gastoBaseManual : (metrics.avgMonthlyOutflows || 0)}
  onChange={(e) => { setGastoBaseManual(Number(e.target.value)); setActiveScenario(null); }}
- className="w-full accent-blue-500 h-2 cursor-pointer"
+ className="w-full accent-[var(--text-primary)] h-2 cursor-pointer"
  />
  <div className="flex justify-between text-[10px] text-[var(--text-disabled)] mt-1">
  <span>€0</span>
@@ -411,7 +411,7 @@ export default function WhatIf({ user }) {
  <div className="space-y-6 lg:col-span-8">
  {/* KPI cards */}
  <div className="mb-1 flex items-center gap-2">
- <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--text-disabled)]">Métricas simuladas</span>
+ <span className="nd-label text-[var(--text-disabled)]">Métricas simuladas</span>
  <HelpButton title="Métricas simuladas" size={13}>
  <p><strong>Ingresos sim.:</strong> Ingresos mensuales proyectados con los ajustes aplicados. El delta muestra la diferencia vs. el valor actual.</p>
  <p><strong>Gastos sim.:</strong> Gastos mensuales proyectados incluyendo variaciones y contrataciones. Delta positivo = más gasto.</p>
@@ -437,7 +437,7 @@ export default function WhatIf({ user }) {
 
  {/* Cash impact */}
  <div className="mb-1 flex items-center gap-2">
- <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--text-disabled)]">Impacto en caja</span>
+ <span className="nd-label text-[var(--text-disabled)]">Impacto en caja</span>
  <HelpButton title="Proyección de caja" size={13}>
  <p>Muestra la caja estimada a 30, 60 y 90 días considerando el margen neto simulado y el impacto del retraso de cobros. Si algún valor es negativo (rojo), significa que la empresa necesitaría financiamiento externo.</p>
  </HelpButton>
@@ -449,7 +449,7 @@ export default function WhatIf({ user }) {
  { label: 'Caja a 90 días', value: sim.caja90 },
  ].map((item) => (
  <div key={item.label} className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 ">
- <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--text-disabled)]">{item.label}</p>
+ <p className="nd-label text-[var(--text-disabled)]">{item.label}</p>
  <p className={`mt-1 text-[16px] font-bold tabular-nums ${item.value < 0 ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'}`}>
  €{formatCurrency(item.value)}
  </p>
@@ -459,7 +459,7 @@ export default function WhatIf({ user }) {
 
  {/* Comparison table */}
  <div className="mb-1 flex items-center gap-2">
- <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--text-disabled)]">Comparación actual vs. simulado</span>
+ <span className="nd-label text-[var(--text-disabled)]">Comparación actual vs. simulado</span>
  <HelpButton title="Tabla comparativa" size={13}>
  <p>Compara lado a lado los valores reales actuales con los valores simulados. La columna delta (Δ) muestra la diferencia: verde indica mejora, rojo indica deterioro respecto a la situación actual.</p>
  </HelpButton>
@@ -501,7 +501,7 @@ export default function WhatIf({ user }) {
 
  {/* Insight */}
  <div className="mb-1 flex items-center gap-2">
- <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--text-disabled)]">Diagnóstico</span>
+ <span className="nd-label text-[var(--text-disabled)]">Diagnóstico</span>
  <HelpButton title="Diagnóstico automático" size={13}>
  <p>Evaluación automática basada en el runway simulado (meses de operación restantes):</p>
  <p><strong>Crítico (rojo):</strong> Menos de 3 meses — acción urgente requerida.</p>

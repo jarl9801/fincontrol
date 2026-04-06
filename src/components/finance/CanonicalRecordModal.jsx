@@ -35,7 +35,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  <div className="w-full max-w-2xl overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
  <div className="flex items-start justify-between border-b border-[var(--border)] px-5 py-4">
  <div>
- <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Edición operativa</p>
+ <p className="nd-label text-[var(--text-disabled)]">Edición operativa</p>
  <h3 className="mt-1 text-[22px] font-semibold tracking-tight text-[var(--text-primary)]">Editar {projectLabel}</h3>
  <p className="mt-1 text-[12px] text-[var(--text-secondary)]">{record.description}</p>
  </div>
@@ -53,7 +53,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  {record.recordFamily === 'movement' && (
  <div className="grid gap-4 md:grid-cols-3">
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Dirección</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Dirección</span>
  <select
  className={fieldClassName}
  value={formData.direction}
@@ -65,7 +65,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Fecha</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Fecha</span>
  <input
  type="date"
  className={fieldClassName}
@@ -75,7 +75,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Importe</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Importe</span>
  <input
  type="number"
  step="0.01"
@@ -91,7 +91,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  {record.recordFamily !== 'movement' && (
  <div className="grid gap-4 md:grid-cols-3">
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Emisión</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Emisión</span>
  <input
  type="date"
  className={fieldClassName}
@@ -101,7 +101,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Vencimiento</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Vencimiento</span>
  <input
  type="date"
  className={fieldClassName}
@@ -111,7 +111,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Importe</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Importe</span>
  <input
  type="number"
  step="0.01"
@@ -126,7 +126,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
 
  <div className="grid gap-4 md:grid-cols-2">
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Contraparte</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Contraparte</span>
  <input
  type="text"
  className={fieldClassName}
@@ -136,7 +136,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Documento</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Documento</span>
  <input
  type="text"
  className={fieldClassName}
@@ -147,7 +147,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  </div>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Descripción</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Descripción</span>
  <textarea
  rows="3"
  className={fieldClassName}
@@ -158,7 +158,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
 
  <div className="grid gap-4 md:grid-cols-3">
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Categoría</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Categoría</span>
  <select
  className={fieldClassName}
  value={formData.categoryName}
@@ -172,7 +172,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Centro de costo</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Centro de costo</span>
  <select
  className={fieldClassName}
  value={formData.costCenterId}
@@ -188,7 +188,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Proyecto</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Proyecto</span>
  <select
  className={fieldClassName}
  value={formData.projectId}

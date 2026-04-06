@@ -73,7 +73,7 @@ const VIEW_TITLES = {
 
 const LoadingState = () => (
  <div className="flex items-center justify-center py-32 animate-fadeIn">
- <p className="font-[Space_Mono] text-[13px] uppercase tracking-[0.08em] text-[var(--text-disabled)]">
+ <p className="nd-mono text-[13px] uppercase tracking-[0.08em] text-[var(--text-disabled)]">
  [CARGANDO...]
  </p>
  </div>
@@ -166,11 +166,11 @@ function AppContent() {
  <div className="flex items-center gap-3">
  <MobileMenuButton onClick={() => setIsMobileMenuOpen(true)} />
  <div>
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)]">Control ejecutivo</p>
- <h2 className="mt-1 text-[22px] font-bold tracking-tight text-[var(--text-display)] md:text-[28px]">
+<p className="nd-label text-[var(--text-secondary)]">Executive Finance Control</p>
+<h2 className="mt-1 nd-display text-[24px] leading-[1.05] tracking-[-0.02em] text-[var(--text-display)] md:text-[30px]">
  {currentTitle}
  </h2>
- <p className="mt-1 hidden font-[Space_Mono] text-[11px] text-[var(--text-disabled)] md:block">
+<p className="mt-1 hidden nd-mono text-[10px] uppercase tracking-[0.08em] text-[var(--text-disabled)] md:block">
  {new Date().toLocaleDateString('es-ES', {
  weekday: 'long',
  year: 'numeric',
@@ -184,16 +184,16 @@ function AppContent() {
  {!loading && (
  <div className="hidden items-center gap-3 md:flex">
  {bankBalanceData && (
- <div className="flex items-center gap-2 border border-[var(--border)] px-3.5 py-2 rounded-lg">
+<div className="flex items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2">
  <Landmark size={12} className={bankBalanceData.currentBalance >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'} />
- <span className={`font-[Space_Mono] text-[12px] font-bold tabular-nums ${bankBalanceData.currentBalance >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
+ <span className={`nd-mono text-[12px] font-bold tabular-nums ${bankBalanceData.currentBalance >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
  {formatCurrency(bankBalanceData.currentBalance)}
  </span>
  </div>
  )}
- <div className="flex items-center gap-2 border border-[var(--border)] px-3.5 py-2 rounded-lg">
+<div className="flex items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2">
  <div className="h-1.5 w-1.5 rounded-full bg-[var(--success)]" />
- <span className="font-[Space_Mono] text-[11px] text-[var(--text-disabled)]">
+<span className="nd-mono text-[10px] uppercase tracking-[0.08em] text-[var(--text-disabled)]">
  {transactions.length} registros
  </span>
  </div>

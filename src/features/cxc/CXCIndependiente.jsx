@@ -38,7 +38,7 @@ const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
  const IconComponent = icon;
  return (
  <div
- className={`rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ${onClick ? 'cursor-pointer hover: transition-transform duration-200' : ''}`}
+ className={`rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ${onClick ? 'cursor-pointer transition-transform duration-200' : ''}`}
  onClick={onClick}
  role={onClick ? 'button' : undefined}
  tabIndex={onClick ? 0 : undefined}
@@ -46,10 +46,10 @@ const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
  >
  <div className="mb-4 flex items-center justify-between">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-disabled)]">{title}</p>
- <p className="mt-2 text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
+ <p className="nd-label text-[var(--text-disabled)]">{title}</p>
+ <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight text-[var(--text-display)]">{value}</p>
  </div>
- <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: `${accent}20`, color: accent }}>
+ <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: 'var(--surface)', color: accent }}>
  <IconComponent size={18} />
  </div>
  </div>
@@ -66,8 +66,8 @@ const AgingBar = ({ buckets }) => {
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-disabled)]">Antigüedad</p>
- <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Cartera vencida por tramos</h3>
+ <p className="nd-label text-[var(--text-disabled)]">Antigüedad</p>
+ <h3 className="nd-display mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-display)]">Cartera vencida por tramos</h3>
  </div>
  <span className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-semibold text-[var(--text-secondary)]">
  {formatCurrency(total)}
@@ -85,7 +85,7 @@ const AgingBar = ({ buckets }) => {
  <div key={bucket.label} className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-3">
  <div className="mb-2 flex items-center gap-2">
  <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: bucketColor[index] }} />
- <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">{bucket.label}</span>
+ <span className="nd-label text-[var(--text-disabled)]">{bucket.label}</span>
  </div>
  <p className="text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(bucket.total)}</p>
  </div>
@@ -182,10 +182,7 @@ const CXCIndependiente = ({ user, userRole }) => {
  if (metrics.loading) {
  return (
  <div className="flex items-center justify-center py-28">
- <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--success)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Preparando cuentas por cobrar...</p>
- </div>
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  );
  }
@@ -195,8 +192,8 @@ const CXCIndependiente = ({ user, userRole }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--success)]">Cuentas por cobrar</p>
- <h2 className="text-[32px] font-semibold tracking-tight text-[var(--text-primary)]">
+ <p className="nd-label text-[var(--success)] mb-3">Cuentas por cobrar</p>
+ <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
  Seguimiento de cobros, abonos y vencimientos.{' '}
  <HelpButton title="Cuentas por cobrar">
  <p><strong>Cartera abierta</strong> — Total de facturas emitidas que aun no se han cobrado completamente.</p>
@@ -215,7 +212,7 @@ const CXCIndependiente = ({ user, userRole }) => {
 
  <div className="grid gap-4 lg:grid-cols-4">
  <StatCard title="Cartera abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="var(--success)" icon={BadgeEuro} onClick={() => setStatusFilter('all')} />
- <StatCard title="Cobrado parcial" value={formatCurrency(totalPartial)} subtitle={totalPartial > 0 ? 'Abonos recibidos en facturas aún no cobradas' : 'Sin cobros parciales — todas pendientes o liquidadas'} accent="#999" icon={ArrowUpRight} onClick={() => setStatusFilter('partial')} />
+ <StatCard title="Cobrado parcial" value={formatCurrency(totalPartial)} subtitle={totalPartial > 0 ? 'Abonos recibidos en facturas aún no cobradas' : 'Sin cobros parciales — todas pendientes o liquidadas'} accent="var(--text-disabled)" icon={ArrowUpRight} onClick={() => setStatusFilter('partial')} />
  <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overdueReceivables.length} documentos fuera de plazo`} accent="var(--accent)" icon={AlertTriangle} onClick={() => setStatusFilter('overdue')} />
  <StatCard title="Ventana 14d" value={formatCurrency(dueSoon)} subtitle={`${metrics.upcomingReceivables.length} cobros proximos`} accent="var(--warning)" icon={Clock3} onClick={() => setStatusFilter('issued')} />
  </div>
@@ -227,14 +224,14 @@ const CXCIndependiente = ({ user, userRole }) => {
  <div className="relative w-full xl:max-w-sm">
  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)]" size={16} />
  <input
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] py-3 pl-10 pr-4 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] py-3 pl-10 pr-4 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  placeholder="Buscar cliente, documento o proyecto"
  value={searchTerm}
  onChange={(event) => setSearchTerm(event.target.value)}
  />
  </div>
  <div className="flex flex-wrap items-center gap-2">
- <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">
+ <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 nd-label text-[var(--text-disabled)]">
  <Filter size={14} />
  Estado
  </div>
@@ -258,7 +255,7 @@ const CXCIndependiente = ({ user, userRole }) => {
  <div className="overflow-x-auto">
  <table className="w-full min-w-[980px] text-left">
  <thead>
- <tr className="border-b border-[var(--border)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">
+ <tr className="border-b border-[var(--border)] nd-label text-[var(--text-disabled)]">
  <th className="px-4 py-3">Cliente</th>
  <th className="px-4 py-3">Documento</th>
  <th className="px-4 py-3">Proyecto</th>

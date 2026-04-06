@@ -6,13 +6,13 @@ import {
 import { useAuditLog } from '../../hooks/useAuditLog';
 
 const ACTION_STYLES = {
- create: { color: 'var(--success)', bg: 'rgba(74,158,92,0.15)', label: 'Creación', icon: Plus },
- update: { color: 'var(--interactive)', bg: 'rgba(91,155,246,0.12)', label: 'Edición', icon: Edit3 },
- delete: { color: 'var(--accent)', bg: 'rgba(215,25,33,0.12)', label: 'Eliminación', icon: Trash2 },
- payment: { color: 'var(--warning)', bg: 'rgba(212,168,67,0.12)', label: 'Pago', icon: FileText },
- status_change: { color: 'var(--text-secondary)', bg: 'rgba(153,153,153,0.08)', label: 'Cambio Estado', icon: Edit3 },
- cancel: { color: 'var(--warning)', bg: 'rgba(212,168,67,0.12)', label: 'Cancelación', icon: Trash2 },
- void: { color: 'var(--accent)', bg: 'rgba(215,25,33,0.12)', label: 'Anulación', icon: Trash2 },
+ create: { color: 'var(--success)', bg: 'var(--success-50)', label: 'Creación', icon: Plus },
+ update: { color: 'var(--interactive)', bg: 'var(--info-50)', label: 'Edición', icon: Edit3 },
+ delete: { color: 'var(--accent)', bg: 'var(--error-50)', label: 'Eliminación', icon: Trash2 },
+ payment: { color: 'var(--warning)', bg: 'var(--warning-50)', label: 'Pago', icon: FileText },
+ status_change: { color: 'var(--text-secondary)', bg: 'var(--surface-raised)', label: 'Cambio Estado', icon: Edit3 },
+ cancel: { color: 'var(--warning)', bg: 'var(--warning-50)', label: 'Cancelación', icon: Trash2 },
+ void: { color: 'var(--accent)', bg: 'var(--error-50)', label: 'Anulación', icon: Trash2 },
 };
 
 const AuditLog = ({ user }) => {
@@ -60,7 +60,7 @@ const AuditLog = ({ user }) => {
  {presetEntityId && (
  <div className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
  <div>
- <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Contexto activo</p>
+ <p className="nd-label text-[var(--text-secondary)]">Contexto activo</p>
  <p className="mt-1 text-[13px] font-medium text-white">
  {presetLabel || presetEntityId}
  </p>

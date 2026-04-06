@@ -510,7 +510,7 @@ const ImportExport = ({ user }) => {
  return (
  <div className="space-y-6 animate-fadeIn">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
- <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--text-primary)]">Operación de datos</p>
+ <p className="nd-label text-[var(--text-primary)]">Operación de datos</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Importación y exportación</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Mueve registros en bloque con control previo de columnas y duplicados.</p>
  </div>
@@ -593,7 +593,7 @@ const ImportExport = ({ user }) => {
  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
  {REQUIRED_COLUMNS.map(col => (
  <div key={col}>
- <label className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">
  {col} {!columnMapping[col] && <span className="text-[var(--accent)]">*</span>}
  </label>
  <select
@@ -613,7 +613,7 @@ const ImportExport = ({ user }) => {
  <div>
  <div className="flex items-center gap-2 mb-2">
  <Eye size={14} className="text-[var(--text-secondary)]" />
- <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <span className="nd-label text-[var(--text-secondary)]">
  Vista previa (primeras {Math.min(previewRows.length, 10)} filas)
  </span>
  </div>
@@ -621,13 +621,13 @@ const ImportExport = ({ user }) => {
  <table className="w-full text-left">
  <thead>
  <tr className="border-b border-[var(--border)] bg-[var(--surface-raised)]">
- <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">#</th>
- <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Fecha</th>
- <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Descripción</th>
- <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Categoría</th>
- <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Tipo</th>
- <th className="px-3 py-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Monto</th>
- <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Estado</th>
+ <th className="px-3 py-2 nd-label text-[var(--text-secondary)]">#</th>
+ <th className="px-3 py-2 nd-label text-[var(--text-secondary)]">Fecha</th>
+ <th className="px-3 py-2 nd-label text-[var(--text-secondary)]">Descripción</th>
+ <th className="px-3 py-2 nd-label text-[var(--text-secondary)]">Categoría</th>
+ <th className="px-3 py-2 nd-label text-[var(--text-secondary)]">Tipo</th>
+ <th className="px-3 py-2 text-right nd-label text-[var(--text-secondary)]">Monto</th>
+ <th className="px-3 py-2 nd-label text-[var(--text-secondary)]">Estado</th>
  </tr>
  </thead>
  <tbody>
@@ -770,11 +770,11 @@ const ImportExport = ({ user }) => {
  <table className="w-full text-left">
  <thead>
  <tr className="border-b border-[var(--border)] bg-[var(--surface-raised)]">
- <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Fecha</th>
- <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Contrapartida</th>
- <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Descripción</th>
- <th className="px-3 py-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Monto</th>
- <th className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Estado</th>
+ <th className="px-3 py-2 nd-label text-[var(--text-secondary)]">Fecha</th>
+ <th className="px-3 py-2 nd-label text-[var(--text-secondary)]">Contrapartida</th>
+ <th className="px-3 py-2 nd-label text-[var(--text-secondary)]">Descripción</th>
+ <th className="px-3 py-2 text-right nd-label text-[var(--text-secondary)]">Monto</th>
+ <th className="px-3 py-2 nd-label text-[var(--text-secondary)]">Estado</th>
  </tr>
  </thead>
  <tbody>

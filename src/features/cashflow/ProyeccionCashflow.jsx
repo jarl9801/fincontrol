@@ -26,14 +26,14 @@ const StatCard = ({ title, value, subtitle, accent, icon }) => {
  return (
  <div
  className="rounded-xl border p-5 "
- style={{ background: `linear-gradient(160deg, ${accent}14 0%, rgba(10,11,15,0.94) 55%)`, borderColor: `${accent}26` }}
+ style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
  >
  <div className="mb-4 flex items-center justify-between">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">{title}</p>
- <p className="mt-2 text-[28px] font-semibold tracking-tight text-white">{value}</p>
+ <p className="nd-label text-[var(--text-disabled)]">{title}</p>
+ <p className="mt-2 nd-display nd-display text-[28px] font-semibold tracking-tight text-[var(--text-display)]">{value}</p>
  </div>
- <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: `${accent}1f`, color: accent }}>
+ <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: 'var(--surface)', color: accent }}>
  <IconComponent size={18} />
  </div>
  </div>
@@ -44,8 +44,8 @@ const StatCard = ({ title, value, subtitle, accent, icon }) => {
 
 const ScenarioCard = ({ title, balance, delta, accent, subtitle }) => (
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">{title}</p>
- <p className="mt-2 text-[28px] font-semibold tracking-tight" style={{ color: accent }}>{formatCurrency(balance)}</p>
+ <p className="nd-label text-[var(--text-disabled)]">{title}</p>
+ <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight" style={{ color: accent }}>{formatCurrency(balance)}</p>
  <p className={`mt-2 text-sm font-semibold ${delta >= 0 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
  {delta >= 0 ? '+' : ''}{formatCurrency(delta)}
  </p>
@@ -113,10 +113,7 @@ const ProyeccionCashflow = ({ user }) => {
  if (metrics.loading) {
  return (
  <div className="flex items-center justify-center py-28">
- <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--text-secondary)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Proyectando tesorería...</p>
- </div>
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  );
  }
@@ -126,15 +123,15 @@ const ProyeccionCashflow = ({ user }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--text-secondary)]">Proyección de tesorería</p>
- <h2 className="text-[32px] font-semibold tracking-tight text-white">Horizonte de 8 semanas usando CXC, CXP y caja real.</h2>
+ <p className="nd-label text-[var(--text-secondary)] mb-3">Proyección de tesorería</p>
+ <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Horizonte de 8 semanas usando CXC, CXP y caja real.</h2>
  <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[var(--text-secondary)]">
  La proyección parte del saldo bancario actual y suma o resta solo compromisos abiertos con vencimiento conocido.
  </p>
  </div>
  <div className="rounded-lg border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-3">
- <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Horizonte</p>
- <p className="mt-1 text-sm font-semibold text-white">Próximas 8 semanas</p>
+ <p className="nd-label text-[var(--text-secondary)]">Horizonte</p>
+ <p className="mt-1 text-sm font-semibold text-[var(--text-primary)]">Próximas 8 semanas</p>
  </div>
  </div>
  </section>
@@ -158,10 +155,10 @@ const ProyeccionCashflow = ({ user }) => {
  )}
 
  <div className="grid gap-4 lg:grid-cols-4">
- <StatCard title="Caja actual" value={formatCurrency(metrics.currentCash)} subtitle="Saldo bancario real a hoy" accent={metrics.currentCash >= 0 ? '#999' : 'var(--accent)'} icon={Wallet} />
+ <StatCard title="Caja actual" value={formatCurrency(metrics.currentCash)} subtitle="Saldo bancario real a hoy" accent={metrics.currentCash >= 0 ? 'var(--text-disabled)' : 'var(--accent)'} icon={Wallet} />
  <StatCard title="Ventana 14d" value={formatCurrency(metrics.next14Net)} subtitle={`${metrics.upcomingReceivables.length} cobros y ${metrics.upcomingPayables.length} pagos`} accent={metrics.next14Net >= 0 ? 'var(--success)' : 'var(--warning)'} icon={Calendar} />
  <StatCard title="Liquidez proyectada" value={formatCurrency(metrics.projectedLiquidity)} subtitle="Caja actual + CXC abiertas - CXP abiertas" accent={metrics.projectedLiquidity >= 0 ? 'var(--success)' : 'var(--accent)'} icon={Target} />
- <StatCard title="Runway" value={metrics.runwayMonths ? `${metrics.runwayMonths.toFixed(1)}m` : 'N/A'} subtitle={`Burn mensual promedio ${formatCurrency(metrics.avgMonthlyOutflows)}`} accent="#999" icon={Zap} />
+ <StatCard title="Runway" value={metrics.runwayMonths ? `${metrics.runwayMonths.toFixed(1)}m` : 'N/A'} subtitle={`Burn mensual promedio ${formatCurrency(metrics.avgMonthlyOutflows)}`} accent="var(--text-disabled)" icon={Zap} />
  </div>
 
  <div className="grid gap-4 md:grid-cols-3">
@@ -176,7 +173,7 @@ const ProyeccionCashflow = ({ user }) => {
  title="Escenario base"
  balance={finalScenario?.base ?? metrics.currentCash}
  delta={(finalScenario?.base ?? metrics.currentCash) - metrics.currentCash}
- accent="#999"
+ accent="var(--text-disabled)"
  subtitle="Solo compromisos actualmente abiertos"
  />
  <ScenarioCard
@@ -190,8 +187,8 @@ const ProyeccionCashflow = ({ user }) => {
 
  <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Curva de liquidez</p>
- <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-white">Saldo proyectado por semana</h3>
+ <p className="nd-label text-[var(--text-disabled)]">Curva de liquidez</p>
+ <h3 className="nd-display mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-display)]">Saldo proyectado por semana</h3>
  </div>
  <ResponsiveContainer width="100%" height={360}>
  <AreaChart
@@ -202,8 +199,8 @@ const ProyeccionCashflow = ({ user }) => {
  >
  <defs>
  <linearGradient id="projection-base" x1="0" y1="0" x2="0" y2="1">
- <stop offset="0%" stopColor="#999" stopOpacity={0.35} />
- <stop offset="100%" stopColor="#999" stopOpacity={0.04} />
+ <stop offset="0%" stopColor="var(--text-disabled)" stopOpacity={0.35} />
+ <stop offset="100%" stopColor="var(--text-disabled)" stopOpacity={0.04} />
  </linearGradient>
  <linearGradient id="projection-optimistic" x1="0" y1="0" x2="0" y2="1">
  <stop offset="0%" stopColor="var(--success)" stopOpacity={0.22} />
@@ -220,7 +217,7 @@ const ProyeccionCashflow = ({ user }) => {
  <Tooltip
  formatter={(value) => formatCurrency(value)}
  labelFormatter={(_, payload) => payload?.[0]?.payload?.range || ''}
- contentStyle={{ backgroundColor: '#000', border: '1px solid var(--border)', borderRadius: 18 }}
+ contentStyle={{ backgroundColor: 'var(--black)', border: '1px solid var(--border)', borderRadius: 18 }}
  />
  <Legend />
  <Area type="monotone" dataKey="optimistic" name="Optimista" stroke="var(--success)" fill="url(#projection-optimistic)" strokeWidth={2} />
@@ -232,7 +229,7 @@ const ProyeccionCashflow = ({ user }) => {
 
  <section className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
  <div className="border-b border-[var(--border)] px-5 py-4">
- <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
+ <h3 className="nd-display flex items-center gap-2 text-lg font-semibold text-[var(--text-display)]">
  <Activity size={18} className="text-[var(--text-secondary)]" />
  Desglose semanal comprometido
  </h3>
@@ -240,7 +237,7 @@ const ProyeccionCashflow = ({ user }) => {
  <div className="overflow-x-auto">
  <table className="w-full min-w-[860px] text-sm">
  <thead>
- <tr className="border-b border-[var(--border)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">
+ <tr className="border-b border-[var(--border)] nd-label text-[var(--text-disabled)]">
  <th className="px-4 py-3 text-left">Semana</th>
  <th className="px-4 py-3 text-left">Rango</th>
  <th className="px-4 py-3 text-right">Cobros comprometidos</th>

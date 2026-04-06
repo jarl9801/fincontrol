@@ -388,7 +388,7 @@ const PartnerFormModal = ({
  className={`
  flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-white
  transition-all duration-200 
- bg-[var(--text-primary)] hover:bg-[#2644b8]
+ bg-[var(--text-primary)] hover:opacity-80
  ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:'}
  `}
  >

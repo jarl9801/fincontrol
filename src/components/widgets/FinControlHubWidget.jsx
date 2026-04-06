@@ -93,13 +93,12 @@ const FinControlHubWidget = () => {
 
  if (loading) {
  return (
- <div className="nexus-widget nexus-widget-fincontrol skeleton">
+ <div className="nexus-widget nexus-widget-fincontrol">
  <div className="nexus-widget-header">
- <span>💰 FinControl</span>
+ <span>FinControl</span>
  </div>
- <div className="nexus-skeleton-grid">
- <div className="nexus-skeleton-line"></div>
- <div className="nexus-skeleton-line"></div>
+ <div className="n-empty" style={{ padding: '16px' }}>
+ <p>[LOADING...]</p>
  </div>
  </div>
  );
@@ -109,7 +108,7 @@ const FinControlHubWidget = () => {
  return (
  <div className="nexus-widget nexus-widget-fincontrol">
  <div className="nexus-widget-header">
- <span>💰 FinControl</span>
+ <span>FinControl</span>
  </div>
  <div className="nexus-widget-error">
  No se pudieron cargar los datos
@@ -125,7 +124,7 @@ const FinControlHubWidget = () => {
  <div className={`nexus-widget nexus-widget-fincontrol ${hasAlerts ? 'has-alerts' : ''}`}>
  <div className="nexus-widget-header">
  <div className="nexus-widget-title">
- <span>💰 FinControl</span>
+ <span>FinControl</span>
  {hasAlerts && (
  <span className="nexus-alert-badge">
  <Bell size={12} />
@@ -226,17 +225,17 @@ const _widgetStyles = `
 }
 
 .nexus-widget-fincontrol.has-alerts {
- border-color: var(--accent);
+ border-color: var(--negative);
 }
 
 .nexus-alert-badge {
  display: flex;
  align-items: center;
  gap: 4px;
- background: rgba(239, 68, 68, 0.15);
- color: var(--accent);
+ background: var(--error-50);
+ color: var(--negative);
  padding: 2px 8px;
- border-radius: 12px;
+ border-radius: var(--radius-lg);
  font-size: 11px;
  font-weight: 700;
 }
@@ -253,8 +252,8 @@ const _widgetStyles = `
  align-items: center;
  gap: 10px;
  padding: 12px;
- background: rgba(255,255,255,0.03);
- border-radius: 8px;
+ background: var(--surface);
+ border-radius: var(--radius-md);
 }
 
 .nexus-fin-icon {
@@ -263,17 +262,17 @@ const _widgetStyles = `
  display: flex;
  align-items: center;
  justify-content: center;
- border-radius: 8px;
+ border-radius: var(--radius-md);
 }
 
 .nexus-fin-income {
- background: rgba(34, 197, 94, 0.15);
+ background: var(--success-50);
  color: var(--success);
 }
 
 .nexus-fin-expense {
- background: rgba(239, 68, 68, 0.15);
- color: var(--accent);
+ background: var(--error-50);
+ color: var(--negative);
 }
 
 .nexus-fin-label {
@@ -289,15 +288,15 @@ const _widgetStyles = `
 }
 
 .nexus-text-success { color: var(--success); }
-.nexus-text-danger { color: var(--accent); }
+.nexus-text-danger { color: var(--negative); }
 
 .nexus-fin-balance {
  display: flex;
  align-items: center;
  gap: 12px;
  padding: 16px;
- background: rgba(255,255,255,0.03);
- border-radius: 8px;
+ background: var(--surface);
+ border-radius: var(--radius-md);
  margin-bottom: 16px;
 }
 
@@ -316,7 +315,7 @@ const _widgetStyles = `
 }
 
 .nexus-fin-balance-value.positive { color: var(--success); }
-.nexus-fin-balance-value.negative { color: var(--accent); }
+.nexus-fin-balance-value.negative { color: var(--negative); }
 
 .nexus-fin-pending {
  display: flex;
@@ -329,8 +328,8 @@ const _widgetStyles = `
  align-items: center;
  justify-content: space-between;
  padding: 10px 12px;
- background: rgba(255,255,255,0.03);
- border-radius: 6px;
+ background: var(--surface);
+ border-radius: var(--radius-sm);
 }
 
 .nexus-pending-label {
@@ -347,10 +346,10 @@ const _widgetStyles = `
 .nexus-pending-overdue {
  font-size: 10px;
  font-weight: 600;
- color: var(--accent);
- background: rgba(239, 68, 68, 0.15);
+ color: var(--negative);
+ background: var(--error-50);
  padding: 2px 6px;
- border-radius: 4px;
+ border-radius: var(--radius-sm);
 }
 
 .nexus-pending-total {
@@ -370,17 +369,17 @@ const _widgetStyles = `
  align-items: center;
  gap: 8px;
  padding: 8px 10px;
- border-radius: 6px;
+ border-radius: var(--radius-sm);
  font-size: 12px;
 }
 
 .nexus-alert-high {
- background: rgba(239, 68, 68, 0.1);
- color: var(--accent);
+ background: var(--error-50);
+ color: var(--negative);
 }
 
 .nexus-alert-medium {
- background: rgba(245, 158, 11, 0.1);
+ background: var(--warning-50);
  color: var(--warning);
 }
 `;

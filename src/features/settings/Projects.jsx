@@ -148,7 +148,7 @@ const Projects = ({ user }) => {
  <div className="space-y-6 animate-fadeIn">
  <div className="flex items-center justify-center py-12">
  <div className="flex flex-col items-center gap-4">
- <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+ <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--text-secondary)]"></div>
  <p className="text-[var(--text-secondary)]">Cargando proyectos...</p>
  </div>
  </div>
@@ -160,7 +160,7 @@ const Projects = ({ user }) => {
  <div className="space-y-6 animate-fadeIn">
  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
- <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--text-primary)]">Configuración operativa</p>
+ <p className="nd-label text-[var(--text-primary)]">Configuración operativa</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Proyectos</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">
  Administra el catálogo de proyectos para reportes, cobros, pagos y seguimiento financiero.
@@ -181,8 +181,8 @@ const Projects = ({ user }) => {
  <Briefcase className="h-5 w-5 text-[var(--text-primary)]" />
  </div>
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Total proyectos</p>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{projects.length}</p>
+ <p className="nd-label text-[var(--text-secondary)]">Total proyectos</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{projects.length}</p>
  </div>
  </div>
  </div>
@@ -192,8 +192,8 @@ const Projects = ({ user }) => {
  <CheckCircle2 className="h-5 w-5 text-[var(--success)]" />
  </div>
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Activos</p>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--success)]">{activeProjects.length}</p>
+ <p className="nd-label text-[var(--text-secondary)]">Activos</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--success)]">{activeProjects.length}</p>
  </div>
  </div>
  </div>
@@ -203,8 +203,8 @@ const Projects = ({ user }) => {
  <AlertCircle className="h-5 w-5 text-[var(--text-secondary)]" />
  </div>
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Inactivos</p>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-secondary)]">{inactiveProjects.length}</p>
+ <p className="nd-label text-[var(--text-secondary)]">Inactivos</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-secondary)]">{inactiveProjects.length}</p>
  </div>
  </div>
  </div>
@@ -226,12 +226,12 @@ const Projects = ({ user }) => {
  <table className="w-full">
  <thead className="border-b border-[var(--border)] bg-[var(--surface-raised)]">
  <tr>
- <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Código</th>
- <th className="px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Nombre</th>
- <th className="hidden px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)] md:table-cell">Cliente</th>
- <th className="hidden px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)] sm:table-cell">Fechas</th>
- <th className="px-6 py-4 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Estado</th>
- <th className="px-6 py-4 text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Acciones</th>
+ <th className="px-6 py-4 text-left nd-label text-[var(--text-secondary)]">Código</th>
+ <th className="px-6 py-4 text-left nd-label text-[var(--text-secondary)]">Nombre</th>
+ <th className="hidden px-6 py-4 text-left nd-label text-[var(--text-secondary)] md:table-cell">Cliente</th>
+ <th className="hidden px-6 py-4 text-left nd-label text-[var(--text-secondary)] sm:table-cell">Fechas</th>
+ <th className="px-6 py-4 text-center nd-label text-[var(--text-secondary)]">Estado</th>
+ <th className="px-6 py-4 text-right nd-label text-[var(--text-secondary)]">Acciones</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-[var(--border)]">
@@ -394,7 +394,7 @@ const Projects = ({ user }) => {
  <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
  <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-5">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-primary)]">Ficha de proyecto</p>
+ <p className="nd-label text-[var(--text-primary)]">Ficha de proyecto</p>
  <h3 className="text-xl font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
  {editingProject ? 'Editar proyecto' : 'Nuevo proyecto'}
  </h3>
@@ -410,7 +410,7 @@ const Projects = ({ user }) => {
  <form onSubmit={handleSubmit} className="p-6 space-y-5">
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <label className="mb-2 block nd-label text-[var(--text-secondary)]">
  Código <span className="text-[var(--accent)]">*</span>
  </label>
  <input
@@ -423,7 +423,7 @@ const Projects = ({ user }) => {
  />
  </div>
  <div>
- <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <label className="mb-2 block nd-label text-[var(--text-secondary)]">
  Nombre <span className="text-[var(--accent)]">*</span>
  </label>
  <input
@@ -438,7 +438,7 @@ const Projects = ({ user }) => {
  </div>
 
  <div>
- <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <label className="mb-2 block nd-label text-[var(--text-secondary)]">
  Cliente
  </label>
  <input
@@ -451,7 +451,7 @@ const Projects = ({ user }) => {
  </div>
 
  <div>
- <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <label className="mb-2 block nd-label text-[var(--text-secondary)]">
  Descripción
  </label>
  <textarea
@@ -465,7 +465,7 @@ const Projects = ({ user }) => {
 
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <label className="mb-2 block nd-label text-[var(--text-secondary)]">
  Fecha inicio
  </label>
  <input
@@ -476,7 +476,7 @@ const Projects = ({ user }) => {
  />
  </div>
  <div>
- <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <label className="mb-2 block nd-label text-[var(--text-secondary)]">
  Fecha fin
  </label>
  <input
@@ -489,7 +489,7 @@ const Projects = ({ user }) => {
  </div>
 
  <div>
- <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <label className="mb-2 block nd-label text-[var(--text-secondary)]">
  Presupuesto (EUR)
  </label>
  <div className="relative">
@@ -507,7 +507,7 @@ const Projects = ({ user }) => {
  </div>
 
  <div>
- <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Estado</label>
+ <label className="mb-2 block nd-label text-[var(--text-secondary)]">Estado</label>
  <div className="flex gap-3">
  <button
  type="button"
@@ -515,7 +515,7 @@ const Projects = ({ user }) => {
  className={`
  flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
  ${formData.status === 'active'
- ? 'border-[#83d5ba] bg-transparent text-[var(--success)]'
+ ? 'border-[var(--success)] bg-transparent text-[var(--success)]'
  : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border-visible)]'}
  `}
  >

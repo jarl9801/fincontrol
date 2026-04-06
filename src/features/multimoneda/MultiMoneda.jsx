@@ -158,7 +158,7 @@ const MultiMoneda = ({ user }) => {
  return (
  <div key={pair} className="bg-[var(--surface)] rounded-xl p-5 border border-[var(--border)]">
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-sm font-semibold text-[var(--text-secondary)] uppercase tracking-wide">{pair}</h3>
+ <h3 className="nd-label text-[var(--text-secondary)]">{pair}</h3>
  <ArrowRightLeft className="text-[var(--text-secondary)]" size={18} />
  </div>
  <p className="text-2xl font-bold text-[var(--text-primary)]">
@@ -182,7 +182,7 @@ const MultiMoneda = ({ user }) => {
  <div>
  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Par de monedas</label>
  <select
- className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:ring-2 focus:ring-[#999]"
+ className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)]"
  value={form.pair}
  onChange={(e) => setForm({ ...form, pair: e.target.value })}
  >
@@ -196,7 +196,7 @@ const MultiMoneda = ({ user }) => {
  <input
  type="number"
  step="0.0001"
- className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:ring-2 focus:ring-[#999]"
+ className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)]"
  value={form.rate}
  onChange={(e) => setForm({ ...form, rate: e.target.value })}
  placeholder={`Ej: ${DEFAULT_RATES[form.pair] || '1.00'}`}
@@ -273,7 +273,7 @@ const MultiMoneda = ({ user }) => {
  <input
  type="number"
  step="0.01"
- className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:ring-2 focus:ring-[#999]"
+ className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)]"
  value={converter.amount}
  onChange={(e) => setConverter({ ...converter, amount: e.target.value })}
  placeholder="1000.00"
@@ -282,7 +282,7 @@ const MultiMoneda = ({ user }) => {
  <div>
  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">De</label>
  <select
- className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:ring-2 focus:ring-[#999]"
+ className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)]"
  value={converter.from}
  onChange={(e) => setConverter({ ...converter, from: e.target.value })}
  >
@@ -294,7 +294,7 @@ const MultiMoneda = ({ user }) => {
  <div>
  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">A</label>
  <select
- className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:ring-2 focus:ring-[#999]"
+ className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)]"
  value={converter.to}
  onChange={(e) => setConverter({ ...converter, to: e.target.value })}
  >

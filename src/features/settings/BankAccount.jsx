@@ -60,7 +60,7 @@ const BankAccount = ({ user, transactions }) => {
  <Landmark className="text-[var(--text-primary)]" size={22} />
  </div>
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--text-primary)]">Tesorería</p>
+ <p className="nd-label text-[var(--text-primary)]">Tesorería</p>
  <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Cuenta bancaria</h2>
  <p className="text-sm text-[var(--text-secondary)]">Define el saldo base y el límite operativo para medir la liquidez disponible.</p>
  </div>
@@ -71,7 +71,7 @@ const BankAccount = ({ user, transactions }) => {
  <h3 className="mb-4 text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Datos de la cuenta</h3>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Nombre del banco</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Nombre del banco</label>
  <input
  type="text"
  className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-2.5 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)] "
@@ -81,7 +81,7 @@ const BankAccount = ({ user, transactions }) => {
  />
  </div>
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Fecha del saldo</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Fecha del saldo</label>
  <input
  type="date"
  className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-2.5 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)] "
@@ -91,7 +91,7 @@ const BankAccount = ({ user, transactions }) => {
  <p className="mt-1 text-xs text-[var(--text-secondary)]">Los movimientos posteriores a esta fecha ajustan el saldo base.</p>
  </div>
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Saldo bancario (EUR)</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Saldo bancario (EUR)</label>
  <input
  type="number"
  step="0.01"
@@ -103,7 +103,7 @@ const BankAccount = ({ user, transactions }) => {
  <p className="mt-1 text-xs text-[var(--text-secondary)]">Saldo confirmado por el banco en la fecha seleccionada.</p>
  </div>
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Límite de línea de crédito (EUR)</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Límite de línea de crédito (EUR)</label>
  <input
  type="number"
  step="0.01"
@@ -135,22 +135,22 @@ const BankAccount = ({ user, transactions }) => {
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Saldo inicial</h3>
+ <h3 className="nd-label text-[var(--text-secondary)]">Saldo inicial</h3>
  <Landmark className="text-[var(--text-primary)]" size={18} />
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{formatCurrency(realBalance.startingBalance)}</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{formatCurrency(realBalance.startingBalance)}</p>
  <p className="mt-1 text-xs text-[var(--text-secondary)]">Al {bankAccount.balanceDate}</p>
  </div>
 
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Movimiento neto</h3>
+ <h3 className="nd-label text-[var(--text-secondary)]">Movimiento neto</h3>
  {realBalance.netMovement >= 0
  ? <TrendingUp className="text-[var(--success)]" size={18} />
  : <TrendingDown className="text-[var(--accent)]" size={18} />
  }
  </div>
- <p className={`text-[28px] font-semibold tracking-[-0.03em] ${realBalance.netMovement >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
+ <p className={`nd-display text-[28px] font-semibold tracking-[-0.03em] ${realBalance.netMovement >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
  {realBalance.netMovement >= 0 ? '+' : ''}{formatCurrency(realBalance.netMovement)}
  </p>
  <p className="mt-1 text-xs text-[var(--text-secondary)]">{realBalance.transactionsCount} movimientos contabilizados</p>
@@ -158,10 +158,10 @@ const BankAccount = ({ user, transactions }) => {
 
  <div className={`rounded-xl bg-[var(--surface)] p-5 ${realBalance.currentBalance < 0 ? 'border border-[var(--border-visible)]' : 'border border-[var(--border)]'}`}>
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Saldo actual</h3>
+ <h3 className="nd-label text-[var(--text-secondary)]">Saldo actual</h3>
  <Landmark className={realBalance.currentBalance >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'} size={18} />
  </div>
- <p className={`text-[28px] font-semibold tracking-[-0.03em] ${realBalance.currentBalance >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
+ <p className={`nd-display text-[28px] font-semibold tracking-[-0.03em] ${realBalance.currentBalance >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
  {formatCurrency(realBalance.currentBalance)}
  </p>
  <p className="mt-1 text-xs text-[var(--text-secondary)]">Saldo operativo proyectado al día de hoy</p>
@@ -169,10 +169,10 @@ const BankAccount = ({ user, transactions }) => {
 
  <div className={`rounded-xl bg-[var(--surface)] p-5 ${parseFloat(creditUtilizationPct) > 80 ? 'border border-[var(--border-visible)]' : 'border border-[var(--border)]'}`}>
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Crédito disponible</h3>
+ <h3 className="nd-label text-[var(--text-secondary)]">Crédito disponible</h3>
  <CreditCard className={parseFloat(creditUtilizationPct) > 80 ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'} size={18} />
  </div>
- <p className={`text-[28px] font-semibold tracking-[-0.03em] ${parseFloat(creditUtilizationPct) > 80 ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'}`}>
+ <p className={`nd-display text-[28px] font-semibold tracking-[-0.03em] ${parseFloat(creditUtilizationPct) > 80 ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'}`}>
  {formatCurrency(realBalance.availableCredit)}
  </p>
  <p className="mt-1 text-xs text-[var(--text-secondary)]">
@@ -197,7 +197,7 @@ const BankAccount = ({ user, transactions }) => {
  <div
  className={`h-full rounded-full transition-all ${
  parseFloat(creditUtilizationPct) > 80 ? 'bg-[var(--accent)]' :
- parseFloat(creditUtilizationPct) > 50 ? 'bg-[var(--warning)]' : 'bg-[#8db6ff]'
+ parseFloat(creditUtilizationPct) > 50 ? 'bg-[var(--warning)]' : 'bg-[var(--interactive)]'
  }`}
  style={{ width: `${Math.min(parseFloat(creditUtilizationPct), 100)}%` }}
  />

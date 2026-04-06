@@ -710,7 +710,7 @@ const TransactionFormModal = ({
  className={`
  flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
  ${formData.status === 'pending'
- ? 'border-[#e0b460] bg-transparent text-[var(--warning)]'
+ ? 'border-[var(--warning)] bg-transparent text-[var(--warning)]'
  : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border-visible)]'}
  `}
  >
@@ -722,7 +722,7 @@ const TransactionFormModal = ({
  className={`
  flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
  ${formData.status === 'paid'
- ? 'border-[#7fcfb5] bg-transparent text-[var(--success)]'
+ ? 'border-[var(--success)] bg-transparent text-[var(--success)]'
  : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border-visible)]'}
  `}
  >

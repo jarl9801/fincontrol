@@ -131,7 +131,7 @@ const Categories = ({ user }) => {
  return (
  <div className="space-y-6">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
- <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--text-primary)]">Configuración financiera</p>
+ <p className="nd-label text-[var(--text-primary)]">Configuración financiera</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Categorías</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Mantén el catálogo de ingresos y gastos con una estructura clara para el análisis financiero.</p>
  </div>

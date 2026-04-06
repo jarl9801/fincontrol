@@ -23,7 +23,7 @@ const DuplicateReviewPanel = ({ duplicateGroups, onDelete }) => {
  </p>
  {duplicateGroups.map((group, gIdx) => (
  <div key={gIdx} className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4">
- <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+ <p className="mb-3 nd-label text-[var(--accent)]">
  Grupo {gIdx + 1} — €{group.original.amount.toLocaleString('de-DE', { minimumFractionDigits: 2 })} · {group.original.type === 'income' ? 'Ingreso' : 'Gasto'}
  </p>
  <div className="space-y-2">

@@ -67,7 +67,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
  onClick={() => setActiveTab('logs')}
  className={`flex-1 px-6 py-3 text-sm font-medium transition-colors border-b-2 ${
  activeTab === 'logs'
- ? 'border-[#9eb0cf] bg-transparent text-[var(--text-disabled)]'
+ ? 'border-[var(--text-disabled)] bg-transparent text-[var(--text-disabled)]'
  : 'border-transparent text-[var(--text-secondary)] hover:bg-transparent hover:text-[var(--text-disabled)]'
  }`}
  >

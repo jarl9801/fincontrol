@@ -156,7 +156,7 @@ const Recurrencia = ({ user }) => {
  <div className="space-y-6 animate-fadeIn">
  <div className="flex items-center justify-between">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
- <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--text-primary)]">Automatización</p>
+ <p className="nd-label text-[var(--text-primary)]">Automatización</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Recurrencia automática</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Controla los movimientos periódicos y genera los pendientes del mes con un solo paso.</p>
  </div>
@@ -177,24 +177,24 @@ const Recurrencia = ({ user }) => {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Total recurrentes</p>
+ <p className="nd-label text-[var(--text-secondary)]">Total recurrentes</p>
  <RefreshCw size={18} className="text-[var(--text-primary)]" />
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{totalRecurring}</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{totalRecurring}</p>
  </div>
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Próximas este mes</p>
+ <p className="nd-label text-[var(--text-secondary)]">Próximas este mes</p>
  <CalendarClock size={18} className="text-[var(--warning)]" />
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">{dueThisMonth}</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">{dueThisMonth}</p>
  </div>
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Monto mensual estimado</p>
+ <p className="nd-label text-[var(--text-secondary)]">Monto mensual estimado</p>
  <TrendingUp size={18} className="text-[var(--success)]" />
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--success)]">{formatCurrency(monthlyEstimate)}</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--success)]">{formatCurrency(monthlyEstimate)}</p>
  </div>
  </div>
 
@@ -221,12 +221,12 @@ const Recurrencia = ({ user }) => {
  <table className="w-full text-left">
  <thead>
  <tr className="border-b border-[var(--border)] bg-[var(--surface-raised)]">
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Descripción</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Tipo</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Frecuencia</th>
- <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Monto</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Próxima fecha</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Estado</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Descripción</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Tipo</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Frecuencia</th>
+ <th className="px-4 py-3 text-right nd-label text-[var(--text-secondary)]">Monto</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Próxima fecha</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Estado</th>
  </tr>
  </thead>
  <tbody>

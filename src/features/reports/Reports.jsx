@@ -48,15 +48,14 @@ const StatCard = ({ title, value, subtitle, accent, icon, delta }) => {
 
  return (
  <div
- className="rounded-xl border bg-[var(--surface)] p-5 "
- style={{ backgroundImage: `linear-gradient(180deg, rgba(255,255,255,0.96), ${accent}12)`, borderColor: `${accent}26` }}
+ className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 "
  >
  <div className="mb-4 flex items-start justify-between">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">{title}</p>
- <p className="mt-2 text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
+ <p className="nd-label text-[var(--text-disabled)]">{title}</p>
+ <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
  </div>
- <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: `${accent}1f`, color: accent }}>
+ <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ color: accent }}>
  <IconComponent size={18} />
  </div>
  </div>
@@ -273,10 +272,7 @@ const Reports = ({ user }) => {
  if (ledger.loading) {
  return (
  <div className="flex items-center justify-center py-28">
- <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--text-secondary)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Consolidando estado de resultados...</p>
- </div>
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  );
  }
@@ -286,8 +282,8 @@ const Reports = ({ user }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--text-secondary)]">Estado de resultados</p>
- <h2 className="text-[32px] font-semibold tracking-tight text-[var(--text-primary)]">
+ <p className="mb-3 nd-label text-[var(--text-secondary)]">Estado de resultados</p>
+ <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
  Resultado realizado y compromisos abiertos del periodo.{' '}
  <HelpButton title="Estado de resultados">
  <p><strong>Ingresos realizados</strong> — Cobros reales registrados como movimientos bancarios en el periodo seleccionado. No incluye CXC pendientes.</p>
@@ -452,7 +448,7 @@ const Reports = ({ user }) => {
  title="Resultado de caja"
  value={formatCurrency(currentTotals.net)}
  subtitle="Ingresos realizados menos gastos realizados"
- accent={currentTotals.net >= 0 ? '#999' : 'var(--accent)'}
+ accent={currentTotals.net >= 0 ? 'var(--text-secondary)' : 'var(--accent)'}
  icon={Wallet}
  delta={compareMode ? variation(currentTotals.net, previousTotals.net) : null}
  />
@@ -460,7 +456,7 @@ const Reports = ({ user }) => {
  title="Compromisos del período"
  value={formatCurrency(outstandingFromPeriod.net)}
  subtitle={`${formatCurrency(outstandingFromPeriod.cxc)} CXC y ${formatCurrency(outstandingFromPeriod.cxp)} CXP emitidas en este período`}
- accent={outstandingFromPeriod.net >= 0 ? 'var(--warning)' : '#999'}
+ accent={outstandingFromPeriod.net >= 0 ? 'var(--warning)' : 'var(--text-secondary)'}
  icon={Calendar}
  />
  </div>
@@ -468,7 +464,7 @@ const Reports = ({ user }) => {
  <div className="grid gap-6 xl:grid-cols-[1.3fr_0.9fr]">
  <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Tendencia</p>
+ <p className="nd-label text-[var(--text-disabled)]">Tendencia</p>
  <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Caja realizada {trendYear}</h3>
  </div>
  <ResponsiveContainer width="100%" height={320}>
@@ -478,7 +474,7 @@ const Reports = ({ user }) => {
  <YAxis tick={{ fill: 'var(--text-disabled)', fontSize: 11 }} tickFormatter={(value) => `${Math.round(value / 1000)}k`} tickLine={false} axisLine={false} />
  <Tooltip
  formatter={(value) => formatCurrency(value)}
- contentStyle={{ backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)', border: '1px solid #222', borderRadius: 18 }}
+ contentStyle={{ backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: 18 }}
  />
  <Legend />
  <Bar dataKey="ingresos" fill="var(--success)" radius={0} name="Ingresos" />
@@ -490,7 +486,7 @@ const Reports = ({ user }) => {
 
  <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Top proyectos</p>
+ <p className="nd-label text-[var(--text-disabled)]">Top proyectos</p>
  <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Margen realizado por proyecto</h3>
  </div>
  <div className="space-y-3">
@@ -522,7 +518,7 @@ const Reports = ({ user }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Ingresos</p>
+ <p className="nd-label text-[var(--text-disabled)]">Ingresos</p>
  <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Desglose de entradas realizadas</h3>
  </div>
  <span className="rounded-full border border-[var(--border-visible)] px-3 py-1 text-xs font-semibold text-[var(--success)]">
@@ -543,7 +539,7 @@ const Reports = ({ user }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Gastos</p>
+ <p className="nd-label text-[var(--text-disabled)]">Gastos</p>
  <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Desglose de salidas realizadas</h3>
  </div>
  <span className="rounded-full border border-[var(--border-visible)] px-3 py-1 text-xs font-semibold text-[var(--accent)]">
@@ -566,7 +562,7 @@ const Reports = ({ user }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">IVA Alemán (Umsatzsteuer)</p>
+ <p className="nd-label text-[var(--text-disabled)]">IVA Alemán (Umsatzsteuer)</p>
  <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Resumen VAT del período</h3>
  </div>
  <div className="flex gap-3">

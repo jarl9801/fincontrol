@@ -135,7 +135,7 @@ const Partners = ({ user, userRole }) => {
  <Building2 size={18} className="text-[var(--text-primary)]" />
  </div>
  <div>
- <p className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
+ <p className="nd-labelst text-[var(--text-secondary)]">
  Master data
  </p>
  <h3 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">
@@ -238,28 +238,28 @@ const Partners = ({ user, userRole }) => {
  <table className="w-full text-sm">
  <thead>
  <tr className="border-b border-[var(--border)]">
- <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+ <th className="px-5 py-3.5 text-left nd-labelst text-[var(--text-secondary)]">
  Nombre
  </th>
- <th className="px-4 py-3.5 text-left text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+ <th className="px-4 py-3.5 text-left nd-labelst text-[var(--text-secondary)]">
  Tipo
  </th>
- <th className="px-4 py-3.5 text-left text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+ <th className="px-4 py-3.5 text-left nd-labelst text-[var(--text-secondary)]">
  Email
  </th>
- <th className="px-4 py-3.5 text-left text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+ <th className="px-4 py-3.5 text-left nd-labelst text-[var(--text-secondary)]">
  Teléfono
  </th>
- <th className="px-4 py-3.5 text-left text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+ <th className="px-4 py-3.5 text-left nd-labelst text-[var(--text-secondary)]">
  IVA default
  </th>
- <th className="px-4 py-3.5 text-center text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+ <th className="px-4 py-3.5 text-center nd-labelst text-[var(--text-secondary)]">
  Estado
  </th>
- <th className="px-4 py-3.5 text-center text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+ <th className="px-4 py-3.5 text-center nd-labelst text-[var(--text-secondary)]">
  Transacciones
  </th>
- <th className="px-4 py-3.5 text-right text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+ <th className="px-4 py-3.5 text-right nd-labelst text-[var(--text-secondary)]">
  Acciones
  </th>
  </tr>

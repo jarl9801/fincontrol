@@ -275,8 +275,8 @@ const Conciliacion = ({ user }) => {
  return (
  <div className="flex items-center justify-center py-28">
  <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--text-secondary)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Preparando conciliación bancaria...</p>
+ <Scale size={24} className="text-[var(--text-disabled)]" />
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  </div>
  );
@@ -285,11 +285,11 @@ const Conciliacion = ({ user }) => {
  return (
  <div className="space-y-6 pb-12">
  {/* Header */}
- <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+ <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-7">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--text-secondary)]">Conciliación bancaria</p>
- <h2 className="text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">Banco vs. Sistema</h2>
+ <p className="nd-label text-[var(--text-secondary)] mb-3">Conciliación bancaria</p>
+ <h2 className="nd-display text-[28px] font-bold text-[var(--text-display)]">Banco vs. Sistema</h2>
  <p className="mt-2 max-w-2xl text-[14px] leading-6 text-[var(--text-disabled)]">
  Compara los movimientos importados del banco con las transacciones registradas en FinControl.
  Vincula registros por monto, fecha y descripción.
@@ -297,7 +297,7 @@ const Conciliacion = ({ user }) => {
  </div>
  <div className="flex items-center gap-3">
  <select
- className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none"
+ className="rounded-full border border-[var(--border-visible)] bg-[var(--surface-raised)] px-4 py-2.5 nd-mono text-xs text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)]"
  value={month}
  onChange={e => setMonth(e.target.value)}
  >
@@ -308,7 +308,7 @@ const Conciliacion = ({ user }) => {
  </select>
  <button
  onClick={autoMatch}
- className="inline-flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-4 py-3 text-sm font-semibold text-[var(--black)] transition hover:opacity-85"
+ className="btn btn-primary"
  >
  <Link2 size={16} />
  Auto-conciliar
@@ -319,44 +319,44 @@ const Conciliacion = ({ user }) => {
 
  {/* Stats */}
  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 ">
- <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-disabled)]">Mov. banco</p>
- <p className="mt-1 text-[22px] font-semibold text-[var(--text-primary)]">{monthMovements.length}</p>
+ <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
+ <p className="nd-label text-[var(--text-secondary)]">Mov. banco</p>
+ <p className="mt-2 nd-display text-[24px] font-bold text-[var(--text-display)]">{monthMovements.length}</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 ">
- <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-disabled)]">Transacciones</p>
- <p className="mt-1 text-[22px] font-semibold text-[var(--text-primary)]">{monthTransactions.length}</p>
+ <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
+ <p className="nd-label text-[var(--text-secondary)]">Transacciones</p>
+ <p className="mt-2 nd-display text-[24px] font-bold text-[var(--text-display)]">{monthTransactions.length}</p>
  </div>
- <div className="rounded-xl border border-[var(--border-visible)] bg-transparent p-4">
- <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--success)]">Conciliados</p>
- <p className="mt-1 text-[22px] font-semibold text-[var(--success)]">{matchedPairs.length}</p>
+ <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
+ <p className="nd-label text-[var(--text-secondary)]">Conciliados</p>
+ <p className="mt-2 nd-display text-[24px] font-bold text-[var(--success)]">{matchedPairs.length}</p>
  </div>
  <div
- className="rounded-xl border border-[var(--border-visible)] bg-transparent p-4 cursor-pointer hover: transition-transform duration-200"
+className="cursor-pointer rounded-xl border border-[var(--border-visible)] bg-transparent p-4 transition-colors duration-200 hover:border-[var(--text-primary)] hover:bg-[var(--surface)]"
  onClick={() => bankColumnRef.current?.scrollIntoView({ behavior: 'smooth' })}
  role="button"
  tabIndex={0}
  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bankColumnRef.current?.scrollIntoView({ behavior: 'smooth' }); } }}
  >
- <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-secondary)]">Sin conciliar (banco)</p>
- <p className="mt-1 text-[22px] font-semibold text-[var(--accent)]">{unmatchedMovements.length}</p>
+ <p className="nd-label text-[var(--text-secondary)]">Sin conciliar (banco)</p>
+ <p className="mt-2 nd-display text-[24px] font-bold text-[var(--accent)]">{unmatchedMovements.length}</p>
  </div>
  <div
- className="rounded-xl border border-[var(--border-visible)] bg-transparent p-4 cursor-pointer hover: transition-transform duration-200"
+className="cursor-pointer rounded-xl border border-[var(--border-visible)] bg-transparent p-4 transition-colors duration-200 hover:border-[var(--text-primary)] hover:bg-[var(--surface)]"
  onClick={() => systemColumnRef.current?.scrollIntoView({ behavior: 'smooth' })}
  role="button"
  tabIndex={0}
  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); systemColumnRef.current?.scrollIntoView({ behavior: 'smooth' }); } }}
  >
- <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--warning)]">Sin conciliar (sistema)</p>
- <p className="mt-1 text-[22px] font-semibold text-[var(--warning)]">{unmatchedTransactions.length}</p>
+ <p className="nd-label text-[var(--text-secondary)]">Sin conciliar (sistema)</p>
+ <p className="mt-2 nd-display text-[24px] font-bold text-[var(--warning)]">{unmatchedTransactions.length}</p>
  </div>
  </div>
 
  {/* Totals comparison */}
  <div className="grid gap-4 sm:grid-cols-2">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
- <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-disabled)]">Banco — {month}</p>
+ <p className="nd-label text-[var(--text-secondary)]">Banco — {month}</p>
  <div className="mt-3 flex gap-6">
  <div>
  <p className="text-[10px] text-[var(--success)]">Entradas</p>
@@ -373,7 +373,7 @@ const Conciliacion = ({ user }) => {
  </div>
  </div>
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
- <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-disabled)]">Sistema — {month}</p>
+ <p className="nd-label text-[var(--text-secondary)]">Sistema — {month}</p>
  <div className="mt-3 flex gap-6">
  <div>
  <p className="text-[10px] text-[var(--success)]">Ingresos</p>
@@ -400,7 +400,7 @@ const Conciliacion = ({ user }) => {
  >
  <div className="flex items-center gap-2">
  <CheckCircle2 size={18} className="text-[var(--success)]" />
- <h3 className="text-[15px] font-semibold text-[var(--text-primary)]">Conciliados ({matchedPairs.length})</h3>
+ <h3 className="nd-mono text-[15px] font-bold text-[var(--text-display)]">Conciliados ({matchedPairs.length})</h3>
  </div>
  <ChevronDown size={18} className={`text-[var(--text-secondary)] transition ${showMatched ? 'rotate-180' : ''}`} />
  </button>
@@ -445,7 +445,7 @@ const Conciliacion = ({ user }) => {
  <div className="mb-4 flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Landmark size={18} className="text-[var(--text-primary)]" />
- <h3 className="text-[16px] font-semibold text-[var(--text-primary)]">Movimientos banco</h3>
+ <h3 className="nd-mono text-[14px] font-bold text-[var(--text-display)]">Movimientos banco</h3>
  <span className="text-[11px] text-[var(--text-secondary)]">({unmatchedMovements.length})</span>
  </div>
  </div>
@@ -475,7 +475,7 @@ const Conciliacion = ({ user }) => {
  className={`flex-1 min-w-0 rounded-lg border px-4 py-3 text-left transition-all ${
  isSelected
  ? 'border-[var(--border-visible)] bg-[var(--surface)] '
- : 'border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface)]'
+: 'border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-raised)]'
  }`}
  >
  <div className="flex items-center justify-between gap-2">
@@ -492,7 +492,7 @@ const Conciliacion = ({ user }) => {
  </button>
  <button
  onClick={() => handleCreateFromMovement(m)}
- className="flex-shrink-0 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2 text-[var(--text-secondary)] transition hover:border-[var(--border-visible)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]"
+className="flex-shrink-0 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2 text-[var(--text-secondary)] transition hover:border-[var(--border-visible)] hover:bg-[var(--surface-raised)] hover:text-[var(--text-primary)]"
  title="Crear transacción desde este movimiento"
  >
  <Plus size={14} />
@@ -511,7 +511,7 @@ const Conciliacion = ({ user }) => {
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Link2 size={18} className="text-[var(--warning)]" />
- <h3 className="text-[16px] font-semibold text-[var(--text-primary)]">Sugerencias de coincidencia</h3>
+ <h3 className="nd-mono text-[14px] font-bold text-[var(--text-display)]">Sugerencias de coincidencia</h3>
  </div>
  <button onClick={() => setSelectedMovement(null)} className="rounded-lg p-1 text-[var(--text-secondary)] hover:text-[var(--accent)]">
  <X size={16} />
@@ -536,7 +536,7 @@ const Conciliacion = ({ user }) => {
  {suggestions.map(({ transaction: t, score }) => (
  <div
  key={t.id}
- className="flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 transition hover:bg-[var(--surface)]"
+className="flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 transition hover:bg-[var(--surface-raised)]"
  >
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2">
@@ -558,7 +558,7 @@ const Conciliacion = ({ user }) => {
  </span>
  <button
  onClick={() => manualMatch(selectedMovement.id, t.id)}
- className="flex-shrink-0 rounded-xl bg-[var(--text-primary)] px-3 py-1.5 text-[11px] font-semibold text-[var(--black)] transition hover:opacity-85"
+ className="flex-shrink-0 rounded-full bg-[var(--text-display)] px-3 py-1.5 nd-mono text-[10px] uppercase tracking-[0.06em] text-[var(--black)] transition hover:opacity-85"
  >
  Vincular
  </button>
@@ -571,7 +571,7 @@ const Conciliacion = ({ user }) => {
  <div className="mb-4 flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Scale size={18} className="text-[var(--warning)]" />
- <h3 className="text-[16px] font-semibold text-[var(--text-primary)]">Transacciones sistema</h3>
+ <h3 className="nd-mono text-[14px] font-bold text-[var(--text-display)]">Transacciones sistema</h3>
  <span className="text-[11px] text-[var(--text-secondary)]">({unmatchedTransactions.length})</span>
  </div>
  </div>

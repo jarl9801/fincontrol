@@ -1,27 +1,47 @@
 /**
  * Nothing Design System — Recharts Theme
  * Monochrome palette for all chart components.
+ * Uses CSS variable values for consistency with the design system.
  */
+
+const style = typeof getComputedStyle !== 'undefined' && document?.documentElement
+  ? getComputedStyle(document.documentElement)
+  : null;
+
+const v = (name, fallback) =>
+  style?.getPropertyValue(name)?.trim() || fallback;
+
 export const CHART_THEME = {
-  grid: '#1F1F1F',
-  axis: '#555555',
-  axisFont: { fontFamily: "'Space Mono', monospace", fontSize: 11, fill: '#888888' },
+  grid: v('--border', '#1F1F1F'),
+  axis: v('--text-disabled', '#555555'),
+  axisFont: { fontFamily: "'Space Mono', monospace", fontSize: 11, fill: v('--text-secondary', '#888888') },
   tooltip: {
-    bg: '#1C1C1C',
-    border: '#2E2E2E',
-    text: '#D4D4D4',
-    label: '#888888',
+    bg: v('--surface', '#1C1C1C'),
+    border: v('--border-visible', '#2E2E2E'),
+    text: v('--text-primary', '#D4D4D4'),
+    label: v('--text-secondary', '#888888'),
   },
   // Monochrome bar/area fills — ordered by brightness
-  bars: ['#D4D4D4', '#888888', '#555555', '#444444', '#2E2E2E'],
+  bars: [
+    v('--text-primary', '#D4D4D4'),
+    v('--text-secondary', '#888888'),
+    v('--text-disabled', '#555555'),
+    v('--text-tertiary', '#444444'),
+    v('--border-visible', '#2E2E2E'),
+  ],
   // Line chart strokes
-  lines: ['#D4D4D4', '#555555', '#888888', '#444444'],
+  lines: [
+    v('--text-primary', '#D4D4D4'),
+    v('--text-disabled', '#555555'),
+    v('--text-secondary', '#888888'),
+    v('--text-tertiary', '#444444'),
+  ],
   // Status-specific (use sparingly)
-  accent: '#5B9BF6',
-  negative: '#C45A5A',
-  success: '#5A9E6B',
-  warning: '#C4A24E',
-  neutral: '#888888',
+  accent: v('--accent', '#5B9BF6'),
+  negative: v('--negative', '#D71921'),
+  success: v('--success', '#4A9E5C'),
+  warning: v('--warning', '#D4A843'),
+  neutral: v('--text-secondary', '#888888'),
 };
 
 // Replaces the old COLORS array from config.js for chart usage

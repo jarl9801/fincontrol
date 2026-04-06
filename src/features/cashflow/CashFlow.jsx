@@ -28,9 +28,9 @@ const TooltipCard = ({ active, payload, label }) => {
  if (!active || !payload?.length) return null;
  return (
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-3 ">
- <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">{label}</p>
+ <p className="nd-label text-[var(--text-disabled)] mb-2">{label}</p>
  {payload.map((entry) => (
- <p key={entry.name} className="text-sm font-medium" style={{ color: entry.color }}>
+ <p key={entry.name} className="nd-mono text-sm" style={{ color: entry.color }}>
  {entry.name}: {formatCurrency(entry.value)}
  </p>
  ))}
@@ -42,7 +42,7 @@ const Section = ({ title, subtitle, children, help }) => (
  <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-5">
  <div className="flex items-center gap-2">
- <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">{title}</h3>
+ <h3 className="nd-display text-[18px] font-semibold tracking-tight text-[var(--text-display)]">{title}</h3>
  {help}
  </div>
  {subtitle && <p className="mt-1 text-sm text-[var(--text-secondary)]">{subtitle}</p>}
@@ -82,10 +82,7 @@ const CashFlow = ({ user }) => {
  if (metrics.loading) {
  return (
  <div className="flex items-center justify-center py-28">
- <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--text-secondary)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Preparando el panel de tesorería...</p>
- </div>
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  );
  }
@@ -99,8 +96,8 @@ const CashFlow = ({ user }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
  <div>
- <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--text-secondary)]">Tesorería</p>
- <h2 className="text-[32px] font-semibold tracking-tight text-[var(--text-primary)]">
+ <p className="nd-label text-[var(--text-secondary)] mb-3">Tesorería</p>
+ <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
  Caja, vencimientos y seguimiento diario en una sola vista.
  </h2>
  <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--text-disabled)]">
@@ -110,23 +107,23 @@ const CashFlow = ({ user }) => {
  <div className="grid gap-3 sm:grid-cols-2">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
  <div className="flex items-center gap-1.5">
- <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--text-disabled)]">Caja actual</p>
+ <p className="nd-label text-[var(--text-disabled)]">Caja actual</p>
  <HelpButton title="Caja actual" size={13}>
  <p>Saldo operativo real de la cuenta bancaria principal.</p>
  <p>Calculado desde el saldo de apertura (dic 2025) mas todos los movimientos bancarios registrados.</p>
  </HelpButton>
  </div>
- <p className="mt-2 text-[30px] font-semibold text-[var(--text-primary)]">{formatCurrency(metrics.currentCash)}</p>
+ <p className="mt-2 nd-display text-[30px] font-semibold text-[var(--text-display)]">{formatCurrency(metrics.currentCash)}</p>
  </div>
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
  <div className="flex items-center gap-1.5">
- <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--text-disabled)]">Liquidez proyectada</p>
+ <p className="nd-label text-[var(--text-disabled)]">Liquidez proyectada</p>
  <HelpButton title="Liquidez proyectada" size={13}>
  <p>Caja actual + CXC abiertas - CXP abiertas.</p>
  <p>Muestra cuanto tendria la empresa si se cobrara y pagara todo lo pendiente.</p>
  </HelpButton>
  </div>
- <p className="mt-2 text-[30px] font-semibold text-[var(--text-primary)]">{formatCurrency(metrics.projectedLiquidity)}</p>
+ <p className="mt-2 nd-display text-[30px] font-semibold text-[var(--text-display)]">{formatCurrency(metrics.projectedLiquidity)}</p>
  </div>
  <div
  className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4 cursor-pointer hover: transition-transform duration-200"
@@ -136,13 +133,13 @@ const CashFlow = ({ user }) => {
  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); movementsRef.current?.scrollIntoView({ behavior: 'smooth' }); } }}
  >
  <div className="flex items-center gap-1.5">
- <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--text-disabled)]">Cobros proximos</p>
+ <p className="nd-label text-[var(--text-disabled)]">Cobros proximos</p>
  <HelpButton title="Cobros proximos" size={13}>
  <p>Suma de documentos CXC abiertos con vencimiento en los proximos 14 dias.</p>
  <p>Representa el dinero que se espera recibir a corto plazo.</p>
  </HelpButton>
  </div>
- <p className="mt-2 text-[30px] font-semibold text-[var(--success)]">
+ <p className="mt-2 nd-display text-[30px] font-semibold text-[var(--success)]">
  {formatCurrency(metrics.upcomingReceivables.reduce((sum, entry) => sum + entry.openAmount, 0))}
  </p>
  </div>
@@ -154,13 +151,13 @@ const CashFlow = ({ user }) => {
  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); reconciliationRef.current?.scrollIntoView({ behavior: 'smooth' }); } }}
  >
  <div className="flex items-center gap-1.5">
- <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--text-disabled)]">Pagos proximos</p>
+ <p className="nd-label text-[var(--text-disabled)]">Pagos proximos</p>
  <HelpButton title="Pagos proximos" size={13}>
  <p>Suma de documentos CXP abiertos con vencimiento en la siguiente ventana.</p>
  <p>Representa las obligaciones de pago mas inmediatas.</p>
  </HelpButton>
  </div>
- <p className="mt-2 text-[30px] font-semibold text-[var(--warning)]">
+ <p className="mt-2 nd-display text-[30px] font-semibold text-[var(--warning)]">
  {formatCurrency(metrics.upcomingPayables.reduce((sum, entry) => sum + entry.openAmount, 0))}
  </p>
  </div>
@@ -178,10 +175,10 @@ const CashFlow = ({ user }) => {
  <table className="w-full text-left text-sm">
  <thead>
  <tr className="border-b border-[var(--border)]">
- <th className="px-3 py-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Mes</th>
- <th className="px-3 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Ingresos</th>
- <th className="px-3 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Gastos</th>
- <th className="px-3 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Resultado</th>
+ <th className="px-3 py-2.5 nd-label text-[var(--text-disabled)]">Mes</th>
+ <th className="px-3 py-2.5 text-right nd-label text-[var(--text-disabled)]">Ingresos</th>
+ <th className="px-3 py-2.5 text-right nd-label text-[var(--text-disabled)]">Gastos</th>
+ <th className="px-3 py-2.5 text-right nd-label text-[var(--text-disabled)]">Resultado</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-[var(--border)]">
@@ -270,7 +267,7 @@ const CashFlow = ({ user }) => {
  <div
  className="flex h-11 w-11 items-center justify-center rounded-lg"
  style={{
- backgroundColor: isInflow ? 'rgba(74,158,92,0.15)' : 'rgba(212,168,67,0.12)',
+ backgroundColor: isInflow ? 'var(--success-50)' : 'var(--warning-50)',
  color: isInflow ? 'var(--success)' : 'var(--warning)',
  }}
  >
@@ -339,7 +336,7 @@ const CashFlow = ({ user }) => {
  <TrendingUp size={18} />
  </div>
  <div>
- <p className="text-[32px] font-semibold tracking-tight text-[var(--text-primary)]">
+ <p className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
  {metrics.runwayMonths == null ? 'N/A' : `${metrics.runwayMonths.toFixed(1)}m`}
  </p>
  <p className="text-sm text-[var(--text-secondary)]">Egreso medio mensual: {formatCurrency(metrics.avgMonthlyOutflows)}</p>
@@ -360,7 +357,7 @@ const CashFlow = ({ user }) => {
  <ShieldAlert size={18} />
  </div>
  <div>
- <p className="text-[32px] font-semibold tracking-tight text-[var(--text-primary)]">
+ <p className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
  {metrics.overdueReceivables.length}
  </p>
  <p className="text-sm text-[var(--text-secondary)]">
@@ -384,7 +381,7 @@ const CashFlow = ({ user }) => {
  <Clock3 size={18} />
  </div>
  <div>
- <p className="text-[32px] font-semibold tracking-tight text-[var(--text-primary)]">
+ <p className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
  {metrics.upcomingPayables.length}
  </p>
  <p className="text-sm text-[var(--text-secondary)]">

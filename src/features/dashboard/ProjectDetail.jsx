@@ -14,7 +14,7 @@ import { useCostCenters } from '../../hooks/useCostCenters';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { COLORS } from '../../constants/config';
 
-const CHART_COLORS = ['#64748b', '#94a3b8', '#475569', '#cbd5e1', '#334155', '#222', 'var(--success)', 'var(--accent)'];
+const CHART_COLORS = ['var(--text-disabled)', 'var(--text-secondary)', 'var(--border-visible)', 'var(--text-primary)', 'var(--text-tertiary)', 'var(--border)', 'var(--success)', 'var(--accent)'];
 
 const ProjectChartTooltip = ({ active, payload, label }) => {
  if (active && payload && payload.length) {
@@ -183,7 +183,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
  <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} strokeWidth={0} />
  ))}
  </Pie>
- <Tooltip formatter={v => `${formatCurrency(v)} €`} contentStyle={{ borderRadius: '16px', border: '1px solid #222', backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)' }} />
+ <Tooltip formatter={v => `${formatCurrency(v)} €`} contentStyle={{ borderRadius: '16px', border: '1px solid var(--border)', backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)' }} />
  <Legend layout="vertical" align="right" verticalAlign="middle" wrapperStyle={{ fontSize: '11px' }} />
  </PieChart>
  </ResponsiveContainer>

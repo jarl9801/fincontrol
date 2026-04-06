@@ -109,7 +109,7 @@ const RecordAuditTrailModal = ({ isOpen, onClose, record, logs = [], loading = f
  <div className="flex max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
  <div className="flex items-start justify-between border-b border-[var(--border)] px-6 py-5">
  <div>
- <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[var(--text-secondary)]">Trazabilidad del registro</p>
+ <p className="nd-label text-[var(--text-secondary)]">Trazabilidad del registro</p>
  <h3 className="mt-2 text-[24px] font-semibold tracking-tight text-[var(--text-primary)]">{record.description || 'Registro sin descripción'}</h3>
  <p className="mt-2 text-[13px] text-[var(--text-disabled)]">
  {record.recordFamilyLabel} · {record.documentNumber || 'Sin documento'} · {record.counterpartyName || 'Sin contraparte'}
@@ -146,19 +146,19 @@ const RecordAuditTrailModal = ({ isOpen, onClose, record, logs = [], loading = f
 
  <div className="grid gap-3 border-b border-[var(--border)] px-6 py-4 md:grid-cols-4">
  <div className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3">
- <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Importe</p>
+ <p className="nd-label text-[var(--text-disabled)]">Importe</p>
  <p className="mt-1 text-[18px] font-semibold text-[var(--text-primary)]">€{formatCurrency(record.amount || 0)}</p>
  </div>
  <div className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3">
- <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Estado</p>
+ <p className="nd-label text-[var(--text-disabled)]">Estado</p>
  <p className="mt-1 text-[18px] font-semibold text-[var(--text-primary)]">{record.statusLabel || record.status || '—'}</p>
  </div>
  <div className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3">
- <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Último editor</p>
+ <p className="nd-label text-[var(--text-disabled)]">Último editor</p>
  <p className="mt-1 truncate text-[14px] font-semibold text-[var(--text-primary)]">{record.lastEditor || 'Sin rastro'}</p>
  </div>
  <div className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3">
- <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Último cambio</p>
+ <p className="nd-label text-[var(--text-disabled)]">Último cambio</p>
  <p className="mt-1 text-[14px] font-semibold text-[var(--text-primary)]">{formatDateTime(record.lastEditedAt) || 'Sin fecha'}</p>
  </div>
  </div>
@@ -167,8 +167,8 @@ const RecordAuditTrailModal = ({ isOpen, onClose, record, logs = [], loading = f
  {loading ? (
  <div className="flex items-center justify-center py-18">
  <div className="flex items-center gap-3 text-[var(--text-disabled)]">
- <History size={18} className="animate-pulse" />
- Cargando trazabilidad...
+ <History size={18} />
+ [CARGANDO...]
  </div>
  </div>
  ) : timeline.length === 0 ? (

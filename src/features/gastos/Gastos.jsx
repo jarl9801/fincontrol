@@ -44,8 +44,8 @@ const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
  >
  <div className="mb-4 flex items-center justify-between">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">{title}</p>
- <p className="mt-2 text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
+ <p className="nd-label text-[var(--text-secondary)]">{title}</p>
+ <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
  </div>
  <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: `${accent}1f`, color: accent }}>
  <IconComponent size={18} />
@@ -148,10 +148,7 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  if (metrics.loading) {
  return (
  <div className="flex items-center justify-center py-28">
- <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--warning)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Consolidando gastos operativos...</p>
- </div>
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  );
  }
@@ -161,8 +158,8 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--warning)]">Gastos</p>
- <h2 className="text-[32px] font-semibold tracking-tight text-[var(--text-primary)]">Pagos reales y deuda operativa sin mezclar con caja futura.</h2>
+ <p className="mb-3 nd-label text-[var(--warning)]">Gastos</p>
+ <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Pagos reales y deuda operativa sin mezclar con caja futura.</h2>
  <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[var(--text-secondary)]">
  Las CXP abiertas permanecen fuera de caja hasta registrar una salida real en banco. Aquí ves deuda, abonos y pagos realizados sobre el mismo ledger.
  </p>
@@ -183,7 +180,7 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  <div className="grid gap-4 lg:grid-cols-4">
  <StatCard title="Pagado real" value={formatCurrency(paidReal)} subtitle={`${paymentMovements.length} pagos bancarios registrados`} accent="var(--accent)" icon={Wallet} onClick={() => setStatusFilter('settled')} />
  <StatCard title="Deuda abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="var(--warning)" icon={BadgeEuro} onClick={() => setStatusFilter('all')} />
- <StatCard title="Pago parcial" value={formatCurrency(totalPartial)} subtitle="Importe ya pagado sobre facturas aún abiertas" accent="#999" icon={ArrowDownCircle} />
+ <StatCard title="Pago parcial" value={formatCurrency(totalPartial)} subtitle="Importe ya pagado sobre facturas aún abiertas" accent="var(--text-secondary)" icon={ArrowDownCircle} />
  <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overduePayables.length} documentos fuera de plazo`} accent="var(--accent)" icon={AlertTriangle} onClick={() => setStatusFilter('overdue')} />
  </div>
 
@@ -219,7 +216,7 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  <div className="overflow-x-auto">
  <table className="w-full min-w-[980px] text-left">
  <thead>
- <tr className="border-b border-[var(--border)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <tr className="border-b border-[var(--border)] nd-label text-[var(--text-secondary)]">
  <th className="px-4 py-3">Proveedor</th>
  <th className="px-4 py-3">Documento</th>
  <th className="px-4 py-3">Proyecto</th>

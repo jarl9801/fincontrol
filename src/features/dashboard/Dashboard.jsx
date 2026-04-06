@@ -25,10 +25,10 @@ import { summarizeVAT } from '../../finance/reporting';
 const ChartTooltip = ({ active, payload, label }) => {
  if (!active || !payload?.length) return null;
  return (
- <div className="border border-[var(--border-visible)] bg-[var(--surface)] px-3 py-2.5 rounded-lg">
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)] mb-1.5">{label}</p>
+ <div className="border border-[var(--border-visible)] bg-[var(--surface)] px-3 py-2.5 rounded-xl">
+ <p className="nd-label text-[var(--text-secondary)] mb-1.5">{label}</p>
  {payload.map((entry) => (
- <p key={entry.name} className="font-[Space_Mono] text-[13px] tabular-nums" style={{ color: entry.color }}>
+ <p key={entry.name} className="nd-mono text-[13px] tabular-nums" style={{ color: entry.color }}>
  {entry.name}: {formatCurrency(entry.value)}
  </p>
  ))}
@@ -93,8 +93,8 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  if (metrics.loading) {
  return (
  <div className="flex items-center justify-center py-32">
- <p className="font-[Space_Mono] text-[13px] uppercase tracking-[0.08em] text-[var(--text-disabled)]">
- [CARGANDO TESORERIA...]
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">
+ [LOADING...]
  </p>
  </div>
  );
@@ -107,27 +107,27 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  <section className="pt-4">
  <div className="flex flex-col gap-10 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)] mb-3">
+ <p className="nd-label text-[var(--text-secondary)] mb-3">
  Caja real
  </p>
- <p className={`font-[Doto] text-[64px] md:text-[80px] leading-[1] tracking-[-0.03em] tabular-nums ${
+ <p className={`nd-display text-[64px] md:text-[80px] leading-[1] tracking-[-0.03em] tabular-nums ${
  metrics.currentCash >= 0 ? 'text-[var(--text-display)]' : 'text-[var(--negative)]'
  }`}>
  {formatCurrency(metrics.currentCash)}
  </p>
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-disabled)] mt-2">
+ <p className="nd-label text-[var(--text-disabled)] mt-2">
  EUR
  </p>
 
  <div className="flex items-center gap-6 mt-6">
  <span
- className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em]"
+ className="nd-label"
  style={{ color: health.color }}
  >
  [{health.label}]
  </span>
  {metrics.runwayMonths != null && (
- <span className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-disabled)]">
+ <span className="nd-label text-[var(--text-disabled)]">
  Runway {metrics.runwayMonths.toFixed(1)}m
  </span>
  )}
@@ -135,14 +135,14 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  </div>
 
  {/* Secondary metrics — right side */}
- <div className="grid gap-px sm:grid-cols-3 xl:min-w-[420px] border border-[var(--border)] rounded-lg overflow-hidden">
+ <div className="grid gap-px sm:grid-cols-3 xl:min-w-[420px] border border-[var(--border)] rounded-xl overflow-hidden">
  <button
  type="button"
  onClick={() => setView?.('cashflow')}
  className="bg-[var(--surface)] px-5 py-4 text-left transition-colors hover:bg-[var(--surface-raised)]"
  >
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)]">Liquidez proy.</p>
- <p className="font-[Space_Mono] text-[22px] tabular-nums text-[var(--text-primary)] mt-1">
+ <p className="nd-label text-[var(--text-secondary)]">Liquidez proy.</p>
+ <p className="nd-mono text-[22px] tabular-nums text-[var(--text-primary)] mt-1">
  {formatCurrency(metrics.projectedLiquidity)}
  </p>
  </button>
@@ -151,8 +151,8 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  onClick={() => setView?.('cxc')}
  className="bg-[var(--surface)] px-5 py-4 text-left transition-colors hover:bg-[var(--surface-raised)] border-l border-[var(--border)]"
  >
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)]">CXC abierta</p>
- <p className="font-[Space_Mono] text-[22px] tabular-nums text-[var(--text-primary)] mt-1">
+ <p className="nd-label text-[var(--text-secondary)]">CXC abierta</p>
+ <p className="nd-mono text-[22px] tabular-nums text-[var(--text-primary)] mt-1">
  {formatCurrency(metrics.pendingReceivables)}
  </p>
  </button>
@@ -161,8 +161,8 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  onClick={() => setView?.('cxp')}
  className="bg-[var(--surface)] px-5 py-4 text-left transition-colors hover:bg-[var(--surface-raised)] border-l border-[var(--border)]"
  >
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)]">CXP abierta</p>
- <p className="font-[Space_Mono] text-[22px] tabular-nums text-[var(--warning)] mt-1">
+ <p className="nd-label text-[var(--text-secondary)]">CXP abierta</p>
+ <p className="nd-mono text-[22px] tabular-nums text-[var(--warning)] mt-1">
  {formatCurrency(metrics.pendingPayables)}
  </p>
  </button>
@@ -172,7 +172,7 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
 
  {/* ===== KPI ROW — Secondary Layer ===== */}
  <section>
- <div className="grid grid-cols-2 gap-px lg:grid-cols-5 border border-[var(--border)] rounded-lg overflow-hidden">
+ <div className="grid grid-cols-2 gap-px lg:grid-cols-5 border border-[var(--border)] rounded-xl overflow-hidden">
  {[
  {
  label: 'Ventana 14d',
@@ -209,10 +209,10 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  tabIndex={kpi.onClick ? 0 : undefined}
  onKeyDown={kpi.onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); kpi.onClick(); } } : undefined}
  >
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)]">
+ <p className="nd-label text-[var(--text-secondary)]">
  {kpi.label}
  </p>
- <p className="font-[Space_Mono] text-[20px] tabular-nums mt-1" style={{ color: kpi.color }}>
+ <p className="nd-mono text-[20px] tabular-nums mt-1" style={{ color: kpi.color }}>
  {kpi.value}
  </p>
  </div>
@@ -222,26 +222,26 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
 
  {/* ===== VAT — German Umsatzsteuer ===== */}
  <section>
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)] mb-4">
+ <p className="nd-label text-[var(--text-secondary)] mb-4">
  IVA Aleman — Umsatzsteuer
  </p>
- <div className="grid grid-cols-3 gap-px border border-[var(--border)] rounded-lg overflow-hidden">
+ <div className="grid grid-cols-3 gap-px border border-[var(--border)] rounded-xl overflow-hidden">
  <div className="bg-[var(--surface)] px-5 py-4">
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)]">USt (ingresos)</p>
- <p className="font-[Space_Mono] text-[20px] tabular-nums text-[var(--warning)] mt-1">{formatCurrency(vatSummary.outputVAT)}</p>
- <p className="font-[Space_Mono] text-[11px] text-[var(--text-disabled)] mt-1">Debe a Finanzamt</p>
+ <p className="nd-label text-[var(--text-secondary)]">USt (ingresos)</p>
+ <p className="nd-mono text-[20px] tabular-nums text-[var(--warning)] mt-1">{formatCurrency(vatSummary.outputVAT)}</p>
+ <p className="nd-mono text-[11px] text-[var(--text-disabled)] mt-1">Debe a Finanzamt</p>
  </div>
  <div className="bg-[var(--surface)] px-5 py-4 border-l border-[var(--border)]">
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)]">Vorsteuer (gastos)</p>
- <p className="font-[Space_Mono] text-[20px] tabular-nums text-[var(--text-primary)] mt-1">{formatCurrency(vatSummary.inputVAT)}</p>
- <p className="font-[Space_Mono] text-[11px] text-[var(--text-disabled)] mt-1">Reclamable</p>
+ <p className="nd-label text-[var(--text-secondary)]">Vorsteuer (gastos)</p>
+ <p className="nd-mono text-[20px] tabular-nums text-[var(--text-primary)] mt-1">{formatCurrency(vatSummary.inputVAT)}</p>
+ <p className="nd-mono text-[11px] text-[var(--text-disabled)] mt-1">Reclamable</p>
  </div>
  <div className="bg-[var(--surface)] px-5 py-4 border-l border-[var(--border)]">
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)]">Neto VAT</p>
- <p className={`font-[Space_Mono] text-[20px] tabular-nums mt-1 ${vatSummary.netVAT >= 0 ? 'text-[var(--negative)]' : 'text-[var(--success)]'}`}>
+ <p className="nd-label text-[var(--text-secondary)]">Neto VAT</p>
+ <p className={`nd-mono text-[20px] tabular-nums mt-1 ${vatSummary.netVAT >= 0 ? 'text-[var(--negative)]' : 'text-[var(--success)]'}`}>
  {vatSummary.netVAT >= 0 ? '+' : ''}{formatCurrency(vatSummary.netVAT)}
  </p>
- <p className="font-[Space_Mono] text-[11px] text-[var(--text-disabled)] mt-1">
+ <p className="nd-mono text-[11px] text-[var(--text-disabled)] mt-1">
  {vatSummary.netVAT >= 0 ? 'Pagar' : 'A favor'}
  </p>
  </div>
@@ -253,18 +253,18 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  {/* Cash trend */}
  <section>
  <div className="flex items-center justify-between mb-4">
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)]">
+ <p className="nd-label text-[var(--text-secondary)]">
  Caja — 12 semanas
  </p>
  <button
  type="button"
  onClick={() => setView?.('cashflow')}
- className="font-[Space_Mono] text-[11px] uppercase tracking-[0.06em] text-[var(--text-disabled)] hover:text-[var(--text-primary)] transition-colors"
+ className="nd-label text-[var(--text-disabled)] hover:text-[var(--text-primary)] transition-colors"
  >
  Abrir tesoreria <ChevronRight size={12} className="inline" />
  </button>
  </div>
- <div className="border border-[var(--border)] rounded-lg p-4 bg-[var(--surface)]">
+ <div className="border border-[var(--border)] rounded-xl p-4 bg-[var(--surface)]">
  <div className="h-[280px]">
  <ResponsiveContainer width="100%" height="100%">
  <LineChart data={metrics.cashSeries}>
@@ -274,14 +274,14 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  stroke="var(--text-disabled)"
  tickLine={false}
  axisLine={false}
- style={{ fontFamily: 'Space Mono', fontSize: 11 }}
+ style={{ fontFamily: "'Space Mono', monospace", fontSize: 11 }}
  />
  <YAxis
  stroke="var(--text-disabled)"
  tickLine={false}
  axisLine={false}
  tickFormatter={(v) => `${Math.round(v / 1000)}k`}
- style={{ fontFamily: 'Space Mono', fontSize: 11 }}
+ style={{ fontFamily: "'Space Mono', monospace", fontSize: 11 }}
  />
  <Tooltip content={<ChartTooltip />} />
  <Line
@@ -302,11 +302,11 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  {/* Weekly projection */}
  <section>
  <div className="flex items-center justify-between mb-4">
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)]">
+ <p className="nd-label text-[var(--text-secondary)]">
  Compromisos — 8 semanas
  </p>
  </div>
- <div className="border border-[var(--border)] rounded-lg p-4 bg-[var(--surface)]">
+ <div className="border border-[var(--border)] rounded-xl p-4 bg-[var(--surface)]">
  <div className="h-[280px]">
  <ResponsiveContainer width="100%" height="100%">
  <BarChart data={metrics.weeklyProjection} barCategoryGap={12}>
@@ -316,14 +316,14 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  stroke="var(--text-disabled)"
  tickLine={false}
  axisLine={false}
- style={{ fontFamily: 'Space Mono', fontSize: 11 }}
+ style={{ fontFamily: "'Space Mono', monospace", fontSize: 11 }}
  />
  <YAxis
  stroke="var(--text-disabled)"
  tickLine={false}
  axisLine={false}
  tickFormatter={(v) => `${Math.round(v / 1000)}k`}
- style={{ fontFamily: 'Space Mono', fontSize: 11 }}
+ style={{ fontFamily: "'Space Mono', monospace", fontSize: 11 }}
  />
  <Tooltip content={<ChartTooltip />} />
  <Bar dataKey="committedIn" name="Cobros" fill="var(--text-display)" radius={0} />
@@ -337,10 +337,10 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
 
  {/* ===== QUICK ACTIONS ===== */}
  <section>
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)] mb-4">
+ <p className="nd-label text-[var(--text-secondary)] mb-4">
  Acciones rapidas
  </p>
- <div className="grid gap-px grid-cols-2 lg:grid-cols-5 border border-[var(--border)] rounded-lg overflow-hidden">
+ <div className="grid gap-px grid-cols-2 lg:grid-cols-5 border border-[var(--border)] rounded-xl overflow-hidden">
  {quickActions.map((action) => {
  const Icon = action.icon;
  return (
@@ -348,11 +348,11 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  key={action.id}
  type="button"
  onClick={() => onNewTransaction?.(action.id)}
- className="bg-[var(--surface)] px-4 py-5 text-left transition-colors hover:bg-[var(--surface-raised)] group"
+className="group bg-[var(--surface)] px-4 py-5 text-left transition-colors hover:bg-[var(--surface-raised)]"
  >
  <Icon size={16} className="text-[var(--text-disabled)] mb-3 group-hover:text-[var(--text-primary)] transition-colors" />
- <p className="text-[14px] text-[var(--text-primary)]">{action.title}</p>
- <p className="font-[Space_Mono] text-[11px] text-[var(--text-disabled)] mt-1">{action.desc}</p>
+<p className="nd-label text-[var(--text-primary)]">[{action.title}]</p>
+<p className="mt-1 text-[12px] leading-5 text-[var(--text-secondary)]">{action.desc}</p>
  </button>
  );
  })}
@@ -363,10 +363,10 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  <div className="grid gap-8 xl:grid-cols-[1.2fr,0.8fr]">
  {/* Upcoming */}
  <section>
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)] mb-4">
+ <p className="nd-label text-[var(--text-secondary)] mb-4">
  Proximos vencimientos
  </p>
- <div className="border border-[var(--border)] rounded-lg overflow-hidden">
+ <div className="border border-[var(--border)] rounded-xl overflow-hidden">
  {upcomingRows.length === 0 ? (
  <div className="px-5 py-12 text-center">
  <p className="text-[14px] text-[var(--text-disabled)]">No hay vencimientos proximos.</p>
@@ -390,12 +390,12 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  )}
  <div className="min-w-0">
  <p className="text-[14px] text-[var(--text-primary)] truncate">{entry.counterpartyName}</p>
- <p className="font-[Space_Mono] text-[11px] text-[var(--text-disabled)]">
+ <p className="nd-mono text-[11px] text-[var(--text-disabled)]">
  {entry.documentNumber || '—'} · {formatDate(entry.dueDate)}
  </p>
  </div>
  </div>
- <p className={`font-[Space_Mono] text-[14px] tabular-nums flex-shrink-0 ${
+ <p className={`nd-mono text-[14px] tabular-nums flex-shrink-0 ${
  isIn ? 'text-[var(--text-primary)]' : 'text-[var(--warning)]'
  }`}>
  {isIn ? '+' : '-'}{formatCurrency(entry.openAmount)}
@@ -410,21 +410,21 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  {/* Project margins */}
  <section>
  <div className="flex items-center justify-between mb-4">
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)]">
+ <p className="nd-label text-[var(--text-secondary)]">
  Margen por proyecto
  </p>
  <button
  type="button"
  onClick={() => setView?.('proyectos')}
- className="font-[Space_Mono] text-[11px] uppercase tracking-[0.06em] text-[var(--text-disabled)] hover:text-[var(--text-primary)] transition-colors"
+ className="nd-label text-[var(--text-disabled)] hover:text-[var(--text-primary)] transition-colors"
  >
  Detalle <ChevronRight size={12} className="inline" />
  </button>
  </div>
- <div className="border border-[var(--border)] rounded-lg overflow-hidden">
+ <div className="border border-[var(--border)] rounded-xl overflow-hidden">
  {metrics.projectMargins.length === 0 ? (
  <div className="px-5 py-12 text-center">
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-disabled)]">
+ <p className="nd-label text-[var(--text-disabled)]">
  Sin movimientos con proyecto asignado.
  </p>
  </div>
@@ -436,7 +436,7 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  >
  <div className="flex items-center justify-between mb-2">
  <p className="text-[14px] text-[var(--text-primary)]">{project.name}</p>
- <p className={`font-[Space_Mono] text-[14px] tabular-nums ${
+ <p className={`nd-mono text-[14px] tabular-nums ${
  project.net >= 0 ? 'text-[var(--text-primary)]' : 'text-[var(--negative)]'
  }`}>
  {project.margin.toFixed(1)}%
@@ -450,10 +450,10 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  height={6}
  />
  <div className="flex items-center justify-between mt-2">
- <p className="font-[Space_Mono] text-[11px] text-[var(--text-disabled)]">
+ <p className="nd-mono text-[11px] text-[var(--text-disabled)]">
  In {formatCurrency(project.inflows)} · Out {formatCurrency(project.outflows)}
  </p>
- <p className={`font-[Space_Mono] text-[11px] ${project.net >= 0 ? 'text-[var(--text-secondary)]' : 'text-[var(--negative)]'}`}>
+ <p className={`nd-mono text-[11px] ${project.net >= 0 ? 'text-[var(--text-secondary)]' : 'text-[var(--negative)]'}`}>
  {project.net >= 0 ? '+' : ''}{formatCurrency(project.net)}
  </p>
  </div>
@@ -468,29 +468,29 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  <div className="grid gap-8 lg:grid-cols-3">
  {/* Radar */}
  <section>
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)] mb-4">
+ <p className="nd-label text-[var(--text-secondary)] mb-4">
  Radar operativo
  </p>
- <div className="space-y-px border border-[var(--border)] rounded-lg overflow-hidden">
+ <div className="space-y-px border border-[var(--border)] rounded-xl overflow-hidden">
  <div className="bg-[var(--surface)] px-5 py-4">
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--error)] mb-1">
+ <p className="nd-label text-[var(--error)] mb-1">
  [CARTERA VENCIDA]
  </p>
  <p className="text-[14px] text-[var(--text-primary)]">
  {metrics.overdueReceivables.length} docs por cobrar
  </p>
- <p className="font-[Space_Mono] text-[14px] tabular-nums text-[var(--negative)] mt-0.5">
+ <p className="nd-mono text-[14px] tabular-nums text-[var(--negative)] mt-0.5">
  {formatCurrency(metrics.overdueReceivables.reduce((s, e) => s + e.openAmount, 0))}
  </p>
  </div>
  <div className="bg-[var(--surface)] px-5 py-4 border-t border-[var(--border)]">
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--warning)] mb-1">
+ <p className="nd-label text-[var(--warning)] mb-1">
  [PAGOS VENCIDOS]
  </p>
  <p className="text-[14px] text-[var(--text-primary)]">
  {metrics.overduePayables.length} docs por pagar
  </p>
- <p className="font-[Space_Mono] text-[14px] tabular-nums text-[var(--warning)] mt-0.5">
+ <p className="nd-mono text-[14px] tabular-nums text-[var(--warning)] mt-0.5">
  {formatCurrency(metrics.overduePayables.reduce((s, e) => s + e.openAmount, 0))}
  </p>
  </div>
@@ -499,14 +499,14 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
 
  {/* Runway */}
  <section>
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)] mb-4">
+ <p className="nd-label text-[var(--text-secondary)] mb-4">
  Runway estimado
  </p>
- <div className="border border-[var(--border)] rounded-lg bg-[var(--surface)] px-5 py-5">
- <p className="font-[Doto] text-[48px] leading-[1] tracking-[-0.02em] text-[var(--text-display)]">
+ <div className="border border-[var(--border)] rounded-xl bg-[var(--surface)] px-5 py-5">
+ <p className="nd-display text-[48px] leading-[1] tracking-[-0.02em] text-[var(--text-display)]">
  {metrics.runwayMonths == null ? '—' : metrics.runwayMonths.toFixed(1)}
  </p>
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-disabled)] mt-1">
+ <p className="nd-label text-[var(--text-disabled)] mt-1">
  Meses
  </p>
  <div className="mt-4">
@@ -524,8 +524,8 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  height={10}
  />
  <div className="flex justify-between mt-1">
- <span className="font-[Space_Mono] text-[9px] text-[var(--text-disabled)]">0</span>
- <span className="font-[Space_Mono] text-[9px] text-[var(--text-disabled)]">12m</span>
+ <span className="nd-mono text-[9px] text-[var(--text-disabled)]">0</span>
+ <span className="nd-mono text-[9px] text-[var(--text-disabled)]">12m</span>
  </div>
  </div>
  <p className="text-[13px] text-[var(--text-disabled)] mt-4 leading-relaxed">
@@ -536,17 +536,17 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
 
  {/* Suggested action */}
  <section>
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)] mb-4">
+ <p className="nd-label text-[var(--text-secondary)] mb-4">
  Accion sugerida
  </p>
- <div className="border border-[var(--border)] rounded-lg bg-[var(--surface)] px-5 py-5">
+ <div className="border border-[var(--border)] rounded-xl bg-[var(--surface)] px-5 py-5">
  <p className="text-[14px] text-[var(--text-secondary)] leading-relaxed">
  Prioriza el cobro de la cartera vencida y valida conciliacion semanalmente para mantener la caja proyectada alineada con banco.
  </p>
  <button
  type="button"
  onClick={() => setView?.('conciliacion')}
- className="mt-4 font-[Space_Mono] text-[11px] uppercase tracking-[0.06em] text-[var(--text-disabled)] hover:text-[var(--text-primary)] transition-colors"
+ className="mt-4 nd-label text-[var(--text-disabled)] hover:text-[var(--text-primary)] transition-colors"
  >
  Ir a conciliacion <ChevronRight size={12} className="inline" />
  </button>

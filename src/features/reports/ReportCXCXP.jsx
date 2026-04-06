@@ -106,10 +106,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  if (metrics.loading) {
  return (
  <div className="flex items-center justify-center py-24">
- <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--text-secondary)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Armando reporte operativo...</p>
- </div>
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  );
  }
@@ -178,7 +175,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  <YAxis tick={{ fill: 'var(--text-disabled)', fontSize: 11 }} tickFormatter={(value) => `${Math.round(value / 1000)}k`} tickLine={false} axisLine={false} />
  <Tooltip
  formatter={(value) => formatCurrency(value)}
- contentStyle={{ backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)', border: '1px solid #222', borderRadius: 18 }}
+ contentStyle={{ backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: 18 }}
  />
  <Bar dataKey="amount" fill={cfg.primaryColor} radius={0} />
  </BarChart>
@@ -208,7 +205,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  <div className="overflow-x-auto">
  <table className="w-full min-w-[860px] text-left">
  <thead>
- <tr className="border-b border-[var(--border)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">
+ <tr className="border-b border-[var(--border)] nd-label text-[var(--text-disabled)]">
  <th className="px-4 py-3">Vence</th>
  <th className="px-4 py-3">Contraparte</th>
  <th className="px-4 py-3">Documento</th>

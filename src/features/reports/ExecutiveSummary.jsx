@@ -22,7 +22,7 @@ const Card = ({ title, value, subtitle, accent, icon }) => {
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-disabled)]">{title}</p>
+ <p className="nd-label text-[var(--text-disabled)]">{title}</p>
  <p className="mt-2 text-[26px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
  </div>
  <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: `${accent}20`, color: accent }}>
@@ -46,10 +46,7 @@ const ExecutiveSummary = ({ user }) => {
  if (metrics.loading) {
  return (
  <div className="flex items-center justify-center py-28">
- <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--text-secondary)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Preparando resumen ejecutivo...</p>
- </div>
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  );
  }
@@ -85,7 +82,7 @@ const ExecutiveSummary = ({ user }) => {
  <div className="space-y-6">
  {/* Year selector */}
  <div className="flex items-center gap-3 flex-wrap">
- <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Año fiscal</span>
+ <span className="nd-label text-[var(--text-disabled)]">Año fiscal</span>
  <div className="flex flex-wrap gap-2">
  {YEAR_OPTIONS.map((opt) => (
  <button
@@ -106,7 +103,7 @@ const ExecutiveSummary = ({ user }) => {
 
  <div className="grid gap-4 lg:grid-cols-4">
  <Card title="Caja actual" value={formatCurrency(metrics.currentCash)} subtitle="Saldo operativo real." accent="var(--success)" icon={Landmark} />
- <Card title="Liquidez proyectada" value={formatCurrency(metrics.projectedLiquidity)} subtitle="Caja mas CXC menos CXP." accent="#999" icon={Target} />
+ <Card title="Liquidez proyectada" value={formatCurrency(metrics.projectedLiquidity)} subtitle="Caja mas CXC menos CXP." accent="var(--text-secondary)" icon={Target} />
  <Card title="CXC vencida" value={formatCurrency(metrics.overdueReceivables.reduce((sum, entry) => sum + entry.openAmount, 0))} subtitle={`${metrics.overdueReceivables.length} documentos`} accent="var(--accent)" icon={AlertTriangle} />
  <Card title="Runway" value={metrics.runwayMonths == null ? 'N/A' : `${metrics.runwayMonths.toFixed(1)}m`} subtitle="Caja actual sobre egreso promedio 90d." accent="var(--warning)" icon={ShieldAlert} />
  </div>

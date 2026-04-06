@@ -14,9 +14,9 @@ import { balances2025 } from '../../data/balances2025';
 import { useToast } from '../../contexts/ToastContext';
 
 const SEVERITY_STYLES = {
- critical: { bg: 'rgba(255,244,241,0.92)', border: 'rgba(208,76,54,0.22)', color: 'var(--accent)', icon: AlertTriangle },
- warning: { bg: 'rgba(255,248,234,0.94)', border: 'rgba(212,168,67,0.08)', color: 'var(--warning)', icon: Clock },
- info: { bg: 'rgba(240,246,255,0.94)', border: 'rgba(91,155,246,0.12)', color: 'var(--text-primary)', icon: Bell },
+ critical: { bg: 'var(--error-50)', border: 'var(--negative)', color: 'var(--accent)', icon: AlertTriangle },
+ warning: { bg: 'var(--warning-50)', border: 'var(--warning)', color: 'var(--warning)', icon: Clock },
+ info: { bg: 'var(--surface)', border: 'var(--border)', color: 'var(--text-secondary)', icon: Bell },
 };
 
 const getDaysUntilDue = (dueDate) => {
@@ -213,7 +213,7 @@ const Alertas = ({ user }) => {
  <div className="space-y-6 animate-fadeIn">
  <div className="flex items-center justify-between">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
- <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--text-primary)]">Seguimiento</p>
+ <p className="nd-label text-[var(--text-primary)]">Seguimiento</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Centro de alertas</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Revisa vencimientos, riesgos y avisos operativos desde una sola bandeja.</p>
  </div>
@@ -228,24 +228,24 @@ const Alertas = ({ user }) => {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Críticas</p>
+ <p className="nd-label text-[var(--text-secondary)]">Críticas</p>
  <AlertTriangle size={18} className="text-[var(--accent)]" />
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--accent)]">{criticalCount}</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--accent)]">{criticalCount}</p>
  </div>
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Advertencias</p>
+ <p className="nd-label text-[var(--text-secondary)]">Advertencias</p>
  <Clock size={18} className="text-[var(--warning)]" />
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">{warningCount}</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">{warningCount}</p>
  </div>
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">No leídas</p>
+ <p className="nd-label text-[var(--text-secondary)]">No leídas</p>
  <Bell size={18} className="text-[var(--text-primary)]" />
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{unreadCount}</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{unreadCount}</p>
  </div>
  </div>
 
@@ -257,7 +257,7 @@ const Alertas = ({ user }) => {
  { id: 'unread', label: 'No leídas' },
  ].map(tab => (
  <button key={tab.id} onClick={() => setFilter(tab.id)}
- className={`px-3.5 py-1.5 rounded-lg text-[12px] font-medium transition-all ${
+className={`px-3.5 py-1.5 rounded-md nd-label transition-all ${
  filter === tab.id
  ? 'border border-[var(--text-primary)] bg-transparent text-[var(--text-primary)]'
  : 'border border-[var(--border)] bg-[var(--surface)] text-[var(--text-secondary)] hover:bg-transparent'
@@ -293,7 +293,7 @@ const Alertas = ({ user }) => {
  </button>
  )}
  {alert.auto && (
- <span className="flex-shrink-0 rounded-full bg-transparent px-1.5 py-0.5 text-[9px] text-[var(--text-secondary)]">AUTO</span>
+<span className="flex-shrink-0 rounded-full border border-[var(--border-visible)] bg-transparent px-1.5 py-0.5 nd-mono text-[9px] text-[var(--text-secondary)]">AUTO</span>
  )}
  </div>
  );

@@ -359,7 +359,7 @@ const CostCenters = ({ user }) => {
  return (
  <div className="space-y-6">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
- <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--text-primary)]">Presupuesto operativo</p>
+ <p className="nd-label text-[var(--text-primary)]">Presupuesto operativo</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Centros de costo</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Organiza responsables, presupuesto anual y seguimiento mensual desde una sola mesa.</p>
  </div>
@@ -372,7 +372,7 @@ const CostCenters = ({ user }) => {
  </div>
  <h3 className="font-semibold text-[var(--text-primary)]">Centros de costos</h3>
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--accent)]">{costCenters.length}</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--accent)]">{costCenters.length}</p>
  <p className="text-xs text-[var(--text-secondary)]">activos</p>
  </div>
 
@@ -383,7 +383,7 @@ const CostCenters = ({ user }) => {
  </div>
  <h3 className="font-semibold text-[var(--text-primary)]">Presupuesto anual</h3>
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{formatCurrency(totalBudget)}</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{formatCurrency(totalBudget)}</p>
  <p className="text-xs text-[var(--text-secondary)]">{formatCurrency(totalBudget / 12)}/mes</p>
  </div>
 
@@ -394,7 +394,7 @@ const CostCenters = ({ user }) => {
  </div>
  <h3 className="font-semibold text-[var(--text-primary)]">Ejecutado YTD</h3>
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">{formatCurrency(totalExecuted)}</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">{formatCurrency(totalExecuted)}</p>
  <p className="text-xs text-[var(--text-secondary)]">de {formatCurrency(ytdBudget)} presupuestado</p>
  </div>
 
@@ -407,7 +407,7 @@ const CostCenters = ({ user }) => {
  Utilización YTD
  </h3>
  </div>
- <p className={`text-[28px] font-semibold tracking-[-0.03em] ${overallUtilization > 100 ? 'text-[var(--accent)]' : overallUtilization > 80 ? 'text-[var(--warning)]' : 'text-[var(--success)]'}`}>
+ <p className={`nd-display text-[28px] font-semibold tracking-[-0.03em] ${overallUtilization > 100 ? 'text-[var(--accent)]' : overallUtilization > 80 ? 'text-[var(--warning)]' : 'text-[var(--success)]'}`}>
  {overallUtilization.toFixed(1)}%
  </p>
  <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-[var(--surface)]">
@@ -453,15 +453,15 @@ const CostCenters = ({ user }) => {
  <table className="w-full text-left">
  <thead className="border-b border-[var(--border-visible)] bg-transparent">
  <tr>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Código</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Nombre</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Tipo</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Ppto. anual</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Ppto. mensual</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Ejecutado YTD</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Utilización</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Responsable</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Acciones</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Código</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Nombre</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Tipo</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Ppto. anual</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Ppto. mensual</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Ejecutado YTD</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Utilización</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Responsable</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Acciones</th>
  </tr>
  </thead>
  <tbody>
@@ -492,19 +492,19 @@ const CostCenters = ({ user }) => {
  </div>
  </div>
 
- <div className="overflow-hidden rounded-xl border border-[#d7ebe2] bg-[var(--surface)]">
+ <div className="overflow-hidden rounded-xl border border-[var(--success)] bg-[var(--surface)]">
  <table className="w-full text-left">
  <thead className="border-b border-[var(--border-visible)] bg-transparent">
  <tr>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--success)]">Código</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--success)]">Nombre</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--success)]">Tipo</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--success)]">Objetivo anual</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--success)]">Objetivo mensual</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--success)]">Logrado YTD</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--success)]">Cumplimiento</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--success)]">Responsable</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--success)]">Acciones</th>
+ <th className="px-4 py-3 nd-label text-[var(--success)]">Código</th>
+ <th className="px-4 py-3 nd-label text-[var(--success)]">Nombre</th>
+ <th className="px-4 py-3 nd-label text-[var(--success)]">Tipo</th>
+ <th className="px-4 py-3 nd-label text-[var(--success)]">Objetivo anual</th>
+ <th className="px-4 py-3 nd-label text-[var(--success)]">Objetivo mensual</th>
+ <th className="px-4 py-3 nd-label text-[var(--success)]">Logrado YTD</th>
+ <th className="px-4 py-3 nd-label text-[var(--success)]">Cumplimiento</th>
+ <th className="px-4 py-3 nd-label text-[var(--success)]">Responsable</th>
+ <th className="px-4 py-3 nd-label text-[var(--success)]">Acciones</th>
  </tr>
  </thead>
  <tbody>
@@ -521,14 +521,14 @@ const CostCenters = ({ user }) => {
  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
  <div className="w-full max-w-md overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
  <div className="border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-4">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-primary)]">Centro presupuestario</p>
+ <p className="nd-label text-[var(--text-primary)]">Centro presupuestario</p>
  <h3 className="text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
  {editingCenter ? 'Editar centro' : 'Nuevo centro'}
  </h3>
  </div>
  <div className="p-6 space-y-4">
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Nombre</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Nombre</label>
  <input
  type="text"
  className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-2.5 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)] "
@@ -538,7 +538,7 @@ const CostCenters = ({ user }) => {
  />
  </div>
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Tipo</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Tipo</label>
  <select
  className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-2.5 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)] "
  value={newCenter.type}
@@ -549,7 +549,7 @@ const CostCenters = ({ user }) => {
  </select>
  </div>
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">
  Presupuesto anual
  </label>
  <div className="relative">
@@ -569,7 +569,7 @@ const CostCenters = ({ user }) => {
  )}
  </div>
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Responsable</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Responsable</label>
  <input
  type="text"
  className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-2.5 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)] "

@@ -73,7 +73,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
 
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Desde</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Desde</label>
  <input
  type="date"
  className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
@@ -82,7 +82,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
  />
  </div>
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Hasta</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Hasta</label>
  <input
  type="date"
  className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
@@ -91,7 +91,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
  />
  </div>
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Proyecto</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Proyecto</label>
  <select
  className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
  value={filters.project}
@@ -102,7 +102,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
  </select>
  </div>
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Categoría</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Categoría</label>
  <select
  className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
  value={filters.category}
@@ -113,7 +113,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
  </select>
  </div>
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Tipo</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Tipo</label>
  <select
  className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
  value={filters.type}
@@ -125,7 +125,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
  </select>
  </div>
  <div>
- <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Estado</label>
+ <label className="mb-1 block nd-label text-[var(--text-secondary)]">Estado</label>
  <select
  className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
  value={filters.status}
@@ -140,7 +140,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
 
  <button
  onClick={onApply}
- className="w-full rounded-lg bg-[var(--text-primary)] py-2.5 text-sm font-semibold text-[var(--black)] transition hover:opacity-85"
+ className="w-full rounded-full bg-[var(--text-display)] py-2.5 nd-mono text-[13px] uppercase tracking-[0.06em] text-[var(--black)] transition hover:opacity-85"
  >
  Aplicar filtros
  </button>

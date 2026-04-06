@@ -40,7 +40,7 @@ const Adjuntos = ({ user }) => {
  <div className="space-y-6 animate-fadeIn">
  <div className="flex items-center justify-between">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
- <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--text-primary)]">Documentación</p>
+ <p className="nd-label text-[var(--text-primary)]">Documentación</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Adjuntos</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Centraliza facturas, justificantes y respaldos de cada registro financiero.</p>
  </div>
@@ -53,24 +53,24 @@ const Adjuntos = ({ user }) => {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Total archivos</p>
+ <p className="nd-label text-[var(--text-secondary)]">Total archivos</p>
  <Paperclip size={18} className="text-[var(--text-primary)]" />
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">0</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">0</p>
  </div>
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Registros con adjuntos</p>
+ <p className="nd-label text-[var(--text-secondary)]">Registros con adjuntos</p>
  <FileText size={18} className="text-[var(--success)]" />
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--success)]">0</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--success)]">0</p>
  </div>
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Espacio usado</p>
+ <p className="nd-label text-[var(--text-secondary)]">Espacio usado</p>
  <Image size={18} className="text-[var(--warning)]" />
  </div>
- <p className="text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">0 MB</p>
+ <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">0 MB</p>
  </div>
  </div>
 
@@ -103,7 +103,7 @@ const Adjuntos = ({ user }) => {
  placeholder="Buscar por transacción o archivo..."
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] py-2.5 pl-10 pr-4 text-[13px] text-[var(--text-primary)] placeholder-[#999] outline-none transition focus:border-[var(--text-primary)] "
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] py-2.5 pl-10 pr-4 text-[13px] text-[var(--text-primary)] placeholder-[var(--text-secondary)] outline-none transition focus:border-[var(--text-primary)] "
  />
  </div>
 
@@ -112,10 +112,10 @@ const Adjuntos = ({ user }) => {
  <table className="w-full text-left">
  <thead>
  <tr className="border-b border-[var(--border)] bg-[var(--surface-raised)]">
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Transacción</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Archivos</th>
- <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Fecha</th>
- <th className="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Tamaño</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Transacción</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Archivos</th>
+ <th className="px-4 py-3 nd-label text-[var(--text-secondary)]">Fecha</th>
+ <th className="px-4 py-3 text-right nd-label text-[var(--text-secondary)]">Tamaño</th>
  </tr>
  </thead>
  <tbody>

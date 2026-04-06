@@ -109,7 +109,7 @@ const ReportCXC = ({ transactions }) => {
  <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.22)" />
  <XAxis dataKey="name" tick={{ fill: 'var(--text-secondary)', fontSize: 11 }} />
  <YAxis tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`} tick={{ fill: 'var(--text-secondary)', fontSize: 11 }} />
- <Tooltip formatter={(value) => formatCurrency(value)} contentStyle={{ borderRadius: '16px', border: '1px solid #222', backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)' }} />
+ <Tooltip formatter={(value) => formatCurrency(value)} contentStyle={{ borderRadius: '16px', border: '1px solid var(--border)', backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)' }} />
  <Bar dataKey="monto" fill="var(--success)" radius={0} />
  </BarChart>
  </ResponsiveContainer>

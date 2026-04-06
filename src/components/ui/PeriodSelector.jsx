@@ -114,7 +114,7 @@ const PeriodSelector = ({
  else setPeriodValue(null);
  };
 
- const btnBase = 'px-3 py-1.5 rounded-sm font-[Space_Mono] text-[11px] uppercase tracking-[0.06em] transition-colors duration-150';
+ const btnBase = 'px-3 py-1.5 rounded-sm nd-label transition-colors duration-150';
  const btnActive = 'bg-[var(--surface)] text-[var(--text-primary)]';
  const btnInactive = 'text-[var(--text-disabled)] hover:text-[var(--text-secondary)]';
 
@@ -153,7 +153,7 @@ const PeriodSelector = ({
  <div className="relative" ref={subRef}>
  <button
  onClick={() => setSubOpen(!subOpen)}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-[Space_Mono] text-[11px] uppercase tracking-[0.06em] border border-[var(--border-visible)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--text-primary)] transition-colors"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg nd-label border border-[var(--border-visible)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--text-primary)] transition-colors"
  >
  <Calendar size={12} />
  {subOptions.find((o) => o.value === periodValue)?.label || 'Seleccionar'}
@@ -165,7 +165,7 @@ const PeriodSelector = ({
  <button
  key={opt.value}
  onClick={() => { setPeriodValue(opt.value); setSubOpen(false); }}
- className={`w-full text-left px-3 py-1.5 font-[Space_Mono] text-[11px] uppercase tracking-[0.06em] transition-colors ${
+ className={`w-full text-left px-3 py-1.5 nd-label transition-colors ${
  periodValue === opt.value
  ? 'bg-[var(--surface)] text-[var(--text-primary)]'
  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface)]'

@@ -28,7 +28,7 @@ import { useFinanceLedger } from '../../hooks/useFinanceLedger';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 
 const MONTHS_ES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-const CHART_COLORS = ['var(--text-primary)', 'var(--success)', 'var(--warning)', 'var(--warning)', '#5f7fd6', '#5ca8e6', '#85b4f6', '#8eb39b'];
+const CHART_COLORS = ['var(--text-primary)', 'var(--success)', 'var(--warning)', 'var(--warning)', 'var(--text-disabled)', 'var(--border-visible)', 'var(--text-tertiary)', 'var(--text-secondary)'];
 
 const OPEN_DOCUMENT_STATUSES = new Set(['issued', 'partial', 'overdue']);
 
@@ -74,7 +74,7 @@ const TooltipCard = ({ active, payload, label }) => {
 
  return (
  <div className="min-w-[180px] rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-3 ">
- <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">{label}</p>
+ <p className="mb-2 nd-label text-[var(--text-disabled)]">{label}</p>
  {payload.map((entry) => (
  <p key={entry.name} className="text-sm font-medium" style={{ color: entry.color }}>
  {entry.name}: {formatCurrency(entry.value)}
@@ -109,8 +109,8 @@ const KpiCard = ({ title, value, subtitle, tone = 'neutral', icon }) => {
  <div className={`rounded-xl border border-[var(--border)] p-5 ${palette.card}`}>
  <div className="mb-3 flex items-center justify-between gap-3">
  <div>
- <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-disabled)]">{title}</p>
- <p className={`mt-2 text-[28px] font-semibold tracking-tight ${palette.value}`}>{value}</p>
+ <p className="nd-label text-[var(--text-disabled)]">{title}</p>
+ <p className={`mt-2 nd-display text-[28px] font-semibold tracking-tight ${palette.value}`}>{value}</p>
  </div>
  <div className={`flex h-11 w-11 items-center justify-center rounded-lg ${palette.icon}`}>
  <IconComponent size={18} />
@@ -278,8 +278,8 @@ const ProyectoDashboard = ({ user }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="grid gap-5 xl:grid-cols-[1.1fr,0.9fr]">
  <div>
- <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--text-secondary)]">Proyectos</p>
- <h2 className="text-[32px] font-semibold tracking-tight text-[var(--text-primary)]">Rentabilidad y seguimiento por proyecto.</h2>
+ <p className="mb-3 nd-label text-[var(--text-secondary)]">Proyectos</p>
+ <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Rentabilidad y seguimiento por proyecto.</h2>
  <p className="mt-3 max-w-2xl text-[15px] leading-7 text-[var(--text-disabled)]">
  Revisa ingresos, gastos, documentos abiertos y evolución mensual de cada proyecto desde una sola vista.
  </p>
@@ -287,7 +287,7 @@ const ProyectoDashboard = ({ user }) => {
 
  <div className="flex flex-col gap-3 justify-end">
  <label className="block">
- <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Proyecto</span>
+ <span className="mb-2 block nd-label text-[var(--text-disabled)]">Proyecto</span>
  <div className="relative">
  <select
  value={effectiveProjectId}
@@ -307,7 +307,7 @@ const ProyectoDashboard = ({ user }) => {
 
  {selectedProject ? (
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
- <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-disabled)]">Proyecto activo</p>
+ <p className="nd-label text-[var(--text-disabled)]">Proyecto activo</p>
  <p className="mt-2 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">{selectedProject.name}</p>
  <p className="mt-1 text-[12px] text-[var(--text-secondary)]">
  {selectedProject.code || 'Sin código'}{selectedProject.client ? ` · ${selectedProject.client}` : ''}
@@ -451,7 +451,7 @@ const ProyectoDashboard = ({ user }) => {
  </Pie>
  <Tooltip
  formatter={(value) => formatCurrency(value)}
- contentStyle={{ backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)', border: '1px solid #222', borderRadius: 18 }}
+ contentStyle={{ backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: 18 }}
  />
  </PieChart>
  </ResponsiveContainer>
@@ -485,7 +485,7 @@ const ProyectoDashboard = ({ user }) => {
  <div className="overflow-x-auto">
  <table className="w-full min-w-[880px] text-left">
  <thead>
- <tr className="border-b border-[var(--border)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">
+ <tr className="border-b border-[var(--border)] nd-label text-[var(--text-disabled)]">
  <th className="px-4 py-3">Fecha</th>
  <th className="px-4 py-3">Descripción</th>
  <th className="px-4 py-3">Tipo</th>

@@ -44,8 +44,8 @@ const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
  >
  <div className="mb-4 flex items-center justify-between">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">{title}</p>
- <p className="mt-2 text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
+ <p className="nd-label text-[var(--text-secondary)]">{title}</p>
+ <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
  </div>
  <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: `${accent}1f`, color: accent }}>
  <IconComponent size={18} />
@@ -148,10 +148,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  if (metrics.loading) {
  return (
  <div className="flex items-center justify-center py-28">
- <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--success)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Consolidando ingresos operativos...</p>
- </div>
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  );
  }
@@ -161,8 +158,8 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--success)]">Ingresos</p>
- <h2 className="text-[32px] font-semibold tracking-tight text-[var(--text-primary)]">Cobros reales y cartera pendiente en una sola vista.</h2>
+ <p className="mb-3 nd-label text-[var(--success)]">Ingresos</p>
+ <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Cobros reales y cartera pendiente en una sola vista.</h2>
  <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[var(--text-secondary)]">
  La caja entra solo con movimientos bancarios `posted`. Las facturas abiertas permanecen como cartera hasta registrar un cobro real.
  </p>
@@ -182,7 +179,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
 
  <div className="grid gap-4 lg:grid-cols-4">
  <StatCard title="Cobrado real" value={formatCurrency(collectedReal)} subtitle={`${collectionMovements.length} cobros bancarios registrados`} accent="var(--success)" icon={Wallet} onClick={() => setStatusFilter('settled')} />
- <StatCard title="Cartera abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="#999" icon={BadgeEuro} onClick={() => setStatusFilter('all')} />
+ <StatCard title="Cartera abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="var(--text-secondary)" icon={BadgeEuro} onClick={() => setStatusFilter('all')} />
  <StatCard title="Cobro parcial" value={formatCurrency(totalPartial)} subtitle="Importe ya cobrado sobre facturas aún abiertas" accent="var(--warning)" icon={ArrowUpCircle} />
  <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overdueReceivables.length} documentos fuera de plazo`} accent="var(--accent)" icon={AlertTriangle} onClick={() => setStatusFilter('overdue')} />
  </div>
@@ -219,7 +216,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  <div className="overflow-x-auto">
  <table className="w-full min-w-[980px] text-left">
  <thead>
- <tr className="border-b border-[var(--border)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+ <tr className="border-b border-[var(--border)] nd-label text-[var(--text-secondary)]">
  <th className="px-4 py-3">Cliente</th>
  <th className="px-4 py-3">Documento</th>
  <th className="px-4 py-3">Proyecto</th>

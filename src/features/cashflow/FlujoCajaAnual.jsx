@@ -11,14 +11,14 @@ const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_OPTIONS = [2024, 2025, 2026, CURRENT_YEAR + 1].filter((v, i, a) => a.indexOf(v) === i).sort();
 
 const fmtCell = (val) => {
-  if (!val || val === 0) return <span style={{ color: 'var(--nd-text-disabled)' }}>—</span>;
-  if (val > 0) return <span style={{ color: 'var(--nd-success)' }}>+€{formatCurrency(val)}</span>;
-  return <span style={{ color: 'var(--nd-accent)' }}>-€{formatCurrency(Math.abs(val))}</span>;
+  if (!val || val === 0) return <span style={{ color: 'var(--text-disabled)' }}>—</span>;
+  if (val > 0) return <span style={{ color: 'var(--success)' }}>+€{formatCurrency(val)}</span>;
+  return <span style={{ color: 'var(--accent)' }}>-€{formatCurrency(Math.abs(val))}</span>;
 };
 
 const fmtCellAbs = (val) => {
-  if (!val || val === 0) return <span style={{ color: 'var(--nd-text-disabled)' }}>—</span>;
-  return <span style={{ color: 'var(--nd-accent)' }}>€{formatCurrency(Math.abs(val))}</span>;
+  if (!val || val === 0) return <span style={{ color: 'var(--text-disabled)' }}>—</span>;
+  return <span style={{ color: 'var(--accent)' }}>€{formatCurrency(Math.abs(val))}</span>;
 };
 
 const isOverdue = (dueDate) => {
@@ -28,14 +28,14 @@ const isOverdue = (dueDate) => {
 
 // ── Style helpers ──
 const thStyle = (isFirst = false) => ({
-  background: 'var(--nd-surface)',
+  background: 'var(--surface)',
   padding: '10px 12px',
   textAlign: isFirst ? 'left' : 'right',
-  color: 'var(--nd-text-secondary)',
+  color: 'var(--text-secondary)',
   fontSize: '10px',
   textTransform: 'uppercase',
   letterSpacing: '0.05em',
-  borderBottom: '2px solid var(--nd-border)',
+  borderBottom: '2px solid var(--border)',
   whiteSpace: 'nowrap',
   ...(isFirst ? { position: 'sticky', left: 0, zIndex: 10, width: 180 } : {}),
 });
@@ -43,28 +43,28 @@ const thStyle = (isFirst = false) => ({
 const tdStyle = (isFirst = false) => ({
   padding: '7px 12px',
   textAlign: isFirst ? 'left' : 'right',
-  borderBottom: '1px solid var(--nd-border)',
+  borderBottom: '1px solid var(--border)',
   whiteSpace: 'nowrap',
   ...(isFirst ? { position: 'sticky', left: 0, zIndex: 5, background: 'inherit', width: 180, minWidth: 180, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis' } : {}),
 });
 
 const panelThStyle = (isFirst = false) => ({
-  background: 'var(--nd-surface)',
+  background: 'var(--surface)',
   padding: '7px 10px',
   textAlign: isFirst ? 'left' : 'right',
-  color: 'var(--nd-text-secondary)',
+  color: 'var(--text-secondary)',
   fontSize: '9px',
   textTransform: 'uppercase',
   letterSpacing: '0.05em',
-  borderBottom: '1px solid var(--nd-border)',
+  borderBottom: '1px solid var(--border)',
   whiteSpace: 'nowrap',
 });
 
 const panelTdStyle = (isFirst = false) => ({
   padding: '6px 10px',
   textAlign: isFirst ? 'left' : 'right',
-  borderBottom: '1px solid var(--nd-border)',
-  color: 'var(--nd-text-primary)',
+  borderBottom: '1px solid var(--border)',
+  color: 'var(--text-primary)',
   whiteSpace: 'nowrap',
   maxWidth: isFirst ? '140px' : 'unset',
   overflow: 'hidden',
@@ -80,10 +80,10 @@ function KpiCard({ label, value, color, prefix = '', negative = false, signed = 
     : formattedValue;
 
   return (
-    <div className="rounded-2xl border border-[var(--nd-border)] p-4" style={{ background: 'var(--nd-surface)' }}>
-      <p className="nd-label mb-1" style={{ color: 'var(--nd-text-secondary)' }}>{label}</p>
+    <div className="rounded-xl border border-[var(--border)] p-4" style={{ background: 'var(--surface)' }}>
+      <p className="nd-label mb-1" style={{ color: 'var(--text-secondary)' }}>{label}</p>
       <p className="nd-display text-lg font-bold leading-tight" style={{ color }}>{signed ? signedValue : formattedValue}</p>
-      {sub && <p className="text-[10px] mt-1" style={{ color: 'var(--nd-text-disabled)' }}>{sub}</p>}
+      {sub && <p className="text-[10px] mt-1" style={{ color: 'var(--text-disabled)' }}>{sub}</p>}
     </div>
   );
 }
@@ -184,28 +184,28 @@ export default function FlujoCajaAnual({ user }) {
     <div className="space-y-6 pb-12">
       {/* ── HEADER ── */}
       <div
-        className="rounded-2xl border border-[var(--nd-border)] px-6 py-5 flex items-center justify-between"
-        style={{ background: 'var(--nd-surface)', borderBottom: '2px solid var(--nd-success)33' }}
+        className="rounded-xl border border-[var(--border)] px-6 py-5 flex items-center justify-between"
+        style={{ background: 'var(--surface)', borderBottom: '2px solid var(--success)' }}
       >
         <div className="flex items-center gap-3">
-          <TableProperties className="h-5 w-5" style={{ color: 'var(--nd-success)' }} />
+          <TableProperties className="h-5 w-5" style={{ color: 'var(--success)' }} />
           <div>
             <h1 className="nd-display text-xl font-bold text-[var(--text-display)]">Flujo de Caja Anual</h1>
-            <p className="text-xs mt-0.5" style={{ color: 'var(--nd-text-secondary)' }}>Vista consolidada por mes y categoría</p>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>Vista consolidada por mes y categoría</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="rounded-lg border border-[var(--nd-border)] text-sm px-3 py-1.5 cursor-pointer"
-            style={{ background: 'var(--nd-surface)', color: 'var(--nd-text-primary)' }}
+            className="rounded-lg border border-[var(--border)] text-sm px-3 py-1.5 cursor-pointer"
+            style={{ background: 'var(--surface)', color: 'var(--text-primary)' }}
           >
             {YEAR_OPTIONS.map((y) => <option key={y} value={y}>{y}</option>)}
           </select>
           <span
             className="text-xs font-semibold px-3 py-1 rounded-full"
-            style={{ background: 'var(--nd-success)22', color: 'var(--nd-success)', border: '1px solid var(--nd-success)44' }}
+            style={{ background: 'var(--success-50)', color: 'var(--success)', border: '1px solid var(--success)' }}
           >
             {selectedYear} YTD
           </span>
@@ -214,18 +214,18 @@ export default function FlujoCajaAnual({ user }) {
 
       {/* ── KPI BAR ── */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
-        <KpiCard label="Ingresos YTD" value={ytdIncome} color="var(--nd-success)" prefix="€" />
-        <KpiCard label="Gastos YTD" value={ytdExpense} color="var(--nd-accent)" prefix="€" negative />
-        <KpiCard label="Resultado Neto" value={ytdNet} color={ytdNet >= 0 ? 'var(--nd-success)' : 'var(--nd-accent)'} prefix="€" signed />
-        <KpiCard label="CxC Pendiente" value={totalCxC} color="var(--nd-interactive)" prefix="€" sub="Facturas issued" />
-        <KpiCard label="CxP Pendiente" value={totalCxP} color="var(--nd-warning)" prefix="€" negative sub="Por pagar" />
-        <KpiCard label="Balance CxC–CxP" value={balanceNeto} color={balanceNeto >= 0 ? 'var(--nd-success)' : 'var(--nd-accent)'} prefix="€" signed sub="Neto pendiente" />
+        <KpiCard label="Ingresos YTD" value={ytdIncome} color="var(--success)" prefix="€" />
+        <KpiCard label="Gastos YTD" value={ytdExpense} color="var(--accent)" prefix="€" negative />
+        <KpiCard label="Resultado Neto" value={ytdNet} color={ytdNet >= 0 ? 'var(--success)' : 'var(--accent)'} prefix="€" signed />
+        <KpiCard label="CxC Pendiente" value={totalCxC} color="var(--interactive)" prefix="€" sub="Facturas issued" />
+        <KpiCard label="CxP Pendiente" value={totalCxP} color="var(--warning)" prefix="€" negative sub="Por pagar" />
+        <KpiCard label="Balance CxC–CxP" value={balanceNeto} color={balanceNeto >= 0 ? 'var(--success)' : 'var(--accent)'} prefix="€" signed sub="Neto pendiente" />
       </div>
 
       {/* ── MAIN TABLE ── */}
-      <section className="rounded-2xl border border-[var(--nd-border)] overflow-hidden" style={{ background: 'var(--nd-surface)' }}>
-        <div className="px-5 py-4 border-b border-[var(--nd-border)]">
-          <h2 className="nd-label" style={{ color: 'var(--nd-text-primary)' }}>
+      <section className="rounded-xl border border-[var(--border)] overflow-hidden" style={{ background: 'var(--surface)' }}>
+        <div className="px-5 py-4 border-b border-[var(--border)]">
+          <h2 className="nd-label" style={{ color: 'var(--text-primary)' }}>
             Estado de Cuenta por Mes
           </h2>
         </div>
@@ -240,68 +240,68 @@ export default function FlujoCajaAnual({ user }) {
             </thead>
             <tbody>
               {/* ── INCOME SECTION HEADER ── */}
-              <tr style={{ background: 'var(--nd-surface)' }}>
+              <tr style={{ background: 'var(--surface)' }}>
                 <td
                   colSpan={14}
-                  style={{ padding: '8px 12px', color: 'var(--nd-text-secondary)', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}
+                  style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}
                 >
-                  ▲ INGRESOS
+                  [INGRESOS]
                 </td>
               </tr>
               {incomeRows.length === 0 && (
                 <tr>
-                  <td style={{ ...tdStyle(true), color: 'var(--nd-text-disabled)', fontStyle: 'italic' }}>Sin datos</td>
-                  {MONTHS.map((_, i) => <td key={i} style={tdStyle()}><span style={{ color: 'var(--nd-text-disabled)' }}>—</span></td>)}
-                  <td style={tdStyle()}><span style={{ color: 'var(--nd-text-disabled)' }}>—</span></td>
+                  <td style={{ ...tdStyle(true), color: 'var(--text-disabled)', fontStyle: 'italic' }}>Sin datos</td>
+                  {MONTHS.map((_, i) => <td key={i} style={tdStyle()}><span style={{ color: 'var(--text-disabled)' }}>—</span></td>)}
+                  <td style={tdStyle()}><span style={{ color: 'var(--text-disabled)' }}>—</span></td>
                 </tr>
               )}
               {incomeRows.map((row) => (
-                <tr key={row.cat} style={{ background: 'var(--nd-surface)' }}>
-                  <td style={{ ...tdStyle(true), background: 'var(--nd-surface)', color: 'var(--nd-success)' }}>{row.cat}</td>
+                <tr key={row.cat} style={{ background: 'var(--surface)' }}>
+                  <td style={{ ...tdStyle(true), background: 'var(--surface)', color: 'var(--success)' }}>{row.cat}</td>
                   {row.months.map((v, i) => <td key={i} style={tdStyle()}>{fmtCell(v)}</td>)}
                   <td style={{ ...tdStyle(), fontWeight: 700 }}>{fmtCell(row.total)}</td>
                 </tr>
               ))}
               {/* Subtotal income */}
-              <tr style={{ background: 'var(--nd-surface)', borderTop: '1px solid var(--nd-success)44' }}>
-                <td style={{ ...tdStyle(true), background: 'var(--nd-surface)', color: 'var(--nd-success)', fontWeight: 700 }}>✦ TOTAL INGRESOS</td>
+              <tr style={{ background: 'var(--surface)', borderTop: '1px solid var(--success)' }}>
+                <td style={{ ...tdStyle(true), background: 'var(--surface)', color: 'var(--success)', fontWeight: 700 }}>TOTAL INGRESOS</td>
                 {monthTotalsIncome.map((v, i) => <td key={i} style={{ ...tdStyle(), fontWeight: 700 }}>{fmtCell(v)}</td>)}
                 <td style={{ ...tdStyle(), fontWeight: 700 }}>{fmtCell(ytdIncome)}</td>
               </tr>
 
               {/* ── EXPENSE SECTION HEADER ── */}
-              <tr style={{ background: 'var(--nd-surface)' }}>
+              <tr style={{ background: 'var(--surface)' }}>
                 <td
                   colSpan={14}
-                  style={{ padding: '8px 12px', color: 'var(--nd-text-secondary)', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}
+                  style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}
                 >
-                  ▼ GASTOS
+                  [GASTOS]
                 </td>
               </tr>
               {expenseRows.length === 0 && (
                 <tr>
-                  <td style={{ ...tdStyle(true), color: 'var(--nd-text-disabled)', fontStyle: 'italic' }}>Sin datos</td>
-                  {MONTHS.map((_, i) => <td key={i} style={tdStyle()}><span style={{ color: 'var(--nd-text-disabled)' }}>—</span></td>)}
-                  <td style={tdStyle()}><span style={{ color: 'var(--nd-text-disabled)' }}>—</span></td>
+                  <td style={{ ...tdStyle(true), color: 'var(--text-disabled)', fontStyle: 'italic' }}>Sin datos</td>
+                  {MONTHS.map((_, i) => <td key={i} style={tdStyle()}><span style={{ color: 'var(--text-disabled)' }}>—</span></td>)}
+                  <td style={tdStyle()}><span style={{ color: 'var(--text-disabled)' }}>—</span></td>
                 </tr>
               )}
               {expenseRows.map((row) => (
-                <tr key={row.cat} style={{ background: 'var(--nd-surface)' }}>
-                  <td style={{ ...tdStyle(true), background: 'var(--nd-surface)', color: '#ff7b7b' }}>{row.cat}</td>
+                <tr key={row.cat} style={{ background: 'var(--surface)' }}>
+                  <td style={{ ...tdStyle(true), background: 'var(--surface)', color: 'var(--accent)' }}>{row.cat}</td>
                   {row.months.map((v, i) => <td key={i} style={tdStyle()}>{fmtCellAbs(v)}</td>)}
                   <td style={{ ...tdStyle(), fontWeight: 700 }}>{fmtCellAbs(row.total)}</td>
                 </tr>
               ))}
               {/* Subtotal expense */}
-              <tr style={{ background: 'var(--nd-surface)', borderTop: '1px solid var(--nd-accent)44' }}>
-                <td style={{ ...tdStyle(true), background: 'var(--nd-surface)', color: 'var(--nd-accent)', fontWeight: 700 }}>✦ TOTAL GASTOS</td>
+              <tr style={{ background: 'var(--surface)', borderTop: '1px solid var(--negative)' }}>
+                <td style={{ ...tdStyle(true), background: 'var(--surface)', color: 'var(--accent)', fontWeight: 700 }}>TOTAL GASTOS</td>
                 {monthTotalsExpense.map((v, i) => <td key={i} style={{ ...tdStyle(), fontWeight: 700 }}>{fmtCellAbs(v)}</td>)}
                 <td style={{ ...tdStyle(), fontWeight: 700 }}>{fmtCellAbs(ytdExpense)}</td>
               </tr>
 
               {/* ── FLUJO NETO ── */}
-              <tr style={{ background: 'var(--nd-surface)', borderTop: '2px solid #3a3d50' }}>
-                <td style={{ ...tdStyle(true), background: 'var(--nd-surface)', fontWeight: 800, fontSize: '13px', color: 'var(--nd-text-primary)' }}>
+              <tr style={{ background: 'var(--surface)', borderTop: '2px solid var(--border-visible)' }}>
+                <td style={{ ...tdStyle(true), background: 'var(--surface)', fontWeight: 800, fontSize: '13px', color: 'var(--text-primary)' }}>
                   FLUJO NETO
                 </td>
                 {netRow.map((v, i) => (
@@ -311,17 +311,17 @@ export default function FlujoCajaAnual({ user }) {
               </tr>
 
               {/* ── ACUMULADO ── */}
-              <tr style={{ background: 'var(--nd-surface)' }}>
-                <td style={{ ...tdStyle(true), background: 'var(--nd-surface)', color: 'var(--nd-interactive)', fontWeight: 700 }}>ACUMULADO</td>
+              <tr style={{ background: 'var(--surface)' }}>
+                <td style={{ ...tdStyle(true), background: 'var(--surface)', color: 'var(--interactive)', fontWeight: 700 }}>ACUMULADO</td>
                 {acumRow.map((v, i) => (
-                  <td key={i} style={{ ...tdStyle(), color: v >= 0 ? 'var(--nd-interactive)' : 'var(--nd-accent)', fontWeight: 700 }}>
+                  <td key={i} style={{ ...tdStyle(), color: v >= 0 ? 'var(--interactive)' : 'var(--accent)', fontWeight: 700 }}>
                     {v === 0
-                      ? <span style={{ color: 'var(--nd-text-disabled)' }}>—</span>
+                      ? <span style={{ color: 'var(--text-disabled)' }}>—</span>
                       : `€${formatCurrency(v)}`}
                   </td>
                 ))}
-                <td style={{ ...tdStyle(), color: (acumRow[11] || 0) >= 0 ? 'var(--nd-interactive)' : 'var(--nd-accent)', fontWeight: 700 }}>
-                  {(acumRow[11] || 0) === 0 ? <span style={{ color: 'var(--nd-text-disabled)' }}>—</span> : `€${formatCurrency(acumRow[11] || 0)}`}
+                <td style={{ ...tdStyle(), color: (acumRow[11] || 0) >= 0 ? 'var(--interactive)' : 'var(--accent)', fontWeight: 700 }}>
+                  {(acumRow[11] || 0) === 0 ? <span style={{ color: 'var(--text-disabled)' }}>—</span> : `€${formatCurrency(acumRow[11] || 0)}`}
                 </td>
               </tr>
             </tbody>
@@ -332,10 +332,10 @@ export default function FlujoCajaAnual({ user }) {
       {/* ── CxC / CxP PANELS ── */}
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         {/* CxC Panel */}
-        <div className="rounded-2xl border border-[var(--nd-border)] overflow-hidden" style={{ background: 'var(--nd-surface)' }}>
-          <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--nd-border)]">
-            <span className="font-bold text-sm" style={{ color: 'var(--nd-interactive)' }}>CXC PENDIENTES</span>
-            <span className="font-bold text-base" style={{ color: 'var(--nd-success)' }}>€{formatCurrency(totalCxC)}</span>
+        <div className="rounded-xl border border-[var(--border)] overflow-hidden" style={{ background: 'var(--surface)' }}>
+          <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)]">
+            <span className="font-bold text-sm" style={{ color: 'var(--interactive)' }}>CXC PENDIENTES</span>
+            <span className="font-bold text-base" style={{ color: 'var(--success)' }}>€{formatCurrency(totalCxC)}</span>
           </div>
           <div style={{ maxHeight: 280, overflowY: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px' }}>
@@ -350,7 +350,7 @@ export default function FlujoCajaAnual({ user }) {
               <tbody>
                 {pendingCxC.length === 0 && (
                   <tr>
-                    <td colSpan={4} style={{ padding: '12px', color: 'var(--nd-text-disabled)', textAlign: 'center' }}>
+                    <td colSpan={4} style={{ padding: '12px', color: 'var(--text-disabled)', textAlign: 'center' }}>
                       Sin facturas pendientes
                     </td>
                   </tr>
@@ -361,11 +361,11 @@ export default function FlujoCajaAnual({ user }) {
                     <tr key={r.id}>
                       <td style={panelTdStyle(true)}>{r.counterpartyName || r.client || '—'}</td>
                       <td style={panelTdStyle()}>{r.documentNumber || r.invoiceNumber || '—'}</td>
-                      <td style={{ ...panelTdStyle(), color: isOverdue(r.dueDate) ? 'var(--nd-warning)' : 'var(--nd-text-primary)' }}>
+                      <td style={{ ...panelTdStyle(), color: isOverdue(r.dueDate) ? 'var(--warning)' : 'var(--text-primary)' }}>
                         {r.dueDate ? formatDate(r.dueDate) : '—'}
-                        {isOverdue(r.dueDate) && ' ⚠'}
+                        {isOverdue(r.dueDate) && ' [VENCIDO]'}
                       </td>
-                      <td style={{ ...panelTdStyle(), color: 'var(--nd-success)', fontWeight: 600 }}>
+                      <td style={{ ...panelTdStyle(), color: 'var(--success)', fontWeight: 600 }}>
                         €{formatCurrency(r.openAmount || 0)}
                       </td>
                     </tr>
@@ -376,10 +376,10 @@ export default function FlujoCajaAnual({ user }) {
         </div>
 
         {/* CxP Panel */}
-        <div className="rounded-2xl border border-[var(--nd-border)] overflow-hidden" style={{ background: 'var(--nd-surface)' }}>
-          <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--nd-border)]">
-            <span className="font-bold text-sm" style={{ color: 'var(--nd-warning)' }}>CXP PENDIENTES</span>
-            <span className="font-bold text-base" style={{ color: 'var(--nd-accent)' }}>€{formatCurrency(totalCxP)}</span>
+        <div className="rounded-xl border border-[var(--border)] overflow-hidden" style={{ background: 'var(--surface)' }}>
+          <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)]">
+            <span className="font-bold text-sm" style={{ color: 'var(--warning)' }}>CXP PENDIENTES</span>
+            <span className="font-bold text-base" style={{ color: 'var(--accent)' }}>€{formatCurrency(totalCxP)}</span>
           </div>
           <div style={{ maxHeight: 280, overflowY: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px' }}>
@@ -394,7 +394,7 @@ export default function FlujoCajaAnual({ user }) {
               <tbody>
                 {pendingCxP.length === 0 && (
                   <tr>
-                    <td colSpan={4} style={{ padding: '12px', color: 'var(--nd-text-disabled)', textAlign: 'center' }}>
+                    <td colSpan={4} style={{ padding: '12px', color: 'var(--text-disabled)', textAlign: 'center' }}>
                       Sin obligaciones pendientes
                     </td>
                   </tr>
@@ -405,11 +405,11 @@ export default function FlujoCajaAnual({ user }) {
                     <tr key={p.id}>
                       <td style={panelTdStyle(true)}>{p.counterpartyName || p.vendor || '—'}</td>
                       <td style={panelTdStyle()}>{p.documentNumber || p.invoiceNumber || '—'}</td>
-                      <td style={{ ...panelTdStyle(), color: isOverdue(p.dueDate) ? 'var(--nd-warning)' : 'var(--nd-text-primary)' }}>
+                      <td style={{ ...panelTdStyle(), color: isOverdue(p.dueDate) ? 'var(--warning)' : 'var(--text-primary)' }}>
                         {p.dueDate ? formatDate(p.dueDate) : '—'}
-                        {isOverdue(p.dueDate) && ' ⚠'}
+                        {isOverdue(p.dueDate) && ' [VENCIDO]'}
                       </td>
-                      <td style={{ ...panelTdStyle(), color: 'var(--nd-accent)', fontWeight: 600 }}>
+                      <td style={{ ...panelTdStyle(), color: 'var(--accent)', fontWeight: 600 }}>
                         €{formatCurrency(p.openAmount || 0)}
                       </td>
                     </tr>

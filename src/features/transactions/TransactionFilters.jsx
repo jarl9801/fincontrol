@@ -81,7 +81,7 @@ const TransactionFilters = ({
  <input
  type="text"
  placeholder="Buscar por descripcion, proyecto, documento, contraparte o comentarios..."
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] py-2.5 pl-10 pr-10 text-[13px] text-[var(--text-primary)] outline-none transition-all placeholder:text-[var(--text-disabled)] focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] py-2.5 pl-10 pr-10 text-[13px] text-[var(--text-primary)] outline-none transition-all placeholder:text-[var(--text-disabled)] focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={searchTerm}
  onChange={(event) => setSearchTerm(event.target.value)}
  />
@@ -104,7 +104,7 @@ const TransactionFilters = ({
  className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-[13px] font-medium transition-all ${
  showFilters || activeFiltersCount > 0
  ? 'border-[var(--border-visible)] bg-[var(--surface)] text-[var(--text-primary)] '
- : 'border-[var(--border)] bg-[var(--surface)] text-[#32415f] hover:bg-[var(--surface)]'
+ : 'border-[var(--border)] bg-[var(--surface)] text-[var(--text-disabled)] hover:bg-[var(--surface)]'
  }`}
  >
  <Filter size={15} />
@@ -169,29 +169,29 @@ const TransactionFilters = ({
 
  <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Desde</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Desde</span>
  <input
  type="date"
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.dateFrom}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, dateFrom: event.target.value }))}
  />
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Hasta</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Hasta</span>
  <input
  type="date"
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.dateTo}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, dateTo: event.target.value }))}
  />
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Proyecto</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Proyecto</span>
  <select
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.project}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, project: event.target.value }))}
  >
@@ -203,9 +203,9 @@ const TransactionFilters = ({
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Categoría</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Categoría</span>
  <select
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.category}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, category: event.target.value }))}
  >
@@ -217,9 +217,9 @@ const TransactionFilters = ({
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Centro de costo</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Centro de costo</span>
  <select
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.costCenter}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, costCenter: event.target.value }))}
  >
@@ -231,9 +231,9 @@ const TransactionFilters = ({
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Tipo</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Tipo</span>
  <select
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.type}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, type: event.target.value }))}
  >
@@ -244,9 +244,9 @@ const TransactionFilters = ({
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Estado</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Estado</span>
  <select
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.status}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, status: event.target.value }))}
  >
@@ -257,9 +257,9 @@ const TransactionFilters = ({
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Origen</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Origen</span>
  <select
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.origin}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, origin: event.target.value }))}
  >
@@ -270,9 +270,9 @@ const TransactionFilters = ({
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Tipo de registro</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Tipo de registro</span>
  <select
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.family}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, family: event.target.value }))}
  >
@@ -283,9 +283,9 @@ const TransactionFilters = ({
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Año fiscal</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Año fiscal</span>
  <select
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.year}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, year: event.target.value }))}
  >
@@ -296,33 +296,33 @@ const TransactionFilters = ({
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Importe mínimo</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Importe mínimo</span>
  <input
  type="number"
  min="0"
  step="0.01"
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.minAmount}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, minAmount: event.target.value }))}
  />
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Importe máximo</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Importe máximo</span>
  <input
  type="number"
  min="0"
  step="0.01"
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.maxAmount}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, maxAmount: event.target.value }))}
  />
  </label>
 
  <label className="block">
- <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Comentarios</span>
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Comentarios</span>
  <select
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[13px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={advancedFilters.notesMode}
  onChange={(event) => setAdvancedFilters((current) => ({ ...current, notesMode: event.target.value }))}
  >

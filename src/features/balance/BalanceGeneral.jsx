@@ -19,7 +19,7 @@ const SectionCard = ({ title, icon, accentColor, items, total, totalLabel }) => 
  return (
  <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
  <div className="flex items-center gap-3 border-b border-[var(--border)] px-5 py-4">
- <div className="rounded-xl p-2" style={{ backgroundColor: `${accentColor}1f`, color: accentColor }}>
+ <div className="rounded-xl p-2" style={{ backgroundColor: 'var(--surface)', color: accentColor }}>
  <IconComponent size={18} />
  </div>
  <h3 className="text-sm font-semibold text-white">{title}</h3>
@@ -36,7 +36,7 @@ const SectionCard = ({ title, icon, accentColor, items, total, totalLabel }) => 
  ))}
  </div>
  <div className="flex items-center justify-between border-t border-[var(--border)] bg-[var(--black)] px-5 py-4">
- <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">{totalLabel}</span>
+ <span className="nd-label text-[var(--text-disabled)]">{totalLabel}</span>
  <span className="text-lg font-semibold" style={{ color: accentColor }}>{formatCurrency(total)}</span>
  </div>
  </div>
@@ -73,10 +73,7 @@ const BalanceGeneral = ({ user }) => {
  if (ledger.loading) {
  return (
  <div className="flex items-center justify-center py-28">
- <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--text-secondary)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Armando balance operativo...</p>
- </div>
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  );
  }
@@ -86,14 +83,14 @@ const BalanceGeneral = ({ user }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--text-secondary)]">Balance general</p>
- <h2 className="text-[32px] font-semibold tracking-tight text-white">Posición financiera operativa a partir de caja, CXC, CXP y saldos de apertura.</h2>
+ <p className="mb-3 nd-label text-[var(--text-secondary)]">Balance general</p>
+ <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Posición financiera operativa a partir de caja, CXC, CXP y saldos de apertura.</h2>
  <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[var(--text-secondary)]">
  Esta vista es gerencial: parte de tesorería real y documentos abiertos. No intenta reemplazar un ERP contable completo.
  </p>
  </div>
  <div className="rounded-lg border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-3">
- <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Fecha de corte</p>
+ <p className="nd-label text-[var(--text-secondary)]">Fecha de corte</p>
  <p className="mt-1 text-sm font-semibold text-white">
  {new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}
  </p>
@@ -104,17 +101,17 @@ const BalanceGeneral = ({ user }) => {
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex flex-wrap items-center justify-center gap-4 text-center">
  <div>
- <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Activos</p>
+ <p className="nd-label text-[var(--text-disabled)]">Activos</p>
  <p className="mt-2 text-2xl font-semibold text-[var(--text-secondary)]">{formatCurrency(balance.assets)}</p>
  </div>
  <span className="text-xl font-bold text-[var(--text-disabled)]">=</span>
  <div>
- <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Pasivos</p>
+ <p className="nd-label text-[var(--text-disabled)]">Pasivos</p>
  <p className="mt-2 text-2xl font-semibold text-[var(--accent)]">{formatCurrency(balance.liabilities)}</p>
  </div>
  <span className="text-xl font-bold text-[var(--text-disabled)]">+</span>
  <div>
- <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Patrimonio</p>
+ <p className="nd-label text-[var(--text-disabled)]">Patrimonio</p>
  <p className="mt-2 text-2xl font-semibold text-[var(--success)]">{formatCurrency(balance.equity)}</p>
  </div>
  </div>
@@ -124,7 +121,7 @@ const BalanceGeneral = ({ user }) => {
  <SectionCard
  title="Activos"
  icon={Wallet}
- accentColor="#999"
+ accentColor="var(--text-disabled)"
  items={[
  { label: 'Caja / bancos', value: balance.cash },
  { label: 'Reserva IVA 2025', value: balance.taxReserve },
@@ -166,7 +163,7 @@ const BalanceGeneral = ({ user }) => {
  <div className="overflow-x-auto">
  <table className="w-full min-w-[720px] text-sm">
  <thead>
- <tr className="border-b border-[var(--border)] text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">
+ <tr className="border-b border-[var(--border)] nd-label text-[var(--text-disabled)]">
  <th className="px-6 py-3 text-left">Cuenta</th>
  <th className="px-6 py-3 text-right">Monto</th>
  <th className="px-6 py-3 text-right">% activos</th>
@@ -196,8 +193,8 @@ const BalanceGeneral = ({ user }) => {
 
  <div className="grid gap-4 md:grid-cols-2">
  <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
- <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-disabled)]">Capital de trabajo</p>
- <p className={`mt-3 text-[30px] font-semibold ${balance.netWorkingCapital >= 0 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
+ <p className="nd-label text-[var(--text-disabled)]">Capital de trabajo</p>
+ <p className={`mt-3 nd-display text-[30px] font-semibold ${balance.netWorkingCapital >= 0 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
  {formatCurrency(balance.netWorkingCapital)}
  </p>
  <p className="mt-2 text-sm text-[var(--text-secondary)]">Caja más CXC menos CXP abiertas.</p>

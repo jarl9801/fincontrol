@@ -19,7 +19,7 @@ const InputField = ({ label, value, onChange, type = 'text', disabled = false, p
  onChange={onChange}
  disabled={disabled}
  placeholder={placeholder}
- className={`w-full ${Icon ? 'pl-9' : 'pl-3'} pr-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[#444] focus:outline-none focus:border-[var(--interactive)] focus:ring-1 focus:ring-[var(--interactive)] transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+ className={`w-full ${Icon ? 'pl-9' : 'pl-3'} pr-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
  />
  </div>
  </div>
@@ -192,7 +192,7 @@ const UserProfile = ({ user, userRole }) => {
  <button
  onClick={handleSaveProfile}
  disabled={saving}
- className="flex items-center justify-center gap-2 w-full bg-[var(--interactive)] hover:bg-[#0070e0] disabled:opacity-50 text-white px-4 py-2.5 rounded-lg text-[13px] font-semibold transition-all"
+ className="flex items-center justify-center gap-2 w-full bg-[var(--interactive)] hover:opacity-80 disabled:opacity-50 text-white px-4 py-2.5 rounded-lg text-[13px] font-semibold transition-all"
  >
  {saving ? 'Guardando...' : <><Save size={14} /> Guardar Cambios</>}
  </button>
@@ -215,7 +215,7 @@ const UserProfile = ({ user, userRole }) => {
  value={currentPassword}
  onChange={(e) => setCurrentPassword(e.target.value)}
  placeholder="********"
- className="w-full pl-9 pr-10 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[#444] focus:outline-none focus:border-[var(--interactive)] focus:ring-1 focus:ring-[var(--interactive)] transition-all"
+ className="w-full pl-9 pr-10 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all"
  />
  <button onClick={() => setShowCurrentPw(!showCurrentPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)] hover:text-[var(--text-secondary)]">
  {showCurrentPw ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -232,7 +232,7 @@ const UserProfile = ({ user, userRole }) => {
  value={newPassword}
  onChange={(e) => setNewPassword(e.target.value)}
  placeholder="Min. 8 caracteres"
- className="w-full pl-9 pr-10 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[#444] focus:outline-none focus:border-[var(--interactive)] focus:ring-1 focus:ring-[var(--interactive)] transition-all"
+ className="w-full pl-9 pr-10 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all"
  />
  <button onClick={() => setShowNewPw(!showNewPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)] hover:text-[var(--text-secondary)]">
  {showNewPw ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -258,7 +258,7 @@ const UserProfile = ({ user, userRole }) => {
  value={confirmPassword}
  onChange={(e) => setConfirmPassword(e.target.value)}
  placeholder="Repetir contraseña"
- className="w-full pl-9 pr-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[#444] focus:outline-none focus:border-[var(--interactive)] focus:ring-1 focus:ring-[var(--interactive)] transition-all"
+ className="w-full pl-9 pr-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all"
  />
  </div>
  {confirmPassword && (
@@ -275,7 +275,7 @@ const UserProfile = ({ user, userRole }) => {
  <button
  onClick={handleChangePassword}
  disabled={changingPassword || !currentPassword || !newPassword || !confirmPassword || !!pwValidation || !pwMatch}
- className="flex items-center justify-center gap-2 w-full bg-[var(--warning)] hover:bg-[#e8900a] disabled:opacity-40 text-black px-4 py-2.5 rounded-lg text-[13px] font-semibold transition-all"
+ className="flex items-center justify-center gap-2 w-full bg-[var(--warning)] hover:opacity-80 disabled:opacity-40 text-black px-4 py-2.5 rounded-lg text-[13px] font-semibold transition-all"
  >
  {changingPassword ? 'Cambiando...' : <><Lock size={14} /> Cambiar Contraseña</>}
  </button>

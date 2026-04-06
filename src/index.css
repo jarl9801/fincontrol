@@ -59,6 +59,17 @@
   --purple-dim: rgba(136, 136, 136, 0.10);
   --indigo: #888888;
 
+  /* Type scale */
+  --display-xl: 72px;
+  --display-lg: 48px;
+  --display-md: 36px;
+  --heading: 24px;
+  --subheading: 18px;
+  --body: 16px;
+  --body-sm: 14px;
+  --caption: 12px;
+  --label: 11px;
+
   /* Semantic Colors */
   --success-50: rgba(74, 158, 92, 0.10);
   --success-500: #4A9E5C;
@@ -110,15 +121,15 @@
   --transition-bounce: 0.3s var(--ease);
 
   /* Spacing (8px base) */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
 
   /* Legacy grayscale — mapped to Nothing */
   --gray-50: #111111;
@@ -131,6 +142,23 @@
   --gray-700: #999999;
   --gray-800: #E8E8E8;
   --gray-900: #FFFFFF;
+
+  /* Legacy Nothing aliases (compat for older screens) */
+  --nd-black: var(--black);
+  --nd-surface: var(--surface);
+  --nd-surface-raised: var(--surface-raised);
+  --nd-border: var(--border);
+  --nd-border-visible: var(--border-visible);
+  --nd-text-disabled: var(--text-disabled);
+  --nd-text-secondary: var(--text-secondary);
+  --nd-text-primary: var(--text-primary);
+  --nd-text-display: var(--text-display);
+  --nd-accent: var(--accent);
+  --nd-success: var(--success);
+  --nd-warning: var(--warning);
+  --nd-error: var(--error);
+  --nd-info: var(--info);
+  --nd-interactive: var(--interactive);
 }
 
 /* ===== BASE STYLES ===== */
@@ -207,6 +235,10 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-visible); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-disabled); }
+
+/* Hide scrollbar but keep scroll functionality */
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
 
 /* ===== FOCUS STYLES — Nothing: text brightens, no colored rings ===== */
 :focus-visible {
@@ -660,4 +692,5 @@ input, select, textarea {
 /* ===== NDS ALIASES ===== */
 .nd-display { font-family: "Doto", "Space Mono", monospace; letter-spacing: -0.02em; }
 .nd-mono { font-family: "Space Mono", monospace; }
-.nd-label { font-family: "Space Mono", monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
+.nd-label { font-family: "Space Mono", monospace; font-size: 11px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
+.nd-heading { font-family: "Space Grotesk", system-ui, sans-serif; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }

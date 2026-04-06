@@ -86,9 +86,9 @@ const RolesManager = ({ userRole }) => {
  case 'manager':
  case 'finance_manager': return 'var(--interactive)';
  case 'project_manager': return 'var(--success)';
- case 'viewer': return '#999';
- case 'editor': return '#999';
- default: return '#999';
+ case 'viewer': return 'var(--text-secondary)';
+ case 'editor': return 'var(--text-secondary)';
+ default: return 'var(--text-secondary)';
  }
  };
 
@@ -144,7 +144,7 @@ const RolesManager = ({ userRole }) => {
  className="px-2.5 py-1 rounded-full text-xs font-semibold"
  style={{
  color: getRoleColor(u.role),
- backgroundColor: `${getRoleColor(u.role)}1a`,
+ backgroundColor: 'var(--surface-raised)',
  }}
  >
  {getRoleLabel(u.role)}
@@ -177,7 +177,7 @@ const RolesManager = ({ userRole }) => {
  <button
  onClick={handleSavePermissions}
  disabled={saving}
- className="flex items-center gap-2 px-4 py-2 bg-[var(--success)] hover:bg-[#28b84c] text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+ className="flex items-center gap-2 px-4 py-2 bg-[var(--success)] hover:opacity-80 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
  >
  {saving ? <Loader2 size={16} className="animate-spin" /> : <Shield size={16} />}
  {saving ? 'Guardando...' : 'Guardar Permisos'}
@@ -189,7 +189,7 @@ const RolesManager = ({ userRole }) => {
  <tr className="border-b border-[var(--border)]">
  <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Modulo</th>
  {AVAILABLE_ROLES.map((role) => (
- <th key={role.key} className="pb-3 text-xs font-semibold uppercase tracking-wide text-center" style={{ color: getRoleColor(role.key) }}>
+ <th key={role.key} className="pb-3 nd-label text-center" style={{ color: getRoleColor(role.key) }}>
  {role.label}
  </th>
  ))}
@@ -237,7 +237,7 @@ const RolesManager = ({ userRole }) => {
  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)]" size={16} />
  <input
  type="email"
- className="w-full pl-10 pr-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:ring-2 focus:ring-[#999]"
+ className="w-full pl-10 pr-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)]"
  value={inviteForm.email}
  onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
  placeholder="usuario@empresa.com"
@@ -247,7 +247,7 @@ const RolesManager = ({ userRole }) => {
  <div>
  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Rol</label>
  <select
- className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:ring-2 focus:ring-[#999]"
+ className="w-full px-4 py-2.5 bg-[var(--surface-raised)] border border-[var(--border-visible)] rounded-lg text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)]"
  value={inviteForm.role}
  onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
  >

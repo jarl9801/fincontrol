@@ -82,7 +82,7 @@ const RatioCard = ({ title, value, unit = '', benchmark, inverse = false, descri
  </div>
  <div className="flex items-center justify-between gap-3">
  <div>
- <p className={`text-3xl font-bold ${colors.text}`}>{displayValue}{unit}</p>
+ <p className={`nd-display text-3xl font-bold ${colors.text}`}>{displayValue}{unit}</p>
  <p className="mt-1 text-xs text-[var(--text-disabled)]">
  Referencia {inverse ? 'máx.' : 'mín.'}: {benchmark.good}{unit}
  </p>
@@ -188,10 +188,7 @@ const FinancialRatios = ({ user }) => {
  if (globalMetrics.loading || periodMetrics.loading || ledger.loading) {
  return (
  <div className="flex items-center justify-center py-28">
- <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--text-secondary)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Calculando indicadores financieros...</p>
- </div>
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  );
  }
@@ -201,8 +198,8 @@ const FinancialRatios = ({ user }) => {
  <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--text-secondary)]">Ratios financieros</p>
- <h2 className="text-[32px] font-semibold tracking-tight text-[var(--text-primary)]">Liquidez, cobertura y eficiencia operativa.</h2>
+ <p className="mb-3 nd-label text-[var(--text-secondary)]">Ratios financieros</p>
+ <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Liquidez, cobertura y eficiencia operativa.</h2>
  <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[var(--text-disabled)]">
  Los indicadores se calculan desde caja real, facturas abiertas y ritmo de entradas y salidas para ofrecer una lectura útil de la operación.
  </p>
@@ -329,7 +326,7 @@ const FinancialRatios = ({ user }) => {
  <YAxis type="category" dataKey="name" tick={{ fill: 'var(--text-primary)', fontSize: 12 }} axisLine={false} tickLine={false} />
  <Tooltip
  formatter={(value, name) => [Number(value).toFixed(1), name === 'value' ? 'Actual' : 'Benchmark']}
- contentStyle={{ backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)', border: '1px solid #222', borderRadius: 18 }}
+ contentStyle={{ backgroundColor: 'var(--surface-raised)', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: 18 }}
  />
  <Bar dataKey="value" name="Actual" radius={0}>
  {comparisonData.map((entry, index) => (

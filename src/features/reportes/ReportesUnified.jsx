@@ -62,10 +62,7 @@ const ReportesUnified = ({ user }) => {
  <Suspense
  fallback={
  <div className="flex items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] py-16 ">
- <div className="flex flex-col items-center gap-3">
- <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--text-secondary)] border-t-transparent" />
- <p className="text-sm text-[var(--text-secondary)]">Cargando reporte...</p>
- </div>
+ <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  }
  >

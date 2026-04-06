@@ -19,7 +19,8 @@ Apply and maintain the Nothing Design System across all UI components in this pr
 - --text-secondary: #999999
 - --text-primary: #E8E8E8
 - --text-display: #FFFFFF
-- --nd-accent: #D71921 (error/negative)
+- --nd-accent: #5B9BF6 (interactive/primary)
+- --nd-negative: #D71921 (error/negative)
 - --nd-success: #4A9E5C (positive)
 - --nd-warning: #D4A843 (pending)
 - --nd-interactive: #5B9BF6 (info/active)
@@ -31,7 +32,7 @@ Apply and maintain the Nothing Design System across all UI components in this pr
 - Code: nd-mono class (Space Mono)
 
 ## KPI Cards (CRITICAL RULE)
-ALL cards: bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-5
+ALL cards: bg-[var(--surface)] border border-[var(--border)] rounded-xl p-5
 NEVER color card backgrounds. Show positive/negative via text color only:
 - Positive number: text-[var(--nd-success)]
 - Negative number: text-[var(--nd-accent)]

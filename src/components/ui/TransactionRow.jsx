@@ -102,8 +102,8 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
  >
  {/* Date */}
  <td className="px-4 py-3.5 whitespace-nowrap">
- <span className="font-[Space_Mono] text-[13px] tabular-nums text-[var(--text-primary)]">{formatDate(t.date)}</span>
- <span className="block font-[Space_Mono] text-[10px] uppercase tracking-[0.08em] text-[var(--text-disabled)] mt-0.5">{t.recordFamilyLabel}</span>
+ <span className="nd-mono text-[13px] tabular-nums text-[var(--text-primary)]">{formatDate(t.date)}</span>
+ <span className="block nd-mono text-[10px] uppercase tracking-[0.08em] text-[var(--text-disabled)] mt-0.5">{t.recordFamilyLabel}</span>
  </td>
 
  {/* Description */}
@@ -120,25 +120,25 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
  {isNew && <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[var(--text-display)]" />}
  <span className="text-[13px] text-[var(--text-primary)]">{highlightText(t.description)}</span>
 
- <span className="font-[Space_Mono] text-[10px] uppercase tracking-[0.06em] border border-[var(--border-visible)] rounded-sm px-1.5 py-0.5 text-[var(--text-disabled)]">
+ <span className="nd-mono text-[10px] uppercase tracking-[0.06em] border border-[var(--border-visible)] rounded-sm px-1.5 py-0.5 text-[var(--text-disabled)]">
  {t.sourceLabel}
  </span>
 
  {isNew && (
- <span className="font-[Space_Mono] text-[10px] uppercase tracking-[0.06em] text-[var(--text-display)]">
+ <span className="nd-mono text-[10px] uppercase tracking-[0.06em] text-[var(--text-display)]">
  [NEW]
  </span>
  )}
 
  {t.isRecurring && (
- <span className="inline-flex items-center gap-1 font-[Space_Mono] text-[10px] uppercase tracking-[0.06em] border border-[var(--border)] rounded-sm px-1.5 py-0.5 text-[var(--text-disabled)]">
+ <span className="inline-flex items-center gap-1 nd-mono text-[10px] uppercase tracking-[0.06em] border border-[var(--border)] rounded-sm px-1.5 py-0.5 text-[var(--text-disabled)]">
  <RefreshCw size={9} />
  Rec
  </span>
  )}
 
  {commentCount > 0 && (
- <span className="inline-flex items-center gap-1 font-[Space_Mono] text-[10px] text-[var(--text-disabled)]">
+ <span className="inline-flex items-center gap-1 nd-mono text-[10px] text-[var(--text-disabled)]">
  <MessageSquare size={10} />
  {commentCount}
  </span>
@@ -148,16 +148,16 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
  <div className="mt-1 flex flex-wrap items-center gap-1.5">
  <span className="text-[11px] text-[var(--text-disabled)]">{safe(t.project || t.secondaryMeta)}</span>
  {t.costCenter ? (
- <span className="font-[Space_Mono] text-[10px] uppercase tracking-[0.06em] border border-[var(--border)] rounded-sm px-1.5 py-0.5 text-[var(--text-disabled)]">
+ <span className="nd-mono text-[10px] uppercase tracking-[0.06em] border border-[var(--border)] rounded-sm px-1.5 py-0.5 text-[var(--text-disabled)]">
  {safe(t.costCenter)}
  </span>
  ) : (t.type === 'expense' || t.type === 'income') && (
- <span className="font-[Space_Mono] text-[10px] uppercase tracking-[0.06em] border border-[var(--warning)] rounded-sm px-1.5 py-0.5 text-[var(--warning)]">
+ <span className="nd-mono text-[10px] uppercase tracking-[0.06em] border border-[var(--warning)] rounded-sm px-1.5 py-0.5 text-[var(--warning)]">
  Sin CC
  </span>
  )}
  {t.documentNumber && (
- <span className="font-[Space_Mono] text-[10px] tracking-[0.04em] border border-[var(--border)] rounded-sm px-1.5 py-0.5 text-[var(--text-disabled)]">
+ <span className="nd-mono text-[10px] tracking-[0.04em] border border-[var(--border)] rounded-sm px-1.5 py-0.5 text-[var(--text-disabled)]">
  {t.documentNumber}
  </span>
  )}
@@ -174,7 +174,7 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
  />
  ))}
  </div>
- <span className="font-[Space_Mono] text-[10px] text-[var(--text-disabled)] mt-0.5 block">
+ <span className="nd-mono text-[10px] text-[var(--text-disabled)] mt-0.5 block">
  {formatCurrency(paidAmount)} / {formatCurrency(t.amount)}
  </span>
  </div>
@@ -185,14 +185,14 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
 
  {/* Category */}
  <td className="px-4 py-3.5">
- <span className="font-[Space_Mono] text-[11px] uppercase tracking-[0.06em] border border-[var(--border-visible)] rounded-sm px-2 py-1 text-[var(--text-secondary)]">
+ <span className="nd-label border border-[var(--border-visible)] rounded-sm px-2 py-1 text-[var(--text-secondary)]">
  {safe(t.categoryLabel || t.category)}
  </span>
  </td>
 
  {/* Amount */}
  <td className="px-4 py-3.5 text-right whitespace-nowrap">
- <span className={`font-[Space_Mono] text-[14px] font-bold tabular-nums ${isIncome ? 'text-[var(--text-primary)]' : 'text-[var(--text-primary)]'}`}>
+ <span className={`nd-mono text-[14px] font-bold tabular-nums ${isIncome ? 'text-[var(--text-primary)]' : 'text-[var(--text-primary)]'}`}>
  {isIncome ? '+' : '-'}{formatCurrency(t.amount)}
  </span>
  </td>
@@ -200,7 +200,7 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
  {/* Status */}
  <td className="px-4 py-3.5 text-center">
  <span
- className="inline-flex items-center gap-1.5 font-[Space_Mono] text-[11px] uppercase tracking-[0.06em] border border-[var(--border-visible)] rounded-full px-2.5 py-1"
+ className="inline-flex items-center gap-1.5 nd-label border border-[var(--border-visible)] rounded-full px-2.5 py-1"
  style={{ color: statusConfig.color, borderColor: statusConfig.color }}
  >
  <StatusIcon size={12} />
@@ -214,7 +214,7 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
  {canRegisterPayment && (
  <button
  onClick={() => onRegisterPayment(t)}
- className="font-[Space_Mono] text-[10px] uppercase tracking-[0.06em] border border-[var(--border-visible)] rounded-full px-2.5 py-1.5 text-[var(--text-secondary)] transition-colors hover:text-[var(--text-display)] hover:border-[var(--text-display)]"
+ className="nd-mono text-[10px] uppercase tracking-[0.06em] border border-[var(--border-visible)] rounded-full px-2.5 py-1.5 text-[var(--text-secondary)] transition-colors hover:text-[var(--text-display)] hover:border-[var(--text-display)]"
  title={t.paymentActionLabel || 'Abono'}
  >
  {t.paymentActionLabel || 'Abono'}
@@ -224,7 +224,7 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
  {canChangeStatus && (
  <button
  onClick={() => onChangeStatus(t)}
- className="font-[Space_Mono] text-[10px] uppercase tracking-[0.06em] border border-[var(--border-visible)] rounded-full px-2.5 py-1.5 text-[var(--text-secondary)] transition-colors hover:text-[var(--text-display)] hover:border-[var(--text-display)]"
+ className="nd-mono text-[10px] uppercase tracking-[0.06em] border border-[var(--border-visible)] rounded-full px-2.5 py-1.5 text-[var(--text-secondary)] transition-colors hover:text-[var(--text-display)] hover:border-[var(--text-display)]"
  title="Cambiar estado"
  >
  Estado
@@ -264,7 +264,7 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
  {canVoid && (
  <button
  onClick={() => onVoid(t)}
- className="font-[Space_Mono] text-[10px] uppercase tracking-[0.06em] border border-[var(--error)] rounded-full px-2.5 py-1.5 text-[var(--error)] transition-colors hover:text-[var(--text-display)] hover:border-[var(--text-display)]"
+ className="nd-mono text-[10px] uppercase tracking-[0.06em] border border-[var(--error)] rounded-full px-2.5 py-1.5 text-[var(--error)] transition-colors hover:text-[var(--text-display)] hover:border-[var(--text-display)]"
  title={t.voidActionLabel || 'Anular'}
  >
  {t.voidActionLabel || 'Anular'}

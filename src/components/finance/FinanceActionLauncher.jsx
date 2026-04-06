@@ -39,7 +39,7 @@ const ACTIONS = [
  title: 'Crear factura CXC',
  description: 'Documento pendiente por cobrar que aun no afecta caja.',
  icon: FileUp,
- accent: '#999',
+ accent: 'var(--text-secondary)',
  family: 'Documento',
  },
  {
@@ -55,7 +55,7 @@ const ACTIONS = [
  title: 'Ajuste bancario',
  description: 'Movimiento directo de tesoreria no ligado a CXC o CXP.',
  icon: WalletCards,
- accent: '#999',
+ accent: 'var(--text-secondary)',
  family: 'Tesorería',
  },
 ];
@@ -74,7 +74,7 @@ const resolveProjectName = (projects, projectId) => {
 
 const Field = ({ label, children, optional = false }) => (
  <label className="block">
- <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">
+ <span className="mb-2 block nd-label text-[var(--text-disabled)]">
  {label}
  {optional ? '' : ' *'}
  </span>
@@ -88,9 +88,9 @@ const inputClassName =
 const accentButtonMap = {
  'register-collection': 'bg-[var(--success)] hover:bg-[var(--success)] ',
  'register-payment': 'bg-[var(--accent)] hover:bg-[var(--accent)] ',
- 'create-receivable': 'bg-[var(--text-secondary)] hover:bg-[#127ab0] ',
- 'create-payable': 'bg-[var(--warning)] hover:bg-[#a86f12] ',
- 'bank-adjustment': 'bg-[var(--text-secondary)] hover:bg-[#4d49d8] ',
+ 'create-receivable': 'bg-[var(--text-secondary)] hover:opacity-80 ',
+ 'create-payable': 'bg-[var(--warning)] hover:opacity-80 ',
+ 'bank-adjustment': 'bg-[var(--text-secondary)] hover:opacity-80 ',
 };
 
 const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
@@ -309,7 +309,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
 
  <aside className="hidden w-[360px] shrink-0 border-r border-[var(--border)] bg-[var(--black)] p-6 lg:block">
  <div className="mb-8">
- <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--text-disabled)]">
+ <p className="mb-3 nd-label text-[var(--text-disabled)]">
  Operación
  </p>
  <h3 className="text-[26px] font-semibold tracking-tight text-[var(--text-primary)]">Centro operativo</h3>
@@ -347,7 +347,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  </div>
  </div>
  {isActive && (
- <span className="rounded-full bg-[var(--surface)] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--text-primary)]">
+ <span className="rounded-full bg-[var(--surface)] px-2 py-1 nd-label text-[var(--text-primary)]">
  Activo
  </span>
  )}
@@ -376,16 +376,16 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  <activeMeta.icon size={20} />
  </div>
  <div className="min-w-0">
- <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--text-disabled)]">
+ <p className="nd-label text-[var(--text-disabled)]">
  Flujo activo
  </p>
  <h2 className="text-[24px] font-semibold tracking-tight text-[var(--text-primary)]">{activeMeta.title}</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">{activeMeta.description}</p>
  <div className="mt-3 flex flex-wrap items-center gap-2">
- <span className="rounded-full bg-[var(--surface)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-primary)]">
+ <span className="rounded-full bg-[var(--surface)] px-3 py-1 nd-label text-[var(--text-primary)]">
  {activeMeta.family}
  </span>
- <span className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.16em] text-[var(--text-secondary)]">
+ <span className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 nd-label text-[var(--text-secondary)]">
  Registro guiado
  </span>
  </div>

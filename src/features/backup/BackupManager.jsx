@@ -195,13 +195,13 @@ const BackupManager = ({ user }) => {
  <button
  onClick={handleExport}
  disabled={exporting}
- className="flex items-center gap-2 px-6 py-2.5 bg-[var(--interactive)] hover:bg-[#0070e0] text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+ className="flex items-center gap-2 px-6 py-2.5 bg-[var(--interactive)] hover:opacity-80 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
  >
  {exporting ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
  {exporting ? 'Exportando...' : 'Descargar Backup Completo'}
  </button>
  {exportProgress && (
- <span className="text-sm text-[var(--text-secondary)] animate-pulse">{exportProgress}</span>
+ <span className="text-sm text-[var(--text-secondary)] n-mono">[{exportProgress}]</span>
  )}
  </div>
  </div>
@@ -298,7 +298,7 @@ const BackupManager = ({ user }) => {
  <button
  onClick={handleImport}
  disabled={importing}
- className="flex items-center gap-2 px-6 py-2.5 bg-[var(--warning)] hover:bg-[#e68f00] text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+ className="flex items-center gap-2 px-6 py-2.5 bg-[var(--warning)] hover:opacity-80 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
  >
  {importing ? <Loader2 size={18} className="animate-spin" /> : <Upload size={18} />}
  {importing ? 'Procesando...' : 'Restaurar Datos'}

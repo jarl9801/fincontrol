@@ -285,7 +285,7 @@ const MetricCard = ({ label, value, icon, tone = 'neutral', onClick }) => {
  >
  <div className="flex items-center justify-between gap-3">
  <div>
- <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-disabled)]">{label}</p>
+ <p className="nd-label text-[var(--text-disabled)]">{label}</p>
  <p className={`mt-2 text-[22px] font-semibold tracking-tight ${palette.value}`}>{value}</p>
  </div>
  <div className={`flex h-10 w-10 items-center justify-center rounded-[15px] border border-white/70 bg-[var(--surface)] ${palette.icon}`}>
@@ -942,8 +942,8 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <section className="rounded-[32px] border border-[var(--border)] bg-[var(--black)] p-5 md:p-6">
  <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
  <div className="max-w-3xl">
- <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-[var(--text-secondary)]">Control operativo</p>
- <h2 className="mt-2 text-[28px] font-semibold tracking-tight text-[var(--text-primary)] md:text-[32px]">Mesa central de registros financieros</h2>
+ <p className="nd-label text-[var(--text-secondary)]">Control operativo</p>
+ <h2 className="mt-2 nd-display text-[28px] font-semibold tracking-tight text-[var(--text-primary)] md:text-[32px]">Mesa central de registros financieros</h2>
  <p className="mt-2 max-w-2xl text-[13px] leading-6 text-[var(--text-disabled)]">
  Revisa en una sola vista movimientos bancarios, facturas por cobrar, facturas por pagar y registros históricos sin duplicados.
  </p>
@@ -1015,7 +1015,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  {/* Controls */}
  <div className="flex flex-wrap items-end gap-3">
  <label className="block flex-1 min-w-[180px]">
- <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Categoría</span>
+ <span className="mb-1 block nd-label text-[var(--text-disabled)]">Categoría</span>
  <select
  className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm outline-none focus:border-[var(--text-secondary)]"
  value={bulkCategory}
@@ -1031,7 +1031,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  </select>
  </label>
  <label className="block min-w-[160px]">
- <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">Centro de costo</span>
+ <span className="mb-1 block nd-label text-[var(--text-disabled)]">Centro de costo</span>
  <select
  className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm outline-none focus:border-[var(--text-secondary)]"
  value={bulkCostCenter}
@@ -1072,7 +1072,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <div className="max-h-[340px] overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--surface)]">
  <table className="w-full text-left text-sm">
  <thead className="sticky top-0 bg-[var(--surface)] ">
- <tr className="border-b border-[var(--border)] text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--text-disabled)]">
+ <tr className="border-b border-[var(--border)] nd-label text-[var(--text-disabled)]">
  <th className="w-10 px-3 py-2 text-center">
  <input
  type="checkbox"

@@ -28,65 +28,95 @@ const Login = () => {
  };
 
  return (
- <div className="flex h-screen bg-[var(--black)] items-center justify-center p-4 dot-grid-subtle">
- <div className="bg-[var(--surface)] rounded-xl w-full max-w-sm p-8 border border-[var(--border-visible)]">
- <div className="flex flex-col items-center gap-3 mb-8">
- <div className="w-14 h-14 border border-[var(--border-visible)] rounded-xl flex items-center justify-center bg-[var(--black)]">
- <Briefcase size={28} className="text-[var(--text-primary)]" />
- </div>
- <div className="text-center">
- <h1 className="font-[Space_Mono] text-xl font-bold uppercase tracking-[0.08em] text-[var(--text-display)]">UMTELKOMD</h1>
- <p className="font-[Space_Mono] text-[11px] uppercase tracking-[0.12em] text-[var(--text-disabled)] mt-1">Sistema Financiero</p>
- </div>
- </div>
+<div className="min-h-screen bg-[var(--black)] text-[var(--text-primary)]">
+<div className="mx-auto flex min-h-screen w-full max-w-[1240px]">
+<section className="dot-grid-subtle hidden flex-1 flex-col justify-between border-r border-[var(--border)] p-10 lg:flex">
+<div>
+<div className="mb-6 flex h-12 w-12 items-center justify-center rounded-md border border-[var(--border-visible)] bg-[var(--surface)]">
+<Briefcase size={20} className="text-[var(--text-display)]" />
+</div>
+<p className="nd-label text-[var(--text-secondary)]">Secure access</p>
+<h1 className="mt-3 nd-display text-[44px] leading-[1] tracking-[-0.03em] text-[var(--text-display)]">
+FINCONTROL
+</h1>
+<p className="mt-4 max-w-[420px] text-[15px] leading-7 text-[var(--text-secondary)]">
+Plataforma financiera para operación diaria, control de caja y seguimiento de cuentas por cobrar y pagar.
+</p>
+</div>
 
- <form onSubmit={handleLogin} className="space-y-4">
- <div>
- <label htmlFor="email" className="block font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)] mb-2">Email</label>
- <input
- id="email"
- type="email"
- required
- className="w-full px-4 py-3 bg-transparent text-[var(--text-primary)] border border-[var(--border-visible)] rounded-lg font-[Space_Mono] text-sm focus:border-[var(--text-primary)] focus:outline-none placeholder-[#444]"
- value={loginData.email}
- onChange={(e) => setLoginData({...loginData, email: e.target.value})}
- placeholder="usuario@umtelkomd.com"
- />
- </div>
+<div className="space-y-4">
+<div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
+<p className="nd-label text-[var(--text-secondary)]">Entorno</p>
+<p className="mt-1 nd-mono text-[14px] text-[var(--text-display)]">UMTELKOMD GmbH</p>
+</div>
+<div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
+<p className="nd-label text-[var(--text-secondary)]">Modo</p>
+<p className="mt-1 nd-mono text-[14px] text-[var(--text-display)]">Finance Operations Console</p>
+</div>
+</div>
+</section>
 
- <div>
- <label htmlFor="password" className="block font-[Space_Mono] text-[11px] uppercase tracking-[0.08em] text-[var(--text-secondary)] mb-2">Contraseña</label>
- <input
- id="password"
- type="password"
- required
- className="w-full px-4 py-3 bg-transparent text-[var(--text-primary)] border border-[var(--border-visible)] rounded-lg font-[Space_Mono] text-sm focus:border-[var(--text-primary)] focus:outline-none placeholder-[#444]"
- value={loginData.password}
- onChange={(e) => setLoginData({...loginData, password: e.target.value})}
- placeholder="********"
- />
- </div>
+<section className="flex flex-1 items-center justify-center p-4 sm:p-8">
+<div className="w-full max-w-md rounded-xl border border-[var(--border-visible)] bg-[var(--surface)] p-8">
+<div className="mb-8 flex flex-col items-center gap-3 text-center">
+<div className="flex h-14 w-14 items-center justify-center rounded-md border border-[var(--border-visible)] bg-[var(--black)]">
+<Briefcase size={24} className="text-[var(--text-primary)]" />
+</div>
+<div>
+<h2 className="nd-display text-[28px] tracking-[-0.02em] text-[var(--text-display)]">Acceso</h2>
+<p className="mt-1 nd-label text-[var(--text-disabled)]">UMTELKOMD Financial System</p>
+</div>
+</div>
 
- {loginError && (
- <div className="border border-[var(--accent)] text-[var(--accent)] px-4 py-3 rounded-lg font-[Space_Mono] text-[12px]">
- [ERROR] {loginError}
- </div>
- )}
+<form onSubmit={handleLogin} className="space-y-4">
+<div>
+<label htmlFor="email" className="mb-2 block nd-label text-[var(--text-secondary)]">Email</label>
+<input
+id="email"
+type="email"
+required
+className="w-full rounded-md border border-[var(--border-visible)] bg-transparent px-4 py-3 nd-mono text-sm text-[var(--text-primary)] focus:border-[var(--text-primary)] focus:outline-none placeholder-[var(--text-tertiary)]"
+value={loginData.email}
+onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+placeholder="usuario@umtelkomd.com"
+/>
+</div>
 
- <button
- type="submit"
- disabled={loading}
- className={`w-full bg-[var(--text-primary)] text-[var(--black)] font-[Space_Mono] font-bold uppercase tracking-[0.06em] py-3 rounded-full text-[13px] transition-opacity ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-85'}`}
- >
- {loading ? '[Loading...]' : 'Iniciar Sesión'}
- </button>
- </form>
+<div>
+<label htmlFor="password" className="mb-2 block nd-label text-[var(--text-secondary)]">Contraseña</label>
+<input
+id="password"
+type="password"
+required
+className="w-full rounded-md border border-[var(--border-visible)] bg-transparent px-4 py-3 nd-mono text-sm text-[var(--text-primary)] focus:border-[var(--text-primary)] focus:outline-none placeholder-[var(--text-tertiary)]"
+value={loginData.password}
+onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+placeholder="********"
+/>
+</div>
 
- <p className="font-[Space_Mono] text-[10px] uppercase tracking-[0.08em] text-[var(--text-disabled)] text-center mt-6">
- Sistema de Gestión Financiera {new Date().getFullYear()}
- </p>
- </div>
- </div>
+{loginError && (
+<div className="rounded-md border border-[var(--accent)] px-4 py-3 nd-mono text-[12px] text-[var(--accent)]">
+[ERROR] {loginError}
+</div>
+)}
+
+<button
+type="submit"
+disabled={loading}
+className={`w-full rounded-full bg-[var(--text-primary)] py-3 nd-mono text-[13px] font-bold uppercase tracking-[0.06em] text-[var(--black)] transition-opacity ${loading ? 'cursor-not-allowed opacity-50' : 'hover:opacity-85'}`}
+>
+{loading ? '[Loading...]' : 'Iniciar Sesión'}
+</button>
+</form>
+
+<p className="mt-6 text-center nd-mono text-[10px] uppercase tracking-[0.08em] text-[var(--text-disabled)]">
+Sistema de Gestión Financiera {new Date().getFullYear()}
+</p>
+</div>
+</section>
+</div>
+</div>
  );
 };
 

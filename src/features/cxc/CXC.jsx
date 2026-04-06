@@ -75,53 +75,53 @@ const CXC = ({
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
  <div className="bg-[var(--surface)] rounded-xl p-6 border border-[var(--border)]">
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-sm font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Total por Cobrar</h3>
+ <h3 className="nd-label text-[var(--text-secondary)]">Total por Cobrar</h3>
  <TrendingUp className="text-[var(--success)]" size={20} />
  </div>
- <p className="text-3xl font-bold text-[var(--success)]">{formatCurrency(totalReceivable)}</p>
+ <p className="nd-display text-3xl font-bold text-[var(--success)]">{formatCurrency(totalReceivable)}</p>
  <p className="text-xs text-[var(--text-disabled)] mt-1">{receivables.length} facturas pendientes</p>
  </div>
  <div className="bg-[var(--surface)] rounded-xl p-6 border border-[var(--border)]">
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-sm font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Cobrado Parcialmente</h3>
+ <h3 className="nd-label text-[var(--text-secondary)]">Cobrado Parcialmente</h3>
  <DollarSign className="text-[var(--warning)]" size={20} />
  </div>
- <p className="text-3xl font-bold text-[var(--warning)]">{formatCurrency(totalPartial)}</p>
+ <p className="nd-display text-3xl font-bold text-[var(--warning)]">{formatCurrency(totalPartial)}</p>
  <p className="text-xs text-[var(--text-disabled)] mt-1">{partialReceivables.length} facturas con abono</p>
  </div>
  <div className="bg-[var(--surface)] rounded-xl p-6 border border-[var(--border)]">
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-sm font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Vencido</h3>
+ <h3 className="nd-label text-[var(--text-secondary)]">Vencido</h3>
  <AlertCircle className="text-[var(--accent)]" size={20} />
  </div>
- <p className="text-3xl font-bold text-[var(--accent)]">{formatCurrency(totalOverdue)}</p>
+ <p className="nd-display text-3xl font-bold text-[var(--accent)]">{formatCurrency(totalOverdue)}</p>
  <p className="text-xs text-[var(--text-disabled)] mt-1">{overdueReceivables.length} facturas vencidas</p>
  </div>
  <div className="bg-[var(--surface)] rounded-xl p-6 border border-[var(--border)]">
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-sm font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Vence Esta Semana</h3>
+ <h3 className="nd-label text-[var(--text-secondary)]">Vence Esta Semana</h3>
  <Clock className="text-[var(--warning)]" size={20} />
  </div>
- <p className="text-3xl font-bold text-[var(--warning)]">{formatCurrency(totalDueThisWeek)}</p>
+ <p className="nd-display text-3xl font-bold text-[var(--warning)]">{formatCurrency(totalDueThisWeek)}</p>
  <p className="text-xs text-[var(--text-disabled)] mt-1">{dueThisWeek.length} facturas próximas</p>
  </div>
  </div>
 
  <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] overflow-hidden">
  <div className="px-6 py-4 border-b border-[var(--border)] flex items-center justify-between">
- <h2 className="text-base font-bold text-[var(--text-primary)]">Cuentas por Cobrar</h2>
+ <h2 className="nd-display text-base font-bold text-[var(--text-display)]">Cuentas por Cobrar</h2>
  <span className="text-xs text-[var(--text-secondary)]">{sorted.length} facturas pendientes</span>
  </div>
  <div className="overflow-x-auto">
  <table className="w-full text-left">
  <thead className="bg-[var(--surface)] border-b border-[var(--border)]">
  <tr>
- <th className="px-4 py-4 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Fecha</th>
- <th className="px-4 py-4 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Descripción</th>
- <th className="px-4 py-4 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider hidden md:table-cell">Categoría</th>
- <th className="px-4 py-4 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider text-right">Monto</th>
- <th className="px-4 py-4 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider text-center">Estado</th>
- {canAct && <th className="px-4 py-4 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider text-center">Acciones</th>}
+ <th className="px-4 py-4 nd-label text-[var(--text-secondary)]">Fecha</th>
+ <th className="px-4 py-4 nd-label text-[var(--text-secondary)]">Descripción</th>
+ <th className="px-4 py-4 nd-label text-[var(--text-secondary)] hidden md:table-cell">Categoría</th>
+ <th className="px-4 py-4 nd-label text-[var(--text-secondary)] text-right">Monto</th>
+ <th className="px-4 py-4 nd-label text-[var(--text-secondary)] text-center">Estado</th>
+ {canAct && <th className="px-4 py-4 nd-label text-[var(--text-secondary)] text-center">Acciones</th>}
  </tr>
  </thead>
  <tbody className="divide-y divide-[var(--border)]">
@@ -173,7 +173,7 @@ const CXC = ({
  </td>
  <td className="px-4 py-4 text-right whitespace-nowrap">
  <div className="flex flex-col items-end">
- <span className="text-sm font-bold text-[var(--success)]">+{formatCurrency(t.amount)}</span>
+ <span className="nd-mono text-sm font-bold text-[var(--success)]">+{formatCurrency(t.amount)}</span>
  {isPartial && <span className="text-xs text-[var(--warning)]">Restante: {formatCurrency(remaining)}</span>}
  </div>
  </td>
@@ -195,7 +195,7 @@ const CXC = ({
  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-white bg-[var(--success)] hover:bg-[var(--success)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 "
  >
  <CheckCircle2 size={14} />
- {isLoading ? 'Guardando...' : '✅ Cobrado'}
+ {isLoading ? 'Guardando...' : 'Cobrado'}
  </button>
  <button
  onClick={() => { setPaymentTransaction(t); setIsPaymentModalOpen(true); }}
