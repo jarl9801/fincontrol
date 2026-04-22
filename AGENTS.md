@@ -49,10 +49,12 @@ npm run build && npx firebase deploy --only hosting   # deploy
 - `lucide-react` — Icons
 - `jspdf` + `jspdf-autotable` — PDF export
 
-## Theme — Apple Dark
-- Frosted glass effects
-- Font: Inter
-- Dark grays: `#1c1c1e`, `#2c2c2e`
+## Theme — NEXUS.OS (dark-first, strict)
+- Accent: `#FF4D2E` (orange) — CTAs, brand `.OS`, active nav, chart highlights
+- Surfaces escalate: `#07080A` → `#0E1014` → `#161920` → `#1D2029`
+- Fonts: Space Grotesk (display, 300/400/500), JetBrains Mono (labels/data), Inter (body)
+- Radii: 4 / 6 / 10 px only — skill doc at `.claude/agents/nexus-design.md`
+- Nothing Design System is deprecated
 
 ## ⚠️ CRITICAL — DO NOT BREAK THESE
 

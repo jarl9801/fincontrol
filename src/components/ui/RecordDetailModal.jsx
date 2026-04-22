@@ -75,7 +75,7 @@ const RecordDetailModal = ({ record, onClose, onEdit, onChangeStatus, userRole }
  </div>
  )}
 
- <div className="grid grid-cols-2 gap-4 rounded-xl border border-[var(--border)] bg-[var(--black)] p-4">
+ <div className="grid grid-cols-2 gap-4 rounded-md border border-[var(--border)] bg-[var(--black)] p-4">
  <Field label="Fecha" value={date} />
  <Field label="Origen" value={r.sourceLabel || r.source} />
  <Field label="Proyecto" value={project} />

@@ -32,7 +32,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
 
  return (
  <div className="fixed inset-0 z-[240] flex items-center justify-center bg-[var(--surface)] p-4 ">
- <div className="w-full max-w-2xl overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="w-full max-w-2xl overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="flex items-start justify-between border-b border-[var(--border)] px-5 py-4">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">Edición operativa</p>

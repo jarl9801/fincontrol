@@ -17,9 +17,9 @@ const SectionCard = ({ title, icon, accentColor, items, total, totalLabel }) => 
  const IconComponent = icon;
 
  return (
- <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="flex items-center gap-3 border-b border-[var(--border)] px-5 py-4">
- <div className="rounded-xl p-2" style={{ backgroundColor: 'var(--surface)', color: accentColor }}>
+ <div className="rounded-md p-2" style={{ backgroundColor: 'var(--surface)', color: accentColor }}>
  <IconComponent size={18} />
  </div>
  <h3 className="text-sm font-semibold text-white">{title}</h3>
@@ -80,7 +80,7 @@ const BalanceGeneral = ({ user }) => {
 
  return (
  <div className="space-y-6 pb-12">
- <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="mb-3 nd-label text-[var(--text-secondary)]">Balance general</p>
@@ -98,7 +98,7 @@ const BalanceGeneral = ({ user }) => {
  </div>
  </section>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex flex-wrap items-center justify-center gap-4 text-center">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">Activos</p>
@@ -153,7 +153,7 @@ const BalanceGeneral = ({ user }) => {
  />
  </div>
 
- <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="border-b border-[var(--border)] px-5 py-4">
  <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
  <Scale size={18} className="text-[var(--text-secondary)]" />
@@ -192,14 +192,14 @@ const BalanceGeneral = ({ user }) => {
  </div>
 
  <div className="grid gap-4 md:grid-cols-2">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5">
  <p className="nd-label text-[var(--text-disabled)]">Capital de trabajo</p>
  <p className={`mt-3 nd-display text-[30px] font-semibold ${balance.netWorkingCapital >= 0 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
  {formatCurrency(balance.netWorkingCapital)}
  </p>
  <p className="mt-2 text-sm text-[var(--text-secondary)]">Caja más CXC menos CXP abiertas.</p>
  </div>
- <div className="rounded-xl border border-[var(--border-visible)] bg-[var(--surface)] p-5">
+ <div className="rounded-md border border-[var(--border-visible)] bg-[var(--surface)] p-5">
  <div className="flex items-start gap-3">
  <ShieldCheck size={18} className="mt-0.5 text-[var(--text-secondary)]" />
  <div>

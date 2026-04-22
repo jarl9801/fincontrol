@@ -25,7 +25,7 @@ const StatCard = ({ title, value, subtitle, accent, icon }) => {
 
  return (
  <div
- className="rounded-xl border p-5 "
+ className="rounded-md border p-5 "
  style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
  >
  <div className="mb-4 flex items-center justify-between">
@@ -43,7 +43,7 @@ const StatCard = ({ title, value, subtitle, accent, icon }) => {
 };
 
 const ScenarioCard = ({ title, balance, delta, accent, subtitle }) => (
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5">
  <p className="nd-label text-[var(--text-disabled)]">{title}</p>
  <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight" style={{ color: accent }}>{formatCurrency(balance)}</p>
  <p className={`mt-2 text-sm font-semibold ${delta >= 0 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
@@ -120,7 +120,7 @@ const ProyeccionCashflow = ({ user }) => {
 
  return (
  <div className="space-y-6 pb-12">
- <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="nd-label text-[var(--text-secondary)] mb-3">Proyección de tesorería</p>
@@ -141,7 +141,7 @@ const ProyeccionCashflow = ({ user }) => {
  {alerts.map((alert) => (
  <div
  key={alert.text}
- className={`flex items-center gap-3 rounded-xl border px-4 py-3 ${
+ className={`flex items-center gap-3 rounded-md border px-4 py-3 ${
  alert.type === 'critical'
  ? 'border-[var(--border-visible)] bg-transparent'
  : 'border-[var(--border-visible)] bg-transparent'
@@ -185,7 +185,7 @@ const ProyeccionCashflow = ({ user }) => {
  />
  </div>
 
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4">
  <p className="nd-label text-[var(--text-disabled)]">Curva de liquidez</p>
  <h3 className="nd-display mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-display)]">Saldo proyectado por semana</h3>
@@ -227,7 +227,7 @@ const ProyeccionCashflow = ({ user }) => {
  </ResponsiveContainer>
  </section>
 
- <section className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <section className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="border-b border-[var(--border)] px-5 py-4">
  <h3 className="nd-display flex items-center gap-2 text-lg font-semibold text-[var(--text-display)]">
  <Activity size={18} className="text-[var(--text-secondary)]" />
@@ -264,7 +264,7 @@ const ProyeccionCashflow = ({ user }) => {
  </div>
  </section>
 
- <div className="rounded-xl border border-[var(--border-visible)] bg-transparent p-5">
+ <div className="rounded-md border border-[var(--border-visible)] bg-transparent p-5">
  <div className="flex items-start gap-3">
  <Target className="mt-0.5 text-[var(--text-secondary)]" size={18} />
  <div className="grid gap-3 md:grid-cols-3">

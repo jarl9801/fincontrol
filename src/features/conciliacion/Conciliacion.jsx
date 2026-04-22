@@ -285,11 +285,11 @@ const Conciliacion = ({ user }) => {
  return (
  <div className="space-y-6 pb-12">
  {/* Header */}
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-7">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-7">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="nd-label text-[var(--text-secondary)] mb-3">Conciliación bancaria</p>
- <h2 className="nd-display text-[28px] font-bold text-[var(--text-display)]">Banco vs. Sistema</h2>
+ <h2 className="nd-display text-[28px] font-medium text-[var(--text-display)]">Banco vs. Sistema</h2>
  <p className="mt-2 max-w-2xl text-[14px] leading-6 text-[var(--text-disabled)]">
  Compara los movimientos importados del banco con las transacciones registradas en FinControl.
  Vincula registros por monto, fecha y descripción.
@@ -319,20 +319,20 @@ const Conciliacion = ({ user }) => {
 
  {/* Stats */}
  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-4">
  <p className="nd-label text-[var(--text-secondary)]">Mov. banco</p>
  <p className="mt-2 nd-display text-[24px] font-bold text-[var(--text-display)]">{monthMovements.length}</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-4">
  <p className="nd-label text-[var(--text-secondary)]">Transacciones</p>
  <p className="mt-2 nd-display text-[24px] font-bold text-[var(--text-display)]">{monthTransactions.length}</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-4">
  <p className="nd-label text-[var(--text-secondary)]">Conciliados</p>
  <p className="mt-2 nd-display text-[24px] font-bold text-[var(--success)]">{matchedPairs.length}</p>
  </div>
  <div
-className="cursor-pointer rounded-xl border border-[var(--border-visible)] bg-transparent p-4 transition-colors duration-200 hover:border-[var(--text-primary)] hover:bg-[var(--surface)]"
+className="cursor-pointer rounded-md border border-[var(--border-visible)] bg-transparent p-4 transition-colors duration-200 hover:border-[var(--text-primary)] hover:bg-[var(--surface)]"
  onClick={() => bankColumnRef.current?.scrollIntoView({ behavior: 'smooth' })}
  role="button"
  tabIndex={0}
@@ -342,7 +342,7 @@ className="cursor-pointer rounded-xl border border-[var(--border-visible)] bg-tr
  <p className="mt-2 nd-display text-[24px] font-bold text-[var(--accent)]">{unmatchedMovements.length}</p>
  </div>
  <div
-className="cursor-pointer rounded-xl border border-[var(--border-visible)] bg-transparent p-4 transition-colors duration-200 hover:border-[var(--text-primary)] hover:bg-[var(--surface)]"
+className="cursor-pointer rounded-md border border-[var(--border-visible)] bg-transparent p-4 transition-colors duration-200 hover:border-[var(--text-primary)] hover:bg-[var(--surface)]"
  onClick={() => systemColumnRef.current?.scrollIntoView({ behavior: 'smooth' })}
  role="button"
  tabIndex={0}
@@ -355,7 +355,7 @@ className="cursor-pointer rounded-xl border border-[var(--border-visible)] bg-tr
 
  {/* Totals comparison */}
  <div className="grid gap-4 sm:grid-cols-2">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5">
  <p className="nd-label text-[var(--text-secondary)]">Banco — {month}</p>
  <div className="mt-3 flex gap-6">
  <div>
@@ -372,7 +372,7 @@ className="cursor-pointer rounded-xl border border-[var(--border-visible)] bg-tr
  </div>
  </div>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5">
  <p className="nd-label text-[var(--text-secondary)]">Sistema — {month}</p>
  <div className="mt-3 flex gap-6">
  <div>
@@ -393,7 +393,7 @@ className="cursor-pointer rounded-xl border border-[var(--border-visible)] bg-tr
 
  {/* Matched pairs */}
  {matchedPairs.length > 0 && (
- <section className="rounded-xl border border-[var(--border-visible)] bg-transparent p-5">
+ <section className="rounded-md border border-[var(--border-visible)] bg-transparent p-5">
  <button
  onClick={() => setShowMatched(!showMatched)}
  className="flex w-full items-center justify-between"
@@ -441,7 +441,7 @@ className="cursor-pointer rounded-xl border border-[var(--border-visible)] bg-tr
  {/* Two-column comparison */}
  <div className="grid gap-6 xl:grid-cols-2">
  {/* Bank movements */}
- <section ref={bankColumnRef} className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section ref={bankColumnRef} className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Landmark size={18} className="text-[var(--text-primary)]" />
@@ -454,7 +454,7 @@ className="cursor-pointer rounded-xl border border-[var(--border-visible)] bg-tr
  <input
  type="text"
  placeholder="Buscar movimiento..."
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] py-2 pl-9 pr-3 text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--border-visible)]"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] py-2 pl-9 pr-3 text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--border-visible)]"
  value={searchBank}
  onChange={e => setSearchBank(e.target.value)}
  />
@@ -492,7 +492,7 @@ className="cursor-pointer rounded-xl border border-[var(--border-visible)] bg-tr
  </button>
  <button
  onClick={() => handleCreateFromMovement(m)}
-className="flex-shrink-0 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2 text-[var(--text-secondary)] transition hover:border-[var(--border-visible)] hover:bg-[var(--surface-raised)] hover:text-[var(--text-primary)]"
+className="flex-shrink-0 rounded-md border border-[var(--border)] bg-[var(--surface)] p-2 text-[var(--text-secondary)] transition hover:border-[var(--border-visible)] hover:bg-[var(--surface-raised)] hover:text-[var(--text-primary)]"
  title="Crear transacción desde este movimiento"
  >
  <Plus size={14} />
@@ -504,7 +504,7 @@ className="flex-shrink-0 rounded-xl border border-[var(--border)] bg-[var(--surf
  </section>
 
  {/* Transactions / Suggestions */}
- <section ref={systemColumnRef} className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section ref={systemColumnRef} className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  {selectedMovement ? (
  <>
  <div className="mb-4">
@@ -517,7 +517,7 @@ className="flex-shrink-0 rounded-xl border border-[var(--border)] bg-[var(--surf
  <X size={16} />
  </button>
  </div>
- <div className="mt-2 rounded-xl border border-[var(--border-visible)] bg-[var(--surface)] px-3 py-2">
+ <div className="mt-2 rounded-md border border-[var(--border-visible)] bg-[var(--surface)] px-3 py-2">
  <p className="text-[11px] text-[var(--text-primary)]">Buscando coincidencias para:</p>
  <p className="text-[13px] font-semibold text-[var(--text-primary)]">
  {selectedMovement.counterpartyName || selectedMovement.description} —{' '}
@@ -580,7 +580,7 @@ className="flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[
  <input
  type="text"
  placeholder="Buscar transacción..."
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] py-2 pl-9 pr-3 text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--border-visible)]"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] py-2 pl-9 pr-3 text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--border-visible)]"
  value={searchTx}
  onChange={e => setSearchTx(e.target.value)}
  />

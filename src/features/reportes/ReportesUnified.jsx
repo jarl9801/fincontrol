@@ -36,7 +36,7 @@ const ReportesUnified = ({ user }) => {
 
  return (
  <div className="space-y-6 animate-fadeIn">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-2 ">
  <div className="flex items-center gap-1 overflow-x-auto">
  {TABS.map(tab => {
  const Icon = tab.icon;
@@ -61,7 +61,7 @@ const ReportesUnified = ({ user }) => {
 
  <Suspense
  fallback={
- <div className="flex items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] py-16 ">
+ <div className="flex items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface)] py-16 ">
  <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
  </div>
  }

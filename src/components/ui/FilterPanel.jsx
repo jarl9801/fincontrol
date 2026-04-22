@@ -3,7 +3,7 @@ import { PROJECTS } from '../../constants/projects';
 import { CATEGORIES } from '../../constants/categories';
 
 const FilterPanel = ({ filters, setFilters, onApply }) => (
- <div className="space-y-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="space-y-4 rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center justify-between">
  <h3 className="flex items-center gap-2 text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
  <Filter size={18} /> Filtros
@@ -76,7 +76,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
  <label className="mb-1 block nd-label text-[var(--text-secondary)]">Desde</label>
  <input
  type="date"
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
  value={filters.dateFrom}
  onChange={e => setFilters({...filters, dateFrom: e.target.value})}
  />
@@ -85,7 +85,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
  <label className="mb-1 block nd-label text-[var(--text-secondary)]">Hasta</label>
  <input
  type="date"
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
  value={filters.dateTo}
  onChange={e => setFilters({...filters, dateTo: e.target.value})}
  />
@@ -93,7 +93,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
  <div>
  <label className="mb-1 block nd-label text-[var(--text-secondary)]">Proyecto</label>
  <select
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
  value={filters.project}
  onChange={e => setFilters({...filters, project: e.target.value})}
  >
@@ -104,7 +104,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
  <div>
  <label className="mb-1 block nd-label text-[var(--text-secondary)]">Categoría</label>
  <select
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
  value={filters.category}
  onChange={e => setFilters({...filters, category: e.target.value})}
  >
@@ -115,7 +115,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
  <div>
  <label className="mb-1 block nd-label text-[var(--text-secondary)]">Tipo</label>
  <select
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
  value={filters.type}
  onChange={e => setFilters({...filters, type: e.target.value})}
  >
@@ -127,7 +127,7 @@ const FilterPanel = ({ filters, setFilters, onApply }) => (
  <div>
  <label className="mb-1 block nd-label text-[var(--text-secondary)]">Estado</label>
  <select
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
  value={filters.status}
  onChange={e => setFilters({...filters, status: e.target.value})}
  >

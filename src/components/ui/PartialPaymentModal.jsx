@@ -72,22 +72,22 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
  type="button"
  aria-label="Cerrar registro de pago"
  onClick={onClose}
- className="rounded-xl p-2 text-[var(--text-secondary)] transition-all hover:bg-[var(--surface)] hover:text-[var(--text-primary)]"
+ className="rounded-md p-2 text-[var(--text-secondary)] transition-all hover:bg-[var(--surface)] hover:text-[var(--text-primary)]"
  >
  <X size={20} />
  </button>
  </div>
 
  <div className="px-6 pt-5 pb-3 grid grid-cols-3 gap-3">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
  <p className="mb-1 text-[10px] font-semibold uppercase text-[var(--text-disabled)]">Total</p>
  <p className="text-sm font-bold text-[var(--text-primary)]">{formatCurrency(transaction.amount)}</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
  <p className="mb-1 text-[10px] font-semibold uppercase text-[var(--text-disabled)]">Pagado</p>
  <p className="text-sm font-bold text-[var(--success)]">{formatCurrency(paidAmount)}</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
  <p className="mb-1 text-[10px] font-semibold uppercase text-[var(--text-disabled)]">Restante</p>
  <p className="text-sm font-bold text-[var(--warning)]">{formatCurrency(remaining)}</p>
  </div>
@@ -119,7 +119,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
  max={remaining}
  required
  placeholder="0.00"
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] py-3 pl-8 pr-4 text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] py-3 pl-8 pr-4 text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
  value={formData.amount}
  onChange={e => setFormData({ ...formData, amount: e.target.value })}
  />
@@ -148,7 +148,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
  <input
  type="date"
  required
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
  value={formData.date}
  onChange={e => setFormData({ ...formData, date: e.target.value })}
  />
@@ -156,7 +156,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
  <div>
  <label className="mb-2 block text-sm font-semibold text-[var(--text-primary)]">Método</label>
  <select
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
  value={formData.method}
  onChange={e => setFormData({ ...formData, method: e.target.value })}
  >
@@ -172,7 +172,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
  <input
  type="text"
  placeholder="ej. Pago parcial factura #123"
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
  value={formData.note}
  onChange={e => setFormData({ ...formData, note: e.target.value })}
  />
@@ -181,7 +181,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
  <button
  type="submit"
  disabled={submitting}
- className={`flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--text-primary)] py-4 font-bold text-[var(--black)] transition-all duration-200 ${submitting ? 'cursor-not-allowed opacity-50' : 'hover:opacity-85 hover:'}`}
+ className={`flex w-full items-center justify-center gap-2 rounded-md bg-[var(--text-primary)] py-4 font-bold text-[var(--black)] transition-all duration-200 ${submitting ? 'cursor-not-allowed opacity-50' : 'hover:opacity-85 hover:'}`}
  >
  {submitting ? <Loader2 size={18} className="animate-spin" /> : <DollarSign size={18} />}
  {submitting ? 'Registrando...' : transaction.type === 'income' ? 'Registrar cobro' : 'Registrar pago'}

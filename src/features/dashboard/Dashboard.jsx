@@ -25,7 +25,7 @@ import { summarizeVAT } from '../../finance/reporting';
 const ChartTooltip = ({ active, payload, label }) => {
  if (!active || !payload?.length) return null;
  return (
- <div className="border border-[var(--border-visible)] bg-[var(--surface)] px-3 py-2.5 rounded-xl">
+ <div className="border border-[var(--border-visible)] bg-[var(--surface)] px-3 py-2.5 rounded-md">
  <p className="nd-label text-[var(--text-secondary)] mb-1.5">{label}</p>
  {payload.map((entry) => (
  <p key={entry.name} className="nd-mono text-[13px] tabular-nums" style={{ color: entry.color }}>
@@ -135,7 +135,7 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  </div>
 
  {/* Secondary metrics — right side */}
- <div className="grid gap-px sm:grid-cols-3 xl:min-w-[420px] border border-[var(--border)] rounded-xl overflow-hidden">
+ <div className="grid gap-px sm:grid-cols-3 xl:min-w-[420px] border border-[var(--border)] rounded-md overflow-hidden">
  <button
  type="button"
  onClick={() => setView?.('cashflow')}
@@ -172,7 +172,7 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
 
  {/* ===== KPI ROW — Secondary Layer ===== */}
  <section>
- <div className="grid grid-cols-2 gap-px lg:grid-cols-5 border border-[var(--border)] rounded-xl overflow-hidden">
+ <div className="grid grid-cols-2 gap-px lg:grid-cols-5 border border-[var(--border)] rounded-md overflow-hidden">
  {[
  {
  label: 'Ventana 14d',
@@ -225,7 +225,7 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  <p className="nd-label text-[var(--text-secondary)] mb-4">
  IVA Aleman — Umsatzsteuer
  </p>
- <div className="grid grid-cols-3 gap-px border border-[var(--border)] rounded-xl overflow-hidden">
+ <div className="grid grid-cols-3 gap-px border border-[var(--border)] rounded-md overflow-hidden">
  <div className="bg-[var(--surface)] px-5 py-4">
  <p className="nd-label text-[var(--text-secondary)]">USt (ingresos)</p>
  <p className="nd-mono text-[20px] tabular-nums text-[var(--warning)] mt-1">{formatCurrency(vatSummary.outputVAT)}</p>
@@ -264,7 +264,7 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  Abrir tesoreria <ChevronRight size={12} className="inline" />
  </button>
  </div>
- <div className="border border-[var(--border)] rounded-xl p-4 bg-[var(--surface)]">
+ <div className="border border-[var(--border)] rounded-md p-4 bg-[var(--surface)]">
  <div className="h-[280px]">
  <ResponsiveContainer width="100%" height="100%">
  <LineChart data={metrics.cashSeries}>
@@ -274,14 +274,14 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  stroke="var(--text-disabled)"
  tickLine={false}
  axisLine={false}
- style={{ fontFamily: "'Space Mono', monospace", fontSize: 11 }}
+ style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}
  />
  <YAxis
  stroke="var(--text-disabled)"
  tickLine={false}
  axisLine={false}
  tickFormatter={(v) => `${Math.round(v / 1000)}k`}
- style={{ fontFamily: "'Space Mono', monospace", fontSize: 11 }}
+ style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}
  />
  <Tooltip content={<ChartTooltip />} />
  <Line
@@ -306,7 +306,7 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  Compromisos — 8 semanas
  </p>
  </div>
- <div className="border border-[var(--border)] rounded-xl p-4 bg-[var(--surface)]">
+ <div className="border border-[var(--border)] rounded-md p-4 bg-[var(--surface)]">
  <div className="h-[280px]">
  <ResponsiveContainer width="100%" height="100%">
  <BarChart data={metrics.weeklyProjection} barCategoryGap={12}>
@@ -316,14 +316,14 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  stroke="var(--text-disabled)"
  tickLine={false}
  axisLine={false}
- style={{ fontFamily: "'Space Mono', monospace", fontSize: 11 }}
+ style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}
  />
  <YAxis
  stroke="var(--text-disabled)"
  tickLine={false}
  axisLine={false}
  tickFormatter={(v) => `${Math.round(v / 1000)}k`}
- style={{ fontFamily: "'Space Mono', monospace", fontSize: 11 }}
+ style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}
  />
  <Tooltip content={<ChartTooltip />} />
  <Bar dataKey="committedIn" name="Cobros" fill="var(--text-display)" radius={0} />
@@ -340,7 +340,7 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  <p className="nd-label text-[var(--text-secondary)] mb-4">
  Acciones rapidas
  </p>
- <div className="grid gap-px grid-cols-2 lg:grid-cols-5 border border-[var(--border)] rounded-xl overflow-hidden">
+ <div className="grid gap-px grid-cols-2 lg:grid-cols-5 border border-[var(--border)] rounded-md overflow-hidden">
  {quickActions.map((action) => {
  const Icon = action.icon;
  return (
@@ -366,7 +366,7 @@ className="group bg-[var(--surface)] px-4 py-5 text-left transition-colors hover
  <p className="nd-label text-[var(--text-secondary)] mb-4">
  Proximos vencimientos
  </p>
- <div className="border border-[var(--border)] rounded-xl overflow-hidden">
+ <div className="border border-[var(--border)] rounded-md overflow-hidden">
  {upcomingRows.length === 0 ? (
  <div className="px-5 py-12 text-center">
  <p className="text-[14px] text-[var(--text-disabled)]">No hay vencimientos proximos.</p>
@@ -421,7 +421,7 @@ className="group bg-[var(--surface)] px-4 py-5 text-left transition-colors hover
  Detalle <ChevronRight size={12} className="inline" />
  </button>
  </div>
- <div className="border border-[var(--border)] rounded-xl overflow-hidden">
+ <div className="border border-[var(--border)] rounded-md overflow-hidden">
  {metrics.projectMargins.length === 0 ? (
  <div className="px-5 py-12 text-center">
  <p className="nd-label text-[var(--text-disabled)]">
@@ -471,7 +471,7 @@ className="group bg-[var(--surface)] px-4 py-5 text-left transition-colors hover
  <p className="nd-label text-[var(--text-secondary)] mb-4">
  Radar operativo
  </p>
- <div className="space-y-px border border-[var(--border)] rounded-xl overflow-hidden">
+ <div className="space-y-px border border-[var(--border)] rounded-md overflow-hidden">
  <div className="bg-[var(--surface)] px-5 py-4">
  <p className="nd-label text-[var(--error)] mb-1">
  [CARTERA VENCIDA]
@@ -502,7 +502,7 @@ className="group bg-[var(--surface)] px-4 py-5 text-left transition-colors hover
  <p className="nd-label text-[var(--text-secondary)] mb-4">
  Runway estimado
  </p>
- <div className="border border-[var(--border)] rounded-xl bg-[var(--surface)] px-5 py-5">
+ <div className="border border-[var(--border)] rounded-md bg-[var(--surface)] px-5 py-5">
  <p className="nd-display text-[48px] leading-[1] tracking-[-0.02em] text-[var(--text-display)]">
  {metrics.runwayMonths == null ? '—' : metrics.runwayMonths.toFixed(1)}
  </p>
@@ -539,7 +539,7 @@ className="group bg-[var(--surface)] px-4 py-5 text-left transition-colors hover
  <p className="nd-label text-[var(--text-secondary)] mb-4">
  Accion sugerida
  </p>
- <div className="border border-[var(--border)] rounded-xl bg-[var(--surface)] px-5 py-5">
+ <div className="border border-[var(--border)] rounded-md bg-[var(--surface)] px-5 py-5">
  <p className="text-[14px] text-[var(--text-secondary)] leading-relaxed">
  Prioriza el cobro de la cartera vencida y valida conciliacion semanalmente para mantener la caja proyectada alineada con banco.
  </p>

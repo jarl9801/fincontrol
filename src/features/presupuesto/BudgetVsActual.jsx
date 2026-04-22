@@ -59,7 +59,7 @@ const ConfirmModal = ({ isOpen, onConfirm, onCancel, title, message }) => {
  if (!isOpen) return null;
  return (
  <div className="fixed inset-0 z-[240] flex items-center justify-center bg-[var(--surface)] p-4 ">
- <div className="w-full max-w-sm rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="w-full max-w-sm rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <h3 className="mb-2 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">{title}</h3>
  <p className="mb-6 text-sm text-[var(--text-disabled)]">{message}</p>
  <div className="flex justify-end gap-3">
@@ -90,7 +90,7 @@ const NumberInputModal = ({ isOpen, onSubmit, onCancel, title, label, defaultVal
  if (!isOpen) return null;
  return (
  <div className="fixed inset-0 z-[240] flex items-center justify-center bg-[var(--surface)] p-4 ">
- <div className="w-full max-w-xs rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="w-full max-w-xs rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <h3 className="mb-4 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">{title}</h3>
  <label className="block">
  <span className="mb-2 block nd-label text-[var(--text-disabled)]">{label}</span>
@@ -221,12 +221,12 @@ const BudgetLineModal = ({ isOpen, onClose, onSave, line, categories, allCategor
 
  return (
  <div className="fixed inset-0 z-[230] flex items-center justify-center bg-[var(--surface)] p-4 ">
- <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="mb-5 flex items-center justify-between">
  <h3 className="text-[22px] font-semibold tracking-tight text-[var(--text-primary)]">
  {line?.id ? 'Editar línea' : 'Nueva línea de presupuesto'}
  </h3>
- <button onClick={onClose} className="rounded-xl p-2 text-[var(--text-secondary)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]">
+ <button onClick={onClose} className="rounded-md p-2 text-[var(--text-secondary)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]">
  <X size={20} />
  </button>
  </div>
@@ -281,7 +281,7 @@ const BudgetLineModal = ({ isOpen, onClose, onSave, line, categories, allCategor
  type="number"
  min="0"
  step="100"
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-2 py-2 text-center text-sm text-[var(--text-primary)] outline-none focus:border-[var(--border-visible)]"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-2 py-2 text-center text-sm text-[var(--text-primary)] outline-none focus:border-[var(--border-visible)]"
  value={form.monthlyBudget[i].toFixed(2)}
  onChange={(e) => setMonth(i, e.target.value)}
  />
@@ -358,7 +358,7 @@ const CreateBudgetModal = ({ isOpen, onClose, onSubmit, projects, year }) => {
 
  return (
  <div className="fixed inset-0 z-[220] flex items-center justify-center bg-[var(--surface)] p-4 ">
- <div className="w-full max-w-md rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="w-full max-w-md rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <h3 className="text-[22px] font-semibold tracking-tight text-[var(--text-primary)]">Nuevo presupuesto {year}</h3>
  <p className="mt-2 text-sm text-[var(--text-secondary)]">Define el alcance del presupuesto. Las líneas se añaden después.</p>
 
@@ -696,7 +696,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  return (
  <div className="space-y-6 pb-12">
  {/* Header */}
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-7 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="mb-3 nd-label text-[var(--text-secondary)]">Presupuesto {selectedYear}</p>
@@ -817,7 +817,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  const txCats2026 = [...new Set(mov2026.map((m) => m.categoryName || '(vacío)'))];
 
  return (
- <section className="rounded-xl border border-[var(--accent)] bg-[var(--surface)] p-5">
+ <section className="rounded-md border border-[var(--accent)] bg-[var(--surface)] p-5">
  <h3 className="mb-3 nd-label text-[var(--accent)]">[Diagnóstico]</h3>
  <div className="grid gap-3 md:grid-cols-3">
  <div>
@@ -865,7 +865,7 @@ const BudgetVsActual = ({ user, userRole }) => {
 
  {/* No budget state */}
  {!currentBudget && (
- <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[var(--border)] py-20">
+ <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-[var(--border)] py-20">
  <Target size={48} className="mb-4 text-[var(--text-secondary)]" />
  <h3 className="text-xl font-semibold text-[var(--text-primary)]">Sin presupuesto para {selectedYear}</h3>
  <p className="mt-2 text-sm text-[var(--text-secondary)]">Crea un presupuesto para empezar a comparar.</p>
@@ -952,14 +952,14 @@ const BudgetVsActual = ({ user, userRole }) => {
  <>
  {/* KPI Cards */}
  <div className="grid gap-4 lg:grid-cols-4">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-3 flex items-center justify-between">
  <p className="nd-label text-[var(--text-disabled)]">Ingresos presupuestados</p>
  <TrendingUp size={16} className="text-[var(--text-primary)]" />
  </div>
  <p className="text-[26px] font-semibold tracking-tight text-[var(--text-primary)]">{formatCurrency(totals.budgetIncome)}</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-3 flex items-center justify-between">
  <p className="nd-label text-[var(--text-disabled)]">Ingresos reales (neto)</p>
  <TrendingUp size={16} className="text-[var(--success)]" />
@@ -969,14 +969,14 @@ const BudgetVsActual = ({ user, userRole }) => {
  {totals.budgetIncome > 0 ? (((totals.actualIncome / totals.budgetIncome) - 1) * 100).toFixed(1) : '0'}% del objetivo
  </p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-3 flex items-center justify-between">
  <p className="nd-label text-[var(--text-disabled)]">Gastos presupuestados</p>
  <TrendingDown size={16} className="text-[var(--warning)]" />
  </div>
  <p className="text-[26px] font-semibold tracking-tight text-[var(--text-primary)]">{formatCurrency(totals.budgetExpense)}</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-3 flex items-center justify-between">
  <p className="nd-label text-[var(--text-disabled)]">Gastos reales (neto)</p>
  <TrendingDown size={16} className="text-[var(--warning)]" />
@@ -1002,7 +1002,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  </div>
  <a
  href="#/transactions"
- className="flex-shrink-0 rounded-xl bg-[var(--warning)] px-4 py-2 text-xs font-semibold text-white hover:bg-[var(--warning)]"
+ className="flex-shrink-0 rounded-md bg-[var(--warning)] px-4 py-2 text-xs font-semibold text-white hover:bg-[var(--warning)]"
  >
  Categorizar
  </a>
@@ -1032,7 +1032,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  </div>
 
  {/* Monthly Chart (always visible) */}
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4">
  <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">
  {activeTab === 'summary' ? 'Ingresos y Gastos por mes' : 'Detalle mensual por categoría'}
@@ -1089,7 +1089,7 @@ const BudgetVsActual = ({ user, userRole }) => {
 
  {/* Summary Table */}
  {activeTab === 'summary' && (
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
  <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Resumen por categoría</h3>
@@ -1304,7 +1304,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  : (actuals.get(key)?.expense || 0);
  const isPast = i < CURRENT_MONTH || selectedYear < CURRENT_YEAR;
  return (
- <div key={m} className="flex flex-col items-center gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2">
+ <div key={m} className="flex flex-col items-center gap-1 rounded-md border border-[var(--border)] bg-[var(--surface)] p-2">
  <span className="text-[9px] font-semibold text-[var(--text-secondary)]">{m}</span>
  <div className="text-center">
  <p className="text-[10px] font-semibold text-[var(--text-primary)]">{formatCurrency(budget)}</p>

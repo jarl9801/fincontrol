@@ -18,8 +18,8 @@ class ErrorBoundary extends React.Component {
  render() {
  if (this.state.hasError) {
  return (
- <div style={{ padding: 20, color: 'var(--accent)', background: 'var(--surface)', border: '1px solid var(--border-visible)', borderRadius: 8, margin: 20, fontFamily: "'Space Mono', monospace" }}>
- <h2 style={{ color: 'var(--text-primary)', fontFamily: "'Space Mono', monospace", fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.08em' }}>[ERROR] Application Error</h2>
+ <div style={{ padding: 20, color: 'var(--accent)', background: 'var(--surface)', border: '1px solid var(--border-visible)', borderRadius: 8, margin: 20, fontFamily: "'JetBrains Mono', monospace" }}>
+ <h2 style={{ color: 'var(--text-primary)', fontFamily: "'JetBrains Mono', monospace", fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.08em' }}>[ERROR] Application Error</h2>
  {import.meta.env.DEV ? (
  <>
  <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12, marginTop: 12 }}>
@@ -34,7 +34,7 @@ class ErrorBoundary extends React.Component {
  )}
  <button
  onClick={() => window.location.reload()}
- style={{ marginTop: 16, padding: '12px 24px', background: 'var(--text-primary)', color: 'var(--black)', border: 'none', borderRadius: 999, cursor: 'pointer', fontFamily: "'Space Mono', monospace", fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em' }}
+ style={{ marginTop: 16, padding: '12px 24px', background: 'var(--text-primary)', color: 'var(--black)', border: 'none', borderRadius: 999, cursor: 'pointer', fontFamily: "'JetBrains Mono', monospace", fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em' }}
  >
  Reintentar
  </button>

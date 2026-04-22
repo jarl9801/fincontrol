@@ -39,7 +39,7 @@ const Adjuntos = ({ user }) => {
  return (
  <div className="space-y-6 animate-fadeIn">
  <div className="flex items-center justify-between">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Documentación</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Adjuntos</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Centraliza facturas, justificantes y respaldos de cada registro financiero.</p>
@@ -51,21 +51,21 @@ const Adjuntos = ({ user }) => {
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">Total archivos</p>
  <Paperclip size={18} className="text-[var(--text-primary)]" />
  </div>
  <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">0</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">Registros con adjuntos</p>
  <FileText size={18} className="text-[var(--success)]" />
  </div>
  <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--success)]">0</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">Espacio usado</p>
  <Image size={18} className="text-[var(--warning)]" />
@@ -79,7 +79,7 @@ const Adjuntos = ({ user }) => {
  onDragLeave={handleDragLeave}
  onDrop={handleDrop}
  onClick={handleFileSelect}
- className={`cursor-pointer rounded-xl border-2 border-dashed p-10 text-center transition-all ${
+ className={`cursor-pointer rounded-md border-2 border-dashed p-10 text-center transition-all ${
  isDragging
  ? 'border-[var(--text-primary)] bg-transparent'
  : 'border-[var(--border)] bg-[var(--surface)] hover:border-[var(--border)]'
@@ -107,7 +107,7 @@ const Adjuntos = ({ user }) => {
  />
  </div>
 
- <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="overflow-x-auto">
  <table className="w-full text-left">
  <thead>

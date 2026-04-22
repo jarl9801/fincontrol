@@ -75,8 +75,8 @@ const VIEW_TITLES = {
 
 const LoadingState = () => (
  <div className="flex items-center justify-center py-32 animate-fadeIn">
- <p className="nd-mono text-[13px] uppercase tracking-[0.08em] text-[var(--text-disabled)]">
- [CARGANDO...]
+ <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-fg-3)]">
+ Cargando…
  </p>
  </div>
 );
@@ -152,7 +152,7 @@ function AppContent() {
  };
 
  return (
- <div className="flex h-full flex-col overflow-hidden bg-[var(--black)] font-sans text-[14px] text-[var(--text-primary)]">
+ <div className="flex h-full flex-col overflow-hidden bg-[var(--color-bg-0)] font-sans text-[14px] text-[var(--color-fg-1)]">
  <Sidebar
  user={user}
  userRole={userRole}
@@ -164,15 +164,18 @@ function AppContent() {
 
  <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
  <div className="z-20 flex-shrink-0 px-4 pb-0 pt-4 md:px-8 md:pt-6">
- <div className="mx-auto flex max-w-[1280px] items-center justify-between border-b border-[var(--border)] px-2 pb-4 md:px-0">
+ <div className="mx-auto flex max-w-[1280px] flex-wrap items-end justify-between gap-4 border-b border-[var(--color-line)] px-2 pb-5 md:px-0">
  <div className="flex items-center gap-3">
  <MobileMenuButton onClick={() => setIsMobileMenuOpen(true)} />
  <div>
-<p className="nd-label text-[var(--text-secondary)]">Executive Finance Control</p>
-<h2 className="mt-1 nd-display text-[24px] leading-[1.05] tracking-[-0.02em] text-[var(--text-display)] md:text-[30px]">
+ <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-fg-3)]">§ Executive Finance Control</p>
+ <h1
+ className="mt-1 text-[32px] leading-[1] text-[var(--color-fg-1)] md:text-[40px]"
+ style={{ fontFamily: 'var(--font-display)', fontWeight: 300, letterSpacing: '-0.03em' }}
+ >
  {currentTitle}
- </h2>
-<p className="mt-1 hidden nd-mono text-[10px] uppercase tracking-[0.08em] text-[var(--text-disabled)] md:block">
+ </h1>
+ <p className="mt-2 hidden font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-fg-4)] md:block">
  {new Date().toLocaleDateString('es-ES', {
  weekday: 'long',
  year: 'numeric',
@@ -184,18 +187,18 @@ function AppContent() {
  </div>
 
  {!loading && (
- <div className="hidden items-center gap-3 md:flex">
+ <div className="hidden items-center gap-2 md:flex">
  {bankBalanceData && (
-<div className="flex items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2">
- <Landmark size={12} className={bankBalanceData.currentBalance >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'} />
- <span className={`nd-mono text-[12px] font-bold tabular-nums ${bankBalanceData.currentBalance >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
+ <div className="flex items-center gap-2 rounded-md border border-[var(--color-line)] bg-[var(--color-bg-1)] px-3.5 py-2">
+ <Landmark size={12} className={bankBalanceData.currentBalance >= 0 ? 'text-[var(--color-ok)]' : 'text-[var(--color-err)]'} />
+ <span className={`font-mono text-[12px] font-medium tabular-nums ${bankBalanceData.currentBalance >= 0 ? 'text-[var(--color-ok)]' : 'text-[var(--color-err)]'}`}>
  {formatCurrency(bankBalanceData.currentBalance)}
  </span>
  </div>
  )}
-<div className="flex items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2">
- <div className="h-1.5 w-1.5 rounded-full bg-[var(--success)]" />
-<span className="nd-mono text-[10px] uppercase tracking-[0.08em] text-[var(--text-disabled)]">
+ <div className="flex items-center gap-2 rounded-md border border-[var(--color-line)] bg-[var(--color-bg-1)] px-3.5 py-2">
+ <div className="h-1.5 w-1.5 rounded-full bg-[var(--color-ok)]" />
+ <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-fg-3)]">
  {transactions.length} registros
  </span>
  </div>

@@ -155,7 +155,7 @@ const Partners = ({ user, userRole }) => {
  </div>
 
  {/* Tabs + Search */}
- <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2 ">
+ <div className="flex flex-wrap items-center justify-between gap-4 rounded-md border border-[var(--border)] bg-[var(--surface)] p-2 ">
  {/* Tabs */}
  <div className="flex items-center gap-1">
  {[
@@ -208,7 +208,7 @@ const Partners = ({ user, userRole }) => {
  </div>
 
  {/* Table */}
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] overflow-hidden">
  {displayedPartners.length === 0 ? (
  <div className="flex flex-col items-center justify-center py-16 text-center">
  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-transparent">
@@ -226,7 +226,7 @@ const Partners = ({ user, userRole }) => {
  <button
  type="button"
  onClick={handleOpenCreate}
- className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-2.5 text-sm font-semibold text-[var(--text-primary)] transition hover:bg-[var(--surface)]"
+ className="mt-4 inline-flex items-center gap-2 rounded-md border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-2.5 text-sm font-semibold text-[var(--text-primary)] transition hover:bg-[var(--surface)]"
  >
  <Plus size={15} />
  Crear primer partner
@@ -384,7 +384,7 @@ const Partners = ({ user, userRole }) => {
  <button
  type="button"
  onClick={() => handleOpenEdit(partner)}
- className="flex h-8 w-8 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text-secondary)] transition-colors hover:border-[var(--text-primary)] hover:text-[var(--text-primary)]"
+ className="flex h-8 w-8 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--text-secondary)] transition-colors hover:border-[var(--text-primary)] hover:text-[var(--text-primary)]"
  title="Editar"
  >
  <Pencil size={13} />

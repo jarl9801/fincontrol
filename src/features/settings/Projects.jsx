@@ -286,7 +286,7 @@ const Projects = ({ user }) => {
  return (
  <div className="space-y-6 animate-fadeIn">
  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Configuración operativa</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Proyectos</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">
@@ -312,7 +312,7 @@ const Projects = ({ user }) => {
  </div>
 
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center gap-3">
  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-transparent">
  <Briefcase className="h-5 w-5 text-[var(--text-primary)]" />
@@ -323,7 +323,7 @@ const Projects = ({ user }) => {
  </div>
  </div>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center gap-3">
  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-transparent">
  <CheckCircle2 className="h-5 w-5 text-[var(--success)]" />
@@ -334,7 +334,7 @@ const Projects = ({ user }) => {
  </div>
  </div>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center gap-3">
  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-transparent">
  <AlertCircle className="h-5 w-5 text-[var(--text-secondary)]" />
@@ -386,7 +386,7 @@ const Projects = ({ user }) => {
  />
  </div>
 
- <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead className="border-b border-[var(--border)] bg-[var(--surface-raised)]">
@@ -404,7 +404,7 @@ const Projects = ({ user }) => {
  {activeProjects.map((project) => (
  <tr key={project.id} className="transition-colors hover:bg-[var(--surface)]">
  <td className="px-6 py-4">
- <span className="inline-flex items-center rounded-xl bg-transparent px-2.5 py-1 text-sm font-semibold text-[var(--text-primary)]">
+ <span className="inline-flex items-center rounded-md bg-transparent px-2.5 py-1 text-sm font-semibold text-[var(--text-primary)]">
  {project.code}
  </span>
  <div className="mt-1 flex items-center gap-1 text-[10px] text-[var(--text-secondary)]">
@@ -467,21 +467,21 @@ const Projects = ({ user }) => {
  <div className="flex items-center justify-end gap-1">
  <button
  onClick={() => handleToggleStatus(project)}
- className="rounded-xl p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-disabled)]"
+ className="rounded-md p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-disabled)]"
  title="Desactivar"
  >
  <Power className="h-4 w-4" />
  </button>
  <button
  onClick={() => handleOpenEdit(project)}
- className="rounded-xl p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-primary)]"
+ className="rounded-md p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-primary)]"
  title="Editar"
  >
  <Edit2 className="h-4 w-4" />
  </button>
  <button
  onClick={() => setProjectToDelete(project)}
- className="rounded-xl p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--accent)]"
+ className="rounded-md p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--accent)]"
  title="Eliminar"
  >
  <Trash2 className="h-4 w-4" />
@@ -495,7 +495,7 @@ const Projects = ({ user }) => {
  {inactiveProjects.map((project) => (
  <tr key={project.id} className="bg-[var(--surface)] transition-colors hover:bg-[var(--surface)]">
  <td className="px-6 py-4">
- <span className="inline-flex items-center rounded-xl bg-transparent px-2.5 py-1 text-sm font-semibold text-[var(--text-secondary)]">
+ <span className="inline-flex items-center rounded-md bg-transparent px-2.5 py-1 text-sm font-semibold text-[var(--text-secondary)]">
  {project.code}
  </span>
  <div className="mt-1 flex items-center gap-1 text-[10px] text-[var(--text-secondary)] opacity-60">
@@ -556,21 +556,21 @@ const Projects = ({ user }) => {
  <div className="flex items-center justify-end gap-1">
  <button
  onClick={() => handleToggleStatus(project)}
- className="rounded-xl p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--success)]"
+ className="rounded-md p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--success)]"
  title="Activar"
  >
  <Power className="h-4 w-4" />
  </button>
  <button
  onClick={() => handleOpenEdit(project)}
- className="rounded-xl p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-primary)]"
+ className="rounded-md p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-primary)]"
  title="Editar"
  >
  <Edit2 className="h-4 w-4" />
  </button>
  <button
  onClick={() => setProjectToDelete(project)}
- className="rounded-xl p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--accent)]"
+ className="rounded-md p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--accent)]"
  title="Eliminar"
  >
  <Trash2 className="h-4 w-4" />
@@ -608,7 +608,7 @@ const Projects = ({ user }) => {
  {/* Add/Edit Modal */}
  {showAddModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fadeIn">
- <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
+ <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-md border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
  <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-5">
  <div>
  <p className="nd-label text-[var(--text-primary)]">Ficha de proyecto</p>
@@ -666,7 +666,7 @@ const Projects = ({ user }) => {
  key={op.value}
  type="button"
  onClick={() => setFormData({ ...formData, operator: op.value })}
- className={`flex items-center justify-center gap-2 rounded-xl border-2 px-4 py-3 text-sm font-semibold transition-all ${
+ className={`flex items-center justify-center gap-2 rounded-md border-2 px-4 py-3 text-sm font-semibold transition-all ${
  selected
  ? `bg-transparent ${operatorColor(op.value)}`
  : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border-visible)]'
@@ -770,7 +770,7 @@ const Projects = ({ user }) => {
  type="button"
  onClick={() => setFormData({...formData, status: 'active'})}
  className={`
- flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
+ flex-1 py-3 px-4 rounded-md text-sm font-medium border-2 transition-all
  ${formData.status === 'active'
  ? 'border-[var(--success)] bg-transparent text-[var(--success)]'
  : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border-visible)]'}
@@ -782,7 +782,7 @@ const Projects = ({ user }) => {
  type="button"
  onClick={() => setFormData({...formData, status: 'inactive'})}
  className={`
- flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
+ flex-1 py-3 px-4 rounded-md text-sm font-medium border-2 transition-all
  ${formData.status === 'inactive'
  ? 'border-[var(--border)] bg-transparent text-[var(--text-disabled)]'
  : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border)]'}

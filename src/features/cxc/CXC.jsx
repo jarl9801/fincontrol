@@ -65,7 +65,7 @@ const CXC = ({
  return (
  <div className="space-y-6">
  {toast && (
- <div className={`fixed top-6 right-6 z-[100] flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium animate-fadeIn ${
+ <div className={`fixed top-6 right-6 z-[100] flex items-center gap-2 px-5 py-3 rounded-md text-sm font-medium animate-fadeIn ${
  toast.type === 'success' ? 'bg-[var(--success)] text-white' : 'bg-[var(--accent)] text-white'
  }`}>
  {toast.message}
@@ -73,7 +73,7 @@ const CXC = ({
  )}
 
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="bg-[var(--surface)] rounded-xl p-6 border border-[var(--border)]">
+ <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
  <div className="flex items-center justify-between mb-2">
  <h3 className="nd-label text-[var(--text-secondary)]">Total por Cobrar</h3>
  <TrendingUp className="text-[var(--success)]" size={20} />
@@ -81,7 +81,7 @@ const CXC = ({
  <p className="nd-display text-3xl font-bold text-[var(--success)]">{formatCurrency(totalReceivable)}</p>
  <p className="text-xs text-[var(--text-disabled)] mt-1">{receivables.length} facturas pendientes</p>
  </div>
- <div className="bg-[var(--surface)] rounded-xl p-6 border border-[var(--border)]">
+ <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
  <div className="flex items-center justify-between mb-2">
  <h3 className="nd-label text-[var(--text-secondary)]">Cobrado Parcialmente</h3>
  <DollarSign className="text-[var(--warning)]" size={20} />
@@ -89,7 +89,7 @@ const CXC = ({
  <p className="nd-display text-3xl font-bold text-[var(--warning)]">{formatCurrency(totalPartial)}</p>
  <p className="text-xs text-[var(--text-disabled)] mt-1">{partialReceivables.length} facturas con abono</p>
  </div>
- <div className="bg-[var(--surface)] rounded-xl p-6 border border-[var(--border)]">
+ <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
  <div className="flex items-center justify-between mb-2">
  <h3 className="nd-label text-[var(--text-secondary)]">Vencido</h3>
  <AlertCircle className="text-[var(--accent)]" size={20} />
@@ -97,7 +97,7 @@ const CXC = ({
  <p className="nd-display text-3xl font-bold text-[var(--accent)]">{formatCurrency(totalOverdue)}</p>
  <p className="text-xs text-[var(--text-disabled)] mt-1">{overdueReceivables.length} facturas vencidas</p>
  </div>
- <div className="bg-[var(--surface)] rounded-xl p-6 border border-[var(--border)]">
+ <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
  <div className="flex items-center justify-between mb-2">
  <h3 className="nd-label text-[var(--text-secondary)]">Vence Esta Semana</h3>
  <Clock className="text-[var(--warning)]" size={20} />
@@ -109,7 +109,7 @@ const CXC = ({
 
  <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] overflow-hidden">
  <div className="px-6 py-4 border-b border-[var(--border)] flex items-center justify-between">
- <h2 className="nd-display text-base font-bold text-[var(--text-display)]">Cuentas por Cobrar</h2>
+ <h2 className="nd-display text-base font-medium text-[var(--text-display)]">Cuentas por Cobrar</h2>
  <span className="text-xs text-[var(--text-secondary)]">{sorted.length} facturas pendientes</span>
  </div>
  <div className="overflow-x-auto">
@@ -142,7 +142,7 @@ const CXC = ({
  </td>
  <td className="px-4 py-4">
  <div className="flex items-start gap-3">
- <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-transparent">
+ <div className="w-9 h-9 rounded-md flex items-center justify-center flex-shrink-0 bg-transparent">
  <ArrowUpCircle className="w-5 h-5 text-[var(--success)]" />
  </div>
  <div className="flex-1 min-w-0">
@@ -192,7 +192,7 @@ const CXC = ({
  <button
  onClick={() => handleMarkCobrado(t)}
  disabled={isLoading}
- className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-white bg-[var(--success)] hover:bg-[var(--success)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 "
+ className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold text-white bg-[var(--success)] hover:bg-[var(--success)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 "
  >
  <CheckCircle2 size={14} />
  {isLoading ? 'Guardando...' : 'Cobrado'}
@@ -200,7 +200,7 @@ const CXC = ({
  <button
  onClick={() => { setPaymentTransaction(t); setIsPaymentModalOpen(true); }}
  disabled={isLoading}
- className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-[var(--warning)] bg-transparent hover:bg-transparent border border-[var(--border-visible)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+ className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold text-[var(--warning)] bg-transparent hover:bg-transparent border border-[var(--border-visible)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
  >
  <DollarSign size={14} />
  Abono

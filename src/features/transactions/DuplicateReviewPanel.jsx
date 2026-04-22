@@ -11,7 +11,7 @@ const DuplicateReviewPanel = ({ duplicateGroups, onDelete }) => {
  if (duplicateGroups.length === 0) return null;
 
  return (
- <section className="space-y-4 rounded-xl border border-[var(--border-visible)] bg-transparent p-5 ">
+ <section className="space-y-4 rounded-md border border-[var(--border-visible)] bg-transparent p-5 ">
  <div className="flex items-center gap-2">
  <RotateCcw size={18} className="text-[var(--accent)]" />
  <h3 className="text-[15px] font-semibold text-[var(--text-primary)]">
@@ -28,7 +28,7 @@ const DuplicateReviewPanel = ({ duplicateGroups, onDelete }) => {
  </p>
  <div className="space-y-2">
  {[group.original, ...group.duplicates].map((record) => (
- <div key={record.id} className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3">
+ <div key={record.id} className="flex items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3">
  <div className="flex-1 min-w-0">
  <p className="truncate text-[13px] font-medium text-[var(--text-primary)]">{safeString(record.description)}</p>
  <p className="mt-0.5 text-[11px] text-[var(--text-secondary)]">
@@ -44,7 +44,7 @@ const DuplicateReviewPanel = ({ duplicateGroups, onDelete }) => {
  </span>
  <button
  onClick={() => onDelete(record)}
- className="flex-shrink-0 rounded-xl bg-[var(--accent)] px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-[var(--accent)]"
+ className="flex-shrink-0 rounded-md bg-[var(--accent)] px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-[var(--accent)]"
  >
  Eliminar
  </button>

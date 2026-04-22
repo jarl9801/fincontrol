@@ -62,7 +62,7 @@ export const ToastProvider = ({ children }) => {
  return (
  <div
  key={toast.id}
- className={`flex items-center gap-3 px-4 py-3 rounded-xl border animate-slideInRight ${STYLES[toast.type]}`}
+ className={`flex items-center gap-3 px-4 py-3 rounded-md border animate-slideInRight ${STYLES[toast.type]}`}
  style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}
  >
  <Icon className="w-5 h-5 flex-shrink-0" />

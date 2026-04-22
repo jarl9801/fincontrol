@@ -141,11 +141,11 @@ const MultiMoneda = ({ user }) => {
  <div className="space-y-6">
  {/* Header */}
  <div className="flex items-center gap-3">
- <div className="p-3 bg-[var(--surface)] rounded-xl">
+ <div className="p-3 bg-[var(--surface)] rounded-md">
  <DollarSign className="text-[var(--text-secondary)]" size={24} />
  </div>
  <div>
- <h2 className="text-xl font-bold text-[var(--text-primary)]">Multi-Moneda</h2>
+ <h2 className="text-xl font-medium text-[var(--text-primary)]">Multi-Moneda</h2>
  <p className="text-sm text-[var(--text-secondary)]">Gestiona tasas de cambio y convierte entre monedas</p>
  </div>
  </div>
@@ -156,7 +156,7 @@ const MultiMoneda = ({ user }) => {
  const rate = getRate(pair);
  const storedRate = rates.find((r) => r.pair === pair);
  return (
- <div key={pair} className="bg-[var(--surface)] rounded-xl p-5 border border-[var(--border)]">
+ <div key={pair} className="bg-[var(--surface)] rounded-md p-5 border border-[var(--border)]">
  <div className="flex items-center justify-between mb-2">
  <h3 className="nd-label text-[var(--text-secondary)]">{pair}</h3>
  <ArrowRightLeft className="text-[var(--text-secondary)]" size={18} />
@@ -316,7 +316,7 @@ const MultiMoneda = ({ user }) => {
  </div>
 
  {/* Info Box */}
- <div className="bg-transparent border border-[var(--border-visible)] rounded-xl p-4 flex items-start gap-3">
+ <div className="bg-transparent border border-[var(--border-visible)] rounded-md p-4 flex items-start gap-3">
  <Info className="text-[var(--interactive)] flex-shrink-0 mt-0.5" size={20} />
  <div>
  <p className="text-sm text-[var(--interactive)] font-medium">Soporte multi-moneda en transacciones</p>

@@ -38,7 +38,7 @@ const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
  const IconComponent = icon;
  return (
  <div
- className={`rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ${onClick ? 'cursor-pointer transition-transform duration-200' : ''}`}
+ className={`rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ${onClick ? 'cursor-pointer transition-transform duration-200' : ''}`}
  onClick={onClick}
  role={onClick ? 'button' : undefined}
  tabIndex={onClick ? 0 : undefined}
@@ -63,7 +63,7 @@ const AgingBar = ({ buckets }) => {
  if (total <= 0) return null;
 
  return (
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">Antigüedad</p>
@@ -82,7 +82,7 @@ const AgingBar = ({ buckets }) => {
  </div>
  <div className="grid gap-3 sm:grid-cols-4">
  {buckets.map((bucket, index) => (
- <div key={bucket.label} className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-3">
+ <div key={bucket.label} className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-3">
  <div className="mb-2 flex items-center gap-2">
  <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: bucketColor[index] }} />
  <span className="nd-label text-[var(--text-disabled)]">{bucket.label}</span>
@@ -189,7 +189,7 @@ const CXPIndependiente = ({ user, userRole }) => {
 
  return (
  <div className="space-y-6 pb-12">
- <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="mb-3 nd-label text-[var(--warning)]">Cuentas por pagar</p>
@@ -218,7 +218,7 @@ const CXPIndependiente = ({ user, userRole }) => {
 
  <AgingBar buckets={metrics.payablesAging} />
 
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
  <div className="relative w-full xl:max-w-sm">
  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)]" size={16} />

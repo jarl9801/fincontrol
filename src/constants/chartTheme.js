@@ -1,7 +1,6 @@
 /**
- * Nothing Design System — Recharts Theme
- * Monochrome palette for all chart components.
- * Uses CSS variable values for consistency with the design system.
+ * NEXUS.OS — Recharts Theme
+ * Dark-first palette using Nexus tokens with a restrained accent usage.
  */
 
 const style = typeof getComputedStyle !== 'undefined' && document?.documentElement
@@ -12,36 +11,42 @@ const v = (name, fallback) =>
   style?.getPropertyValue(name)?.trim() || fallback;
 
 export const CHART_THEME = {
-  grid: v('--border', '#1F1F1F'),
-  axis: v('--text-disabled', '#555555'),
-  axisFont: { fontFamily: "'Space Mono', monospace", fontSize: 11, fill: v('--text-secondary', '#888888') },
-  tooltip: {
-    bg: v('--surface', '#1C1C1C'),
-    border: v('--border-visible', '#2E2E2E'),
-    text: v('--text-primary', '#D4D4D4'),
-    label: v('--text-secondary', '#888888'),
+  grid: v('--color-line', '#222630'),
+  axis: v('--color-fg-4', '#4A4C50'),
+  axisFont: {
+    fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+    fontSize: 11,
+    fill: v('--color-fg-3', '#7B7D7A'),
   },
-  // Monochrome bar/area fills — ordered by brightness
+  tooltip: {
+    bg: v('--color-bg-2', '#161920'),
+    border: v('--color-line-s', '#2E3440'),
+    text: v('--color-fg-1', '#F5F3EE'),
+    label: v('--color-fg-3', '#7B7D7A'),
+  },
+  // Series fills — accent leads, mono tones follow.
   bars: [
-    v('--text-primary', '#D4D4D4'),
-    v('--text-secondary', '#888888'),
-    v('--text-disabled', '#555555'),
-    v('--text-tertiary', '#444444'),
-    v('--border-visible', '#2E2E2E'),
+    v('--color-accent', '#FF4D2E'),
+    v('--color-fg-1', '#F5F3EE'),
+    v('--color-fg-2', '#B9BAB4'),
+    v('--color-fg-3', '#7B7D7A'),
+    v('--color-fg-4', '#4A4C50'),
+    v('--color-info', '#6BA6FF'),
   ],
   // Line chart strokes
   lines: [
-    v('--text-primary', '#D4D4D4'),
-    v('--text-disabled', '#555555'),
-    v('--text-secondary', '#888888'),
-    v('--text-tertiary', '#444444'),
+    v('--color-accent', '#FF4D2E'),
+    v('--color-fg-1', '#F5F3EE'),
+    v('--color-fg-3', '#7B7D7A'),
+    v('--color-info', '#6BA6FF'),
   ],
-  // Status-specific (use sparingly)
-  accent: v('--accent', '#5B9BF6'),
-  negative: v('--negative', '#D71921'),
-  success: v('--success', '#4A9E5C'),
-  warning: v('--warning', '#D4A843'),
-  neutral: v('--text-secondary', '#888888'),
+  // Status-specific (use sparingly — only for explicit semantic meaning)
+  accent: v('--color-accent', '#FF4D2E'),
+  negative: v('--color-err', '#FF4D2E'),
+  success: v('--color-ok', '#4ADE80'),
+  warning: v('--color-warn', '#FFB020'),
+  info: v('--color-info', '#6BA6FF'),
+  neutral: v('--color-fg-3', '#7B7D7A'),
 };
 
 // Replaces the old COLORS array from config.js for chart usage

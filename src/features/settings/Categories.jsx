@@ -76,7 +76,7 @@ const Categories = ({ user }) => {
  <div className={`flex items-center gap-2 rounded-lg border p-3 ${accent.card}`}>
  <input
  type="text"
- className="flex-1 rounded-xl border border-[var(--border-visible)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
+ className="flex-1 rounded-md border border-[var(--border-visible)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-primary)] "
  value={editValue}
  onChange={(e) => setEditValue(e.target.value)}
  onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
@@ -84,13 +84,13 @@ const Categories = ({ user }) => {
  />
  <button
  onClick={handleSaveEdit}
- className="rounded-xl p-2 text-[var(--success)] transition-colors hover:bg-transparent"
+ className="rounded-md p-2 text-[var(--success)] transition-colors hover:bg-transparent"
  >
  <Check size={16} />
  </button>
  <button
  onClick={() => setEditingItem(null)}
- className="rounded-xl p-2 text-[var(--text-secondary)] transition-colors hover:bg-transparent"
+ className="rounded-md p-2 text-[var(--text-secondary)] transition-colors hover:bg-transparent"
  >
  <X size={16} />
  </button>
@@ -104,13 +104,13 @@ const Categories = ({ user }) => {
  <div className="flex items-center gap-1">
  <button
  onClick={() => handleEdit(type, index)}
- className={`rounded-xl p-2 text-[var(--text-secondary)] transition-colors ${accent.edit}`}
+ className={`rounded-md p-2 text-[var(--text-secondary)] transition-colors ${accent.edit}`}
  >
  <Edit2 size={14} />
  </button>
  <button
  onClick={() => handleDelete(type, index)}
- className={`rounded-xl p-2 text-[var(--text-secondary)] transition-colors ${accent.delete}`}
+ className={`rounded-md p-2 text-[var(--text-secondary)] transition-colors ${accent.delete}`}
  >
  <Trash2 size={14} />
  </button>
@@ -130,13 +130,13 @@ const Categories = ({ user }) => {
 
  return (
  <div className="space-y-6">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Configuración financiera</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Categorías</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Mantén el catálogo de ingresos y gastos con una estructura clara para el análisis financiero.</p>
  </div>
 
- <div className="rounded-xl border border-[var(--border-visible)] bg-transparent p-6 ">
+ <div className="rounded-md border border-[var(--border-visible)] bg-transparent p-6 ">
  <div className="flex items-center gap-3 mb-4">
  <div className="rounded-lg bg-transparent p-2.5">
  <TrendingDown className="text-[var(--accent)]" size={18} />
@@ -171,7 +171,7 @@ const Categories = ({ user }) => {
  </div>
  </div>
 
- <div className="rounded-xl border border-[var(--border-visible)] bg-transparent p-6 ">
+ <div className="rounded-md border border-[var(--border-visible)] bg-transparent p-6 ">
  <div className="flex items-center gap-3 mb-4">
  <div className="rounded-lg bg-transparent p-2.5">
  <TrendingUp className="text-[var(--success)]" size={18} />
