@@ -143,6 +143,10 @@ export const usePayables = (user) => {
         counterpartyName: data.vendor,
         projectId: data.projectId || '',
         projectName: data.projectName || data.project || '',
+        // NEW (Phase 2A): array of employee doc ids attached to this payable.
+        // Persists which technicians the invoice is FOR (e.g., "this CXP from
+        // subcontractor X covers Jorge + Andres for week Y"). Defaults to [].
+        employeeIds: Array.isArray(data.employeeIds) ? data.employeeIds : [],
         costCenterId: data.costCenterId || '',
         description: data.description || '',
         grossAmount: amount,

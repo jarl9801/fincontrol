@@ -7,6 +7,7 @@ import {
  Building2,
  FolderKanban,
  Globe,
+ HardHat,
  Landmark,
  LayoutDashboard,
  LogOut,
@@ -36,6 +37,7 @@ const NAV_ITEMS = [
  { path: '/import-export', label: 'Importar', icon: ArrowLeftRight, permission: 'settings' },
  { path: '/configuracion', label: 'Config', icon: Settings, permission: 'settings' },
  { path: '/partners', label: 'Partners', icon: Building2, permission: 'settings' },
+ { path: '/empleados', label: 'Empleados', icon: HardHat, permission: 'settings' },
 ];
 
 const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceData, bankAccount }) => {

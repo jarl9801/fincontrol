@@ -88,6 +88,9 @@ export const useBankMovements = (user) => {
         documentNumber: data.documentNumber || '',
         projectId: data.projectId || '',
         projectName: data.projectName || '',
+        // NEW (Phase 2A): array of employee doc ids attached to this movement.
+        // Used for free payments and bank adjustments not linked to a payable.
+        employeeIds: Array.isArray(data.employeeIds) ? data.employeeIds : [],
         costCenterId: data.costCenterId || '',
         receivableId: data.receivableId || null,
         payableId: data.payableId || null,
@@ -140,6 +143,9 @@ export const useBankMovements = (user) => {
         documentNumber: data.documentNumber || '',
         projectId: data.projectId || '',
         projectName: data.projectName || '',
+        // NEW (Phase 2A): array of employee doc ids attached to this movement.
+        // Used for free payments and bank adjustments not linked to a payable.
+        employeeIds: Array.isArray(data.employeeIds) ? data.employeeIds : [],
         costCenterId: data.costCenterId || '',
         categoryName: data.categoryName || '',
         updatedBy: user.email,

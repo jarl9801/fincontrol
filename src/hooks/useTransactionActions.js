@@ -63,6 +63,12 @@ export const useTransactionActions = (user) => {
         type: formData.type,
         category: formData.category,
         project: formData.project,
+        // NEW (Phase 2A): stable Firestore doc id of the project, kept in sync
+        // with the legacy `project` string by TransactionFormModal. Future
+        // reports/migrations should use this field.
+        projectId: formData.projectId || '',
+        // NEW (Phase 2A): array of employee doc ids attached to this transaction.
+        employeeIds: Array.isArray(formData.employeeIds) ? formData.employeeIds : [],
         costCenter: formData.costCenter || 'Sin asignar',
         status: formData.status,
         notes: notes,
@@ -136,6 +142,12 @@ export const useTransactionActions = (user) => {
         type: formData.type,
         category: formData.category,
         project: formData.project,
+        // NEW (Phase 2A): stable Firestore doc id of the project, kept in sync
+        // with the legacy `project` string by TransactionFormModal. Future
+        // reports/migrations should use this field.
+        projectId: formData.projectId || '',
+        // NEW (Phase 2A): array of employee doc ids attached to this transaction.
+        employeeIds: Array.isArray(formData.employeeIds) ? formData.employeeIds : [],
         costCenter: formData.costCenter || 'Sin asignar',
         status: formData.status,
         notes: newNotes,

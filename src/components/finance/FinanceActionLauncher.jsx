@@ -16,6 +16,17 @@ import { useProjects } from '../../hooks/useProjects';
 import { useReceivables } from '../../hooks/useReceivables';
 import { useBankMovements } from '../../hooks/useBankMovements';
 import { useToast } from '../../contexts/ToastContext';
+import EmployeePicker from './EmployeePicker';
+
+// Helper: format a project for the dropdown option label.
+// Shows code — name · operator · zone (when available).
+const formatProjectOption = (p) => {
+ const opLabel = p.operator === 'INSYTE' ? 'Insyte' : p.operator === 'VANCOM' ? 'Vancom' : '';
+ const parts = [`${p.code || p.id} — ${p.name || p.displayName || ''}`];
+ if (opLabel) parts.push(opLabel);
+ if (p.zone) parts.push(p.zone);
+ return parts.join(' · ');
+};
 
 const ACTIONS = [
  {
@@ -120,6 +131,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  issueDate: initialIssueDate(),
  dueDate: initialIssueDate(),
  projectId: '',
+ employeeIds: [], // NEW (Phase 2A): technicians the CXP is for
  });
  const [collectionForm, setCollectionForm] = useState({
  receivableId: '',
@@ -140,6 +152,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  description: '',
  projectId: '',
  note: '',
+ employeeIds: [], // NEW (Phase 2A): technicians this payment is for
  });
  const [adjustmentForm, setAdjustmentForm] = useState({
  direction: 'in',
@@ -148,6 +161,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  description: '',
  counterpartyName: '',
  projectId: '',
+ employeeIds: [], // NEW (Phase 2A): technicians this adjustment is for
  });
 
  useEffect(() => {
@@ -196,6 +210,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  ...payableForm,
  projectName,
  amount: Number(payableForm.amount),
+ employeeIds: payableForm.employeeIds, // NEW (Phase 2A)
  });
  if (!result.success) throw new Error('No se pudo crear la factura CXP');
  showToast('Factura CXP creada');
@@ -249,6 +264,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  counterpartyName: paymentForm.counterpartyName,
  projectId: paymentForm.projectId,
  projectName,
+ employeeIds: paymentForm.employeeIds, // NEW (Phase 2A)
  });
  if (!result.success) throw new Error('No se pudo registrar el pago');
  }
@@ -266,6 +282,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  counterpartyName: adjustmentForm.counterpartyName,
  projectId: adjustmentForm.projectId,
  projectName,
+ employeeIds: adjustmentForm.employeeIds, // NEW (Phase 2A)
  });
  if (!result.success) throw new Error('No se pudo crear el ajuste bancario');
  showToast('Ajuste bancario registrado');
@@ -461,7 +478,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  <option value="">Sin proyecto</option>
  {projects.map((project) => (
  <option key={project.id} value={project.id}>
- {project.name || project.displayName || project.code}
+ {formatProjectOption(project)}
  </option>
  ))}
  </select>
@@ -532,7 +549,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  <option value="">Sin proyecto</option>
  {projects.map((project) => (
  <option key={project.id} value={project.id}>
- {project.name || project.displayName || project.code}
+ {formatProjectOption(project)}
  </option>
  ))}
  </select>
@@ -566,6 +583,13 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  onChange={(event) => setPayableForm((state) => ({ ...state, dueDate: event.target.value }))}
  />
  </Field>
+ <div className="xl:col-span-2">
+ <EmployeePicker
+ user={user}
+ value={payableForm.employeeIds}
+ onChange={(ids) => setPayableForm((state) => ({ ...state, employeeIds: ids }))}
+ />
+ </div>
  </>
  )}
 
@@ -654,7 +678,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  <option value="">Sin proyecto</option>
  {projects.map((project) => (
  <option key={project.id} value={project.id}>
- {project.name || project.displayName || project.code}
+ {formatProjectOption(project)}
  </option>
  ))}
  </select>
@@ -677,6 +701,11 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  counterpartyName: linked?.counterpartyName || state.counterpartyName,
  description: linked?.description || state.description,
  projectId: linked?.projectId || state.projectId,
+ // NEW (Phase 2A): inherit technicians from the linked CXP. User can still
+ // edit them after pre-fill if the payment covers a different subset.
+ employeeIds: Array.isArray(linked?.employeeIds) && linked.employeeIds.length > 0
+ ? linked.employeeIds
+ : state.employeeIds,
  amount: linked ? String(linked.openAmount) : state.amount,
  }));
  }}
@@ -745,11 +774,18 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  <option value="">Sin proyecto</option>
  {projects.map((project) => (
  <option key={project.id} value={project.id}>
- {project.name || project.displayName || project.code}
+ {formatProjectOption(project)}
  </option>
  ))}
  </select>
  </Field>
+ <div className="xl:col-span-2">
+ <EmployeePicker
+ user={user}
+ value={paymentForm.employeeIds}
+ onChange={(ids) => setPaymentForm((state) => ({ ...state, employeeIds: ids }))}
+ />
+ </div>
  </>
  )}
 
@@ -811,11 +847,18 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  <option value="">Sin proyecto</option>
  {projects.map((project) => (
  <option key={project.id} value={project.id}>
- {project.name || project.displayName || project.code}
+ {formatProjectOption(project)}
  </option>
  ))}
  </select>
  </Field>
+ <div className="xl:col-span-2">
+ <EmployeePicker
+ user={user}
+ value={adjustmentForm.employeeIds}
+ onChange={(ids) => setAdjustmentForm((state) => ({ ...state, employeeIds: ids }))}
+ />
+ </div>
  </>
  )}
  </div>

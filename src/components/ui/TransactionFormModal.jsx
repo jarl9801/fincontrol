@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { X, ArrowUpCircle, ArrowDownCircle, Save, Loader2, RefreshCw, Calculator, UserPlus, Building2 } from 'lucide-react';
+import { X, ArrowUpCircle, ArrowDownCircle, Save, Loader2, RefreshCw, Calculator, UserPlus, Building2, HardHat } from 'lucide-react';
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../constants/categories';
 import { useProjects } from '../../hooks/useProjects';
 import { usePartners } from '../../hooks/usePartners';
+import { useEmployees } from '../../hooks/useEmployees';
 import { TAX_RATES } from '../../constants/config';
 import { formatCurrency, formatTaxRate } from '../../utils/formatters';
 
@@ -20,6 +21,7 @@ const TransactionFormModal = ({
 }) => {
  const { projects, loading: projectsLoading } = useProjects(user);
  const { partners, loading: partnersLoading } = usePartners(user);
+ const { employees, loading: employeesLoading } = useEmployees(user);
 
  const [submitting, setSubmitting] = useState(false);
 
@@ -30,6 +32,7 @@ const TransactionFormModal = ({
  type: 'expense',
  category: expenseCategories[0] || '',
  project: '',
+ projectId: '', // NEW: Firestore doc id of the project (stable reference)
  costCenter: 'Sin asignar',
  status: 'pending',
  comment: '',
@@ -40,6 +43,7 @@ const TransactionFormModal = ({
  taxRate: TAX_RATES.STANDARD, // Default 19% German VAT
  counterpartyId: '',
  counterpartyName: '',
+ employeeIds: [], // NEW: array of employee doc ids attached to this transaction
  });
 
  // Description autocomplete state (legacy — kept for backward compat)
@@ -56,8 +60,38 @@ const TransactionFormModal = ({
  const partnerSuggestionsRef = useRef(null);
  const [showCreateNewPartner, setShowCreateNewPartner] = useState(false);
 
+ // Employee picker state (multi-select typeahead)
+ const [employeeInput, setEmployeeInput] = useState('');
+ const [showEmployeeSuggestions, setShowEmployeeSuggestions] = useState(false);
+ const [activeEmployeeIndex, setActiveEmployeeIndex] = useState(-1);
+ const employeeInputRef = useRef(null);
+ const employeeSuggestionsRef = useRef(null);
+
  // Filtrar solo proyectos activos para el selector
  const activeProjects = useMemo(() => projects.filter(p => p.status === 'active'), [projects]);
+
+ // Active employees, indexed for fast lookup
+ const activeEmployees = useMemo(() => employees.filter((e) => e.status === 'active'), [employees]);
+ const employeeById = useMemo(() => {
+ const map = new Map();
+ employees.forEach((e) => map.set(e.id, e));
+ return map;
+ }, [employees]);
+
+ // Suggestions for the employee picker — filters out already-selected employees
+ const employeeSuggestions = useMemo(() => {
+ const q = employeeInput.trim().toLowerCase();
+ if (!q || q.length < 1) return [];
+ return activeEmployees
+ .filter((e) => !formData.employeeIds.includes(e.id))
+ .filter((e) => {
+ if (e.fullName?.toLowerCase().includes(q)) return true;
+ if (e.firstName?.toLowerCase().includes(q)) return true;
+ if (e.lastName?.toLowerCase().includes(q)) return true;
+ return (e.aliases || []).some((a) => a.toLowerCase().includes(q));
+ })
+ .slice(0, 8);
+ }, [employeeInput, activeEmployees, formData.employeeIds]);
 
  const getCategoriesByType = (type) => {
  return type === 'income' ? incomeCategories : expenseCategories;
@@ -118,6 +152,12 @@ const TransactionFormModal = ({
  setShowPartnerSuggestions(false);
  setShowCreateNewPartner(false);
  }
+ if (
+ employeeSuggestionsRef.current && !employeeSuggestionsRef.current.contains(e.target) &&
+ employeeInputRef.current && !employeeInputRef.current.contains(e.target)
+ ) {
+ setShowEmployeeSuggestions(false);
+ }
  };
  document.addEventListener('mousedown', handleClickOutside);
  return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -134,6 +174,7 @@ const TransactionFormModal = ({
  type: editingTransaction.type,
  category: editingTransaction.category,
  project: editingTransaction.project || '',
+ projectId: editingTransaction.projectId || '',
  costCenter: editingTransaction.costCenter || 'Sin asignar',
  status: editingTransaction.status,
  comment: '',
@@ -144,13 +185,15 @@ const TransactionFormModal = ({
  taxRate: existingTaxRate,
  counterpartyId: editingTransaction.counterpartyId || '',
  counterpartyName: editingTransaction.counterpartyName || '',
+ employeeIds: Array.isArray(editingTransaction.employeeIds) ? editingTransaction.employeeIds : [],
  });
  // Pre-fill partner input if editing a transaction with a known counterparty
  setPartnerInput(editingTransaction.counterpartyName || '');
  setShowPartnerSuggestions(false);
  setShowCreateNewPartner(false);
  } else {
- const firstProject = activeProjects[0]?.displayName || activeProjects[0]?.name || '';
+ const firstProject = activeProjects[0];
+ const firstProjectDisplay = firstProject?.displayName || (firstProject ? `${firstProject.code} (${firstProject.name})` : '');
  const initialType = defaultType || 'expense';
  const categories = initialType === 'income' ? incomeCategories : expenseCategories;
  setFormData({
@@ -159,7 +202,8 @@ const TransactionFormModal = ({
  amount: '',
  type: initialType,
  category: categories[0] || '',
- project: firstProject,
+ project: firstProjectDisplay,
+ projectId: firstProject?.id || '',
  costCenter: 'Sin asignar',
  status: 'pending',
  comment: '',
@@ -170,13 +214,36 @@ const TransactionFormModal = ({
  taxRate: TAX_RATES.STANDARD,
  counterpartyId: '',
  counterpartyName: '',
+ employeeIds: [],
  });
  setPartnerInput('');
  setShowPartnerSuggestions(false);
  setShowCreateNewPartner(false);
  }
  setShowSuggestions(false);
+ setEmployeeInput('');
+ setShowEmployeeSuggestions(false);
  }, [isOpen, editingTransaction]);
+
+ // Lazy resolution of projectId for legacy transactions: when editing an old
+ // transaction that has `project` (string) but no `projectId`, try to match
+ // against active projects and set the projectId. Re-runs when projects load.
+ useEffect(() => {
+ if (formData.projectId) return; // already set
+ if (!formData.project) return; // nothing to resolve from
+ if (activeProjects.length === 0) return; // projects not loaded yet
+ const candidate = formData.project;
+ const match = activeProjects.find((p) => {
+ if (!p) return false;
+ if (p.displayName === candidate) return true;
+ if (p.code === candidate) return true;
+ if (`${p.code} (${p.name})` === candidate) return true;
+ return false;
+ });
+ if (match) {
+ setFormData((prev) => ({ ...prev, projectId: match.id }));
+ }
+ }, [activeProjects, formData.project, formData.projectId]);
 
  const handleTypeChange = (newType) => {
  const categories = getCategoriesByType(newType);
@@ -297,6 +364,61 @@ const TransactionFormModal = ({
  // For now we just store the name; partner will be created on first transaction save
  };
 
+ // ============================================
+ // Employee picker handlers
+ // ============================================
+ const handleEmployeeInputChange = (e) => {
+ const value = e.target.value;
+ setEmployeeInput(value);
+ setShowEmployeeSuggestions(value.trim().length >= 1);
+ setActiveEmployeeIndex(-1);
+ };
+
+ const handleSelectEmployee = (employee) => {
+ setFormData((prev) => ({
+ ...prev,
+ employeeIds: prev.employeeIds.includes(employee.id)
+ ? prev.employeeIds
+ : [...prev.employeeIds, employee.id],
+ }));
+ setEmployeeInput('');
+ setShowEmployeeSuggestions(false);
+ setActiveEmployeeIndex(-1);
+ // Keep focus on the input so the user can keep adding employees fast
+ setTimeout(() => employeeInputRef.current?.focus(), 0);
+ };
+
+ const handleRemoveEmployee = (employeeId) => {
+ setFormData((prev) => ({
+ ...prev,
+ employeeIds: prev.employeeIds.filter((id) => id !== employeeId),
+ }));
+ };
+
+ const handleEmployeeKeyDown = (e) => {
+ if (!showEmployeeSuggestions || employeeSuggestions.length === 0) {
+ // Backspace with empty input → remove the last selected chip
+ if (e.key === 'Backspace' && !employeeInput && formData.employeeIds.length > 0) {
+ handleRemoveEmployee(formData.employeeIds[formData.employeeIds.length - 1]);
+ }
+ return;
+ }
+ if (e.key === 'Escape') {
+ setShowEmployeeSuggestions(false);
+ return;
+ }
+ if (e.key === 'ArrowDown') {
+ e.preventDefault();
+ setActiveEmployeeIndex((prev) => Math.min(prev + 1, employeeSuggestions.length - 1));
+ } else if (e.key === 'ArrowUp') {
+ e.preventDefault();
+ setActiveEmployeeIndex((prev) => Math.max(prev - 1, 0));
+ } else if (e.key === 'Enter' && activeEmployeeIndex >= 0) {
+ e.preventDefault();
+ handleSelectEmployee(employeeSuggestions[activeEmployeeIndex]);
+ }
+ };
+
  const handleSubmit = async (e) => {
  e.preventDefault();
  if (submitting) return;
@@ -309,7 +431,7 @@ const TransactionFormModal = ({
  if (formData.description.trim().length > 200) {
  return;
  }
- if (!formData.project) {
+ if (!formData.projectId) {
  return;
  }
 
@@ -657,16 +779,34 @@ const TransactionFormModal = ({
  <select
  required
  className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)] "
- value={formData.project}
- onChange={e => setFormData({...formData, project: e.target.value})}
+ value={formData.projectId}
+ onChange={(e) => {
+ const id = e.target.value;
+ const proj = activeProjects.find((p) => p.id === id);
+ setFormData({
+ ...formData,
+ projectId: id,
+ // Keep legacy `project` string in sync for backwards-compat
+ project: proj ? (proj.displayName || `${proj.code} (${proj.name})`) : '',
+ });
+ }}
  >
  <option value="">Seleccionar proyecto...</option>
- {activeProjects.map(p => (
- <option key={p.id} value={p.displayName || `${p.code} (${p.name})`}>
- {p.code} - {p.name} {p.client ? `| ${p.client}` : ''}
+ {activeProjects.map((p) => {
+ const opLabel = p.operator === 'INSYTE' ? 'Insyte' : p.operator === 'VANCOM' ? 'Vancom' : '';
+ return (
+ <option key={p.id} value={p.id}>
+ {p.code} — {p.name}{opLabel ? ` · ${opLabel}` : ''}{p.zone ? ` · ${p.zone}` : ''}
  </option>
- ))}
+ );
+ })}
  </select>
+ )}
+ {/* Legacy data warning: shown when editing an old transaction whose project string doesn't resolve to a current project */}
+ {editingTransaction && formData.project && !formData.projectId && activeProjects.length > 0 && (
+ <p className="mt-1 text-xs text-[var(--warning)]">
+ ⚠ Esta transacción tiene un proyecto legacy (&ldquo;{formData.project}&rdquo;) que no coincide con ningún proyecto actual. Selecciona uno arriba para migrarla.
+ </p>
  )}
  </div>
  </div>
@@ -694,6 +834,104 @@ const TransactionFormModal = ({
  <option key={cc.id} value={cc.name}>{cc.name}</option>
  ))}
  </select>
+ </div>
+
+ {/* Employee picker — multi-select typeahead with chips */}
+ <div className="relative">
+ <label className="mb-2 flex items-center gap-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <HardHat size={14} className="text-[var(--text-secondary)]" />
+ Técnicos / Empleados
+ <span className="text-xs font-normal text-[var(--text-secondary)]">(opcional — uno o varios)</span>
+ </label>
+
+ {/* Selected chips */}
+ {formData.employeeIds.length > 0 && (
+ <div className="mb-2 flex flex-wrap gap-1.5">
+ {formData.employeeIds.map((id) => {
+ const emp = employeeById.get(id);
+ const label = emp?.fullName || `(empleado ${id.slice(0, 6)} eliminado)`;
+ const isOrphan = !emp;
+ return (
+ <span
+ key={id}
+ className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+ isOrphan
+ ? 'border-[var(--warning)] text-[var(--warning)]'
+ : 'border-[var(--border-visible)] bg-[var(--surface-raised)] text-[var(--text-primary)]'
+ }`}
+ >
+ {!isOrphan && <HardHat size={11} />}
+ {label}
+ {emp?.role && <span className="text-[var(--text-secondary)]">· {emp.role}</span>}
+ <button
+ type="button"
+ onClick={() => handleRemoveEmployee(id)}
+ className="ml-0.5 rounded-full p-0.5 text-[var(--text-secondary)] transition hover:text-[var(--accent)]"
+ aria-label={`Quitar ${label}`}
+ >
+ <X size={11} />
+ </button>
+ </span>
+ );
+ })}
+ </div>
+ )}
+
+ {employeesLoading ? (
+ <div className="flex w-full items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--text-secondary)]">
+ <Loader2 className="w-4 h-4 animate-spin" />
+ Cargando empleados...
+ </div>
+ ) : activeEmployees.length === 0 ? (
+ <div className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-xs text-[var(--text-secondary)]">
+ Aún no hay empleados activos. Crea uno en /empleados para poder asociarlo.
+ </div>
+ ) : (
+ <input
+ ref={employeeInputRef}
+ type="text"
+ placeholder="Buscar técnico por nombre o alias..."
+ className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)]"
+ value={employeeInput}
+ onChange={handleEmployeeInputChange}
+ onKeyDown={handleEmployeeKeyDown}
+ onFocus={() => employeeInput.trim().length >= 1 && setShowEmployeeSuggestions(true)}
+ autoComplete="off"
+ />
+ )}
+
+ {showEmployeeSuggestions && employeeSuggestions.length > 0 && (
+ <div
+ ref={employeeSuggestionsRef}
+ className="absolute left-0 right-0 z-[300] mt-1 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface-raised)]"
+ style={{ boxShadow: 'none' }}
+ >
+ {employeeSuggestions.map((emp, idx) => (
+ <button
+ key={emp.id}
+ type="button"
+ onClick={() => handleSelectEmployee(emp)}
+ className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
+ idx === activeEmployeeIndex ? 'bg-transparent' : 'hover:bg-[var(--surface)]'
+ } ${idx > 0 ? 'border-t border-[var(--surface)]' : ''}`}
+ >
+ <div className="flex items-center gap-2">
+ <HardHat size={12} className="text-[var(--text-secondary)]" />
+ <span className="font-medium text-[var(--text-primary)]">{emp.fullName}</span>
+ <span className="text-[10px] uppercase tracking-wide text-[var(--text-secondary)]">
+ {emp.type === 'external' ? 'Externo' : 'Interno'}
+ </span>
+ {emp.role && <span className="text-xs text-[var(--text-secondary)]">· {emp.role}</span>}
+ </div>
+ {emp.aliases && emp.aliases.length > 0 && (
+ <p className="ml-5 text-[10px] text-[var(--text-secondary)]">
+ alias: {emp.aliases.slice(0, 3).join(', ')}
+ </p>
+ )}
+ </button>
+ ))}
+ </div>
+ )}
  </div>
 
  <div className="flex items-center gap-2 pt-1">
@@ -756,14 +994,14 @@ const TransactionFormModal = ({
  </button>
  <button
  type="submit"
- disabled={submitting || projectsLoading || activeProjects.length === 0}
+ disabled={submitting || projectsLoading || activeProjects.length === 0 || !formData.projectId}
  className={`
  flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-white
- transition-all duration-200 
+ transition-all duration-200
  ${formData.type === 'income'
  ? 'bg-[var(--success)] hover:bg-[var(--success)]'
  : 'bg-[var(--text-primary)] hover:opacity-85'}
- ${(submitting || projectsLoading || activeProjects.length === 0) ? 'opacity-50 cursor-not-allowed' : 'hover:'}
+ ${(submitting || projectsLoading || activeProjects.length === 0 || !formData.projectId) ? 'opacity-50 cursor-not-allowed' : 'hover:'}
  `}
  >
  {submitting ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}

@@ -39,6 +39,7 @@ const WhatIf = lazy(() => import('./features/whatif/WhatIf'));
 const BackupManager = lazy(() => import('./features/backup/BackupManager'));
 const UserProfile = lazy(() => import('./features/perfil/UserProfile'));
 const Partners = lazy(() => import('./features/partners/Partners'));
+const Employees = lazy(() => import('./features/employees/Employees'));
 const FinanceActionLauncher = lazy(() => import('./components/finance/FinanceActionLauncher'));
 
 const VIEW_TITLES = {
@@ -69,6 +70,7 @@ const VIEW_TITLES = {
  '/perfil': 'Perfil',
  '/whatif': 'Simulación',
  '/partners': 'Partners',
+ '/empleados': 'Empleados',
 };
 
 const LoadingState = () => (
@@ -258,6 +260,7 @@ function AppContent() {
  <Route path="/backup" element={<ProtectedRoute hasPermission={hasPermission} permission="backup"><BackupManager user={user} userRole={userRole} /></ProtectedRoute>} />
  <Route path="/perfil" element={<UserProfile user={user} userRole={userRole} />} />
  <Route path="/partners" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Partners user={user} userRole={userRole} /></ProtectedRoute>} />
+ <Route path="/empleados" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Employees user={user} userRole={userRole} /></ProtectedRoute>} />
  <Route path="*" element={<Navigate to="/" replace />} />
  </Routes>
  </Suspense>
