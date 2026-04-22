@@ -1001,7 +1001,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
 
  {/* Bulk categorize panel */}
  {bulkCatOpen && uncategorizedMovements.length > 0 && (
- <section className="rounded-xl border border-[var(--border-visible)] bg-transparent p-5 space-y-4">
+ <section className="rounded-md border border-[var(--border-visible)] bg-transparent p-5 space-y-4">
  <div className="flex items-center justify-between">
  <div>
  <h3 className="text-[15px] font-semibold text-[var(--text-primary)]">Categorización en lote</h3>
@@ -1017,7 +1017,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <label className="block flex-1 min-w-[180px]">
  <span className="mb-1 block nd-label text-[var(--text-disabled)]">Categoría</span>
  <select
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm outline-none focus:border-[var(--text-secondary)]"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm outline-none focus:border-[var(--text-secondary)]"
  value={bulkCategory}
  onChange={(e) => setBulkCategory(e.target.value)}
  >
@@ -1033,7 +1033,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <label className="block min-w-[160px]">
  <span className="mb-1 block nd-label text-[var(--text-disabled)]">Centro de costo</span>
  <select
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm outline-none focus:border-[var(--text-secondary)]"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm outline-none focus:border-[var(--text-secondary)]"
  value={bulkCostCenter}
  onChange={(e) => setBulkCostCenter(e.target.value)}
  >
@@ -1044,7 +1044,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <button
  disabled={!bulkCategory || bulkSelected.size === 0 || bulkSubmitting}
  onClick={handleBulkApply}
- className="rounded-xl bg-[var(--text-primary)] px-5 py-2 text-sm font-semibold text-[var(--black)] transition-colors hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed"
+ className="rounded-md bg-[var(--text-primary)] px-5 py-2 text-sm font-semibold text-[var(--black)] transition-colors hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed"
  >
  {bulkSubmitting ? 'Aplicando...' : `Aplicar a ${bulkSelected.size} seleccionados`}
  </button>
@@ -1069,7 +1069,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  </div>
 
  {/* Movement list */}
- <div className="max-h-[340px] overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--surface)]">
+ <div className="max-h-[340px] overflow-y-auto rounded-md border border-[var(--border)] bg-[var(--surface)]">
  <table className="w-full text-left text-sm">
  <thead className="sticky top-0 bg-[var(--surface)] ">
  <tr className="border-b border-[var(--border)] nd-label text-[var(--text-disabled)]">
@@ -1334,7 +1334,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  </div>
  )}
 
- <div className="grid grid-cols-2 gap-4 rounded-xl border border-[var(--border)] bg-[var(--black)] p-4">
+ <div className="grid grid-cols-2 gap-4 rounded-md border border-[var(--border)] bg-[var(--black)] p-4">
  <Field label="Fecha" value={r.date} />
  <Field label="Origen" value={r.sourceLabel} />
  <Field label="Proyecto" value={r.project || raw.projectName} />
@@ -1421,7 +1421,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  </div>
 
  <div className="p-6">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--black)] p-3 mb-5">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--black)] p-3 mb-5">
  <p className="text-sm font-medium text-white">{statusChangeRecord.description}</p>
  <p className="mt-1 text-xs text-[var(--text-secondary)]">
  {familyLabels[family]} · {statusLabels[status] || status} · {formatCurrency(statusChangeRecord.amount)}
@@ -1433,7 +1433,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <button
  type="button"
  onClick={() => confirmStatusChange('pending')}
- className="flex w-full items-center gap-3 rounded-xl border border-[var(--border-visible)] bg-transparent px-4 py-3 text-left transition-all hover:bg-transparent"
+ className="flex w-full items-center gap-3 rounded-md border border-[var(--border-visible)] bg-transparent px-4 py-3 text-left transition-all hover:bg-transparent"
  >
  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-transparent">
  <span className="text-[var(--warning)] text-sm font-bold">CXC</span>
@@ -1450,7 +1450,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <button
  type="button"
  onClick={() => confirmStatusChange('paid')}
- className="flex w-full items-center gap-3 rounded-xl border border-[var(--border-visible)] bg-transparent px-4 py-3 text-left transition-all hover:bg-transparent"
+ className="flex w-full items-center gap-3 rounded-md border border-[var(--border-visible)] bg-transparent px-4 py-3 text-left transition-all hover:bg-transparent"
  >
  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-transparent">
  <span className="text-[var(--success)] text-lg font-bold">&#10003;</span>
@@ -1465,7 +1465,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <button
  type="button"
  onClick={() => confirmStatusChange(isMovement ? 'void' : 'cancelled')}
- className="flex w-full items-center gap-3 rounded-xl border border-[var(--border-visible)] bg-transparent px-4 py-3 text-left transition-all hover:bg-transparent"
+ className="flex w-full items-center gap-3 rounded-md border border-[var(--border-visible)] bg-transparent px-4 py-3 text-left transition-all hover:bg-transparent"
  >
  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-transparent">
  <span className="text-[var(--accent)] text-lg font-bold">&#10005;</span>

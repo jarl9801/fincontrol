@@ -162,14 +162,14 @@ const CostCenters = ({ user }) => {
  const ytdPercent = ytdBudget > 0 ? (ytdExecuted / ytdBudget * 100) : 0;
 
  return (
- <div className="mt-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 animate-fadeIn ">
+ <div className="mt-3 rounded-md border border-[var(--border)] bg-[var(--surface)] p-4 animate-fadeIn ">
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center gap-2">
  <Calendar className="text-[var(--text-secondary)]" size={18} />
  <select
  value={selectedYear}
  onChange={(e) => setSelectedYear(parseInt(e.target.value))}
- className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-sm font-medium text-[var(--text-primary)] outline-none"
+ className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-sm font-medium text-[var(--text-primary)] outline-none"
  >
  {[2024, 2025, 2026].map(year => (
  <option key={year} value={year}>{year}</option>
@@ -177,11 +177,11 @@ const CostCenters = ({ user }) => {
  </select>
  </div>
  <div className="flex items-center gap-4 text-sm">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2">
  <span className="text-[var(--text-secondary)]">Ppto. mensual: </span>
  <span className="font-bold text-[var(--text-primary)]">{formatCurrency(monthlyBudget)}</span>
  </div>
- <div className={`rounded-xl px-3 py-2 ${getProgressBgColor(ytdPercent)}`}>
+ <div className={`rounded-md px-3 py-2 ${getProgressBgColor(ytdPercent)}`}>
  <span className="text-[var(--text-secondary)]">YTD: </span>
  <span className={`font-bold ${ytdPercent > 100 ? 'text-[var(--accent)]' : ytdPercent > 80 ? 'text-[var(--warning)]' : 'text-[var(--success)]'}`}>
  {formatCurrency(ytdExecuted)} / {formatCurrency(ytdBudget)}
@@ -202,7 +202,7 @@ const CostCenters = ({ user }) => {
  return (
  <div
  key={index}
- className={`relative rounded-xl p-2 transition-all ${
+ className={`relative rounded-md p-2 transition-all ${
  isCurrentMonth ? 'ring-2 ring-[var(--text-primary)] bg-transparent' :
  isFutureMonth ? 'bg-[var(--surface)] opacity-70' :
  'border border-[var(--border)] bg-[var(--surface)]'
@@ -358,14 +358,14 @@ const CostCenters = ({ user }) => {
 
  return (
  <div className="space-y-6">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Presupuesto operativo</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Centros de costo</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Organiza responsables, presupuesto anual y seguimiento mensual desde una sola mesa.</p>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center gap-3 mb-3">
  <div className="rounded-lg bg-transparent p-2">
  <TrendingDown className="text-[var(--accent)]" size={20} />
@@ -376,7 +376,7 @@ const CostCenters = ({ user }) => {
  <p className="text-xs text-[var(--text-secondary)]">activos</p>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center gap-3 mb-3">
  <div className="rounded-lg bg-transparent p-2">
  <BarChart3 className="text-[var(--text-primary)]" size={20} />
@@ -387,7 +387,7 @@ const CostCenters = ({ user }) => {
  <p className="text-xs text-[var(--text-secondary)]">{formatCurrency(totalBudget / 12)}/mes</p>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center gap-3 mb-3">
  <div className="rounded-lg bg-transparent p-2">
  <TrendingUpDown className="text-[var(--warning)]" size={20} />
@@ -398,7 +398,7 @@ const CostCenters = ({ user }) => {
  <p className="text-xs text-[var(--text-secondary)]">de {formatCurrency(ytdBudget)} presupuestado</p>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-3 flex items-center gap-3">
  <div className={`rounded-lg p-2 ${getProgressBgColor(overallUtilization)}`}>
  <Calendar className={`${overallUtilization > 100 ? 'text-[var(--accent)]' : overallUtilization > 80 ? 'text-[var(--warning)]' : 'text-[var(--success)]'}`} size={20} />
@@ -438,7 +438,7 @@ const CostCenters = ({ user }) => {
  </button>
  </div>
 
- <div className="rounded-xl border border-[var(--border-visible)] bg-transparent p-6 ">
+ <div className="rounded-md border border-[var(--border-visible)] bg-transparent p-6 ">
  <div className="flex items-center gap-3 mb-4">
  <div className="rounded-lg bg-transparent p-2">
  <TrendingDown className="text-[var(--accent)]" size={20} />
@@ -449,7 +449,7 @@ const CostCenters = ({ user }) => {
  </div>
  </div>
 
- <div className="overflow-hidden rounded-xl border border-[var(--border-visible)] bg-[var(--surface)]">
+ <div className="overflow-hidden rounded-md border border-[var(--border-visible)] bg-[var(--surface)]">
  <table className="w-full text-left">
  <thead className="border-b border-[var(--border-visible)] bg-transparent">
  <tr>
@@ -481,7 +481,7 @@ const CostCenters = ({ user }) => {
  </div>
 
  {incomeCenters.length > 0 && (
- <div className="rounded-xl border border-[var(--border-visible)] bg-transparent p-6 ">
+ <div className="rounded-md border border-[var(--border-visible)] bg-transparent p-6 ">
  <div className="flex items-center gap-3 mb-4">
  <div className="rounded-lg bg-transparent p-2">
  <TrendingUp className="text-[var(--success)]" size={20} />
@@ -492,7 +492,7 @@ const CostCenters = ({ user }) => {
  </div>
  </div>
 
- <div className="overflow-hidden rounded-xl border border-[var(--success)] bg-[var(--surface)]">
+ <div className="overflow-hidden rounded-md border border-[var(--success)] bg-[var(--surface)]">
  <table className="w-full text-left">
  <thead className="border-b border-[var(--border-visible)] bg-transparent">
  <tr>
@@ -519,7 +519,7 @@ const CostCenters = ({ user }) => {
 
  {showNewModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
- <div className="w-full max-w-md overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
+ <div className="w-full max-w-md overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
  <div className="border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-4">
  <p className="nd-label text-[var(--text-primary)]">Centro presupuestario</p>
  <h3 className="text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">

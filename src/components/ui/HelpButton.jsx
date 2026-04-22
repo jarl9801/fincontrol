@@ -25,7 +25,7 @@ const HelpButton = ({ title, children, size = 16 }) => {
  <HelpCircle size={size} />
  </button>
  {open && (
- <div className="absolute right-0 top-full z-[300] mt-2 w-[320px] max-h-[400px] overflow-y-auto rounded-xl border border-[var(--border-visible)] bg-[var(--surface)] p-4 animate-fadeIn">
+ <div className="absolute right-0 top-full z-[300] mt-2 w-[320px] max-h-[400px] overflow-y-auto rounded-md border border-[var(--border-visible)] bg-[var(--surface)] p-4 animate-fadeIn">
  <div className="flex items-start justify-between gap-2 mb-3">
  <h4 className="nd-label text-[var(--text-primary)]">{title}</h4>
  <button onClick={() => setOpen(false)} className="shrink-0 text-[var(--text-disabled)] hover:text-[var(--text-secondary)]">

@@ -49,10 +49,12 @@ npm run build && npx firebase deploy --only hosting   # deploy
 - `lucide-react` — Icons
 - `jspdf` + `jspdf-autotable` — PDF export
 
-## Theme — Apple Dark
-- Frosted glass effects
-- Font: Inter
-- Dark grays: `#1c1c1e`, `#2c2c2e`
+## Theme — NEXUS.OS (dark-first, strict)
+- Accent: `#FF4D2E` (orange) — used for CTAs, brand `.OS`, active nav, chart highlights
+- Surfaces escalate: `#07080A` (page) → `#0E1014` (panel) → `#161920` (card) → `#1D2029` (elevated)
+- Fonts: Space Grotesk (display, 300/400/500), JetBrains Mono (labels/data), Inter (body)
+- Radii: 4 / 6 / 10 px — never `xl`, `2xl`, `3xl`
+- Wordmark: `FinControl.OS` where `.OS` is in accent color
 
 ## ⚠️ CRITICAL — DO NOT BREAK THESE
 
@@ -77,8 +79,13 @@ Firestore docs have a `viewedBy` field that's a plain object (not a Firestore ty
 Uses wrapper pattern (inner component + outer wrapper) for hooks safety. Don't flatten it.
 
 ## Design System
-This project uses the **Nothing Design System**. Before making any UI changes, read the agent skill:
-`.claude/agents/nothing-design.md`
+This project uses the **NEXUS.OS** design system. Before making any UI changes, read the agent skill:
+`.claude/agents/nexus-design.md`
 
-Key rule: ALL cards/panels use `bg-[var(--surface)]` — NEVER colored backgrounds.
-Colors are for text/borders only (positive=nd-success, negative=nd-accent).
+Key rules:
+- All panels/cards use `bg-[var(--color-bg-1)]` or `bg-[var(--color-bg-2)]` — never colored backgrounds
+- Headings: `<h1>` = `font-light` (300), `<h2>` = `font-medium` (500), both on `var(--font-display)`
+- Radii: only `rounded-sm` / `rounded-md` / `rounded-lg` — never `xl` / `2xl` / `3xl`
+- Buttons use `.nx-btn .nx-btn-primary|-secondary|-ghost|-danger` — never `rounded-full` on buttons
+- Accent `#FF4D2E` is reserved for CTAs, active states, `.OS` brand fragment, chart highlights
+- The old Nothing Design System is deprecated — `.claude/agents/nothing-design.md` redirects here

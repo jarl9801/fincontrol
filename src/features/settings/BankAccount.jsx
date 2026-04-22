@@ -54,7 +54,7 @@ const BankAccount = ({ user, transactions }) => {
 
  return (
  <div className="space-y-6">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <div className="flex items-center gap-3">
  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-transparent">
  <Landmark className="text-[var(--text-primary)]" size={22} />
@@ -67,7 +67,7 @@ const BankAccount = ({ user, transactions }) => {
  </div>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <h3 className="mb-4 text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Datos de la cuenta</h3>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <div>
@@ -133,7 +133,7 @@ const BankAccount = ({ user, transactions }) => {
 
  {bankAccount && (
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <h3 className="nd-label text-[var(--text-secondary)]">Saldo inicial</h3>
  <Landmark className="text-[var(--text-primary)]" size={18} />
@@ -142,7 +142,7 @@ const BankAccount = ({ user, transactions }) => {
  <p className="mt-1 text-xs text-[var(--text-secondary)]">Al {bankAccount.balanceDate}</p>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <h3 className="nd-label text-[var(--text-secondary)]">Movimiento neto</h3>
  {realBalance.netMovement >= 0
@@ -156,7 +156,7 @@ const BankAccount = ({ user, transactions }) => {
  <p className="mt-1 text-xs text-[var(--text-secondary)]">{realBalance.transactionsCount} movimientos contabilizados</p>
  </div>
 
- <div className={`rounded-xl bg-[var(--surface)] p-5 ${realBalance.currentBalance < 0 ? 'border border-[var(--border-visible)]' : 'border border-[var(--border)]'}`}>
+ <div className={`rounded-md bg-[var(--surface)] p-5 ${realBalance.currentBalance < 0 ? 'border border-[var(--border-visible)]' : 'border border-[var(--border)]'}`}>
  <div className="flex items-center justify-between mb-2">
  <h3 className="nd-label text-[var(--text-secondary)]">Saldo actual</h3>
  <Landmark className={realBalance.currentBalance >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'} size={18} />
@@ -167,7 +167,7 @@ const BankAccount = ({ user, transactions }) => {
  <p className="mt-1 text-xs text-[var(--text-secondary)]">Saldo operativo proyectado al día de hoy</p>
  </div>
 
- <div className={`rounded-xl bg-[var(--surface)] p-5 ${parseFloat(creditUtilizationPct) > 80 ? 'border border-[var(--border-visible)]' : 'border border-[var(--border)]'}`}>
+ <div className={`rounded-md bg-[var(--surface)] p-5 ${parseFloat(creditUtilizationPct) > 80 ? 'border border-[var(--border-visible)]' : 'border border-[var(--border)]'}`}>
  <div className="flex items-center justify-between mb-2">
  <h3 className="nd-label text-[var(--text-secondary)]">Crédito disponible</h3>
  <CreditCard className={parseFloat(creditUtilizationPct) > 80 ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'} size={18} />
@@ -183,7 +183,7 @@ const BankAccount = ({ user, transactions }) => {
  )}
 
  {bankAccount && creditLimit < 0 && (
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <h3 className="mb-4 text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Utilización de línea de crédito</h3>
 
  <div className="mb-4">

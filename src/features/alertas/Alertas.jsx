@@ -212,7 +212,7 @@ const Alertas = ({ user }) => {
  return (
  <div className="space-y-6 animate-fadeIn">
  <div className="flex items-center justify-between">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Seguimiento</p>
  <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Centro de alertas</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Revisa vencimientos, riesgos y avisos operativos desde una sola bandeja.</p>
@@ -226,21 +226,21 @@ const Alertas = ({ user }) => {
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">Críticas</p>
  <AlertTriangle size={18} className="text-[var(--accent)]" />
  </div>
  <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--accent)]">{criticalCount}</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">Advertencias</p>
  <Clock size={18} className="text-[var(--warning)]" />
  </div>
  <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">{warningCount}</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">No leídas</p>
  <Bell size={18} className="text-[var(--text-primary)]" />
@@ -273,7 +273,7 @@ className={`px-3.5 py-1.5 rounded-md nd-label transition-all ${
  const IconComp = style.icon;
  return (
  <div key={alert.id}
- className={`flex items-start gap-3 px-4 py-3.5 rounded-xl border transition-colors ${!alert.auto && alert.read ? 'opacity-60' : ''}`}
+ className={`flex items-start gap-3 px-4 py-3.5 rounded-md border transition-colors ${!alert.auto && alert.read ? 'opacity-60' : ''}`}
  style={{ background: style.bg, borderColor: style.border }}
  >
  <IconComp size={18} style={{ color: style.color }} className="flex-shrink-0 mt-0.5" />
@@ -288,7 +288,7 @@ className={`px-3.5 py-1.5 rounded-md nd-label transition-all ${
  </div>
  {!alert.auto && !alert.read && (
  <button onClick={() => markAsRead(alert.id)}
- className="flex-shrink-0 rounded-xl p-1.5 text-[var(--text-secondary)] transition-colors hover:bg-transparent hover:text-[var(--text-primary)]">
+ className="flex-shrink-0 rounded-md p-1.5 text-[var(--text-secondary)] transition-colors hover:bg-transparent hover:text-[var(--text-primary)]">
  <Eye size={14} />
  </button>
  )}

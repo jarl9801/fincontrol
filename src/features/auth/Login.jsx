@@ -57,7 +57,7 @@ Plataforma financiera para operación diaria, control de caja y seguimiento de c
 </section>
 
 <section className="flex flex-1 items-center justify-center p-4 sm:p-8">
-<div className="w-full max-w-md rounded-xl border border-[var(--border-visible)] bg-[var(--surface)] p-8">
+<div className="w-full max-w-md rounded-md border border-[var(--border-visible)] bg-[var(--surface)] p-8">
 <div className="mb-8 flex flex-col items-center gap-3 text-center">
 <div className="flex h-14 w-14 items-center justify-center rounded-md border border-[var(--border-visible)] bg-[var(--black)]">
 <Briefcase size={24} className="text-[var(--text-primary)]" />

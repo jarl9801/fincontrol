@@ -106,11 +106,11 @@ const RolesManager = ({ userRole }) => {
  <div className="space-y-6">
  {/* Header */}
  <div className="flex items-center gap-3">
- <div className="p-3 bg-transparent rounded-xl">
+ <div className="p-3 bg-transparent rounded-md">
  <Shield className="text-[var(--warning)]" size={24} />
  </div>
  <div>
- <h2 className="text-xl font-bold text-[var(--text-primary)]">Roles y Permisos</h2>
+ <h2 className="text-xl font-medium text-[var(--text-primary)]">Roles y Permisos</h2>
  <p className="text-sm text-[var(--text-secondary)]">Gestiona usuarios, roles y permisos del sistema</p>
  </div>
  </div>
@@ -288,7 +288,7 @@ const RolesManager = ({ userRole }) => {
  </div>
 
  {/* Info Box */}
- <div className="bg-transparent border border-[var(--border-visible)] rounded-xl p-4 flex items-start gap-3">
+ <div className="bg-transparent border border-[var(--border-visible)] rounded-md p-4 flex items-start gap-3">
  <Info className="text-[var(--interactive)] flex-shrink-0 mt-0.5" size={20} />
  <div>
  <p className="text-sm text-[var(--interactive)] font-medium">Nota sobre seguridad</p>

@@ -108,7 +108,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
 
  return (
  <div className="space-y-6 animate-fadeIn">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center gap-4 mb-5">
  <button
  onClick={onClose}
@@ -147,7 +147,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
  </div>
 
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <h4 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Tendencia mensual</h4>
  <div className="h-56">
  <ResponsiveContainer width="100%" height="100%">
@@ -164,7 +164,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
  </div>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <h4 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Distribución de gastos</h4>
  <div className="h-56">
  {categoryDistribution.length > 0 ? (
@@ -193,7 +193,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
  </div>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 lg:col-span-2">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 lg:col-span-2">
  <h4 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Evolución del margen mensual</h4>
  <div className="h-56">
  <ResponsiveContainer width="100%" height="100%">
@@ -213,7 +213,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
  </div>
  </div>
 
- <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="flex border-b border-[var(--border)]">
  <button
  onClick={() => setActiveTab('income')}

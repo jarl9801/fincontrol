@@ -53,7 +53,7 @@ const AuditLog = ({ user }) => {
  return (
  <div className="space-y-6 animate-fadeIn">
  <div>
- <h2 className="text-xl font-bold text-white tracking-tight">Registro de Auditoría</h2>
+ <h2 className="text-xl font-medium text-white tracking-tight">Registro de Auditoría</h2>
  <p className="text-[13px] text-[var(--text-disabled)] mt-0.5">Historial inmutable de todas las acciones</p>
  </div>
 
@@ -85,7 +85,7 @@ const AuditLog = ({ user }) => {
  const count = logs.filter(l => l.action === key).length;
  const IconComp = style.icon;
  return (
- <div key={key} className="bg-[var(--surface)] rounded-xl p-4 border border-[var(--border)]">
+ <div key={key} className="bg-[var(--surface)] rounded-md p-4 border border-[var(--border)]">
  <div className="flex items-center gap-2 mb-2">
  <div className="p-1.5 rounded-lg" style={{ background: style.bg }}>
  <IconComp size={14} style={{ color: style.color }} />

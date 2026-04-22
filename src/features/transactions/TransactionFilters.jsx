@@ -74,14 +74,14 @@ const TransactionFilters = ({
  onResetFilters,
 }) => {
  return (
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-4 ">
  <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
  <div className="relative flex-1">
  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" size={16} />
  <input
  type="text"
  placeholder="Buscar por descripcion, proyecto, documento, contraparte o comentarios..."
- className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] py-2.5 pl-10 pr-10 text-[13px] text-[var(--text-primary)] outline-none transition-all placeholder:text-[var(--text-disabled)] focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] py-2.5 pl-10 pr-10 text-[13px] text-[var(--text-primary)] outline-none transition-all placeholder:text-[var(--text-disabled)] focus:border-[var(--border-visible)] focus:bg-[var(--surface)]"
  value={searchTerm}
  onChange={(event) => setSearchTerm(event.target.value)}
  />
@@ -151,7 +151,7 @@ const TransactionFilters = ({
  </div>
 
  {showFilters && (
- <div className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 animate-fadeIn">
+ <div className="mt-4 rounded-md border border-[var(--border)] bg-[var(--surface)] p-4 animate-fadeIn">
  <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
  <div>
  <h3 className="text-[14px] font-semibold text-[var(--text-primary)]">Filtros de revision</h3>

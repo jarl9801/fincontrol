@@ -156,7 +156,7 @@ const UserProfile = ({ user, userRole }) => {
  <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
  </label>
  </div>
- <h2 className="text-lg font-bold text-white mt-3">{user?.displayName || user?.email}</h2>
+ <h2 className="text-lg font-medium text-white mt-3">{user?.displayName || user?.email}</h2>
  <span className={`mt-1.5 inline-flex px-3 py-1 rounded-full text-[11px] font-semibold border ${role.color}`}>
  <Shield size={12} className="mr-1.5" /> {role.label}
  </span>
@@ -164,7 +164,7 @@ const UserProfile = ({ user, userRole }) => {
 
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Personal Info */}
- <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] overflow-hidden">
+ <div className="bg-[var(--surface)] rounded-md border border-[var(--border)] overflow-hidden">
  <div className="px-5 py-3.5 border-b border-[var(--border)] flex items-center gap-2">
  <User size={15} className="text-[var(--interactive)]" />
  <h3 className="text-[13px] font-semibold text-[var(--text-secondary)]">Información Personal</h3>
@@ -200,7 +200,7 @@ const UserProfile = ({ user, userRole }) => {
  </div>
 
  {/* Change Password */}
- <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] overflow-hidden">
+ <div className="bg-[var(--surface)] rounded-md border border-[var(--border)] overflow-hidden">
  <div className="px-5 py-3.5 border-b border-[var(--border)] flex items-center gap-2">
  <Lock size={15} className="text-[var(--warning)]" />
  <h3 className="text-[13px] font-semibold text-[var(--text-secondary)]">Cambiar Contraseña</h3>
@@ -284,7 +284,7 @@ const UserProfile = ({ user, userRole }) => {
  </div>
 
  {/* Preferences */}
- <div className="bg-[var(--surface)] rounded-xl border border-[var(--border)] overflow-hidden">
+ <div className="bg-[var(--surface)] rounded-md border border-[var(--border)] overflow-hidden">
  <div className="px-5 py-3.5 border-b border-[var(--border)]">
  <h3 className="text-[13px] font-semibold text-[var(--text-secondary)]">Preferencias</h3>
  </div>

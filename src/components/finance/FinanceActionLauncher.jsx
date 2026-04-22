@@ -314,7 +314,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
 
  return (
  <div className="fixed inset-0 z-[220] flex items-center justify-center bg-[var(--surface)] p-4 ">
- <div className="relative flex max-h-[92vh] w-full max-w-6xl overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="relative flex max-h-[92vh] w-full max-w-6xl overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <button
  type="button"
  aria-label="Cerrar panel de registro"
@@ -344,7 +344,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  key={action.id}
  type="button"
  onClick={() => setActiveAction(action.id)}
- className={`w-full rounded-xl border px-4 py-4 text-left transition-all ${
+ className={`w-full rounded-md border px-4 py-4 text-left transition-all ${
  isActive
  ? 'border-[var(--border-visible)] bg-[var(--surface)] '
  : 'border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface)]'
@@ -863,7 +863,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  )}
  </div>
 
- <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
+ <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
  <div className="flex items-center gap-3 text-[var(--text-secondary)]">
  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--surface)] text-[var(--text-primary)]">
  <CalendarDays size={16} />

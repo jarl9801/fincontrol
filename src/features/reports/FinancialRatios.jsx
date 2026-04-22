@@ -66,11 +66,11 @@ const RatioCard = ({ title, value, unit = '', benchmark, inverse = false, descri
  const gaugeData = [{ name: 'value', value: gaugePercent, fill: status === 'good' ? 'var(--success)' : status === 'warning' ? 'var(--warning)' : 'var(--accent)' }];
 
  return (
- <div className={`overflow-hidden rounded-xl border bg-[var(--surface)] ${colors.border}`}>
+ <div className={`overflow-hidden rounded-md border bg-[var(--surface)] ${colors.border}`}>
  <div className="p-4">
  <div className="mb-3 flex items-start justify-between gap-4">
  <div className="flex items-center gap-2">
- <div className={`rounded-xl p-2 ${colors.bg}`}>
+ <div className={`rounded-md p-2 ${colors.bg}`}>
  <IconComponent className={colors.icon} size={18} />
  </div>
  <div>
@@ -195,7 +195,7 @@ const FinancialRatios = ({ user }) => {
 
  return (
  <div className="space-y-6 pb-12">
- <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="mb-3 nd-label text-[var(--text-secondary)]">Ratios financieros</p>
@@ -257,7 +257,7 @@ const FinancialRatios = ({ user }) => {
 
  <div>
  <div className="mb-4 flex items-center gap-3">
- <div className="rounded-xl bg-[var(--surface)] p-2">
+ <div className="rounded-md bg-[var(--surface)] p-2">
  <Wallet className="text-[var(--text-primary)]" size={18} />
  </div>
  <div>
@@ -275,7 +275,7 @@ const FinancialRatios = ({ user }) => {
 
  <div>
  <div className="mb-4 flex items-center gap-3">
- <div className="rounded-xl bg-transparent p-2">
+ <div className="rounded-md bg-transparent p-2">
  <Clock className="text-[var(--warning)]" size={18} />
  </div>
  <div>
@@ -293,7 +293,7 @@ const FinancialRatios = ({ user }) => {
 
  <div>
  <div className="mb-4 flex items-center gap-3">
- <div className="rounded-xl bg-transparent p-2">
+ <div className="rounded-md bg-transparent p-2">
  <Percent className="text-[var(--success)]" size={18} />
  </div>
  <div>
@@ -309,9 +309,9 @@ const FinancialRatios = ({ user }) => {
  </div>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="mb-6 flex items-center gap-3">
- <div className="rounded-xl bg-[var(--surface)] p-2">
+ <div className="rounded-md bg-[var(--surface)] p-2">
  <BarChart3 className="text-[var(--text-primary)]" size={18} />
  </div>
  <div>
@@ -341,7 +341,7 @@ const FinancialRatios = ({ user }) => {
  </ResponsiveContainer>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-start gap-3">
  <Info className="mt-0.5 text-[var(--text-primary)]" size={18} />
  <div className="grid gap-3 md:grid-cols-3">

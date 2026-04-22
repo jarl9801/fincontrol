@@ -106,7 +106,7 @@ const KpiCard = ({ title, value, subtitle, tone = 'neutral', icon }) => {
  };
 
  return (
- <div className={`rounded-xl border border-[var(--border)] p-5 ${palette.card}`}>
+ <div className={`rounded-md border border-[var(--border)] p-5 ${palette.card}`}>
  <div className="mb-3 flex items-center justify-between gap-3">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">{title}</p>
@@ -122,7 +122,7 @@ const KpiCard = ({ title, value, subtitle, tone = 'neutral', icon }) => {
 };
 
 const Section = ({ title, subtitle, children, action }) => (
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-5 flex items-start justify-between gap-4">
  <div>
  <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">{title}</h3>
@@ -275,7 +275,7 @@ const ProyectoDashboard = ({ user }) => {
 
  return (
  <div className="space-y-6 pb-12 animate-fadeIn">
- <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="grid gap-5 xl:grid-cols-[1.1fr,0.9fr]">
  <div>
  <p className="mb-3 nd-label text-[var(--text-secondary)]">Proyectos</p>
@@ -292,7 +292,7 @@ const ProyectoDashboard = ({ user }) => {
  <select
  value={effectiveProjectId}
  onChange={(event) => setSelectedProjectId(event.target.value)}
- className="w-full appearance-none rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 pr-10 text-[14px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
+ className="w-full appearance-none rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3 pr-10 text-[14px] text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
  >
  {availableProjects.length === 0 && <option value="">Sin proyectos activos</option>}
  {availableProjects.map((project) => (
@@ -319,7 +319,7 @@ const ProyectoDashboard = ({ user }) => {
  </section>
 
  {!selectedProject ? (
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-16 text-center ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-16 text-center ">
  <FolderKanban size={40} className="mx-auto text-[var(--text-disabled)]" />
  <p className="mt-4 text-[16px] font-semibold text-[var(--text-primary)]">No hay proyecto seleccionado</p>
  <p className="mt-2 text-[13px] text-[var(--text-secondary)]">Selecciona un proyecto para revisar su comportamiento financiero.</p>

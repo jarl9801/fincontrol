@@ -51,7 +51,7 @@ const ConfirmModal = ({
 
  return (
  <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeIn" role="dialog" aria-modal="true">
- <div className="bg-[var(--surface)] border border-[var(--border-visible)] rounded-xl w-full max-w-md overflow-hidden animate-scaleIn">
+ <div className="bg-[var(--surface)] border border-[var(--border-visible)] rounded-md w-full max-w-md overflow-hidden animate-scaleIn">
  <div className="px-6 py-4 border-b border-[var(--border)] flex justify-between items-center">
  <h3 className="nd-mono text-[13px] uppercase tracking-[0.06em] text-[var(--text-primary)]">{title}</h3>
  <button onClick={handleClose} className="text-[var(--text-disabled)] hover:text-[var(--text-secondary)] transition-colors" aria-label="Cerrar">

@@ -115,7 +115,7 @@ const PartnerFormModal = ({
  role="dialog"
  aria-modal="true"
  >
- <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
+ <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-md border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
  {/* Header */}
  <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-5">
  <div>
@@ -150,7 +150,7 @@ const PartnerFormModal = ({
  type="button"
  onClick={() => setFormData({ ...formData, type: value })}
  className={`
- flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
+ flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-md transition-all
  ${formData.type === value
  ? 'bg-[var(--surface-raised)] text-[var(--text-primary)] '
  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}
@@ -386,7 +386,7 @@ const PartnerFormModal = ({
  type="submit"
  disabled={submitting}
  className={`
- flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-white
+ flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-md font-bold text-white
  transition-all duration-200 
  bg-[var(--text-primary)] hover:opacity-80
  ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:'}

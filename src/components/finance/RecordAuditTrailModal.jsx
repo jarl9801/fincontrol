@@ -106,7 +106,7 @@ const RecordAuditTrailModal = ({ isOpen, onClose, record, logs = [], loading = f
 
  return (
  <div className="fixed inset-0 z-[250] flex items-center justify-center bg-[var(--surface)] p-4 ">
- <div className="flex max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="flex max-h-[88vh] w-full max-w-4xl flex-col overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="flex items-start justify-between border-b border-[var(--border)] px-6 py-5">
  <div>
  <p className="nd-label text-[var(--text-secondary)]">Trazabilidad del registro</p>

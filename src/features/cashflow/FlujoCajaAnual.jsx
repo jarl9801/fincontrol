@@ -80,7 +80,7 @@ function KpiCard({ label, value, color, prefix = '', negative = false, signed = 
     : formattedValue;
 
   return (
-    <div className="rounded-xl border border-[var(--border)] p-4" style={{ background: 'var(--surface)' }}>
+    <div className="rounded-md border border-[var(--border)] p-4" style={{ background: 'var(--surface)' }}>
       <p className="nd-label mb-1" style={{ color: 'var(--text-secondary)' }}>{label}</p>
       <p className="nd-display text-lg font-bold leading-tight" style={{ color }}>{signed ? signedValue : formattedValue}</p>
       {sub && <p className="text-[10px] mt-1" style={{ color: 'var(--text-disabled)' }}>{sub}</p>}
@@ -184,13 +184,13 @@ export default function FlujoCajaAnual({ user }) {
     <div className="space-y-6 pb-12">
       {/* ── HEADER ── */}
       <div
-        className="rounded-xl border border-[var(--border)] px-6 py-5 flex items-center justify-between"
+        className="rounded-md border border-[var(--border)] px-6 py-5 flex items-center justify-between"
         style={{ background: 'var(--surface)', borderBottom: '2px solid var(--success)' }}
       >
         <div className="flex items-center gap-3">
           <TableProperties className="h-5 w-5" style={{ color: 'var(--success)' }} />
           <div>
-            <h1 className="nd-display text-xl font-bold text-[var(--text-display)]">Flujo de Caja Anual</h1>
+            <h1 className="nd-display text-xl font-light text-[var(--text-display)]">Flujo de Caja Anual</h1>
             <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>Vista consolidada por mes y categoría</p>
           </div>
         </div>
@@ -223,7 +223,7 @@ export default function FlujoCajaAnual({ user }) {
       </div>
 
       {/* ── MAIN TABLE ── */}
-      <section className="rounded-xl border border-[var(--border)] overflow-hidden" style={{ background: 'var(--surface)' }}>
+      <section className="rounded-md border border-[var(--border)] overflow-hidden" style={{ background: 'var(--surface)' }}>
         <div className="px-5 py-4 border-b border-[var(--border)]">
           <h2 className="nd-label" style={{ color: 'var(--text-primary)' }}>
             Estado de Cuenta por Mes
@@ -332,7 +332,7 @@ export default function FlujoCajaAnual({ user }) {
       {/* ── CxC / CxP PANELS ── */}
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         {/* CxC Panel */}
-        <div className="rounded-xl border border-[var(--border)] overflow-hidden" style={{ background: 'var(--surface)' }}>
+        <div className="rounded-md border border-[var(--border)] overflow-hidden" style={{ background: 'var(--surface)' }}>
           <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)]">
             <span className="font-bold text-sm" style={{ color: 'var(--interactive)' }}>CXC PENDIENTES</span>
             <span className="font-bold text-base" style={{ color: 'var(--success)' }}>€{formatCurrency(totalCxC)}</span>
@@ -376,7 +376,7 @@ export default function FlujoCajaAnual({ user }) {
         </div>
 
         {/* CxP Panel */}
-        <div className="rounded-xl border border-[var(--border)] overflow-hidden" style={{ background: 'var(--surface)' }}>
+        <div className="rounded-md border border-[var(--border)] overflow-hidden" style={{ background: 'var(--surface)' }}>
           <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)]">
             <span className="font-bold text-sm" style={{ color: 'var(--warning)' }}>CXP PENDIENTES</span>
             <span className="font-bold text-base" style={{ color: 'var(--accent)' }}>€{formatCurrency(totalCxP)}</span>

@@ -39,7 +39,7 @@ const TooltipCard = ({ active, payload, label }) => {
 };
 
 const Section = ({ title, subtitle, children, help }) => (
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-5">
  <div className="flex items-center gap-2">
  <h3 className="nd-display text-[18px] font-semibold tracking-tight text-[var(--text-display)]">{title}</h3>
@@ -93,7 +93,7 @@ const CashFlow = ({ user }) => {
 
  return (
  <div className="space-y-6 pb-12">
- <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
  <div>
  <p className="nd-label text-[var(--text-secondary)] mb-3">Tesorería</p>
@@ -105,7 +105,7 @@ const CashFlow = ({ user }) => {
  </p>
  </div>
  <div className="grid gap-3 sm:grid-cols-2">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
  <div className="flex items-center gap-1.5">
  <p className="nd-label text-[var(--text-disabled)]">Caja actual</p>
  <HelpButton title="Caja actual" size={13}>
@@ -115,7 +115,7 @@ const CashFlow = ({ user }) => {
  </div>
  <p className="mt-2 nd-display text-[30px] font-semibold text-[var(--text-display)]">{formatCurrency(metrics.currentCash)}</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
  <div className="flex items-center gap-1.5">
  <p className="nd-label text-[var(--text-disabled)]">Liquidez proyectada</p>
  <HelpButton title="Liquidez proyectada" size={13}>
@@ -126,7 +126,7 @@ const CashFlow = ({ user }) => {
  <p className="mt-2 nd-display text-[30px] font-semibold text-[var(--text-display)]">{formatCurrency(metrics.projectedLiquidity)}</p>
  </div>
  <div
- className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4 cursor-pointer hover: transition-transform duration-200"
+ className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-4 cursor-pointer hover: transition-transform duration-200"
  onClick={() => movementsRef.current?.scrollIntoView({ behavior: 'smooth' })}
  role="button"
  tabIndex={0}
@@ -144,7 +144,7 @@ const CashFlow = ({ user }) => {
  </p>
  </div>
  <div
- className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4 cursor-pointer hover: transition-transform duration-200"
+ className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-4 cursor-pointer hover: transition-transform duration-200"
  onClick={() => reconciliationRef.current?.scrollIntoView({ behavior: 'smooth' })}
  role="button"
  tabIndex={0}
@@ -345,7 +345,7 @@ const CashFlow = ({ user }) => {
  </Section>
 
  <div
- className="cursor-pointer hover: transition-transform duration-200 rounded-xl"
+ className="cursor-pointer hover: transition-transform duration-200 rounded-md"
  onClick={() => navigate('/cxc')}
  role="button"
  tabIndex={0}
@@ -369,7 +369,7 @@ const CashFlow = ({ user }) => {
  </div>
 
  <div
- className="cursor-pointer hover: transition-transform duration-200 rounded-xl"
+ className="cursor-pointer hover: transition-transform duration-200 rounded-md"
  onClick={() => navigate('/cxp')}
  role="button"
  tabIndex={0}

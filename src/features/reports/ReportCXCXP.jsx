@@ -117,7 +117,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  <div className="space-y-6">
  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
  <div>
- <h2 className="text-xl font-bold text-[var(--text-primary)]">{cfg.title}</h2>
+ <h2 className="text-xl font-medium text-[var(--text-primary)]">{cfg.title}</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Documentos abiertos pendientes de cobro o pago.</p>
  </div>
  <button
@@ -131,7 +131,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  </div>
 
  <div className="grid gap-4 md:grid-cols-4">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-2 flex items-center justify-between">
  <span className="text-sm font-semibold text-[var(--text-secondary)]">{cfg.totalLabel}</span>
  <TrendIcon size={18} style={{ color: cfg.primaryColor }} />
@@ -139,7 +139,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  <p className={`text-2xl font-semibold ${cfg.accentClass}`}>{formatCurrency(totals.totalAmount)}</p>
  <p className="mt-1 text-xs text-[var(--text-disabled)]">{rows.length} documentos abiertos</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-2 flex items-center justify-between">
  <span className="text-sm font-semibold text-[var(--text-secondary)]">Vencido</span>
  <AlertCircle size={18} className="text-[var(--warning)]" />
@@ -147,7 +147,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  <p className="text-2xl font-semibold text-[var(--warning)]">{formatCurrency(totals.overdueAmount)}</p>
  <p className="mt-1 text-xs text-[var(--text-disabled)]">{totals.overdueCount} documentos</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-2 flex items-center justify-between">
  <span className="text-sm font-semibold text-[var(--text-secondary)]">Crítico (+90d)</span>
  <Clock size={18} className="text-[var(--warning)]" />
@@ -155,7 +155,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  <p className="text-2xl font-semibold text-[var(--warning)]">{formatCurrency(totals.criticalAmount)}</p>
  <p className="mt-1 text-xs text-[var(--text-disabled)]">{totals.criticalCount} documentos</p>
  </div>
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-2 flex items-center justify-between">
  <span className="text-sm font-semibold text-[var(--text-secondary)]">Al corriente</span>
  <TrendIcon size={18} className="text-[var(--text-primary)]" />
@@ -166,7 +166,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  </div>
 
  <div className="grid gap-6 lg:grid-cols-2">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <h3 className="mb-4 text-lg font-semibold text-[var(--text-primary)]">Antigüedad</h3>
  <ResponsiveContainer width="100%" height={260}>
  <BarChart data={agingData}>
@@ -182,11 +182,11 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  </ResponsiveContainer>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <h3 className="mb-4 text-lg font-semibold text-[var(--text-primary)]">Resumen por antigüedad</h3>
  <div className="space-y-3">
  {agingData.map((bucket) => (
- <div key={bucket.name} className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
+ <div key={bucket.name} className="flex items-center justify-between rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
  <div>
  <p className="text-sm font-semibold text-[var(--text-primary)]">{bucket.name}</p>
  <p className="text-xs text-[var(--text-secondary)]">{bucket.count} documentos</p>
@@ -198,7 +198,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  </div>
  </div>
 
- <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="border-b border-[var(--border)] px-5 py-4">
  <h3 className="text-lg font-semibold text-[var(--text-primary)]">{cfg.detailTitle}</h3>
  </div>

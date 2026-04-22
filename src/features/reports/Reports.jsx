@@ -48,7 +48,7 @@ const StatCard = ({ title, value, subtitle, accent, icon, delta }) => {
 
  return (
  <div
- className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 "
+ className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 "
  >
  <div className="mb-4 flex items-start justify-between">
  <div>
@@ -279,7 +279,7 @@ const Reports = ({ user }) => {
 
  return (
  <div className="space-y-6 pb-12">
- <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="mb-3 nd-label text-[var(--text-secondary)]">Estado de resultados</p>
@@ -299,7 +299,7 @@ const Reports = ({ user }) => {
  </div>
  </section>
 
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex flex-wrap items-center justify-between gap-4">
  <div className="flex items-center gap-2 flex-wrap">
  <div className="relative" ref={dropdownRef}>
@@ -462,7 +462,7 @@ const Reports = ({ user }) => {
  </div>
 
  <div className="grid gap-6 xl:grid-cols-[1.3fr_0.9fr]">
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4">
  <p className="nd-label text-[var(--text-disabled)]">Tendencia</p>
  <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Caja realizada {trendYear}</h3>
@@ -484,7 +484,7 @@ const Reports = ({ user }) => {
  </ResponsiveContainer>
  </section>
 
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4">
  <p className="nd-label text-[var(--text-disabled)]">Top proyectos</p>
  <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Margen realizado por proyecto</h3>
@@ -515,7 +515,7 @@ const Reports = ({ user }) => {
  </div>
 
  <div className="grid gap-6 xl:grid-cols-2">
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">Ingresos</p>
@@ -527,7 +527,7 @@ const Reports = ({ user }) => {
  </div>
  <div className="space-y-3">
  {groupedInflows.map((row) => (
- <div key={row.name} className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
+ <div key={row.name} className="flex items-center justify-between rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
  <span className="text-sm text-[var(--text-primary)]">{row.name}</span>
  <span className="text-sm font-semibold text-[var(--success)]">{formatCurrency(row.amount)}</span>
  </div>
@@ -536,7 +536,7 @@ const Reports = ({ user }) => {
  </div>
  </section>
 
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">Gastos</p>
@@ -548,7 +548,7 @@ const Reports = ({ user }) => {
  </div>
  <div className="space-y-3">
  {groupedOutflows.map((row) => (
- <div key={row.name} className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
+ <div key={row.name} className="flex items-center justify-between rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
  <span className="text-sm text-[var(--text-primary)]">{row.name}</span>
  <span className="text-sm font-semibold text-[var(--accent)]">{formatCurrency(row.amount)}</span>
  </div>
@@ -559,7 +559,7 @@ const Reports = ({ user }) => {
  </div>
 
  {/* VAT Summary Section */}
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">IVA Alemán (Umsatzsteuer)</p>

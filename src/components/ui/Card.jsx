@@ -14,7 +14,7 @@ const Card = ({ title, amount, icon, subtext, alert, trend }) => {
  alert
  ? 'border-l-2 border-l-[var(--accent)] border-[var(--border)] bg-[var(--surface)]'
  : 'border-[var(--border)] bg-[var(--surface)] hover:border-[var(--border-visible)]'
- } rounded-xl`}
+ } rounded-md`}
  >
  <div className="flex items-start justify-between">
  <div className="flex-1 min-w-0">

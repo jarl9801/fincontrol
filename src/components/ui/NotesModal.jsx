@@ -30,7 +30,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
 
  return (
  <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true">
- <div className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-4">
  <div>
  <h3 className="flex items-center gap-2 text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">

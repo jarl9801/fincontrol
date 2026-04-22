@@ -162,11 +162,11 @@ const BackupManager = ({ user }) => {
  <div className="space-y-6">
  {/* Header */}
  <div className="flex items-center gap-3">
- <div className="p-3 bg-transparent rounded-xl">
+ <div className="p-3 bg-transparent rounded-md">
  <Database className="text-[var(--success)]" size={24} />
  </div>
  <div>
- <h2 className="text-xl font-bold text-[var(--text-primary)]">Backup & Restauracion</h2>
+ <h2 className="text-xl font-medium text-[var(--text-primary)]">Backup & Restauracion</h2>
  <p className="text-sm text-[var(--text-secondary)]">Exporta e importa los datos de FinControl</p>
  </div>
  </div>
@@ -217,7 +217,7 @@ const BackupManager = ({ user }) => {
  </p>
 
  {!importPreview ? (
- <div className="border-2 border-dashed border-[var(--border)] rounded-xl p-8 text-center hover:border-[var(--border-visible)] transition-colors">
+ <div className="border-2 border-dashed border-[var(--border)] rounded-md p-8 text-center hover:border-[var(--border-visible)] transition-colors">
  <HardDrive className="mx-auto text-[var(--text-disabled)] mb-3" size={36} />
  <p className="text-sm text-[var(--text-secondary)] mb-3">Arrastra un archivo o haz clic para seleccionar</p>
  <label className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--surface-raised)] hover:bg-[var(--border)] text-[var(--text-primary)] rounded-lg cursor-pointer transition-colors text-sm font-medium">
@@ -235,7 +235,7 @@ const BackupManager = ({ user }) => {
  ) : (
  <div className="space-y-4">
  {/* Preview */}
- <div className="bg-[var(--surface-raised)] rounded-xl p-4 border border-[var(--border)]">
+ <div className="bg-[var(--surface-raised)] rounded-md p-4 border border-[var(--border)]">
  <div className="flex items-center gap-2 mb-3">
  <Eye className="text-[var(--warning)]" size={18} />
  <h4 className="text-sm font-bold text-[var(--text-primary)]">Vista Previa del Backup</h4>
@@ -352,7 +352,7 @@ const BackupManager = ({ user }) => {
  </div>
 
  {/* Info Box */}
- <div className="bg-transparent border border-[var(--border-visible)] rounded-xl p-4 flex items-start gap-3">
+ <div className="bg-transparent border border-[var(--border-visible)] rounded-md p-4 flex items-start gap-3">
  <Info className="text-[var(--interactive)] flex-shrink-0 mt-0.5" size={20} />
  <div>
  <p className="text-sm text-[var(--interactive)] font-medium">Backups automaticos</p>

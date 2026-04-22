@@ -32,7 +32,7 @@ const ConfiguracionUnified = ({ user, transactions }) => {
 
  return (
  <div className="space-y-6 animate-fadeIn">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-2 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-2 ">
  <div className="flex items-center gap-1 overflow-x-auto">
  {TABS.map(tab => {
  const Icon = tab.icon;

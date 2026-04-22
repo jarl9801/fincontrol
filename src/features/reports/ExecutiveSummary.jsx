@@ -19,7 +19,7 @@ const YEAR_OPTIONS = [
 const Card = ({ title, value, subtitle, accent, icon }) => {
  const IconComponent = icon;
  return (
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">{title}</p>
@@ -108,7 +108,7 @@ const ExecutiveSummary = ({ user }) => {
  <Card title="Runway" value={metrics.runwayMonths == null ? 'N/A' : `${metrics.runwayMonths.toFixed(1)}m`} subtitle="Caja actual sobre egreso promedio 90d." accent="var(--warning)" icon={ShieldAlert} />
  </div>
 
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-5">
  <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Lectura ejecutiva</h3>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Resumen del estado operativo financiero a partir de la operación registrada.</p>
@@ -117,7 +117,7 @@ const ExecutiveSummary = ({ user }) => {
  {alerts.map((alert) => (
  <div
  key={alert.id}
- className={`rounded-xl border px-4 py-4 ${
+ className={`rounded-md border px-4 py-4 ${
  alert.tone === 'good'
  ? 'border-[var(--border-visible)] bg-transparent'
  : alert.tone === 'warning'
@@ -133,7 +133,7 @@ const ExecutiveSummary = ({ user }) => {
  </section>
 
  <section className="grid gap-6 lg:grid-cols-[1.05fr,0.95fr]">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-5">
  <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Frente de vencimientos</h3>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Prioridades inmediatas de caja.</p>
@@ -160,7 +160,7 @@ const ExecutiveSummary = ({ user }) => {
  </div>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-5">
  <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Recomendaciones</h3>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Acciones sugeridas para la siguiente semana operativa.</p>

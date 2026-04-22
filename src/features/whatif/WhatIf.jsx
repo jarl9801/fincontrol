@@ -164,7 +164,7 @@ function InsightPanel({ runwayMonths }) {
 const CustomTooltip = ({ active, payload, label }) => {
  if (!active || !payload?.length) return null;
  return (
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 ">
  <p className="mb-1 text-[11px] font-semibold text-[var(--text-secondary)]">{label}</p>
  {payload.map((entry) => (
  <p key={entry.dataKey} className="nd-mono text-[11px] tabular-nums" style={{ color: entry.color }}>
@@ -274,7 +274,7 @@ export default function WhatIf({ user }) {
  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
  <div>
  <div className="flex items-center gap-2">
- <h1 className="text-[22px] font-bold tracking-tight text-[var(--text-primary)]">Simulador What-If</h1>
+ <h1 className="text-[22px] font-light tracking-tight text-[var(--text-primary)]">Simulador What-If</h1>
  <HelpButton title="Simulador What-If">
  <p>Permite simular escenarios financieros modificando variables clave. Los resultados son estimaciones basadas en datos actuales y no representan proyecciones reales.</p>
  </HelpButton>

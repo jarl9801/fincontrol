@@ -64,7 +64,7 @@ const ReportCXC = ({ transactions }) => {
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center justify-between mb-2">
  <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Total por cobrar</h3>
  <TrendingUp className="text-[var(--success)]" size={20} />
@@ -73,7 +73,7 @@ const ReportCXC = ({ transactions }) => {
  <p className="mt-1 text-xs text-[var(--text-secondary)]">{receivables.length} facturas</p>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center justify-between mb-2">
  <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Monto vencido</h3>
  <AlertCircle className="text-[var(--accent)]" size={20} />
@@ -82,7 +82,7 @@ const ReportCXC = ({ transactions }) => {
  <p className="mt-1 text-xs text-[var(--text-secondary)]">{agingAnalysis.over90.count} facturas</p>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center justify-between mb-2">
  <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Crítico (90+ días)</h3>
  <Clock className="text-[var(--warning)]" size={20} />
@@ -91,7 +91,7 @@ const ReportCXC = ({ transactions }) => {
  <p className="mt-1 text-xs text-[var(--text-secondary)]">{agingAnalysis.days60_90.count + agingAnalysis.over90.count} facturas</p>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center justify-between mb-2">
  <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Al corriente</h3>
  <TrendingUp className="text-[var(--success)]" size={20} />
@@ -102,7 +102,7 @@ const ReportCXC = ({ transactions }) => {
  </div>
 
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <h3 className="mb-4 text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Análisis de antigüedad</h3>
  <ResponsiveContainer width="100%" height={250}>
  <BarChart data={chartData}>
@@ -115,7 +115,7 @@ const ReportCXC = ({ transactions }) => {
  </ResponsiveContainer>
  </div>
 
- <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <h3 className="mb-4 text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Resumen por antigüedad</h3>
  <table className="w-full">
  <thead>
@@ -143,7 +143,7 @@ const ReportCXC = ({ transactions }) => {
  </div>
  </div>
 
- <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] ">
+ <div className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="border-b border-[var(--border)] px-6 py-4">
  <h3 className="text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Detalle de cuentas por cobrar</h3>
  </div>

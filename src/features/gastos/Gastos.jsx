@@ -36,7 +36,7 @@ const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
 
  return (
  <div
- className={`rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ${onClick ? 'cursor-pointer hover: transition-transform duration-200' : ''}`}
+ className={`rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ${onClick ? 'cursor-pointer hover: transition-transform duration-200' : ''}`}
  onClick={onClick}
  role={onClick ? 'button' : undefined}
  tabIndex={onClick ? 0 : undefined}
@@ -155,7 +155,7 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
 
  return (
  <div className="space-y-6 pb-12">
- <section className="rounded-xl border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="mb-3 nd-label text-[var(--warning)]">Gastos</p>
@@ -184,7 +184,7 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overduePayables.length} documentos fuera de plazo`} accent="var(--accent)" icon={AlertTriangle} onClick={() => setStatusFilter('overdue')} />
  </div>
 
- <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
  <div className="relative w-full xl:max-w-sm">
  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" size={16} />
@@ -264,7 +264,7 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  <button
  type="button"
  onClick={() => setSelectedRow(row)}
- className="rounded-xl border border-[var(--border)] px-3 py-2 text-xs font-semibold text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface)]"
+ className="rounded-md border border-[var(--border)] px-3 py-2 text-xs font-semibold text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface)]"
  >
  Abono
  </button>
@@ -272,7 +272,7 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  type="button"
  onClick={() => handleSettle(row)}
  disabled={loadingId === row.id}
- className="rounded-xl bg-[var(--accent)] px-3 py-2 text-xs font-semibold text-[var(--text-primary)] transition-colors hover:bg-[var(--accent)] disabled:opacity-50"
+ className="rounded-md bg-[var(--accent)] px-3 py-2 text-xs font-semibold text-[var(--text-primary)] transition-colors hover:bg-[var(--accent)] disabled:opacity-50"
  >
  {loadingId === row.id ? 'Procesando...' : 'Liquidar'}
  </button>

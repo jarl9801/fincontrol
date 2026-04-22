@@ -463,7 +463,7 @@ const TransactionFormModal = ({
 
  return (
  <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 p-4 animate-fadeIn" role="dialog" aria-modal="true">
- <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
+ <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-md border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
  <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-5">
  <div>
  <h3 className="text-xl font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
@@ -488,7 +488,7 @@ const TransactionFormModal = ({
  type="button"
  onClick={() => handleTypeChange('income')}
  className={`
- flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
+ flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-md transition-all
  ${formData.type === 'income' 
  ? 'bg-[var(--surface-raised)] text-[var(--success)] ' 
  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}
@@ -501,7 +501,7 @@ const TransactionFormModal = ({
  type="button"
  onClick={() => handleTypeChange('expense')}
  className={`
- flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition-all
+ flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-md transition-all
  ${formData.type === 'expense' 
  ? 'bg-[var(--surface-raised)] text-[var(--accent)] ' 
  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}
@@ -946,7 +946,7 @@ const TransactionFormModal = ({
  type="button"
  onClick={() => setFormData({...formData, status: 'pending'})}
  className={`
- flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
+ flex-1 py-3 px-4 rounded-md text-sm font-medium border-2 transition-all
  ${formData.status === 'pending'
  ? 'border-[var(--warning)] bg-transparent text-[var(--warning)]'
  : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border-visible)]'}
@@ -958,7 +958,7 @@ const TransactionFormModal = ({
  type="button"
  onClick={() => setFormData({...formData, status: 'paid'})}
  className={`
- flex-1 py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all
+ flex-1 py-3 px-4 rounded-md text-sm font-medium border-2 transition-all
  ${formData.status === 'paid'
  ? 'border-[var(--success)] bg-transparent text-[var(--success)]'
  : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border-visible)]'}
@@ -996,7 +996,7 @@ const TransactionFormModal = ({
  type="submit"
  disabled={submitting || projectsLoading || activeProjects.length === 0 || !formData.projectId}
  className={`
- flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-white
+ flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-md font-bold text-white
  transition-all duration-200
  ${formData.type === 'income'
  ? 'bg-[var(--success)] hover:bg-[var(--success)]'

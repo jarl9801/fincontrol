@@ -55,19 +55,22 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
  };
 
  return (
- <header className="hidden border-b border-[var(--border)] bg-[var(--black)] text-[var(--text-primary)] md:block">
+ <header className="hidden border-b border-[var(--color-line)] bg-[var(--color-bg-0)] text-[var(--color-fg-1)] md:block">
  <div className="mx-auto max-w-[1280px] px-5 py-4">
  {/* Top row: brand + actions */}
  <div className="flex items-center justify-between gap-4">
  <button type="button" onClick={() => navigate('/')} className="flex min-w-0 items-center gap-3">
- <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md border border-[var(--border-visible)] bg-[var(--surface)]">
- <Briefcase size={16} className="text-[var(--text-primary)]" />
+ <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md border border-[var(--color-line-s)] bg-[var(--color-bg-2)]">
+ <Briefcase size={16} className="text-[var(--color-fg-1)]" />
  </div>
- <div className="min-w-0">
- <h1 className="truncate nd-display text-[16px] font-bold uppercase tracking-[0.04em] text-[var(--text-display)]">
- FinControl
+ <div className="min-w-0 text-left">
+ <h1
+ className="truncate text-[18px] leading-none text-[var(--color-fg-1)]"
+ style={{ fontFamily: 'var(--font-display)', fontWeight: 500, letterSpacing: '-0.02em' }}
+ >
+ FinControl<span style={{ color: 'var(--color-accent)' }}>.OS</span>
  </h1>
- <p className="truncate nd-mono text-[9px] uppercase tracking-[0.18em] text-[var(--text-disabled)]">
+ <p className="mt-1 truncate font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-fg-3)]">
  Financial Control System
  </p>
  </div>
@@ -75,10 +78,10 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
 
  <div className="flex flex-wrap items-center justify-end gap-2">
  {bankBalanceData && (
- <div className="rounded-md border border-[var(--border)] px-3.5 py-2 text-right">
- <p className="nd-mono text-[9px] uppercase tracking-[0.18em] text-[var(--text-disabled)]">Caja</p>
- <p className={`nd-mono text-[12px] font-bold tabular-nums ${
- bankBalanceData.currentBalance >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'
+ <div className="rounded-md border border-[var(--color-line)] bg-[var(--color-bg-1)] px-3.5 py-2 text-right">
+ <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-fg-3)]">Caja</p>
+ <p className={`font-mono text-[12px] font-medium tabular-nums ${
+ bankBalanceData.currentBalance >= 0 ? 'text-[var(--color-ok)]' : 'text-[var(--color-err)]'
  }`}>
  {formatCurrency(bankBalanceData.currentBalance)}
  </p>
@@ -88,14 +91,14 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
  <button
  type="button"
  onClick={() => navigate('/perfil')}
- className="inline-flex max-w-[200px] items-center gap-2.5 rounded-md border border-[var(--border)] px-3.5 py-2 text-left transition-colors hover:border-[var(--border-visible)]"
+ className="inline-flex max-w-[200px] items-center gap-2.5 rounded-md border border-[var(--color-line)] bg-[var(--color-bg-1)] px-3.5 py-2 text-left transition-colors hover:border-[var(--color-line-s)]"
  >
- <div className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border-visible)] nd-mono text-[11px] font-bold text-[var(--text-primary)]">
+ <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--color-line-s)] bg-[var(--color-bg-3)] font-mono text-[11px] font-medium text-[var(--color-fg-1)]">
  {(user?.displayName || user?.email || '?')[0].toUpperCase()}
  </div>
  <div className="min-w-0">
- <p className="truncate text-[12px] text-[var(--text-primary)]">{user?.displayName || user?.email}</p>
- <p className="nd-mono text-[9px] uppercase tracking-[0.16em] text-[var(--text-disabled)]">
+ <p className="truncate text-[12px] text-[var(--color-fg-1)]">{user?.displayName || user?.email}</p>
+ <p className="truncate font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--color-fg-3)]">
  {userRole === 'admin' ? 'Admin' : userRole === 'manager' ? 'Manager' : 'Editor'}
  </p>
  </div>
@@ -103,7 +106,7 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
 
  <button
  type="button"
- className="flex h-9 w-9 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-disabled)] transition-colors hover:border-[var(--border-visible)] hover:text-[var(--text-primary)]"
+ className="flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-line)] bg-[var(--color-bg-1)] text-[var(--color-fg-3)] transition-colors hover:border-[var(--color-line-s)] hover:text-[var(--color-fg-1)]"
  title={bankAccount?.name || bankAccount?.bankName || 'Cuenta principal'}
  aria-label="Cuenta bancaria"
  >
@@ -113,17 +116,17 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
  <button
  type="button"
  onClick={() => onNewTransaction()}
- className="inline-flex items-center gap-2 rounded-full bg-[var(--text-display)] px-5 py-2.5 nd-label text-[var(--black)] transition-opacity hover:opacity-85"
+ className="nx-btn nx-btn-primary"
  title="Crear registro financiero"
  >
  <Plus size={14} />
-[Crear]
+ <span>Crear</span>
  </button>
 
  <button
  type="button"
  onClick={handleLogout}
-className="flex h-9 w-9 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-disabled)] transition-colors hover:border-[var(--border-visible)] hover:text-[var(--text-primary)]"
+ className="flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-line)] bg-[var(--color-bg-1)] text-[var(--color-fg-3)] transition-colors hover:border-[var(--color-line-s)] hover:text-[var(--color-fg-1)]"
  aria-label="Cerrar sesión"
  >
  <LogOut size={14} />
@@ -132,7 +135,7 @@ className="flex h-9 w-9 items-center justify-center rounded-md border border-[va
  </div>
 
  {/* Nav row */}
- <nav className="-mx-5 mt-4 border-t border-[var(--border)] px-5 pt-2">
+ <nav className="-mx-5 mt-4 border-t border-[var(--color-line)] px-5 pt-2">
  <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide pb-0.5">
  {visibleItems.map((item) => {
  const Icon = item.icon;
@@ -142,14 +145,20 @@ className="flex h-9 w-9 items-center justify-center rounded-md border border-[va
  key={item.path}
  type="button"
  onClick={() => navigate(item.path)}
- className={`inline-flex flex-shrink-0 items-center gap-2 rounded-md border px-3 py-2 nd-label transition-colors ${
+ className={`relative inline-flex flex-shrink-0 items-center gap-2 rounded-md px-3 py-2 font-mono text-[11px] uppercase tracking-[0.1em] transition-colors ${
  active
- ? 'border-[var(--border-visible)] bg-[var(--surface)] text-[var(--text-display)]'
- : 'border-transparent text-[var(--text-disabled)] hover:border-[var(--border)] hover:text-[var(--text-primary)]'
+ ? 'bg-[var(--color-bg-3)] text-[var(--color-fg-1)]'
+ : 'text-[var(--color-fg-3)] hover:bg-[var(--color-bg-2)] hover:text-[var(--color-fg-1)]'
  }`}
  >
  <Icon size={13} />
- <span>{active ? `[${item.label}]` : item.label}</span>
+ <span>{item.label}</span>
+ {active && (
+ <span
+ aria-hidden="true"
+ className="pointer-events-none absolute inset-x-3 -bottom-[9px] h-[2px] bg-[var(--color-accent)]"
+ />
+ )}
  </button>
  );
  })}
