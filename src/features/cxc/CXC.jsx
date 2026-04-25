@@ -3,7 +3,7 @@ import { TrendingUp, Clock, AlertCircle, DollarSign, CheckCircle2, Circle, Arrow
 import { formatCurrency, formatDate, getDaysOverdue, safe } from '../../utils/formatters';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
-import { KPIGrid, KPI } from '@/components/ui/nexus';
+import { KPIGrid, KPI, Button } from '@/components/ui/nexus';
 
 const CXC = ({
  transactions,
@@ -185,22 +185,25 @@ const CXC = ({
  {canAct && (
  <td className="px-4 py-4 text-center">
  <div className="flex items-center justify-center gap-2">
- <button
+ <Button
+ variant="primary"
+ size="sm"
+ icon={CheckCircle2}
  onClick={() => handleMarkCobrado(t)}
+ loading={isLoading}
  disabled={isLoading}
- className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold text-white bg-[var(--success)] hover:bg-[var(--success)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 "
  >
- <CheckCircle2 size={14} />
  {isLoading ? 'Guardando...' : 'Cobrado'}
- </button>
- <button
+ </Button>
+ <Button
+ variant="ghost"
+ size="sm"
+ icon={DollarSign}
  onClick={() => { setPaymentTransaction(t); setIsPaymentModalOpen(true); }}
  disabled={isLoading}
- className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold text-[var(--warning)] bg-transparent hover:bg-transparent border border-[var(--border-visible)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
  >
- <DollarSign size={14} />
  Abono
- </button>
+ </Button>
  </div>
  </td>
  )}
