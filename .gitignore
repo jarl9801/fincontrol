@@ -34,6 +34,7 @@ dist-ssr
 !package-lock.json
 !firestore.rules
 !firestore.indexes.json
+!jsconfig.json
 .firebase/
 
 # Testing
@@ -42,3 +43,7 @@ coverage/
 
 # Build
 build/
+
+# Design assets (handoff zips, mockups — not part of source)
+_design/
+*.zip
