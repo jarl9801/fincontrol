@@ -3,7 +3,7 @@ import { TrendingUp, Clock, AlertCircle, DollarSign, CheckCircle2, ArrowUpCircle
 import { formatCurrency, formatDate, getDaysOverdue, safe } from '../../utils/formatters';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
-import { KPIGrid, KPI, Button, Badge } from '@/components/ui/nexus';
+import { KPIGrid, KPI, Button, Badge, Panel } from '@/components/ui/nexus';
 
 const CXC = ({
  transactions,
@@ -103,11 +103,7 @@ const CXC = ({
  />
  </KPIGrid>
 
- <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] overflow-hidden">
- <div className="px-6 py-4 border-b border-[var(--border)] flex items-center justify-between">
- <h2 className="nd-display text-base font-medium text-[var(--text-display)]">Cuentas por Cobrar</h2>
- <span className="text-xs text-[var(--text-secondary)]">{sorted.length} facturas pendientes</span>
- </div>
+ <Panel title="Cuentas por cobrar" meta={`${sorted.length} facturas pendientes`} padding={false}>
  <div className="overflow-x-auto">
  <table className="w-full text-left">
  <thead className="bg-[var(--surface)] border-b border-[var(--border)]">
@@ -221,7 +217,7 @@ const CXC = ({
  </tbody>
  </table>
  </div>
- </div>
+ </Panel>
 
  <PartialPaymentModal
  isOpen={isPaymentModalOpen}
