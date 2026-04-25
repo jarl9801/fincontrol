@@ -3,6 +3,7 @@ import { TrendingUp, Clock, AlertCircle, DollarSign, CheckCircle2, Circle, Arrow
 import { formatCurrency, formatDate, getDaysOverdue, safe } from '../../utils/formatters';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
+import { KPIGrid, KPI } from '@/components/ui/nexus';
 
 const CXC = ({
  transactions,
@@ -72,40 +73,35 @@ const CXC = ({
  </div>
  )}
 
- <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
- <div className="flex items-center justify-between mb-2">
- <h3 className="nd-label text-[var(--text-secondary)]">Total por Cobrar</h3>
- <TrendingUp className="text-[var(--success)]" size={20} />
- </div>
- <p className="nd-display text-3xl font-bold text-[var(--success)]">{formatCurrency(totalReceivable)}</p>
- <p className="text-xs text-[var(--text-disabled)] mt-1">{receivables.length} facturas pendientes</p>
- </div>
- <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
- <div className="flex items-center justify-between mb-2">
- <h3 className="nd-label text-[var(--text-secondary)]">Cobrado Parcialmente</h3>
- <DollarSign className="text-[var(--warning)]" size={20} />
- </div>
- <p className="nd-display text-3xl font-bold text-[var(--warning)]">{formatCurrency(totalPartial)}</p>
- <p className="text-xs text-[var(--text-disabled)] mt-1">{partialReceivables.length} facturas con abono</p>
- </div>
- <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
- <div className="flex items-center justify-between mb-2">
- <h3 className="nd-label text-[var(--text-secondary)]">Vencido</h3>
- <AlertCircle className="text-[var(--accent)]" size={20} />
- </div>
- <p className="nd-display text-3xl font-bold text-[var(--accent)]">{formatCurrency(totalOverdue)}</p>
- <p className="text-xs text-[var(--text-disabled)] mt-1">{overdueReceivables.length} facturas vencidas</p>
- </div>
- <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
- <div className="flex items-center justify-between mb-2">
- <h3 className="nd-label text-[var(--text-secondary)]">Vence Esta Semana</h3>
- <Clock className="text-[var(--warning)]" size={20} />
- </div>
- <p className="nd-display text-3xl font-bold text-[var(--warning)]">{formatCurrency(totalDueThisWeek)}</p>
- <p className="text-xs text-[var(--text-disabled)] mt-1">{dueThisWeek.length} facturas próximas</p>
- </div>
- </div>
+ <KPIGrid cols={4}>
+ <KPI
+ label="Total por cobrar"
+ value={formatCurrency(totalReceivable)}
+ meta={`${receivables.length} facturas pendientes`}
+ icon={TrendingUp}
+ />
+ <KPI
+ label="Cobrado parcialmente"
+ value={formatCurrency(totalPartial)}
+ meta={`${partialReceivables.length} facturas con abono`}
+ tone="warn"
+ icon={DollarSign}
+ />
+ <KPI
+ label="Vencido"
+ value={formatCurrency(totalOverdue)}
+ meta={`${overdueReceivables.length} facturas vencidas`}
+ tone="err"
+ icon={AlertCircle}
+ />
+ <KPI
+ label="Vence esta semana"
+ value={formatCurrency(totalDueThisWeek)}
+ meta={`${dueThisWeek.length} facturas próximas`}
+ tone="warn"
+ icon={Clock}
+ />
+ </KPIGrid>
 
  <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] overflow-hidden">
  <div className="px-6 py-4 border-b border-[var(--border)] flex items-center justify-between">
