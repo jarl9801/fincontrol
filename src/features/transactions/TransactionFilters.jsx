@@ -1,5 +1,6 @@
 import React from 'react';
 import { Download, Filter, RotateCcw, Search, X } from 'lucide-react';
+import { Button, Badge } from '@/components/ui/nexus';
 
 const FILTER_DEFAULTS = {
  dateFrom: '',
@@ -74,7 +75,7 @@ const TransactionFilters = ({
  onResetFilters,
 }) => {
  return (
- <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-4 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-4">
  <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
  <div className="relative flex-1">
  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" size={16} />
@@ -98,33 +99,23 @@ const TransactionFilters = ({
  </div>
 
  <div className="flex flex-wrap gap-2">
- <button
- type="button"
+ <Button
+ variant={showFilters || activeFiltersCount > 0 ? 'secondary' : 'ghost'}
+ icon={Filter}
  onClick={() => setShowFilters((current) => !current)}
- className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-[13px] font-medium transition-all ${
- showFilters || activeFiltersCount > 0
- ? 'border-[var(--border-visible)] bg-[var(--surface)] text-[var(--text-primary)] '
- : 'border-[var(--border)] bg-[var(--surface)] text-[var(--text-disabled)] hover:bg-[var(--surface)]'
- }`}
  >
- <Filter size={15} />
+ <span className="inline-flex items-center gap-2">
  Filtros avanzados
  {activeFiltersCount > 0 && (
- <span className="rounded-full bg-[var(--surface)] px-2 py-0.5 text-[11px] text-[var(--text-primary)]">
- {activeFiltersCount}
- </span>
+ <Badge variant="neutral">{activeFiltersCount}</Badge>
  )}
- </button>
+ </span>
+ </Button>
 
  {userRole === 'admin' && (
- <button
- type="button"
- onClick={onExportPDF}
- className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-2.5 text-[13px] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--surface)]"
- >
- <Download size={15} />
+ <Button variant="ghost" icon={Download} onClick={onExportPDF}>
  Exportar PDF
- </button>
+ </Button>
  )}
  </div>
  </div>
@@ -137,7 +128,7 @@ const TransactionFilters = ({
  onClick={() => setQuickFilter(key)}
  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-medium transition-all ${
  quickFilter === key
- ? 'border border-[var(--border-visible)] bg-[var(--surface)] text-[var(--text-primary)]'
+ ? 'border border-[var(--accent)] bg-transparent text-[var(--accent)]'
  : 'border border-[var(--border)] bg-[var(--surface)] text-[var(--text-disabled)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]'
  }`}
  >
@@ -154,17 +145,12 @@ const TransactionFilters = ({
  <div className="mt-4 rounded-md border border-[var(--border)] bg-[var(--surface)] p-4 animate-fadeIn">
  <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
  <div>
- <h3 className="text-[14px] font-semibold text-[var(--text-primary)]">Filtros de revision</h3>
+ <h3 className="text-[14px] font-medium text-[var(--text-primary)]">Filtros de revision</h3>
  <p className="mt-1 text-[12px] text-[var(--text-secondary)]">Recorta por origen, tipo de registro, importe, estado y dimensión operativa.</p>
  </div>
- <button
- type="button"
- onClick={onResetFilters}
- className="inline-flex items-center gap-2 text-[12px] font-medium text-[var(--text-primary)] transition-colors hover:text-[var(--text-primary)]"
- >
- <RotateCcw size={13} />
+ <Button variant="ghost" size="sm" icon={RotateCcw} onClick={onResetFilters}>
  Limpiar todo
- </button>
+ </Button>
  </div>
 
  <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
