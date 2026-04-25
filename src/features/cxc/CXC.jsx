@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { TrendingUp, Clock, AlertCircle, DollarSign, CheckCircle2, Circle, ArrowUpCircle, RefreshCw } from 'lucide-react';
+import { TrendingUp, Clock, AlertCircle, DollarSign, CheckCircle2, ArrowUpCircle } from 'lucide-react';
 import { formatCurrency, formatDate, getDaysOverdue, safe } from '../../utils/formatters';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
-import { KPIGrid, KPI, Button } from '@/components/ui/nexus';
+import { KPIGrid, KPI, Button, Badge } from '@/components/ui/nexus';
 
 const CXC = ({
  transactions,
@@ -145,9 +145,7 @@ const CXC = ({
  <div className="flex items-center gap-2 flex-wrap">
  <span className="text-sm font-semibold text-[var(--text-display)]">{safe(t.description)}</span>
  {t.isRecurring && (
- <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-[var(--surface)] text-[var(--text-secondary)] border border-[var(--border)]">
- <RefreshCw size={10} /> Recurrente
- </span>
+ <Badge variant="neutral" dot>Recurrente</Badge>
  )}
  </div>
  <span className="text-xs text-[var(--text-disabled)] block mt-0.5">{safe(t.project)}</span>
@@ -163,9 +161,7 @@ const CXC = ({
  </div>
  </td>
  <td className="px-4 py-4 hidden md:table-cell">
- <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-transparent text-[var(--success)] border border-[var(--border-visible)]">
- {safe(t.category)}
- </span>
+ <Badge variant="neutral">{safe(t.category)}</Badge>
  </td>
  <td className="px-4 py-4 text-right whitespace-nowrap">
  <div className="flex flex-col items-end">
@@ -175,11 +171,11 @@ const CXC = ({
  </td>
  <td className="px-4 py-4 text-center">
  {isPartial ? (
- <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-transparent text-[var(--warning)] border-[var(--border-visible)]"><Circle size={14} /> Pago Parcial</span>
+ <Badge variant="warn" dot>Pago Parcial</Badge>
  ) : isOverdue ? (
- <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-transparent text-[var(--accent)] border-[var(--border-visible)]"><Circle size={14} /> Vencido</span>
+ <Badge variant="err" dot>Vencido</Badge>
  ) : (
- <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-transparent text-[var(--warning)] border-[var(--border-visible)]"><Circle size={14} /> Pendiente</span>
+ <Badge variant="warn" dot>Pendiente</Badge>
  )}
  </td>
  {canAct && (
