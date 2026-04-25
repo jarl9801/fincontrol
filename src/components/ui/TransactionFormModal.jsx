@@ -6,6 +6,7 @@ import { usePartners } from '../../hooks/usePartners';
 import { useEmployees } from '../../hooks/useEmployees';
 import { TAX_RATES } from '../../constants/config';
 import { formatCurrency, formatTaxRate } from '../../utils/formatters';
+import { Button } from '@/components/ui/nexus';
 
 const TransactionFormModal = ({
  isOpen,
@@ -466,7 +467,7 @@ const TransactionFormModal = ({
  <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-md border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
  <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-5">
  <div>
- <h3 className="text-xl font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
+ <h3 className="text-xl font-medium tracking-[-0.03em] text-[var(--text-primary)]">
  {editingTransaction ? 'Editar transacción' : 'Nueva transacción'}
  </h3>
  <p className="mt-0.5 text-sm text-[var(--text-secondary)]">
@@ -488,7 +489,7 @@ const TransactionFormModal = ({
  type="button"
  onClick={() => handleTypeChange('income')}
  className={`
- flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-md transition-all
+ flex items-center justify-center gap-2 py-3 text-sm font-medium rounded-md transition-all
  ${formData.type === 'income' 
  ? 'bg-[var(--surface-raised)] text-[var(--success)] ' 
  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}
@@ -501,7 +502,7 @@ const TransactionFormModal = ({
  type="button"
  onClick={() => handleTypeChange('expense')}
  className={`
- flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-md transition-all
+ flex items-center justify-center gap-2 py-3 text-sm font-medium rounded-md transition-all
  ${formData.type === 'expense' 
  ? 'bg-[var(--surface-raised)] text-[var(--accent)] ' 
  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}
@@ -513,14 +514,14 @@ const TransactionFormModal = ({
  </div>
 
  <div className="flex items-center gap-2 pt-1">
- <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">Detalles</span>
+ <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">Detalles</span>
  <div className="h-px flex-1 bg-[var(--border)]" />
  </div>
 
  {/* Date & Amount & VAT */}
  <div className="grid grid-cols-3 gap-4">
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Fecha <span className="text-[var(--accent)]">*</span>
  </label>
  <input
@@ -532,7 +533,7 @@ const TransactionFormModal = ({
  />
  </div>
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Bruto (EUR) <span className="text-[var(--accent)]">*</span>
  </label>
  <div className="relative">
@@ -550,7 +551,7 @@ const TransactionFormModal = ({
  </div>
  </div>
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  IVA (USt) <span className="text-[var(--accent)]">*</span>
  </label>
  <div className="relative">
@@ -573,20 +574,20 @@ const TransactionFormModal = ({
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3">
  <div className="mb-2 flex items-center gap-1.5">
  <Calculator size={13} className="text-[var(--text-secondary)]" />
- <span className="text-[11px] font-semibold uppercase tracking-widest text-[var(--text-secondary)]">Desglose IVA</span>
+ <span className="text-[11px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">Desglose IVA</span>
  </div>
  <div className="grid grid-cols-3 gap-3 text-sm">
  <div>
  <p className="text-[10px] text-[var(--text-secondary)]]">Neto (netto)</p>
- <p className="font-semibold text-[var(--text-primary)]">{formatCurrency(netAmount)}</p>
+ <p className="font-medium text-[var(--text-primary)]">{formatCurrency(netAmount)}</p>
  </div>
  <div>
  <p className="text-[10px] text-[var(--text-secondary)]]">IVA {formatTaxRate(taxRate)}</p>
- <p className="font-semibold text-[var(--warning)]">{formatCurrency(taxAmount)}</p>
+ <p className="font-medium text-[var(--warning)]">{formatCurrency(taxAmount)}</p>
  </div>
  <div>
  <p className="text-[10px] text-[var(--text-secondary)]]">Bruto (brutto)</p>
- <p className="font-semibold text-[var(--text-primary)]">{formatCurrency(grossAmount)}</p>
+ <p className="font-medium text-[var(--text-primary)]">{formatCurrency(grossAmount)}</p>
  </div>
  </div>
  </div>
@@ -594,7 +595,7 @@ const TransactionFormModal = ({
 
  {/* Partner / Geschäftspartner autocomplete */}
  <div className="relative">
- <label className="mb-2 flex items-center gap-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 flex items-center gap-2 block text-sm font-medium text-[var(--text-disabled)]">
  <Building2 size={14} className="text-[var(--text-secondary)]" />
  {formData.type === 'income' ? 'Cliente' : 'Proveedor'}
  <span className="text-xs font-normal text-[var(--text-secondary)]">(opcional — autocompletado)</span>
@@ -669,7 +670,7 @@ const TransactionFormModal = ({
  </div>
 
  <div className="relative">
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Descripción <span className="text-[var(--accent)]">*</span>
  </label>
  <input
@@ -725,7 +726,7 @@ const TransactionFormModal = ({
  </div>
  <div className="flex items-center gap-2">
  <RefreshCw size={16} className="text-[var(--text-secondary)]" />
- <span className="text-sm font-semibold text-[var(--text-disabled)]">Transacción recurrente</span>
+ <span className="text-sm font-medium text-[var(--text-disabled)]">Transacción recurrente</span>
  </div>
  </label>
 
@@ -757,12 +758,12 @@ const TransactionFormModal = ({
  </div>
 
  <div className="flex items-center gap-2 pt-1">
- <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">Clasificación</span>
+ <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">Clasificación</span>
  <div className="h-px flex-1 bg-[var(--border)]" />
  </div>
 
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Proyecto <span className="text-[var(--accent)]">*</span>
  </label>
  <div className="relative">
@@ -812,7 +813,7 @@ const TransactionFormModal = ({
  </div>
 
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">Categoría</label>
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">Categoría</label>
  <select
  className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)] "
  value={formData.category}
@@ -823,7 +824,7 @@ const TransactionFormModal = ({
  </div>
 
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">Centro de costo</label>
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">Centro de costo</label>
  <select
  className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)] "
  value={formData.costCenter}
@@ -838,7 +839,7 @@ const TransactionFormModal = ({
 
  {/* Employee picker — multi-select typeahead with chips */}
  <div className="relative">
- <label className="mb-2 flex items-center gap-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 flex items-center gap-2 block text-sm font-medium text-[var(--text-disabled)]">
  <HardHat size={14} className="text-[var(--text-secondary)]" />
  Técnicos / Empleados
  <span className="text-xs font-normal text-[var(--text-secondary)]">(opcional — uno o varios)</span>
@@ -854,7 +855,7 @@ const TransactionFormModal = ({
  return (
  <span
  key={id}
- className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+ className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${
  isOrphan
  ? 'border-[var(--warning)] text-[var(--warning)]'
  : 'border-[var(--border-visible)] bg-[var(--surface-raised)] text-[var(--text-primary)]'
@@ -935,12 +936,12 @@ const TransactionFormModal = ({
  </div>
 
  <div className="flex items-center gap-2 pt-1">
- <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">Estado y notas</span>
+ <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">Estado y notas</span>
  <div className="h-px flex-1 bg-[var(--border)]" />
  </div>
 
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">Estado de pago</label>
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">Estado de pago</label>
  <div className="flex gap-3">
  <button
  type="button"
@@ -970,7 +971,7 @@ const TransactionFormModal = ({
  </div>
 
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Comentario {editingTransaction ? '(agregar nota)' : '(opcional)'}
  </label>
  <textarea
@@ -988,25 +989,20 @@ const TransactionFormModal = ({
  <button
  type="button"
  onClick={onClose}
- className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] py-3.5 font-semibold text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-disabled)]"
+ className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] py-3.5 font-medium text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-disabled)]"
  >
  Cancelar
  </button>
- <button
+ <Button
  type="submit"
+ variant="primary"
+ icon={Save}
+ loading={submitting}
  disabled={submitting || projectsLoading || activeProjects.length === 0 || !formData.projectId}
- className={`
- flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-md font-bold text-white
- transition-all duration-200
- ${formData.type === 'income'
- ? 'bg-[var(--success)] hover:bg-[var(--success)]'
- : 'bg-[var(--text-primary)] hover:opacity-85'}
- ${(submitting || projectsLoading || activeProjects.length === 0 || !formData.projectId) ? 'opacity-50 cursor-not-allowed' : 'hover:'}
- `}
+ className="flex-[2]"
  >
- {submitting ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
  {submitting ? 'Guardando...' : editingTransaction ? 'Guardar cambios' : 'Crear transacción'}
- </button>
+ </Button>
  </div>
  </form>
  </div>

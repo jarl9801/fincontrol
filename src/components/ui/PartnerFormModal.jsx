@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Save, Loader2, User, Users } from 'lucide-react';
 import { TAX_RATES } from '../../constants/config';
+import { Button } from '@/components/ui/nexus';
 
 const PartnerFormModal = ({
  isOpen,
@@ -119,7 +120,7 @@ const PartnerFormModal = ({
  {/* Header */}
  <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-5">
  <div>
- <h3 className="text-xl font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
+ <h3 className="text-xl font-medium tracking-[-0.03em] text-[var(--text-primary)]">
  {editingPartner ? 'Editar Geschäftspartner' : 'Nuevo Geschäftspartner'}
  </h3>
  <p className="mt-0.5 text-sm text-[var(--text-secondary)]">
@@ -150,7 +151,7 @@ const PartnerFormModal = ({
  type="button"
  onClick={() => setFormData({ ...formData, type: value })}
  className={`
- flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-md transition-all
+ flex items-center justify-center gap-2 py-3 text-sm font-medium rounded-md transition-all
  ${formData.type === value
  ? 'bg-[var(--surface-raised)] text-[var(--text-primary)] '
  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}
@@ -164,7 +165,7 @@ const PartnerFormModal = ({
 
  {/* Divider */}
  <div className="flex items-center gap-2 pt-1">
- <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+ <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">
  Datos principales
  </span>
  <div className="h-px flex-1 bg-[var(--border)]" />
@@ -172,7 +173,7 @@ const PartnerFormModal = ({
 
  {/* Name */}
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Nombre <span className="text-[var(--accent)]">*</span>
  </label>
  <input
@@ -194,7 +195,7 @@ const PartnerFormModal = ({
 
  {/* Legal Name */}
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Razón social (opcional)
  </label>
  <input
@@ -208,7 +209,7 @@ const PartnerFormModal = ({
 
  {/* Tax ID */}
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  NIF / USt-IdNr (opcional)
  </label>
  <input
@@ -229,7 +230,7 @@ const PartnerFormModal = ({
 
  {/* Divider */}
  <div className="flex items-center gap-2 pt-1">
- <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+ <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">
  Contacto
  </span>
  <div className="h-px flex-1 bg-[var(--border)]" />
@@ -237,7 +238,7 @@ const PartnerFormModal = ({
 
  {/* Email */}
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Email (opcional)
  </label>
  <input
@@ -258,7 +259,7 @@ const PartnerFormModal = ({
 
  {/* Phone */}
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Teléfono (opcional)
  </label>
  <input
@@ -272,7 +273,7 @@ const PartnerFormModal = ({
 
  {/* Address */}
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Dirección (opcional)
  </label>
  <textarea
@@ -286,7 +287,7 @@ const PartnerFormModal = ({
 
  {/* Divider */}
  <div className="flex items-center gap-2 pt-1">
- <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+ <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">
  Preferencias de pago
  </span>
  <div className="h-px flex-1 bg-[var(--border)]" />
@@ -294,7 +295,7 @@ const PartnerFormModal = ({
 
  {/* Default Payment Method */}
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Método de pago predeterminado
  </label>
  <select
@@ -314,7 +315,7 @@ const PartnerFormModal = ({
 
  {/* Default Tax Rate */}
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Tasa IVA predeterminada
  </label>
  <select
@@ -332,7 +333,7 @@ const PartnerFormModal = ({
 
  {/* Notes */}
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
  Notas (opcional)
  </label>
  <textarea
@@ -363,7 +364,7 @@ const PartnerFormModal = ({
  <div className="h-5 w-10 rounded-full bg-[var(--border)] transition-colors peer-checked:bg-transparent"></div>
  <div className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-[var(--surface)] transition-transform peer-checked:translate-x-5"></div>
  </div>
- <span className="text-sm font-semibold text-[var(--text-disabled)]">Activo</span>
+ <span className="text-sm font-medium text-[var(--text-disabled)]">Activo</span>
  </div>
  <span className="text-xs text-[var(--text-secondary)]">
  {formData.status === 'active'
@@ -378,31 +379,24 @@ const PartnerFormModal = ({
  <button
  type="button"
  onClick={onClose}
- className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] py-3.5 font-semibold text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-disabled)]"
+ className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] py-3.5 font-medium text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-disabled)]"
  >
  Cancelar
  </button>
- <button
+ <Button
  type="submit"
+ variant="primary"
+ icon={Save}
+ loading={submitting}
  disabled={submitting}
- className={`
- flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-md font-bold text-white
- transition-all duration-200 
- bg-[var(--text-primary)] hover:opacity-80
- ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:'}
- `}
+ className="flex-[2]"
  >
- {submitting ? (
- <Loader2 size={18} className="animate-spin" />
- ) : (
- <Save size={18} />
- )}
  {submitting
  ? 'Guardando...'
  : editingPartner
  ? 'Guardar cambios'
  : 'Crear Geschäftspartner'}
- </button>
+ </Button>
  </div>
  </form>
  </div>

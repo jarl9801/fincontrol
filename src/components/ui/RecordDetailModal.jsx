@@ -41,10 +41,10 @@ const RecordDetailModal = ({ record, onClose, onEdit, onChangeStatus, userRole }
  <div className="bg-[var(--surface)] rounded-lg w-full max-w-xl max-h-[85vh] overflow-hidden animate-scaleIn flex flex-col" onClick={(e) => e.stopPropagation()}>
  <div className="px-6 py-4 border-b border-[var(--border)] flex justify-between items-start shrink-0">
  <div className="min-w-0 flex-1">
- <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${isIncome ? 'bg-transparent text-[var(--success)]' : 'bg-transparent text-[var(--accent)]'}`}>
+ <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-medium ${isIncome ? 'bg-transparent text-[var(--success)]' : 'bg-transparent text-[var(--accent)]'}`}>
  {isIncome ? 'Ingreso' : 'Egreso'} · {FAMILY_LABELS[family] || family}
  </span>
- <h3 className="mt-2 text-lg font-bold text-[var(--text-primary)] break-words">{description}</h3>
+ <h3 className="mt-2 text-lg font-medium text-[var(--text-primary)] break-words">{description}</h3>
  </div>
  <button onClick={onClose} className="ml-3 shrink-0 text-[var(--text-disabled)] hover:text-[var(--text-secondary)] transition-colors">
  <X size={20} />
@@ -53,10 +53,10 @@ const RecordDetailModal = ({ record, onClose, onEdit, onChangeStatus, userRole }
 
  <div className="overflow-y-auto px-6 py-5 space-y-5">
  <div className="flex items-baseline justify-between">
- <span className={`text-[32px] font-bold tracking-tight ${isIncome ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
+ <span className={`text-[32px] font-medium tracking-tight ${isIncome ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
  {isIncome ? '+' : '-'}{formatCurrency(amount)}
  </span>
- <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
+ <span className={`rounded-full px-3 py-1 text-xs font-medium ${
  status === 'paid' || status === 'settled' ? 'bg-transparent text-[var(--success)]' :
  status === 'void' || status === 'cancelled' ? 'bg-[var(--surface)] text-[var(--text-secondary)]' :
  status === 'overdue' ? 'bg-transparent text-[var(--accent)]' :
@@ -99,7 +99,7 @@ const RecordDetailModal = ({ record, onClose, onEdit, onChangeStatus, userRole }
  <p className="text-sm text-[var(--text-primary)]">{p.method || 'Pago'}</p>
  <p className="text-[11px] text-[var(--text-disabled)]">{p.date} {p.user ? `· ${p.user}` : ''}</p>
  </div>
- <span className="text-sm font-semibold text-[var(--success)]">{formatCurrency(p.amount)}</span>
+ <span className="text-sm font-medium text-[var(--success)]">{formatCurrency(p.amount)}</span>
  </div>
  ))}
  </div>
