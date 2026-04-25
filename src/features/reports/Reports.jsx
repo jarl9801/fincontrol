@@ -53,7 +53,7 @@ const StatCard = ({ title, value, subtitle, accent, icon, delta }) => {
  <div className="mb-4 flex items-start justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">{title}</p>
- <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
+ <p className="mt-2 nd-display text-[28px] font-medium tracking-tight text-[var(--text-primary)]">{value}</p>
  </div>
  <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ color: accent }}>
  <IconComponent size={18} />
@@ -61,7 +61,7 @@ const StatCard = ({ title, value, subtitle, accent, icon, delta }) => {
  </div>
  <p className="text-sm text-[var(--text-secondary)]">{subtitle}</p>
  {delta != null && (
- <div className={`mt-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${delta >= 0 ? 'bg-transparent text-[var(--success)]' : 'bg-transparent text-[var(--accent)]'}`}>
+ <div className={`mt-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${delta >= 0 ? 'bg-transparent text-[var(--success)]' : 'bg-transparent text-[var(--accent)]'}`}>
  {delta >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
  {Math.abs(delta).toFixed(1)}% vs período anterior
  </div>
@@ -283,7 +283,7 @@ const Reports = ({ user }) => {
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="mb-3 nd-label text-[var(--text-secondary)]">Estado de resultados</p>
- <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
+ <h2 className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">
  Resultado realizado y compromisos abiertos del periodo.{' '}
  <HelpButton title="Estado de resultados">
  <p><strong>Ingresos realizados</strong> — Cobros reales registrados como movimientos bancarios en el periodo seleccionado. No incluye CXC pendientes.</p>
@@ -341,7 +341,7 @@ const Reports = ({ user }) => {
  <div className="absolute left-0 top-full z-20 mt-2 max-h-[320px] min-w-[220px] overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--surface)] py-2 ">
  {monthsByYear.map(([year, months]) => (
  <div key={year}>
- <div className="px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--text-disabled)]">
+ <div className="px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-[var(--text-disabled)]">
  {year}
  </div>
  {months.map((key) => (
@@ -413,7 +413,7 @@ const Reports = ({ user }) => {
  <button
  type="button"
  onClick={() => exportReportToPDF(exportRows, 'general')}
- className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm font-semibold text-[var(--text-primary)] transition-colors hover:bg-[var(--surface)]"
+ className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--surface)]"
  >
  <Download size={16} />
  Exportar PDF
@@ -422,8 +422,8 @@ const Reports = ({ user }) => {
  </div>
 
  <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-[var(--text-secondary)]">
- <span>Actual: <span className="font-semibold text-[var(--text-primary)]">{currentRange.label}</span></span>
- {compareMode && periodType !== 'all' && <span>Anterior: <span className="font-semibold text-[var(--text-primary)]">{previousRange.label}</span></span>}
+ <span>Actual: <span className="font-medium text-[var(--text-primary)]">{currentRange.label}</span></span>
+ {compareMode && periodType !== 'all' && <span>Anterior: <span className="font-medium text-[var(--text-primary)]">{previousRange.label}</span></span>}
  </div>
  </section>
 
@@ -465,7 +465,7 @@ const Reports = ({ user }) => {
  <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4">
  <p className="nd-label text-[var(--text-disabled)]">Tendencia</p>
- <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Caja realizada {trendYear}</h3>
+ <h3 className="mt-1 text-[18px] font-medium tracking-tight text-[var(--text-primary)]">Caja realizada {trendYear}</h3>
  </div>
  <ResponsiveContainer width="100%" height={320}>
  <ComposedChart data={trendData}>
@@ -487,19 +487,19 @@ const Reports = ({ user }) => {
  <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4">
  <p className="nd-label text-[var(--text-disabled)]">Top proyectos</p>
- <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Margen realizado por proyecto</h3>
+ <h3 className="mt-1 text-[18px] font-medium tracking-tight text-[var(--text-primary)]">Margen realizado por proyecto</h3>
  </div>
  <div className="space-y-3">
  {projectMargins.map((project) => (
  <div key={project.name} className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4">
  <div className="flex items-center justify-between gap-4">
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">{project.name}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{project.name}</p>
  <p className="mt-1 text-xs text-[var(--text-secondary)]">
  Ingresos {formatCurrency(project.inflows)} · Gastos {formatCurrency(project.outflows)}
  </p>
  </div>
- <span className={`text-sm font-semibold ${project.net >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
+ <span className={`text-sm font-medium ${project.net >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
  {project.net >= 0 ? '+' : ''}{formatCurrency(project.net)}
  </span>
  </div>
@@ -519,9 +519,9 @@ const Reports = ({ user }) => {
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">Ingresos</p>
- <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Desglose de entradas realizadas</h3>
+ <h3 className="mt-1 text-[18px] font-medium tracking-tight text-[var(--text-primary)]">Desglose de entradas realizadas</h3>
  </div>
- <span className="rounded-full border border-[var(--border-visible)] px-3 py-1 text-xs font-semibold text-[var(--success)]">
+ <span className="rounded-full border border-[var(--border-visible)] px-3 py-1 text-xs font-medium text-[var(--success)]">
  {formatCurrency(currentTotals.inflows)}
  </span>
  </div>
@@ -529,7 +529,7 @@ const Reports = ({ user }) => {
  {groupedInflows.map((row) => (
  <div key={row.name} className="flex items-center justify-between rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
  <span className="text-sm text-[var(--text-primary)]">{row.name}</span>
- <span className="text-sm font-semibold text-[var(--success)]">{formatCurrency(row.amount)}</span>
+ <span className="text-sm font-medium text-[var(--success)]">{formatCurrency(row.amount)}</span>
  </div>
  ))}
  {groupedInflows.length === 0 && <p className="text-sm text-[var(--text-secondary)]">No hay ingresos realizados en este período.</p>}
@@ -540,9 +540,9 @@ const Reports = ({ user }) => {
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">Gastos</p>
- <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Desglose de salidas realizadas</h3>
+ <h3 className="mt-1 text-[18px] font-medium tracking-tight text-[var(--text-primary)]">Desglose de salidas realizadas</h3>
  </div>
- <span className="rounded-full border border-[var(--border-visible)] px-3 py-1 text-xs font-semibold text-[var(--accent)]">
+ <span className="rounded-full border border-[var(--border-visible)] px-3 py-1 text-xs font-medium text-[var(--accent)]">
  {formatCurrency(currentTotals.outflows)}
  </span>
  </div>
@@ -550,7 +550,7 @@ const Reports = ({ user }) => {
  {groupedOutflows.map((row) => (
  <div key={row.name} className="flex items-center justify-between rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
  <span className="text-sm text-[var(--text-primary)]">{row.name}</span>
- <span className="text-sm font-semibold text-[var(--accent)]">{formatCurrency(row.amount)}</span>
+ <span className="text-sm font-medium text-[var(--accent)]">{formatCurrency(row.amount)}</span>
  </div>
  ))}
  {groupedOutflows.length === 0 && <p className="text-sm text-[var(--text-secondary)]">No hay gastos realizados en este período.</p>}
@@ -563,29 +563,29 @@ const Reports = ({ user }) => {
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">IVA Alemán (Umsatzsteuer)</p>
- <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Resumen VAT del período</h3>
+ <h3 className="mt-1 text-[18px] font-medium tracking-tight text-[var(--text-primary)]">Resumen VAT del período</h3>
  </div>
  <div className="flex gap-3">
  <div className="rounded-lg border border-[var(--border-visible)] bg-transparent px-3 py-2 text-center">
- <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--warning)]">USt (输出)</p>
- <p className="text-sm font-bold text-[var(--warning)]">{formatCurrency(currentVAT.outputVAT)}</p>
+ <p className="text-[10px] font-medium uppercase tracking-widest text-[var(--warning)]">USt (输出)</p>
+ <p className="text-sm font-medium text-[var(--warning)]">{formatCurrency(currentVAT.outputVAT)}</p>
  </div>
  <div className="rounded-lg border border-[var(--border-visible)] bg-transparent px-3 py-2 text-center">
- <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-primary)]">Vorsteuer (输入)</p>
- <p className="text-sm font-bold text-[var(--text-primary)]">{formatCurrency(currentVAT.inputVAT)}</p>
+ <p className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-primary)]">Vorsteuer (输入)</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{formatCurrency(currentVAT.inputVAT)}</p>
  </div>
  <div className={`rounded-lg border px-3 py-2 text-center ${currentVAT.netVAT >= 0 ? 'border-[var(--border-visible)] bg-transparent' : 'border-[var(--border-visible)] bg-transparent'}`}>
- <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-disabled)]">Neto VAT</p>
- <p className={`text-sm font-bold ${currentVAT.netVAT >= 0 ? 'text-[var(--accent)]' : 'text-[var(--success)]'}`}>
+ <p className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-disabled)]">Neto VAT</p>
+ <p className={`text-sm font-medium ${currentVAT.netVAT >= 0 ? 'text-[var(--accent)]' : 'text-[var(--success)]'}`}>
  {currentVAT.netVAT >= 0 ? '+' : ''}{formatCurrency(currentVAT.netVAT)}
  </p>
  </div>
  </div>
  </div>
  <p className="text-xs text-[var(--text-secondary)]">
- <span className="font-semibold text-[var(--warning)]">USt (Umsatzsteuer)</span> = IVA cobrado en ingresos (acreedor).{' '}
- <span className="font-semibold text-[var(--text-primary)]">Vorsteuer</span> = IVA pagado en gastos (reclamable).{' '}
- <span className="font-semibold">Neto +</span> = debe pagar a Finanzamt. <span className="font-semibold">Neto −</span> = saldo a favor.
+ <span className="font-medium text-[var(--warning)]">USt (Umsatzsteuer)</span> = IVA cobrado en ingresos (acreedor).{' '}
+ <span className="font-medium text-[var(--text-primary)]">Vorsteuer</span> = IVA pagado en gastos (reclamable).{' '}
+ <span className="font-medium">Neto +</span> = debe pagar a Finanzamt. <span className="font-medium">Neto −</span> = saldo a favor.
  </p>
  {compareMode && (previousVAT.outputVAT > 0 || previousVAT.inputVAT > 0) && (
  <div className="mt-3 flex gap-4 text-xs text-[var(--text-secondary)]">
@@ -593,19 +593,19 @@ const Reports = ({ user }) => {
  </div>
  )}
  <div className="mt-4">
- <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-[var(--text-disabled)]">Resultado neto (excluye IVA)</p>
+ <p className="mb-2 text-[11px] font-medium uppercase tracking-widest text-[var(--text-disabled)]">Resultado neto (excluye IVA)</p>
  <div className="grid grid-cols-3 gap-4">
  <div className="rounded-lg border border-[var(--border-visible)] bg-transparent px-4 py-3">
  <p className="text-[10px] text-[var(--text-secondary)]">Ingresos netos</p>
- <p className="text-base font-bold text-[var(--success)]">{formatCurrency(currentTotalsNet.inflows)}</p>
+ <p className="text-base font-medium text-[var(--success)]">{formatCurrency(currentTotalsNet.inflows)}</p>
  </div>
  <div className="rounded-lg border border-[var(--border-visible)] bg-transparent px-4 py-3">
  <p className="text-[10px] text-[var(--text-secondary)]">Gastos netos</p>
- <p className="text-base font-bold text-[var(--accent)]">{formatCurrency(currentTotalsNet.outflows)}</p>
+ <p className="text-base font-medium text-[var(--accent)]">{formatCurrency(currentTotalsNet.outflows)}</p>
  </div>
  <div className={`rounded-lg border px-4 py-3 ${currentTotalsNet.net >= 0 ? 'border-[var(--border-visible)] bg-transparent' : 'border-[var(--border-visible)] bg-transparent'}`}>
  <p className="text-[10px] text-[var(--text-secondary)]">Resultado neto</p>
- <p className={`text-base font-bold ${currentTotalsNet.net >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
+ <p className={`text-base font-medium ${currentTotalsNet.net >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
  {currentTotalsNet.net >= 0 ? '+' : ''}{formatCurrency(currentTotalsNet.net)}
  </p>
  </div>

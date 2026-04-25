@@ -17,6 +17,7 @@ import { useReceivables } from '../../hooks/useReceivables';
 import { useBankMovements } from '../../hooks/useBankMovements';
 import { useToast } from '../../contexts/ToastContext';
 import EmployeePicker from './EmployeePicker';
+import { Button } from '@/components/ui/nexus';
 
 // Helper: format a project for the dropdown option label.
 // Shows code — name · operator · zone (when available).
@@ -329,7 +330,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  <p className="mb-3 nd-label text-[var(--text-disabled)]">
  Operación
  </p>
- <h3 className="text-[26px] font-semibold tracking-tight text-[var(--text-primary)]">Centro operativo</h3>
+ <h3 className="text-[26px] font-medium tracking-tight text-[var(--text-primary)]">Centro operativo</h3>
  <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
  Registra cobros, pagos, facturas y ajustes desde un solo panel, con una estructura clara para el equipo.
  </p>
@@ -359,7 +360,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  <Icon size={18} />
  </div>
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">{action.title}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{action.title}</p>
  <p className="text-xs text-[var(--text-secondary)]">{action.description}</p>
  </div>
  </div>
@@ -396,7 +397,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  <p className="nd-label text-[var(--text-disabled)]">
  Flujo activo
  </p>
- <h2 className="text-[24px] font-semibold tracking-tight text-[var(--text-primary)]">{activeMeta.title}</h2>
+ <h2 className="text-[24px] font-medium tracking-tight text-[var(--text-primary)]">{activeMeta.title}</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">{activeMeta.description}</p>
  <div className="mt-3 flex flex-wrap items-center gap-2">
  <span className="rounded-full bg-[var(--surface)] px-3 py-1 nd-label text-[var(--text-primary)]">
@@ -432,7 +433,7 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  <Icon size={17} />
  </div>
  <div className="min-w-0">
- <p className="text-sm font-semibold text-[var(--text-primary)]">{action.title}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{action.title}</p>
  <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">{action.description}</p>
  </div>
  </div>
@@ -881,14 +882,15 @@ const FinanceActionLauncher = ({ isOpen, onClose, user, defaultAction }) => {
  >
  Cancelar
  </button>
- <button
+ <Button
  type="submit"
+ variant="primary"
+ icon={BriefcaseBusiness}
+ loading={submitting}
  disabled={submitting}
- className={`inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-white transition-all disabled:cursor-not-allowed disabled:opacity-60 ${submitButtonClassName}`}
  >
- {submitting ? <Loader2 size={16} className="animate-spin" /> : <BriefcaseBusiness size={16} />}
  {submitting ? 'Guardando...' : submitLabel}
- </button>
+ </Button>
  </div>
  </div>
  </form>

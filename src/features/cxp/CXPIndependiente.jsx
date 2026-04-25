@@ -15,6 +15,7 @@ import { usePayables } from '../../hooks/usePayables';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
 import { formatCurrency, formatDate } from '../../utils/formatters';
+import { KPIGrid, KPI, Badge, Button } from '@/components/ui/nexus';
 
 const statusLabels = {
  issued: 'Emitida',
@@ -34,46 +35,20 @@ const filters = [
 
 const bucketColor = ['var(--warning)', 'var(--accent)', 'var(--accent)', 'var(--accent)'];
 
-const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
- const IconComponent = icon;
- return (
- <div
- className={`rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ${onClick ? 'cursor-pointer transition-transform duration-200' : ''}`}
- onClick={onClick}
- role={onClick ? 'button' : undefined}
- tabIndex={onClick ? 0 : undefined}
- onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
- >
- <div className="mb-4 flex items-center justify-between">
- <div>
- <p className="nd-label text-[var(--text-disabled)]">{title}</p>
- <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
- </div>
- <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: 'var(--surface)', color: accent }}>
- <IconComponent size={18} />
- </div>
- </div>
- <p className="text-sm text-[var(--text-secondary)]">{subtitle}</p>
- </div>
- );
-};
-
 const AgingBar = ({ buckets }) => {
  const total = buckets.reduce((sum, bucket) => sum + bucket.total, 0);
  if (total <= 0) return null;
 
  return (
- <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5">
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">Antigüedad</p>
- <h3 className="mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Deuda vencida por tramos</h3>
+ <h3 className="mt-1 text-[18px] font-medium tracking-tight text-[var(--text-primary)]">Deuda vencida por tramos</h3>
  </div>
- <span className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-semibold text-[var(--text-secondary)]">
- {formatCurrency(total)}
- </span>
+ <Badge variant="neutral">{formatCurrency(total)}</Badge>
  </div>
- <div className="mb-4 flex h-3 overflow-hidden rounded-full bg-[var(--border)]">
+ <div className="mb-4 flex h-3 overflow-hidden rounded-md bg-[var(--border)]">
  {buckets.map((bucket, index) =>
  bucket.total > 0 ? (
  <div key={bucket.label} style={{ width: `${(bucket.total / total) * 100}%`, backgroundColor: bucketColor[index] }} />
@@ -87,7 +62,7 @@ const AgingBar = ({ buckets }) => {
  <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: bucketColor[index] }} />
  <span className="nd-label text-[var(--text-disabled)]">{bucket.label}</span>
  </div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(bucket.total)}</p>
+ <p className="nd-mono text-sm tabular-nums text-[var(--text-primary)]">{formatCurrency(bucket.total)}</p>
  </div>
  ))}
  </div>
@@ -189,11 +164,11 @@ const CXPIndependiente = ({ user, userRole }) => {
 
  return (
  <div className="space-y-6 pb-12">
- <section className="rounded-md border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-7">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="mb-3 nd-label text-[var(--warning)]">Cuentas por pagar</p>
- <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
+ <p className="mb-3 nd-label text-[var(--text-secondary)]">Cuentas por pagar</p>
+ <h2 className="nd-display text-[32px] font-light tracking-tight text-[var(--text-display)]">
  Control de pagos, deuda y vencimientos.{' '}
  <HelpButton title="Cuentas por pagar">
  <p><strong>Deuda abierta</strong> — Total de facturas por pagar que aun no se han liquidado.</p>
@@ -209,12 +184,39 @@ const CXPIndependiente = ({ user, userRole }) => {
  </div>
  </section>
 
- <div className="grid gap-4 lg:grid-cols-4">
- <StatCard title="Deuda abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="var(--warning)" icon={BadgeEuro} onClick={() => setStatusFilter('all')} />
- <StatCard title="Pagado parcial" value={formatCurrency(totalPartial)} subtitle={totalPartial > 0 ? 'Abonos realizados en facturas aún no liquidadas' : 'Sin abonos parciales — todas pendientes o liquidadas'} accent="var(--text-disabled)" icon={ArrowDownLeft} onClick={() => setStatusFilter('partial')} />
- <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overduePayables.length} documentos fuera de plazo`} accent="var(--accent)" icon={AlertTriangle} onClick={() => setStatusFilter('overdue')} />
- <StatCard title="Ventana 14d" value={formatCurrency(dueSoon)} subtitle={`${metrics.upcomingPayables.length} pagos proximos`} accent="var(--warning)" icon={Clock3} onClick={() => setStatusFilter('issued')} />
- </div>
+ <KPIGrid cols={4}>
+ <KPI
+ label="Deuda abierta"
+ value={formatCurrency(totalOpen)}
+ meta={`${openRows.length} documentos activos`}
+ tone="warn"
+ icon={BadgeEuro}
+ onClick={() => setStatusFilter('all')}
+ />
+ <KPI
+ label="Pagado parcial"
+ value={formatCurrency(totalPartial)}
+ meta={totalPartial > 0 ? 'Abonos realizados en facturas aún no liquidadas' : 'Sin abonos parciales — todas pendientes o liquidadas'}
+ icon={ArrowDownLeft}
+ onClick={() => setStatusFilter('partial')}
+ />
+ <KPI
+ label="Vencido"
+ value={formatCurrency(totalOverdue)}
+ meta={`${metrics.overduePayables.length} documentos fuera de plazo`}
+ tone="err"
+ icon={AlertTriangle}
+ onClick={() => setStatusFilter('overdue')}
+ />
+ <KPI
+ label="Ventana 14d"
+ value={formatCurrency(dueSoon)}
+ meta={`${metrics.upcomingPayables.length} pagos proximos`}
+ tone="warn"
+ icon={Clock3}
+ onClick={() => setStatusFilter('issued')}
+ />
+ </KPIGrid>
 
  <AgingBar buckets={metrics.payablesAging} />
 
@@ -241,7 +243,7 @@ const CXPIndependiente = ({ user, userRole }) => {
  onClick={() => setStatusFilter(filter.id)}
  className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
  statusFilter === filter.id
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--warning)]'
+ ? 'border-[var(--accent)] bg-transparent text-[var(--accent)]'
  : 'border-[var(--border)] bg-[var(--surface)] text-[var(--text-secondary)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]'
  }`}
  >
@@ -272,49 +274,47 @@ const CXPIndependiente = ({ user, userRole }) => {
  return (
  <tr key={row.id} className="cursor-pointer hover:bg-[var(--surface)]" onClick={() => setDetailRecord(row)}>
  <td className="px-4 py-4">
- <p className="text-sm font-semibold text-[var(--text-primary)]">{row.counterpartyName}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{row.counterpartyName}</p>
  <p className="text-xs text-[var(--text-secondary)]">{row.description || 'Sin descripción'}</p>
  </td>
  <td className="px-4 py-4 text-sm text-[var(--text-primary)]">{row.documentNumber || 'Sin documento'}</td>
  <td className="px-4 py-4 text-sm text-[var(--text-secondary)]">{row.projectName || 'Sin proyecto'}</td>
- <td className="px-4 py-4 text-right text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(row.grossAmount)}</td>
- <td className="px-4 py-4 text-right text-sm font-semibold text-[var(--warning)]">{formatCurrency(row.openAmount)}</td>
+ <td className="px-4 py-4 text-right nd-mono text-sm tabular-nums text-[var(--text-primary)]">{formatCurrency(row.grossAmount)}</td>
+ <td className="px-4 py-4 text-right nd-mono text-sm tabular-nums text-[var(--warning)]">{formatCurrency(row.openAmount)}</td>
  <td className="px-4 py-4 text-center text-sm text-[var(--text-secondary)]">{row.dueDate ? formatDate(row.dueDate) : 'Sin fecha'}</td>
  <td className="px-4 py-4 text-center">
- <span
- className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${
- row.status === 'settled'
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--success)]'
- : row.status === 'overdue'
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--accent)]'
- : row.status === 'partial'
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--warning)]'
- : 'border-[var(--border-visible)] bg-[var(--surface)] text-[var(--text-secondary)]'
- }`}
+ <Badge
+ variant={
+ row.status === 'settled' ? 'ok'
+ : row.status === 'overdue' ? 'err'
+ : row.status === 'partial' ? 'warn'
+ : 'neutral'
+ }
  >
  {statusLabels[row.status]}
- </span>
+ </Badge>
  </td>
  <td className="px-4 py-4 text-center text-xs text-[var(--text-secondary)]">{row.source}</td>
  {canAct && (
  <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
  <div className="flex justify-end gap-2">
- <button
- type="button"
+ <Button
+ variant="ghost"
+ size="sm"
  disabled={!canSettle}
  onClick={() => setSelectedRow(row)}
- className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs font-semibold text-[var(--text-secondary)] transition-all hover:bg-[var(--surface)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-40"
  >
  Abono
- </button>
- <button
- type="button"
+ </Button>
+ <Button
+ variant="primary"
+ size="sm"
  disabled={!canSettle || loadingId === row.id}
+ loading={loadingId === row.id}
  onClick={() => handleSettle(row)}
- className="rounded-full bg-[var(--text-primary)] px-3 py-2 text-xs font-semibold text-[var(--black)] transition-all hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-40"
  >
  Liquidar
- </button>
+ </Button>
  </div>
  </td>
  )}

@@ -45,7 +45,7 @@ const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-secondary)]">{title}</p>
- <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
+ <p className="mt-2 nd-display text-[28px] font-medium tracking-tight text-[var(--text-primary)]">{value}</p>
  </div>
  <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: `${accent}1f`, color: accent }}>
  <IconComponent size={18} />
@@ -159,7 +159,7 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="mb-3 nd-label text-[var(--warning)]">Gastos</p>
- <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Pagos reales y deuda operativa sin mezclar con caja futura.</h2>
+ <h2 className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">Pagos reales y deuda operativa sin mezclar con caja futura.</h2>
  <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[var(--text-secondary)]">
  Las CXP abiertas permanecen fuera de caja hasta registrar una salida real en banco. Aquí ves deuda, abonos y pagos realizados sobre el mismo ledger.
  </p>
@@ -168,7 +168,7 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  <button
  type="button"
  onClick={() => onNewTransaction('expense')}
- className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-[var(--text-primary)] transition-colors hover:bg-[var(--accent)]"
+ className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-3 text-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--accent)]"
  >
  <Plus size={16} />
  Nueva factura CXP
@@ -234,16 +234,16 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  return (
  <tr key={row.id} className="cursor-pointer hover:bg-[var(--surface)]" onClick={() => setDetailRecord(row)}>
  <td className="px-4 py-4">
- <p className="text-sm font-semibold text-[var(--text-primary)]">{row.counterpartyName}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{row.counterpartyName}</p>
  <p className="text-xs text-[var(--text-secondary)]">{row.description || 'Sin descripción'}</p>
  </td>
  <td className="px-4 py-4 text-sm text-[var(--text-primary)]">{row.documentNumber || 'Sin documento'}</td>
  <td className="px-4 py-4 text-sm text-[var(--text-secondary)]">{row.projectName || 'Sin proyecto'}</td>
- <td className="px-4 py-4 text-right text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(row.grossAmount)}</td>
- <td className="px-4 py-4 text-right text-sm font-semibold text-[var(--warning)]">{formatCurrency(row.openAmount)}</td>
+ <td className="px-4 py-4 text-right text-sm font-medium text-[var(--text-primary)]">{formatCurrency(row.grossAmount)}</td>
+ <td className="px-4 py-4 text-right text-sm font-medium text-[var(--warning)]">{formatCurrency(row.openAmount)}</td>
  <td className="px-4 py-4 text-center text-sm text-[var(--text-secondary)]">{row.dueDate ? formatDate(row.dueDate) : 'Sin fecha'}</td>
  <td className="px-4 py-4 text-center">
- <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${
+ <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-medium ${
  row.status === 'settled'
  ? 'border-[var(--border-visible)] bg-transparent text-[var(--success)]'
  : row.status === 'overdue'
@@ -264,7 +264,7 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  <button
  type="button"
  onClick={() => setSelectedRow(row)}
- className="rounded-md border border-[var(--border)] px-3 py-2 text-xs font-semibold text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface)]"
+ className="rounded-md border border-[var(--border)] px-3 py-2 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface)]"
  >
  Abono
  </button>
@@ -272,7 +272,7 @@ const Gastos = ({ userRole, user, onNewTransaction }) => {
  type="button"
  onClick={() => handleSettle(row)}
  disabled={loadingId === row.id}
- className="rounded-md bg-[var(--accent)] px-3 py-2 text-xs font-semibold text-[var(--text-primary)] transition-colors hover:bg-[var(--accent)] disabled:opacity-50"
+ className="rounded-md bg-[var(--accent)] px-3 py-2 text-xs font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--accent)] disabled:opacity-50"
  >
  {loadingId === row.id ? 'Procesando...' : 'Liquidar'}
  </button>

@@ -161,7 +161,7 @@ const MultiMoneda = ({ user }) => {
  <h3 className="nd-label text-[var(--text-secondary)]">{pair}</h3>
  <ArrowRightLeft className="text-[var(--text-secondary)]" size={18} />
  </div>
- <p className="text-2xl font-bold text-[var(--text-primary)]">
+ <p className="text-2xl font-medium text-[var(--text-primary)]">
  {rate ? rate.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) : '—'}
  </p>
  <p className="text-xs text-[var(--text-disabled)] mt-1">
@@ -177,7 +177,7 @@ const MultiMoneda = ({ user }) => {
 
  {/* Rate Entry Form */}
  <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--border)]">
- <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4">Agregar / Actualizar Tasa</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)] mb-4">Agregar / Actualizar Tasa</h3>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
  <div>
  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Par de monedas</label>
@@ -206,7 +206,7 @@ const MultiMoneda = ({ user }) => {
  <button
  onClick={handleSaveRate}
  disabled={saving}
- className="flex items-center gap-2 px-6 py-2.5 bg-[var(--text-secondary)] hover:bg-[var(--text-secondary)] text-white rounded-lg font-medium transition-colors disabled:opacity-50 w-full justify-center"
+ className="flex items-center gap-2 px-6 py-2.5 bg-[var(--text-secondary)] hover:bg-[var(--text-secondary)] text-[var(--text-primary)] rounded-lg font-medium transition-colors disabled:opacity-50 w-full justify-center"
  >
  {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
  {saving ? 'Guardando...' : 'Guardar Tasa'}
@@ -217,7 +217,7 @@ const MultiMoneda = ({ user }) => {
 
  {/* Exchange Rates Table */}
  <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--border)]">
- <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4">Tasas Guardadas</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)] mb-4">Tasas Guardadas</h3>
  {rates.length === 0 ? (
  <div className="text-center py-8">
  <RefreshCw className="mx-auto text-[var(--text-disabled)] mb-3" size={32} />
@@ -229,11 +229,11 @@ const MultiMoneda = ({ user }) => {
  <table className="w-full text-left">
  <thead>
  <tr className="border-b border-[var(--border)]">
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Par</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Tasa</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Ultima actualizacion</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Actualizado por</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide text-right">Acciones</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Par</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Tasa</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Ultima actualizacion</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Actualizado por</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide text-right">Acciones</th>
  </tr>
  </thead>
  <tbody>
@@ -266,7 +266,7 @@ const MultiMoneda = ({ user }) => {
 
  {/* Currency Converter */}
  <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--border)]">
- <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4">Calculadora de Conversion</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)] mb-4">Calculadora de Conversion</h3>
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
  <div>
  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Monto</label>
@@ -305,7 +305,7 @@ const MultiMoneda = ({ user }) => {
  </div>
  <div className="bg-[var(--surface-raised)] rounded-lg p-3 border border-[var(--border)]">
  <p className="text-xs text-[var(--text-secondary)] mb-1">Resultado</p>
- <p className="text-xl font-bold text-[var(--success)]">
+ <p className="text-xl font-medium text-[var(--success)]">
  {converter.amount && convertedAmount !== null
  ? `${CURRENCIES.find((c) => c.code === converter.to)?.symbol || ''} ${convertedAmount.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
  : '—'

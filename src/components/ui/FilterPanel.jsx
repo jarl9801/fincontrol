@@ -5,7 +5,7 @@ import { CATEGORIES } from '../../constants/categories';
 const FilterPanel = ({ filters, setFilters, onApply }) => (
  <div className="space-y-4 rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center justify-between">
- <h3 className="flex items-center gap-2 text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+ <h3 className="flex items-center gap-2 text-base font-medium tracking-[-0.02em] text-[var(--text-primary)]">
  <Filter size={18} /> Filtros
  </h3>
  <button

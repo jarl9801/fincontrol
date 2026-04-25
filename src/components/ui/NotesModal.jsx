@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, MessageSquare, FileText, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/nexus';
 
 const safe = (v) => (v == null ? '' : typeof v === 'object' ? JSON.stringify(v) : String(v));
 
@@ -33,7 +34,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
  <div className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-4">
  <div>
- <h3 className="flex items-center gap-2 text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
+ <h3 className="flex items-center gap-2 text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
  <MessageSquare size={20} /> Notas y Comentarios
  </h3>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">{transaction.description}</p>
@@ -92,7 +93,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
  <div className="flex items-start justify-between mb-2">
  <div className="flex items-center gap-2">
  <MessageSquare size={14} className="text-[var(--text-primary)]" />
- <span className="text-xs font-semibold text-[var(--text-primary)]">
+ <span className="text-xs font-medium text-[var(--text-primary)]">
  {safe(note.user)}
  </span>
  </div>
@@ -115,7 +116,7 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
  <div className="flex items-start justify-between mb-2">
  <div className="flex items-center gap-2">
  <AlertCircle size={14} className="text-[var(--text-secondary)]" />
- <span className="text-xs font-semibold text-[var(--text-secondary)]">
+ <span className="text-xs font-medium text-[var(--text-secondary)]">
  Sistema
  </span>
  </div>
@@ -145,17 +146,9 @@ const NotesModal = ({ isOpen, onClose, transaction, onAddNote }) => {
  onChange={(e) => setNewNote(e.target.value)}
  onKeyDown={(e) => e.key === 'Enter' && handleAddNote()}
  />
- <button
- onClick={handleAddNote}
- disabled={!newNote.trim()}
- className={`px-6 py-2 rounded-lg font-medium transition-colors ${
- newNote.trim()
- ? 'bg-[var(--text-primary)] text-[var(--black)] hover:opacity-85'
- : 'cursor-not-allowed bg-[var(--border-visible)] text-white'
- }`}
- >
+ <Button variant="primary" disabled={!newNote.trim()} onClick={handleAddNote}>
  Agregar
- </button>
+ </Button>
  </div>
  </div>
  )}

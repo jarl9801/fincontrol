@@ -45,7 +45,7 @@ const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-secondary)]">{title}</p>
- <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
+ <p className="mt-2 nd-display text-[28px] font-medium tracking-tight text-[var(--text-primary)]">{value}</p>
  </div>
  <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: `${accent}1f`, color: accent }}>
  <IconComponent size={18} />
@@ -159,7 +159,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="mb-3 nd-label text-[var(--success)]">Ingresos</p>
- <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Cobros reales y cartera pendiente en una sola vista.</h2>
+ <h2 className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">Cobros reales y cartera pendiente en una sola vista.</h2>
  <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[var(--text-secondary)]">
  La caja entra solo con movimientos bancarios `posted`. Las facturas abiertas permanecen como cartera hasta registrar un cobro real.
  </p>
@@ -168,7 +168,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  <button
  type="button"
  onClick={() => onNewTransaction('income')}
- className="inline-flex items-center gap-2 rounded-lg bg-[var(--success)] px-4 py-3 text-sm font-semibold text-[var(--text-primary)] transition-colors hover:bg-[var(--success)]"
+ className="inline-flex items-center gap-2 rounded-lg bg-[var(--success)] px-4 py-3 text-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--success)]"
  >
  <Plus size={16} />
  Nueva factura CXC
@@ -234,16 +234,16 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  return (
  <tr key={row.id} className="cursor-pointer hover:bg-[var(--surface)]" onClick={() => setDetailRecord(row)}>
  <td className="px-4 py-4">
- <p className="text-sm font-semibold text-[var(--text-primary)]">{row.counterpartyName}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{row.counterpartyName}</p>
  <p className="text-xs text-[var(--text-secondary)]">{row.description || 'Sin descripción'}</p>
  </td>
  <td className="px-4 py-4 text-sm text-[var(--text-primary)]">{row.documentNumber || 'Sin documento'}</td>
  <td className="px-4 py-4 text-sm text-[var(--text-secondary)]">{row.projectName || 'Sin proyecto'}</td>
- <td className="px-4 py-4 text-right text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(row.grossAmount)}</td>
- <td className="px-4 py-4 text-right text-sm font-semibold text-[var(--text-secondary)]">{formatCurrency(row.openAmount)}</td>
+ <td className="px-4 py-4 text-right text-sm font-medium text-[var(--text-primary)]">{formatCurrency(row.grossAmount)}</td>
+ <td className="px-4 py-4 text-right text-sm font-medium text-[var(--text-secondary)]">{formatCurrency(row.openAmount)}</td>
  <td className="px-4 py-4 text-center text-sm text-[var(--text-secondary)]">{row.dueDate ? formatDate(row.dueDate) : 'Sin fecha'}</td>
  <td className="px-4 py-4 text-center">
- <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${
+ <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-medium ${
  row.status === 'settled'
  ? 'border-[var(--border-visible)] bg-transparent text-[var(--success)]'
  : row.status === 'overdue'
@@ -264,7 +264,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  <button
  type="button"
  onClick={() => setSelectedRow(row)}
- className="rounded-md border border-[var(--border)] px-3 py-2 text-xs font-semibold text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface)]"
+ className="rounded-md border border-[var(--border)] px-3 py-2 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface)]"
  >
  Abono
  </button>
@@ -272,7 +272,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  type="button"
  onClick={() => handleSettle(row)}
  disabled={loadingId === row.id}
- className="rounded-md bg-[var(--success)] px-3 py-2 text-xs font-semibold text-[var(--text-primary)] transition-colors hover:bg-[var(--success)] disabled:opacity-50"
+ className="rounded-md bg-[var(--success)] px-3 py-2 text-xs font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--success)] disabled:opacity-50"
  >
  {loadingId === row.id ? 'Procesando...' : 'Liquidar'}
  </button>

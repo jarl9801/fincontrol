@@ -214,7 +214,7 @@ const Alertas = ({ user }) => {
  <div className="flex items-center justify-between">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Seguimiento</p>
- <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Centro de alertas</h2>
+ <h2 className="mt-2 text-[24px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">Centro de alertas</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Revisa vencimientos, riesgos y avisos operativos desde una sola bandeja.</p>
  </div>
  {unreadCount > 0 && (
@@ -231,21 +231,21 @@ const Alertas = ({ user }) => {
  <p className="nd-label text-[var(--text-secondary)]">Críticas</p>
  <AlertTriangle size={18} className="text-[var(--accent)]" />
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--accent)]">{criticalCount}</p>
+ <p className="nd-display text-[28px] font-medium tracking-[-0.03em] text-[var(--accent)]">{criticalCount}</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">Advertencias</p>
  <Clock size={18} className="text-[var(--warning)]" />
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">{warningCount}</p>
+ <p className="nd-display text-[28px] font-medium tracking-[-0.03em] text-[var(--warning)]">{warningCount}</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">No leídas</p>
  <Bell size={18} className="text-[var(--text-primary)]" />
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{unreadCount}</p>
+ <p className="nd-display text-[28px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">{unreadCount}</p>
  </div>
  </div>
 
@@ -278,7 +278,7 @@ className={`px-3.5 py-1.5 rounded-md nd-label transition-all ${
  >
  <IconComp size={18} style={{ color: style.color }} className="flex-shrink-0 mt-0.5" />
  <div className="flex-1 min-w-0">
- <p className="text-[13px] font-semibold text-[var(--text-primary)]">{alert.title}</p>
+ <p className="text-[13px] font-medium text-[var(--text-primary)]">{alert.title}</p>
  <p className="mt-0.5 text-[12px] text-[var(--text-disabled)]">{alert.message}</p>
  {alert.createdAt && (
  <p className="mt-1 text-[10px] text-[var(--text-secondary)]">

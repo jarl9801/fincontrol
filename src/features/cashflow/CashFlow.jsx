@@ -42,7 +42,7 @@ const Section = ({ title, subtitle, children, help }) => (
  <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-5">
  <div className="flex items-center gap-2">
- <h3 className="nd-display text-[18px] font-semibold tracking-tight text-[var(--text-display)]">{title}</h3>
+ <h3 className="nd-display text-[18px] font-medium tracking-tight text-[var(--text-display)]">{title}</h3>
  {help}
  </div>
  {subtitle && <p className="mt-1 text-sm text-[var(--text-secondary)]">{subtitle}</p>}
@@ -97,7 +97,7 @@ const CashFlow = ({ user }) => {
  <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
  <div>
  <p className="nd-label text-[var(--text-secondary)] mb-3">Tesorería</p>
- <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
+ <h2 className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">
  Caja, vencimientos y seguimiento diario en una sola vista.
  </h2>
  <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--text-disabled)]">
@@ -113,7 +113,7 @@ const CashFlow = ({ user }) => {
  <p>Calculado desde el saldo de apertura (dic 2025) mas todos los movimientos bancarios registrados.</p>
  </HelpButton>
  </div>
- <p className="mt-2 nd-display text-[30px] font-semibold text-[var(--text-display)]">{formatCurrency(metrics.currentCash)}</p>
+ <p className="mt-2 nd-display text-[30px] font-medium text-[var(--text-display)]">{formatCurrency(metrics.currentCash)}</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
  <div className="flex items-center gap-1.5">
@@ -123,7 +123,7 @@ const CashFlow = ({ user }) => {
  <p>Muestra cuanto tendria la empresa si se cobrara y pagara todo lo pendiente.</p>
  </HelpButton>
  </div>
- <p className="mt-2 nd-display text-[30px] font-semibold text-[var(--text-display)]">{formatCurrency(metrics.projectedLiquidity)}</p>
+ <p className="mt-2 nd-display text-[30px] font-medium text-[var(--text-display)]">{formatCurrency(metrics.projectedLiquidity)}</p>
  </div>
  <div
  className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-4 cursor-pointer hover: transition-transform duration-200"
@@ -139,7 +139,7 @@ const CashFlow = ({ user }) => {
  <p>Representa el dinero que se espera recibir a corto plazo.</p>
  </HelpButton>
  </div>
- <p className="mt-2 nd-display text-[30px] font-semibold text-[var(--success)]">
+ <p className="mt-2 nd-display text-[30px] font-medium text-[var(--success)]">
  {formatCurrency(metrics.upcomingReceivables.reduce((sum, entry) => sum + entry.openAmount, 0))}
  </p>
  </div>
@@ -157,7 +157,7 @@ const CashFlow = ({ user }) => {
  <p>Representa las obligaciones de pago mas inmediatas.</p>
  </HelpButton>
  </div>
- <p className="mt-2 nd-display text-[30px] font-semibold text-[var(--warning)]">
+ <p className="mt-2 nd-display text-[30px] font-medium text-[var(--warning)]">
  {formatCurrency(metrics.upcomingPayables.reduce((sum, entry) => sum + entry.openAmount, 0))}
  </p>
  </div>
@@ -187,7 +187,7 @@ const CashFlow = ({ user }) => {
  <td className="px-3 py-3 text-[13px] font-medium text-[var(--text-primary)]">{row.label}</td>
  <td className="px-3 py-3 text-right text-[13px] font-medium text-[var(--success)]">{formatCurrency(row.inflows)}</td>
  <td className="px-3 py-3 text-right text-[13px] font-medium text-[var(--warning)]">{formatCurrency(row.outflows)}</td>
- <td className={`px-3 py-3 text-right text-[13px] font-semibold ${row.net >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
+ <td className={`px-3 py-3 text-right text-[13px] font-medium ${row.net >= 0 ? 'text-[var(--success)]' : 'text-[var(--negative)]'}`}>
  {row.net >= 0 ? '\u{1F7E2}' : '\u{1F534}'} {formatCurrency(row.net)}
  </td>
  </tr>
@@ -274,14 +274,14 @@ const CashFlow = ({ user }) => {
  {isInflow ? <ArrowUpRight size={18} /> : <ArrowDownLeft size={18} />}
  </div>
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">{movement.description || 'Movimiento sin descripción'}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{movement.description || 'Movimiento sin descripción'}</p>
  <p className="text-xs text-[var(--text-secondary)]">
  {movement.counterpartyName || 'Sin contraparte'} · {formatDate(movement.postedDate)}
  </p>
  </div>
  </div>
  <div className="text-right">
- <p className={`text-sm font-semibold ${isInflow ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
+ <p className={`text-sm font-medium ${isInflow ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
  {isInflow ? '+' : '-'}
  {formatCurrency(movement.amount)}
  </p>
@@ -310,9 +310,9 @@ const CashFlow = ({ user }) => {
  <div className="mb-2 flex items-center justify-between gap-3">
  <div className="flex items-center gap-2 text-[var(--text-primary)]">
  <Landmark size={16} className="text-[var(--text-primary)]" />
- <span className="text-sm font-semibold">{movement.description || 'Movimiento sin descripción'}</span>
+ <span className="text-sm font-medium">{movement.description || 'Movimiento sin descripción'}</span>
  </div>
- <span className="text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(movement.amount)}</span>
+ <span className="text-sm font-medium text-[var(--text-primary)]">{formatCurrency(movement.amount)}</span>
  </div>
  <p className="text-xs text-[var(--text-secondary)]">
  {movement.counterpartyName || 'Sin contraparte'} · {formatDate(movement.postedDate)}
@@ -336,7 +336,7 @@ const CashFlow = ({ user }) => {
  <TrendingUp size={18} />
  </div>
  <div>
- <p className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
+ <p className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">
  {metrics.runwayMonths == null ? 'N/A' : `${metrics.runwayMonths.toFixed(1)}m`}
  </p>
  <p className="text-sm text-[var(--text-secondary)]">Egreso medio mensual: {formatCurrency(metrics.avgMonthlyOutflows)}</p>
@@ -357,7 +357,7 @@ const CashFlow = ({ user }) => {
  <ShieldAlert size={18} />
  </div>
  <div>
- <p className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
+ <p className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">
  {metrics.overdueReceivables.length}
  </p>
  <p className="text-sm text-[var(--text-secondary)]">
@@ -381,7 +381,7 @@ const CashFlow = ({ user }) => {
  <Clock3 size={18} />
  </div>
  <div>
- <p className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
+ <p className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">
  {metrics.upcomingPayables.length}
  </p>
  <p className="text-sm text-[var(--text-secondary)]">
@@ -398,21 +398,21 @@ const CashFlow = ({ user }) => {
  <div className="rounded-lg border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-4">
  <div className="mb-2 flex items-center gap-2 text-[var(--success)]">
  <CheckCircle2 size={16} />
- <span className="text-sm font-semibold">Caja registrada</span>
+ <span className="text-sm font-medium">Caja registrada</span>
  </div>
  <p className="text-sm leading-6 text-[var(--text-secondary)]">Los movimientos confirmados alimentan el saldo disponible y la conciliación.</p>
  </div>
  <div className="rounded-lg border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-4">
  <div className="mb-2 flex items-center gap-2 text-[var(--text-primary)]">
  <Landmark size={16} />
- <span className="text-sm font-semibold">Control por documento</span>
+ <span className="text-sm font-medium">Control por documento</span>
  </div>
  <p className="text-sm leading-6 text-[var(--text-secondary)]">Las facturas abiertas se siguen por separado hasta que el cobro o el pago ocurre.</p>
  </div>
  <div className="rounded-lg border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-4">
  <div className="mb-2 flex items-center gap-2 text-[var(--warning)]">
  <Clock3 size={16} />
- <span className="text-sm font-semibold">Disciplina semanal</span>
+ <span className="text-sm font-medium">Disciplina semanal</span>
  </div>
  <p className="text-sm leading-6 text-[var(--text-secondary)]">Revisar y conciliar cada semana mejora la calidad del cierre y de la proyección.</p>
  </div>

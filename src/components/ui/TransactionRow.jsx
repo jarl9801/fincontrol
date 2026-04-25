@@ -1,17 +1,15 @@
 import {
  ArrowDownCircle,
  ArrowUpCircle,
- ArrowRightLeft,
- CheckCircle2,
- Circle,
  Edit2,
  History,
  MessageSquare,
  RefreshCw,
  Trash2,
 } from 'lucide-react';
-import { formatCurrency, formatDate, formatDateTime, getDaysOverdue } from '../../utils/formatters';
+import { formatCurrency, formatDate, getDaysOverdue } from '../../utils/formatters';
 import { ALERT_THRESHOLDS } from '../../constants/config';
+import { Badge } from '@/components/ui/nexus';
 
 const safe = (value) => (value == null ? '' : typeof value === 'object' ? JSON.stringify(value) : String(value));
 
@@ -29,7 +27,7 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
  const parts = str.split(new RegExp(`(${escaped})`, 'gi'));
  return parts.map((part, index) =>
  part.toLowerCase() === searchTerm.toLowerCase()
- ? <mark key={index} className="bg-transparent text-[var(--text-display)] font-bold">{part}</mark>
+ ? <mark key={index} className="bg-transparent text-[var(--text-display)] font-medium">{part}</mark>
  : part,
  );
  };
@@ -47,44 +45,15 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
  const paidAmount = Number(t.paidAmount) || 0;
  const paidPct = Number(t.amount) > 0 ? (paidAmount / Number(t.amount)) * 100 : 0;
 
- const getStatusConfig = () => {
- if (normalizedStatus === 'paid') {
- return {
- icon: CheckCircle2,
- text: t.statusLabel || 'Liquidado',
- color: 'var(--success)',
- };
- }
- if (normalizedStatus === 'partial') {
- return {
- icon: Circle,
- text: t.statusLabel || 'Parcial',
- color: 'var(--warning)',
- };
- }
- if (normalizedStatus === 'cancelled' || normalizedStatus === 'void') {
- return {
- icon: Circle,
- text: t.statusLabel || 'Anulado',
- color: 'var(--text-disabled)',
- };
- }
- if (isOverdue) {
- return {
- icon: Circle,
- text: t.statusLabel || `Vencida`,
- color: 'var(--error)',
- };
- }
- return {
- icon: Circle,
- text: t.statusLabel || 'Emitida',
- color: 'var(--warning)',
- };
+ const getStatus = () => {
+ if (normalizedStatus === 'paid') return { variant: 'ok', text: t.statusLabel || 'Liquidado' };
+ if (normalizedStatus === 'partial') return { variant: 'warn', text: t.statusLabel || 'Parcial' };
+ if (normalizedStatus === 'cancelled' || normalizedStatus === 'void') return { variant: 'neutral', text: t.statusLabel || 'Anulado' };
+ if (isOverdue) return { variant: 'err', text: t.statusLabel || 'Vencida' };
+ return { variant: 'warn', text: t.statusLabel || 'Emitida' };
  };
 
- const statusConfig = getStatusConfig();
- const StatusIcon = statusConfig.icon;
+ const status = getStatus();
  const canRegisterPayment = Boolean(t.canRegisterPayment && onRegisterPayment);
  const canViewNotes = Boolean(t.canViewNotes && onViewNotes);
  const canEdit = Boolean(t.canEdit && onEdit && userRole === 'admin');
@@ -192,20 +161,14 @@ const TransactionRow = ({ t, onDelete, onEdit, onViewNotes, onRegisterPayment, o
 
  {/* Amount */}
  <td className="px-4 py-3.5 text-right whitespace-nowrap">
- <span className={`nd-mono text-[14px] font-bold tabular-nums ${isIncome ? 'text-[var(--text-primary)]' : 'text-[var(--text-primary)]'}`}>
+ <span className="nd-mono text-[14px] tabular-nums text-[var(--text-primary)]">
  {isIncome ? '+' : '-'}{formatCurrency(t.amount)}
  </span>
  </td>
 
  {/* Status */}
  <td className="px-4 py-3.5 text-center">
- <span
- className="inline-flex items-center gap-1.5 nd-label border border-[var(--border-visible)] rounded-full px-2.5 py-1"
- style={{ color: statusConfig.color, borderColor: statusConfig.color }}
- >
- <StatusIcon size={12} />
- {statusConfig.text}
- </span>
+ <Badge variant={status.variant} dot>{status.text}</Badge>
  </td>
 
  {/* Actions */}

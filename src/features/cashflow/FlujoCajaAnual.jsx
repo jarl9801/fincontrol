@@ -82,7 +82,7 @@ function KpiCard({ label, value, color, prefix = '', negative = false, signed = 
   return (
     <div className="rounded-md border border-[var(--border)] p-4" style={{ background: 'var(--surface)' }}>
       <p className="nd-label mb-1" style={{ color: 'var(--text-secondary)' }}>{label}</p>
-      <p className="nd-display text-lg font-bold leading-tight" style={{ color }}>{signed ? signedValue : formattedValue}</p>
+      <p className="nd-display text-lg font-medium leading-tight" style={{ color }}>{signed ? signedValue : formattedValue}</p>
       {sub && <p className="text-[10px] mt-1" style={{ color: 'var(--text-disabled)' }}>{sub}</p>}
     </div>
   );
@@ -204,7 +204,7 @@ export default function FlujoCajaAnual({ user }) {
             {YEAR_OPTIONS.map((y) => <option key={y} value={y}>{y}</option>)}
           </select>
           <span
-            className="text-xs font-semibold px-3 py-1 rounded-full"
+            className="text-xs font-medium px-3 py-1 rounded-full"
             style={{ background: 'var(--success-50)', color: 'var(--success)', border: '1px solid var(--success)' }}
           >
             {selectedYear} YTD
@@ -334,8 +334,8 @@ export default function FlujoCajaAnual({ user }) {
         {/* CxC Panel */}
         <div className="rounded-md border border-[var(--border)] overflow-hidden" style={{ background: 'var(--surface)' }}>
           <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)]">
-            <span className="font-bold text-sm" style={{ color: 'var(--interactive)' }}>CXC PENDIENTES</span>
-            <span className="font-bold text-base" style={{ color: 'var(--success)' }}>€{formatCurrency(totalCxC)}</span>
+            <span className="font-medium text-sm" style={{ color: 'var(--interactive)' }}>CXC PENDIENTES</span>
+            <span className="font-medium text-base" style={{ color: 'var(--success)' }}>€{formatCurrency(totalCxC)}</span>
           </div>
           <div style={{ maxHeight: 280, overflowY: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px' }}>
@@ -378,8 +378,8 @@ export default function FlujoCajaAnual({ user }) {
         {/* CxP Panel */}
         <div className="rounded-md border border-[var(--border)] overflow-hidden" style={{ background: 'var(--surface)' }}>
           <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)]">
-            <span className="font-bold text-sm" style={{ color: 'var(--warning)' }}>CXP PENDIENTES</span>
-            <span className="font-bold text-base" style={{ color: 'var(--accent)' }}>€{formatCurrency(totalCxP)}</span>
+            <span className="font-medium text-sm" style={{ color: 'var(--warning)' }}>CXP PENDIENTES</span>
+            <span className="font-medium text-base" style={{ color: 'var(--accent)' }}>€{formatCurrency(totalCxP)}</span>
           </div>
           <div style={{ maxHeight: 280, overflowY: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px' }}>

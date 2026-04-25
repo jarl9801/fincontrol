@@ -7,6 +7,7 @@ import { useCostCenters } from '../../hooks/useCostCenters';
 import { useTransactions } from '../../hooks/useTransactions';
 import { COST_CENTERS as PREDEFINED_COST_CENTERS } from '../../constants/costCenters';
 import { formatCurrency } from '../../utils/formatters';
+import { Button } from '@/components/ui/nexus';
 
 const MONTH_NAMES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 const MONTH_FULL_NAMES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -179,11 +180,11 @@ const CostCenters = ({ user }) => {
  <div className="flex items-center gap-4 text-sm">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2">
  <span className="text-[var(--text-secondary)]">Ppto. mensual: </span>
- <span className="font-bold text-[var(--text-primary)]">{formatCurrency(monthlyBudget)}</span>
+ <span className="font-medium text-[var(--text-primary)]">{formatCurrency(monthlyBudget)}</span>
  </div>
  <div className={`rounded-md px-3 py-2 ${getProgressBgColor(ytdPercent)}`}>
  <span className="text-[var(--text-secondary)]">YTD: </span>
- <span className={`font-bold ${ytdPercent > 100 ? 'text-[var(--accent)]' : ytdPercent > 80 ? 'text-[var(--warning)]' : 'text-[var(--success)]'}`}>
+ <span className={`font-medium ${ytdPercent > 100 ? 'text-[var(--accent)]' : ytdPercent > 80 ? 'text-[var(--warning)]' : 'text-[var(--success)]'}`}>
  {formatCurrency(ytdExecuted)} / {formatCurrency(ytdBudget)}
  </span>
  <span className={`ml-2 text-xs font-medium ${ytdPercent > 100 ? 'text-[var(--accent)]' : ytdPercent > 80 ? 'text-[var(--warning)]' : 'text-[var(--success)]'}`}>
@@ -209,7 +210,7 @@ const CostCenters = ({ user }) => {
  }`}
  >
  <div className="text-center mb-2">
- <p className={`text-xs font-bold ${isCurrentMonth ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}>
+ <p className={`text-xs font-medium ${isCurrentMonth ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}>
  {data.month}
  </p>
  </div>
@@ -228,7 +229,7 @@ const CostCenters = ({ user }) => {
  </div>
 
  <div className="mt-2 text-center">
- <p className={`text-xs font-bold ${
+ <p className={`text-xs font-medium ${
  percent > 100 ? 'text-[var(--accent)]' :
  percent > 80 ? 'text-[var(--warning)]' :
  percent > 0 ? 'text-[var(--success)]' :
@@ -293,7 +294,7 @@ const CostCenters = ({ user }) => {
  style={{ width: `${Math.min(utilization, 100)}%` }}
  />
  </div>
- <span className={`text-xs font-bold ${
+ <span className={`text-xs font-medium ${
  utilization > 100 ? 'text-[var(--accent)]' :
  utilization > 80 ? 'text-[var(--warning)]' :
  'text-[var(--success)]'
@@ -360,7 +361,7 @@ const CostCenters = ({ user }) => {
  <div className="space-y-6">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Presupuesto operativo</p>
- <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Centros de costo</h2>
+ <h2 className="mt-2 nd-display text-[24px] font-light tracking-[-0.03em] text-[var(--text-primary)]">Centros de costo</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Organiza responsables, presupuesto anual y seguimiento mensual desde una sola mesa.</p>
  </div>
 
@@ -370,9 +371,9 @@ const CostCenters = ({ user }) => {
  <div className="rounded-lg bg-transparent p-2">
  <TrendingDown className="text-[var(--accent)]" size={20} />
  </div>
- <h3 className="font-semibold text-[var(--text-primary)]">Centros de costos</h3>
+ <h3 className="font-medium text-[var(--text-primary)]">Centros de costos</h3>
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--accent)]">{costCenters.length}</p>
+ <p className="nd-display text-[28px] font-light tabular-nums tracking-[-0.03em] text-[var(--accent)]">{costCenters.length}</p>
  <p className="text-xs text-[var(--text-secondary)]">activos</p>
  </div>
 
@@ -381,9 +382,9 @@ const CostCenters = ({ user }) => {
  <div className="rounded-lg bg-transparent p-2">
  <BarChart3 className="text-[var(--text-primary)]" size={20} />
  </div>
- <h3 className="font-semibold text-[var(--text-primary)]">Presupuesto anual</h3>
+ <h3 className="font-medium text-[var(--text-primary)]">Presupuesto anual</h3>
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{formatCurrency(totalBudget)}</p>
+ <p className="nd-display text-[28px] font-light tabular-nums tracking-[-0.03em] text-[var(--text-primary)]">{formatCurrency(totalBudget)}</p>
  <p className="text-xs text-[var(--text-secondary)]">{formatCurrency(totalBudget / 12)}/mes</p>
  </div>
 
@@ -392,9 +393,9 @@ const CostCenters = ({ user }) => {
  <div className="rounded-lg bg-transparent p-2">
  <TrendingUpDown className="text-[var(--warning)]" size={20} />
  </div>
- <h3 className="font-semibold text-[var(--text-primary)]">Ejecutado YTD</h3>
+ <h3 className="font-medium text-[var(--text-primary)]">Ejecutado YTD</h3>
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">{formatCurrency(totalExecuted)}</p>
+ <p className="nd-display text-[28px] font-light tabular-nums tracking-[-0.03em] text-[var(--warning)]">{formatCurrency(totalExecuted)}</p>
  <p className="text-xs text-[var(--text-secondary)]">de {formatCurrency(ytdBudget)} presupuestado</p>
  </div>
 
@@ -403,11 +404,11 @@ const CostCenters = ({ user }) => {
  <div className={`rounded-lg p-2 ${getProgressBgColor(overallUtilization)}`}>
  <Calendar className={`${overallUtilization > 100 ? 'text-[var(--accent)]' : overallUtilization > 80 ? 'text-[var(--warning)]' : 'text-[var(--success)]'}`} size={20} />
  </div>
- <h3 className="font-semibold text-[var(--text-primary)]">
+ <h3 className="font-medium text-[var(--text-primary)]">
  Utilización YTD
  </h3>
  </div>
- <p className={`nd-display text-[28px] font-semibold tracking-[-0.03em] ${overallUtilization > 100 ? 'text-[var(--accent)]' : overallUtilization > 80 ? 'text-[var(--warning)]' : 'text-[var(--success)]'}`}>
+ <p className={`nd-display text-[28px] font-light tabular-nums tracking-[-0.03em] ${overallUtilization > 100 ? 'text-[var(--accent)]' : overallUtilization > 80 ? 'text-[var(--warning)]' : 'text-[var(--success)]'}`}>
  {overallUtilization.toFixed(1)}%
  </p>
  <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-[var(--surface)]">
@@ -420,22 +421,20 @@ const CostCenters = ({ user }) => {
  </div>
 
  <div className="flex justify-end gap-3">
- <button
- onClick={handleLoadPredefined}
- className="inline-flex items-center gap-2 rounded-lg bg-[var(--success)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--success)]"
- >
- <Package size={18} /> Generar Predefinidos
- </button>
- <button
+ <Button variant="secondary" icon={Package} onClick={handleLoadPredefined}>
+ Generar Predefinidos
+ </Button>
+ <Button
+ variant="primary"
+ icon={Plus}
  onClick={() => {
  setEditingCenter(null);
  setNewCenter({ name: '', type: 'Costos', budget: 0, responsible: '' });
  setShowNewModal(true);
  }}
- className="inline-flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--black)] transition hover:opacity-85"
  >
- <Plus size={18} /> Nuevo Centro
- </button>
+ Nuevo Centro
+ </Button>
  </div>
 
  <div className="rounded-md border border-[var(--border-visible)] bg-transparent p-6 ">
@@ -444,7 +443,7 @@ const CostCenters = ({ user }) => {
  <TrendingDown className="text-[var(--accent)]" size={20} />
  </div>
  <div>
- <h3 className="text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Centros de costos</h3>
+ <h3 className="text-base font-medium tracking-[-0.02em] text-[var(--text-primary)]">Centros de costos</h3>
  <p className="text-sm text-[var(--text-secondary)]">Abre cada fila para revisar el detalle mensual.</p>
  </div>
  </div>
@@ -487,7 +486,7 @@ const CostCenters = ({ user }) => {
  <TrendingUp className="text-[var(--success)]" size={20} />
  </div>
  <div>
- <h3 className="text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Centros de ingresos</h3>
+ <h3 className="text-base font-medium tracking-[-0.02em] text-[var(--text-primary)]">Centros de ingresos</h3>
  <p className="text-sm text-[var(--success)]">Usa esta mesa para metas y seguimiento comercial.</p>
  </div>
  </div>
@@ -522,7 +521,7 @@ const CostCenters = ({ user }) => {
  <div className="w-full max-w-md overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
  <div className="border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-4">
  <p className="nd-label text-[var(--text-primary)]">Centro presupuestario</p>
- <h3 className="text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
+ <h3 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
  {editingCenter ? 'Editar centro' : 'Nuevo centro'}
  </h3>
  </div>
@@ -589,12 +588,9 @@ const CostCenters = ({ user }) => {
  >
  Cancelar
  </button>
- <button
- onClick={editingCenter ? handleUpdateCenter : handleAddCenter}
- className="rounded-lg bg-[var(--text-primary)] px-6 py-2.5 text-sm font-semibold text-[var(--black)] transition hover:opacity-85"
- >
+ <Button variant="primary" onClick={editingCenter ? handleUpdateCenter : handleAddCenter}>
  {editingCenter ? 'Guardar cambios' : 'Crear centro'}
- </button>
+ </Button>
  </div>
  </div>
  </div>

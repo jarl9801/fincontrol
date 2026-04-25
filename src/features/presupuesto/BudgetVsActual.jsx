@@ -60,7 +60,7 @@ const ConfirmModal = ({ isOpen, onConfirm, onCancel, title, message }) => {
  return (
  <div className="fixed inset-0 z-[240] flex items-center justify-center bg-[var(--surface)] p-4 ">
  <div className="w-full max-w-sm rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
- <h3 className="mb-2 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">{title}</h3>
+ <h3 className="mb-2 text-[18px] font-medium tracking-tight text-[var(--text-primary)]">{title}</h3>
  <p className="mb-6 text-sm text-[var(--text-disabled)]">{message}</p>
  <div className="flex justify-end gap-3">
  <button
@@ -73,7 +73,7 @@ const ConfirmModal = ({ isOpen, onConfirm, onCancel, title, message }) => {
  <button
  type="button"
  onClick={onConfirm}
- className="rounded-lg bg-[var(--warning)] px-5 py-2.5 text-sm font-semibold text-white hover:opacity-80"
+ className="rounded-lg bg-[var(--warning)] px-5 py-2.5 text-sm font-medium text-[var(--text-primary)] hover:opacity-80"
  >
  Confirmar
  </button>
@@ -91,7 +91,7 @@ const NumberInputModal = ({ isOpen, onSubmit, onCancel, title, label, defaultVal
  return (
  <div className="fixed inset-0 z-[240] flex items-center justify-center bg-[var(--surface)] p-4 ">
  <div className="w-full max-w-xs rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
- <h3 className="mb-4 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">{title}</h3>
+ <h3 className="mb-4 text-[18px] font-medium tracking-tight text-[var(--text-primary)]">{title}</h3>
  <label className="block">
  <span className="mb-2 block nd-label text-[var(--text-disabled)]">{label}</span>
  <input
@@ -115,7 +115,7 @@ const NumberInputModal = ({ isOpen, onSubmit, onCancel, title, label, defaultVal
  <button
  type="button"
  onClick={() => { onSubmit(parseFloat(val) || 0); }}
- className="rounded-lg bg-[var(--text-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--black)] hover:opacity-85"
+ className="rounded-lg bg-[var(--text-primary)] px-5 py-2.5 text-sm font-medium text-[var(--black)] hover:opacity-85"
  >
  Aceptar
  </button>
@@ -223,7 +223,7 @@ const BudgetLineModal = ({ isOpen, onClose, onSave, line, categories, allCategor
  <div className="fixed inset-0 z-[230] flex items-center justify-center bg-[var(--surface)] p-4 ">
  <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="mb-5 flex items-center justify-between">
- <h3 className="text-[22px] font-semibold tracking-tight text-[var(--text-primary)]">
+ <h3 className="text-[22px] font-medium tracking-tight text-[var(--text-primary)]">
  {line?.id ? 'Editar línea' : 'Nueva línea de presupuesto'}
  </h3>
  <button onClick={onClose} className="rounded-md p-2 text-[var(--text-secondary)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]">
@@ -276,7 +276,7 @@ const BudgetLineModal = ({ isOpen, onClose, onSave, line, categories, allCategor
  <div className="grid grid-cols-6 gap-2 md:grid-cols-12">
  {MONTHS.map((m, i) => (
  <div key={m} className="flex flex-col items-center gap-1">
- <span className="text-[10px] font-semibold text-[var(--text-secondary)]">{m}</span>
+ <span className="text-[10px] font-medium text-[var(--text-secondary)]">{m}</span>
  <input
  type="number"
  min="0"
@@ -331,7 +331,7 @@ const BudgetLineModal = ({ isOpen, onClose, onSave, line, categories, allCategor
  onSave({ ...form, id: form.id || generateLineId() });
  onClose();
  }}
- className="rounded-lg bg-[var(--text-primary)] px-5 py-3 text-sm font-semibold text-[var(--black)] hover:opacity-85"
+ className="rounded-lg bg-[var(--text-primary)] px-5 py-3 text-sm font-medium text-[var(--black)] hover:opacity-85"
  >
  Guardar línea
  </button>
@@ -359,7 +359,7 @@ const CreateBudgetModal = ({ isOpen, onClose, onSubmit, projects, year }) => {
  return (
  <div className="fixed inset-0 z-[220] flex items-center justify-center bg-[var(--surface)] p-4 ">
  <div className="w-full max-w-md rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
- <h3 className="text-[22px] font-semibold tracking-tight text-[var(--text-primary)]">Nuevo presupuesto {year}</h3>
+ <h3 className="text-[22px] font-medium tracking-tight text-[var(--text-primary)]">Nuevo presupuesto {year}</h3>
  <p className="mt-2 text-sm text-[var(--text-secondary)]">Define el alcance del presupuesto. Las líneas se añaden después.</p>
 
  <form
@@ -393,7 +393,7 @@ const CreateBudgetModal = ({ isOpen, onClose, onSubmit, projects, year }) => {
  <button type="button" onClick={onClose} className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]">
  Cancelar
  </button>
- <button type="submit" className="rounded-lg bg-[var(--text-primary)] px-4 py-3 text-sm font-semibold text-[var(--black)] hover:opacity-85">
+ <button type="submit" className="rounded-lg bg-[var(--text-primary)] px-4 py-3 text-sm font-medium text-[var(--black)] hover:opacity-85">
  Crear presupuesto
  </button>
  </div>
@@ -440,11 +440,11 @@ const DrillDownRow = ({ row, allTransactions, selectedYear, canAct, incToBudgetM
  <tr key={t.id} className="text-xs">
  <td className="py-1.5 pr-4 whitespace-nowrap text-[var(--text-secondary)]">{t.date}</td>
  <td className="py-1.5 pr-4 text-[var(--text-primary)]">{t.description || t.counterparty || t.vendor || '—'}</td>
- <td className={"py-1.5 pr-4 text-right font-semibold " + (t.type === 'income' ? 'text-[var(--success)]' : 'text-[var(--warning)]')}>
+ <td className={"py-1.5 pr-4 text-right font-medium " + (t.type === 'income' ? 'text-[var(--success)]' : 'text-[var(--warning)]')}>
  {t.type === 'income' ? '+' : '-'}{formatCurrency(Math.abs(t.amount || 0))}
  </td>
  <td className="py-1.5">
- <span className="rounded-full bg-transparent px-2 py-0.5 text-[10px] font-semibold text-[var(--success)]">
+ <span className="rounded-full bg-transparent px-2 py-0.5 text-[10px] font-medium text-[var(--success)]">
  {t.status}
  </span>
  </td>
@@ -700,11 +700,11 @@ const BudgetVsActual = ({ user, userRole }) => {
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="mb-3 nd-label text-[var(--text-secondary)]">Presupuesto {selectedYear}</p>
- <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Planificado vs. Real.</h2>
+ <h2 className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">Planificado vs. Real.</h2>
  <p className="mt-3 max-w-2xl text-[15px] leading-7 text-[var(--text-disabled)]">
  Compara el presupuesto por categoría y mes contra la ejecución real (neto sin IVA).
  {selectedCostCenter && (
- <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-[var(--surface)] px-3 py-0.5 text-[13px] font-semibold text-[var(--text-primary)]">
+ <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-[var(--surface)] px-3 py-0.5 text-[13px] font-medium text-[var(--text-primary)]">
  CC: {selectedCostCenter}
  <button onClick={() => setSelectedCostCenter('')} className="ml-1 text-[var(--text-disabled)] hover:text-[var(--text-primary)]">×</button>
  </span>
@@ -750,7 +750,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  <button
  type="button"
  onClick={() => setIsCreateOpen(true)}
- className="inline-flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-4 py-3 text-sm font-semibold text-[var(--black)] hover:opacity-85"
+ className="inline-flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-4 py-3 text-sm font-medium text-[var(--black)] hover:opacity-85"
  >
  <Plus size={16} />
  Crear presupuesto
@@ -821,7 +821,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  <h3 className="mb-3 nd-label text-[var(--accent)]">[Diagnóstico]</h3>
  <div className="grid gap-3 md:grid-cols-3">
  <div>
- <p className="nd-mono text-[11px] font-bold text-[var(--accent)]">Presupuesto</p>
+ <p className="nd-mono text-[11px] font-medium text-[var(--accent)]">Presupuesto</p>
  <p className="nd-mono text-[11px] text-[var(--text-secondary)]">Año: {selectedYear} | Project: {selectedProject || 'Empresa'}</p>
  <p className="nd-mono text-[11px] text-[var(--text-secondary)]">Líneas: {currentBudget?.lines?.length || 0}</p>
  {currentBudget?.lines?.map(l => (
@@ -829,7 +829,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  ))}
  </div>
  <div>
- <p className="nd-mono text-[11px] font-bold text-[var(--accent)]">Movimientos ledger 2026</p>
+ <p className="nd-mono text-[11px] font-medium text-[var(--accent)]">Movimientos ledger 2026</p>
  <p className="nd-mono text-[11px] text-[var(--text-secondary)]">Total ledger: {ledger.postedMovements.length} | En 2026: {mov2026.length}</p>
  <p className="nd-mono text-[11px] text-[var(--text-secondary)] mt-1">Muestra de movimientos 2026:</p>
  {sampleMov.map(m => (
@@ -841,7 +841,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  ))}
  </div>
  <div>
- <p className="nd-mono text-[11px] font-bold text-[var(--accent)]">Matching</p>
+ <p className="nd-mono text-[11px] font-medium text-[var(--accent)]">Matching</p>
  <p className="nd-mono text-[11px] text-[var(--text-secondary)]">Presupuesto cats: {bCats.join(', ')}</p>
  <p className="nd-mono text-[11px] text-[var(--text-secondary)] mt-1">Matches con score ≥ 40:</p>
  {txCats2026.map(lc => {
@@ -867,14 +867,14 @@ const BudgetVsActual = ({ user, userRole }) => {
  {!currentBudget && (
  <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-[var(--border)] py-20">
  <Target size={48} className="mb-4 text-[var(--text-secondary)]" />
- <h3 className="text-xl font-semibold text-[var(--text-primary)]">Sin presupuesto para {selectedYear}</h3>
+ <h3 className="text-xl font-medium text-[var(--text-primary)]">Sin presupuesto para {selectedYear}</h3>
  <p className="mt-2 text-sm text-[var(--text-secondary)]">Crea un presupuesto para empezar a comparar.</p>
  {canAct && (
  <div className="mt-5 flex gap-3">
  <button
  type="button"
  onClick={() => setIsCreateOpen(true)}
- className="inline-flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-6 py-3 text-sm font-semibold text-[var(--black)] hover:opacity-85"
+ className="inline-flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-6 py-3 text-sm font-medium text-[var(--black)] hover:opacity-85"
  >
  <Plus size={16} />
  Crear presupuesto {selectedYear}
@@ -937,7 +937,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  showToast('Error al crear presupuesto', 'error');
  }
  }}
- className="inline-flex items-center gap-2 rounded-lg border border-[var(--text-primary)] bg-[var(--surface)] px-6 py-3 text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--surface)]"
+ className="inline-flex items-center gap-2 rounded-lg border border-[var(--text-primary)] bg-[var(--surface)] px-6 py-3 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--surface)]"
  >
  <Sparkles size={16} />
  Generar desde 2025
@@ -957,14 +957,14 @@ const BudgetVsActual = ({ user, userRole }) => {
  <p className="nd-label text-[var(--text-disabled)]">Ingresos presupuestados</p>
  <TrendingUp size={16} className="text-[var(--text-primary)]" />
  </div>
- <p className="text-[26px] font-semibold tracking-tight text-[var(--text-primary)]">{formatCurrency(totals.budgetIncome)}</p>
+ <p className="text-[26px] font-medium tracking-tight text-[var(--text-primary)]">{formatCurrency(totals.budgetIncome)}</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-3 flex items-center justify-between">
  <p className="nd-label text-[var(--text-disabled)]">Ingresos reales (neto)</p>
  <TrendingUp size={16} className="text-[var(--success)]" />
  </div>
- <p className="text-[26px] font-semibold tracking-tight text-[var(--success)]">{formatCurrency(totals.actualIncome)}</p>
+ <p className="text-[26px] font-medium tracking-tight text-[var(--success)]">{formatCurrency(totals.actualIncome)}</p>
  <p className={`mt-1 text-xs font-medium ${totals.actualIncome >= totals.budgetIncome ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
  {totals.budgetIncome > 0 ? (((totals.actualIncome / totals.budgetIncome) - 1) * 100).toFixed(1) : '0'}% del objetivo
  </p>
@@ -974,14 +974,14 @@ const BudgetVsActual = ({ user, userRole }) => {
  <p className="nd-label text-[var(--text-disabled)]">Gastos presupuestados</p>
  <TrendingDown size={16} className="text-[var(--warning)]" />
  </div>
- <p className="text-[26px] font-semibold tracking-tight text-[var(--text-primary)]">{formatCurrency(totals.budgetExpense)}</p>
+ <p className="text-[26px] font-medium tracking-tight text-[var(--text-primary)]">{formatCurrency(totals.budgetExpense)}</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-3 flex items-center justify-between">
  <p className="nd-label text-[var(--text-disabled)]">Gastos reales (neto)</p>
  <TrendingDown size={16} className="text-[var(--warning)]" />
  </div>
- <p className="text-[26px] font-semibold tracking-tight text-[var(--warning)]">{formatCurrency(totals.actualExpense)}</p>
+ <p className="text-[26px] font-medium tracking-tight text-[var(--warning)]">{formatCurrency(totals.actualExpense)}</p>
  <p className={`mt-1 text-xs font-medium ${totals.actualExpense <= totals.budgetExpense ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
  {totals.budgetExpense > 0 ? (((totals.actualExpense / totals.budgetExpense) - 1) * 100).toFixed(1) : '0'}% vs límite
  </p>
@@ -993,7 +993,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  <div className="flex items-center gap-3 rounded-lg border border-[var(--border-visible)] bg-transparent px-5 py-3.5">
  <AlertTriangle size={18} className="flex-shrink-0 text-[var(--warning)]" />
  <div className="flex-1">
- <p className="text-sm font-semibold text-[var(--text-primary)]">
+ <p className="text-sm font-medium text-[var(--text-primary)]">
  {uncategorizedStats.uncategorized} movimientos bancarios sin categoría en {selectedYear}
  </p>
  <p className="mt-0.5 text-xs text-[var(--text-secondary)]">
@@ -1002,7 +1002,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  </div>
  <a
  href="#/transactions"
- className="flex-shrink-0 rounded-md bg-[var(--warning)] px-4 py-2 text-xs font-semibold text-white hover:bg-[var(--warning)]"
+ className="flex-shrink-0 rounded-md bg-[var(--warning)] px-4 py-2 text-xs font-medium text-[var(--text-primary)] hover:bg-[var(--warning)]"
  >
  Categorizar
  </a>
@@ -1019,7 +1019,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  key={id}
  type="button"
  onClick={() => setActiveTab(id)}
- className={`flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition-all ${
+ className={`flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all ${
  activeTab === id
  ? 'bg-[var(--text-primary)] text-[var(--black)] '
  : 'border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]'
@@ -1034,7 +1034,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  {/* Monthly Chart (always visible) */}
  <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4">
- <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">
+ <h3 className="text-[18px] font-medium tracking-tight text-[var(--text-primary)]">
  {activeTab === 'summary' ? 'Ingresos y Gastos por mes' : 'Detalle mensual por categoría'}
  </h3>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Barras: presupuesto. Línea: ejecución real.</p>
@@ -1092,14 +1092,14 @@ const BudgetVsActual = ({ user, userRole }) => {
  <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center justify-between">
  <div>
- <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Resumen por categoría</h3>
+ <h3 className="text-[18px] font-medium tracking-tight text-[var(--text-primary)]">Resumen por categoría</h3>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Presupuesto vs. real (neto sin IVA). Clic en monto para editar.</p>
  </div>
  {canAct && (
  <button
  type="button"
  onClick={() => setEditingLine({})}
- className="flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--black)] hover:opacity-85"
+ className="flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-4 py-2.5 text-sm font-medium text-[var(--black)] hover:opacity-85"
  >
  <Plus size={14} />
  Añadir línea
@@ -1135,13 +1135,13 @@ const BudgetVsActual = ({ user, userRole }) => {
  ? <ChevronUp size={14} className="text-[var(--text-primary)]" />
  : <ChevronDown size={14} className="text-[var(--text-secondary)]" />}
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">{row.categoryName}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{row.categoryName}</p>
  {row.notes && <p className="text-xs text-[var(--text-secondary)]">{row.notes}</p>}
  </div>
  </div>
  </td>
  <td className="px-4 py-4">
- <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
+ <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
  row.type === 'income'
  ? 'border border-[var(--border-visible)] bg-transparent text-[var(--success)]'
  : 'border border-[var(--warning)] bg-transparent text-[var(--warning)]'
@@ -1149,7 +1149,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  {row.type === 'income' ? 'Ingreso' : 'Gasto'}
  </span>
  </td>
- <td className="px-4 py-4 text-right text-sm font-semibold text-[var(--text-primary)]">
+ <td className="px-4 py-4 text-right text-sm font-medium text-[var(--text-primary)]">
  <EditableCell
  value={row.totalBudget}
  formatter={(v) => formatCurrency(v)}
@@ -1162,19 +1162,19 @@ const BudgetVsActual = ({ user, userRole }) => {
  }}
  />
  </td>
- <td className="px-4 py-4 text-right text-sm font-semibold text-[var(--text-primary)]">
+ <td className="px-4 py-4 text-right text-sm font-medium text-[var(--text-primary)]">
  {formatCurrency(row.totalActual)}
  </td>
- <td className={`px-4 py-4 text-right text-sm font-semibold ${row.variance >= 0 ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
+ <td className={`px-4 py-4 text-right text-sm font-medium ${row.variance >= 0 ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
  {row.variance >= 0 ? '+' : ''}{formatCurrency(row.variance)}
  </td>
- <td className={`px-4 py-4 text-right text-sm font-semibold ${row.pct >= 0 ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
+ <td className={`px-4 py-4 text-right text-sm font-medium ${row.pct >= 0 ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
  {row.pct >= 0 ? '+' : ''}{row.pct.toFixed(1)}%
  </td>
  <td className="px-4 py-4 text-center">
  {row.variance >= 0
- ? <span className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--success)]"><Check size={12} /> Bajo presupuesto</span>
- : <span className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--warning)]"><AlertTriangle size={12} /> Sobre presupuesto</span>
+ ? <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--success)]"><Check size={12} /> Bajo presupuesto</span>
+ : <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--warning)]"><AlertTriangle size={12} /> Sobre presupuesto</span>
  }
  </td>
  {canAct && (
@@ -1233,7 +1233,7 @@ const BudgetVsActual = ({ user, userRole }) => {
  </tbody>
  {summaryRows.length > 0 && (
  <tfoot>
- <tr className="border-t-2 border-[var(--border)] font-semibold">
+ <tr className="border-t-2 border-[var(--border)] font-medium">
  <td className="px-4 py-3 text-sm text-[var(--text-primary)]" colSpan={2}>TOTALES</td>
  <td className="px-4 py-3 text-right text-sm text-[var(--text-primary)]">{formatCurrency(totals.budgetIncome - totals.budgetExpense)}</td>
  <td className="px-4 py-3 text-right text-sm text-[var(--text-primary)]">{formatCurrency(totals.actualIncome - totals.actualExpense)}</td>
@@ -1253,12 +1253,12 @@ const BudgetVsActual = ({ user, userRole }) => {
  {activeTab === 'detail' && currentBudget.lines?.length > 0 && (
  <section className="space-y-4">
  <div className="flex items-center justify-between">
- <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Desglose mensual</h3>
+ <h3 className="text-[18px] font-medium tracking-tight text-[var(--text-primary)]">Desglose mensual</h3>
  {canAct && (
  <button
  type="button"
  onClick={() => setEditingLine({})}
- className="flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-4 py-2.5 text-sm font-semibold text-[var(--black)] hover:opacity-85"
+ className="flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-4 py-2.5 text-sm font-medium text-[var(--black)] hover:opacity-85"
  >
  <Plus size={14} />
  Añadir línea
@@ -1271,8 +1271,8 @@ const BudgetVsActual = ({ user, userRole }) => {
  <div key={line.id} className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-3 flex items-center justify-between">
  <div className="flex items-center gap-3">
- <h4 className="text-[15px] font-semibold text-[var(--text-primary)]">{line.categoryName}</h4>
- <span className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase ${
+ <h4 className="text-[15px] font-medium text-[var(--text-primary)]">{line.categoryName}</h4>
+ <span className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-medium uppercase ${
  line.type === 'income' ? 'bg-transparent text-[var(--success)]' : 'bg-transparent text-[var(--warning)]'
  }`}>
  {line.type === 'income' ? 'Ingreso' : 'Gasto'}
@@ -1305,9 +1305,9 @@ const BudgetVsActual = ({ user, userRole }) => {
  const isPast = i < CURRENT_MONTH || selectedYear < CURRENT_YEAR;
  return (
  <div key={m} className="flex flex-col items-center gap-1 rounded-md border border-[var(--border)] bg-[var(--surface)] p-2">
- <span className="text-[9px] font-semibold text-[var(--text-secondary)]">{m}</span>
+ <span className="text-[9px] font-medium text-[var(--text-secondary)]">{m}</span>
  <div className="text-center">
- <p className="text-[10px] font-semibold text-[var(--text-primary)]">{formatCurrency(budget)}</p>
+ <p className="text-[10px] font-medium text-[var(--text-primary)]">{formatCurrency(budget)}</p>
  {isPast && (
  <p className={`text-[10px] font-medium ${actual <= budget ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
  {formatCurrency(actual)}

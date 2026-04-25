@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { X, Save, Loader2, HardHat, Briefcase } from 'lucide-react';
 import { useProjects } from '../../hooks/useProjects';
 import { PROJECTS as PROJECT_CONSTANTS } from '../../constants/projects';
+import { Button } from '@/components/ui/nexus';
 
 /**
  * EmployeeFormModal — create/edit employees.
@@ -168,7 +169,7 @@ const EmployeeFormModal = ({
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-5">
           <div>
-            <h3 className="text-xl font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
+            <h3 className="text-xl font-medium tracking-[-0.03em] text-[var(--text-primary)]">
               {editingEmployee ? 'Editar empleado' : 'Nuevo empleado'}
             </h3>
             <p className="mt-0.5 text-sm text-[var(--text-secondary)]">
@@ -198,7 +199,7 @@ const EmployeeFormModal = ({
                 type="button"
                 onClick={() => setFormData({ ...formData, type: value })}
                 className={`
-                  flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-md transition-all
+                  flex items-center justify-center gap-2 py-3 text-sm font-medium rounded-md transition-all
                   ${formData.type === value
                     ? 'bg-[var(--surface-raised)] text-[var(--text-primary)] border border-[var(--border-visible)]'
                     : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}
@@ -212,7 +213,7 @@ const EmployeeFormModal = ({
 
           {/* Datos personales */}
           <div className="flex items-center gap-2 pt-1">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">
               Datos personales
             </span>
             <div className="h-px flex-1 bg-[var(--border)]" />
@@ -221,7 +222,7 @@ const EmployeeFormModal = ({
           <div className="grid grid-cols-2 gap-4">
             {/* First name */}
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
                 Nombre <span className="text-[var(--accent)]">*</span>
               </label>
               <input
@@ -243,7 +244,7 @@ const EmployeeFormModal = ({
 
             {/* Last name */}
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
                 Apellido <span className="text-[var(--accent)]">*</span>
               </label>
               <input
@@ -266,7 +267,7 @@ const EmployeeFormModal = ({
 
           {/* Aliases */}
           <div>
-            <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
               Alias (separados por coma)
             </label>
             <input
@@ -283,7 +284,7 @@ const EmployeeFormModal = ({
 
           {/* Role */}
           <div>
-            <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
               Rol / Cargo
             </label>
             <input
@@ -297,7 +298,7 @@ const EmployeeFormModal = ({
 
           {/* Asignaciones */}
           <div className="flex items-center gap-2 pt-1">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">
               Asignaciones
             </span>
             <div className="h-px flex-1 bg-[var(--border)]" />
@@ -305,7 +306,7 @@ const EmployeeFormModal = ({
 
           {/* Projects multi-select */}
           <div>
-            <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
               Proyectos
             </label>
             <div className="grid grid-cols-1 gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] p-3 sm:grid-cols-2">
@@ -338,7 +339,7 @@ const EmployeeFormModal = ({
 
           {/* Cost center */}
           <div>
-            <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
               Centro de costo predeterminado
             </label>
             <input
@@ -352,7 +353,7 @@ const EmployeeFormModal = ({
 
           {/* Contacto */}
           <div className="flex items-center gap-2 pt-1">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">
               Contacto
             </span>
             <div className="h-px flex-1 bg-[var(--border)]" />
@@ -361,7 +362,7 @@ const EmployeeFormModal = ({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Email */}
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
                 Email
               </label>
               <input
@@ -382,7 +383,7 @@ const EmployeeFormModal = ({
 
             {/* Phone */}
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
                 Teléfono
               </label>
               <input
@@ -397,7 +398,7 @@ const EmployeeFormModal = ({
 
           {/* Período */}
           <div className="flex items-center gap-2 pt-1">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">
               Período
             </span>
             <div className="h-px flex-1 bg-[var(--border)]" />
@@ -405,7 +406,7 @@ const EmployeeFormModal = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
                 Fecha de alta
               </label>
               <input
@@ -416,7 +417,7 @@ const EmployeeFormModal = ({
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
                 Fecha de baja
               </label>
               <input
@@ -437,7 +438,7 @@ const EmployeeFormModal = ({
 
           {/* Notes */}
           <div>
-            <label className="mb-2 block text-sm font-semibold text-[var(--text-disabled)]">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
               Notas
             </label>
             <textarea
@@ -468,7 +469,7 @@ const EmployeeFormModal = ({
                   <div className="h-5 w-10 rounded-full bg-[var(--border)] transition-colors peer-checked:bg-transparent"></div>
                   <div className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-[var(--surface)] transition-transform peer-checked:translate-x-5"></div>
                 </div>
-                <span className="text-sm font-semibold text-[var(--text-disabled)]">Activo</span>
+                <span className="text-sm font-medium text-[var(--text-disabled)]">Activo</span>
               </div>
               <span className="text-xs text-[var(--text-secondary)]">
                 {formData.status === 'active'
@@ -483,31 +484,24 @@ const EmployeeFormModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] py-3.5 font-semibold text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-disabled)]"
+              className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] py-3.5 font-medium text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-disabled)]"
             >
               Cancelar
             </button>
-            <button
+            <Button
               type="submit"
+              variant="primary"
+              icon={Save}
+              loading={submitting}
               disabled={submitting}
-              className={`
-                flex-[2] flex items-center justify-center gap-2 py-3.5 rounded-md font-bold text-white
-                transition-all duration-200
-                bg-[var(--text-primary)] hover:opacity-80
-                ${submitting ? 'opacity-50 cursor-not-allowed' : ''}
-              `}
+              className="flex-[2]"
             >
-              {submitting ? (
-                <Loader2 size={18} className="animate-spin" />
-              ) : (
-                <Save size={18} />
-              )}
               {submitting
                 ? 'Guardando...'
                 : editingEmployee
                 ? 'Guardar cambios'
                 : 'Crear empleado'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

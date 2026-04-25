@@ -2,6 +2,7 @@ import React from 'react';
 import { RotateCcw } from 'lucide-react';
 import TransactionRow from '../../components/ui/TransactionRow';
 import { formatCurrency } from '../../utils/formatters';
+import { Panel, Button, EmptyState } from '@/components/ui/nexus';
 
 const TransactionTable = ({
  filteredRecords,
@@ -18,26 +19,23 @@ const TransactionTable = ({
  onChangeStatus,
  onViewDetail,
 }) => {
- return (
- <section className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface)]">
- <div className="border-b border-[var(--border)] px-4 py-2.5 flex items-center justify-between gap-4">
- <span className="nd-label text-[var(--text-disabled)]">
- {loadingLedger
- ? 'Sincronizando registros...'
- : `${filteredRecords.length} registros`}
- </span>
- {!loadingLedger && filteredRecords.length > 0 && (
- <div className="flex items-center gap-4">
+ const totalsActions = !loadingLedger && filteredRecords.length > 0 ? (
+ <>
  <span className="nd-mono text-[11px] tabular-nums text-[var(--success)]">
  +{formatCurrency(filteredRecords.filter(r => r.type === 'income').reduce((s, r) => s + Number(r.amount || 0), 0))}
  </span>
  <span className="nd-mono text-[11px] tabular-nums text-[var(--negative)]">
  -{formatCurrency(filteredRecords.filter(r => r.type !== 'income').reduce((s, r) => s + Number(r.amount || 0), 0))}
  </span>
- </div>
- )}
- </div>
+ </>
+ ) : null;
 
+ return (
+ <Panel
+ meta={loadingLedger ? 'Sincronizando registros...' : `${filteredRecords.length} registros`}
+ actions={totalsActions}
+ padding={false}
+ >
  {/* Desktop table */}
  <div className="hidden lg:block">
  <table className="w-full text-left">
@@ -71,21 +69,16 @@ const TransactionTable = ({
 
  {filteredRecords.length === 0 && (
  <tr>
- <td colSpan="6" className="px-4 py-16 text-center">
- <p className="nd-mono text-[13px] uppercase tracking-[0.08em] text-[var(--text-disabled)]">
- No hay transacciones que mostrar.
- </p>
- <p className="mt-2 text-[13px] text-[var(--text-disabled)]">
- Prueba ajustar los filtros o importa nuevos registros.
- </p>
- <button
- type="button"
- onClick={resetFilters}
- className="mt-4 inline-flex items-center gap-2 rounded-full border border-[var(--border-visible)] px-4 py-2 nd-label text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] hover:border-[var(--text-primary)]"
- >
- <RotateCcw size={12} />
+ <td colSpan="6">
+ <EmptyState
+ title="Sin transacciones"
+ description="Prueba ajustar los filtros o importa nuevos registros."
+ action={
+ <Button variant="ghost" size="sm" icon={RotateCcw} onClick={resetFilters}>
  Limpiar filtros
- </button>
+ </Button>
+ }
+ />
  </td>
  </tr>
  )}
@@ -117,7 +110,7 @@ const TransactionTable = ({
  </p>
  </div>
  <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
- <span className="nd-mono text-[14px] font-bold tabular-nums text-[var(--text-primary)]">
+ <span className="nd-mono text-[14px] tabular-nums text-[var(--text-primary)]">
  {isIncome ? '+' : '-'}{formatCurrency(record.amount)}
  </span>
  <span
@@ -132,15 +125,18 @@ const TransactionTable = ({
  );
  })}
  {filteredRecords.length === 0 && (
- <div className="px-4 py-16 text-center">
- <p className="nd-mono text-[13px] uppercase tracking-[0.08em] text-[var(--text-disabled)]">No hay transacciones que mostrar.</p>
- <button type="button" onClick={resetFilters} className="mt-4 inline-flex items-center gap-2 rounded-full border border-[var(--border-visible)] px-4 py-2 nd-label text-[var(--text-secondary)]">
- <RotateCcw size={12} /> Limpiar filtros
- </button>
- </div>
+ <EmptyState
+ title="Sin transacciones"
+ description="Prueba ajustar los filtros o importa nuevos registros."
+ action={
+ <Button variant="ghost" size="sm" icon={RotateCcw} onClick={resetFilters}>
+ Limpiar filtros
+ </Button>
+ }
+ />
  )}
  </div>
- </section>
+ </Panel>
  );
 };
 

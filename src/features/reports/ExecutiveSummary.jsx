@@ -23,7 +23,7 @@ const Card = ({ title, value, subtitle, accent, icon }) => {
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">{title}</p>
- <p className="mt-2 text-[26px] font-semibold tracking-tight text-[var(--text-primary)]">{value}</p>
+ <p className="mt-2 text-[26px] font-medium tracking-tight text-[var(--text-primary)]">{value}</p>
  </div>
  <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: `${accent}20`, color: accent }}>
  <IconComponent size={18} />
@@ -110,7 +110,7 @@ const ExecutiveSummary = ({ user }) => {
 
  <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-5">
- <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Lectura ejecutiva</h3>
+ <h3 className="text-[18px] font-medium tracking-tight text-[var(--text-primary)]">Lectura ejecutiva</h3>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Resumen del estado operativo financiero a partir de la operación registrada.</p>
  </div>
  <div className="grid gap-4 lg:grid-cols-3">
@@ -125,7 +125,7 @@ const ExecutiveSummary = ({ user }) => {
  : 'border-[var(--border-visible)] bg-transparent'
  }`}
  >
- <p className="text-sm font-semibold text-[var(--text-primary)]">{alert.title}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{alert.title}</p>
  <p className="mt-2 text-sm leading-7 text-[var(--text-disabled)]">{alert.body}</p>
  </div>
  ))}
@@ -135,7 +135,7 @@ const ExecutiveSummary = ({ user }) => {
  <section className="grid gap-6 lg:grid-cols-[1.05fr,0.95fr]">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-5">
- <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Frente de vencimientos</h3>
+ <h3 className="text-[18px] font-medium tracking-tight text-[var(--text-primary)]">Frente de vencimientos</h3>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Prioridades inmediatas de caja.</p>
  </div>
  <div className="space-y-3">
@@ -146,9 +146,9 @@ const ExecutiveSummary = ({ user }) => {
  <div className="mb-2 flex items-center justify-between gap-3">
  <div className="flex items-center gap-2">
  {isInflow ? <ArrowUpRight size={16} className="text-[var(--success)]" /> : <ArrowDownRight size={16} className="text-[var(--warning)]" />}
- <span className="text-sm font-semibold text-[var(--text-primary)]">{entry.counterpartyName}</span>
+ <span className="text-sm font-medium text-[var(--text-primary)]">{entry.counterpartyName}</span>
  </div>
- <span className={`text-sm font-semibold ${isInflow ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
+ <span className={`text-sm font-medium ${isInflow ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
  {isInflow ? '+' : '-'}
  {formatCurrency(entry.openAmount)}
  </span>
@@ -162,7 +162,7 @@ const ExecutiveSummary = ({ user }) => {
 
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-5">
- <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">Recomendaciones</h3>
+ <h3 className="text-[18px] font-medium tracking-tight text-[var(--text-primary)]">Recomendaciones</h3>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Acciones sugeridas para la siguiente semana operativa.</p>
  </div>
  <div className="space-y-3">

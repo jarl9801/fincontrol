@@ -53,7 +53,7 @@ const AuditLog = ({ user }) => {
  return (
  <div className="space-y-6 animate-fadeIn">
  <div>
- <h2 className="text-xl font-medium text-white tracking-tight">Registro de Auditoría</h2>
+ <h2 className="text-xl font-medium text-[var(--text-primary)] tracking-tight">Registro de Auditoría</h2>
  <p className="text-[13px] text-[var(--text-disabled)] mt-0.5">Historial inmutable de todas las acciones</p>
  </div>
 
@@ -61,7 +61,7 @@ const AuditLog = ({ user }) => {
  <div className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
  <div>
  <p className="nd-label text-[var(--text-secondary)]">Contexto activo</p>
- <p className="mt-1 text-[13px] font-medium text-white">
+ <p className="mt-1 text-[13px] font-medium text-[var(--text-primary)]">
  {presetLabel || presetEntityId}
  </p>
  <p className="mt-1 text-[11px] text-[var(--text-disabled)]">
@@ -90,9 +90,9 @@ const AuditLog = ({ user }) => {
  <div className="p-1.5 rounded-lg" style={{ background: style.bg }}>
  <IconComp size={14} style={{ color: style.color }} />
  </div>
- <p className="text-[11px] font-semibold text-[var(--text-secondary)] uppercase">{style.label}</p>
+ <p className="text-[11px] font-medium text-[var(--text-secondary)] uppercase">{style.label}</p>
  </div>
- <p className="text-[22px] font-bold text-white">{count}</p>
+ <p className="text-[22px] font-medium text-[var(--text-primary)]">{count}</p>
  </div>
  );
  })}
@@ -103,17 +103,17 @@ const AuditLog = ({ user }) => {
  <div className="relative flex-1 max-w-xs">
  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)]" />
  <input value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="Buscar..."
- className="w-full bg-[var(--surface-raised)] border border-[var(--border)] rounded-lg pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-[var(--border-visible)]" />
+ className="w-full bg-[var(--surface-raised)] border border-[var(--border)] rounded-lg pl-9 pr-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--border-visible)]" />
  </div>
  <select value={filterAction} onChange={e => setFilterAction(e.target.value)}
- className="bg-[var(--surface-raised)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-white focus:outline-none">
+ className="bg-[var(--surface-raised)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none">
  <option value="all">Todas las acciones</option>
  {Object.entries(ACTION_STYLES).map(([key, style]) => (
  <option key={key} value={key}>{style.label}</option>
  ))}
  </select>
  <select value={filterUser} onChange={e => setFilterUser(e.target.value)}
- className="bg-[var(--surface-raised)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-white focus:outline-none">
+ className="bg-[var(--surface-raised)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none">
  <option value="all">Todos los usuarios</option>
  {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
  </select>
@@ -122,7 +122,7 @@ const AuditLog = ({ user }) => {
  {/* Log List */}
  <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] overflow-hidden">
  <div className="px-5 py-3 border-b border-[var(--border)] flex items-center justify-between">
- <h4 className="text-[13px] font-semibold text-[var(--text-secondary)]">Registros</h4>
+ <h4 className="text-[13px] font-medium text-[var(--text-secondary)]">Registros</h4>
  <span className="text-[11px] text-[var(--text-disabled)]">{filtered.length} de {logs.length}</span>
  </div>
  <div className="divide-y divide-[var(--border)]">
@@ -138,8 +138,8 @@ const AuditLog = ({ user }) => {
  </div>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
- <span className="text-[13px] font-medium text-white">{log.description}</span>
- <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase" style={{ background: style.bg, color: style.color }}>
+ <span className="text-[13px] font-medium text-[var(--text-primary)]">{log.description}</span>
+ <span className="px-2 py-0.5 rounded text-[9px] font-medium uppercase" style={{ background: style.bg, color: style.color }}>
  {style.label}
  </span>
  </div>

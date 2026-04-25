@@ -123,7 +123,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  <button
  type="button"
  onClick={() => cfg.exportFn(exportRows)}
- className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm font-semibold text-[var(--text-primary)] transition-colors hover:bg-[var(--surface)]"
+ className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--surface)]"
  >
  <Download size={16} />
  Exportar PDF
@@ -133,41 +133,41 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  <div className="grid gap-4 md:grid-cols-4">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-2 flex items-center justify-between">
- <span className="text-sm font-semibold text-[var(--text-secondary)]">{cfg.totalLabel}</span>
+ <span className="text-sm font-medium text-[var(--text-secondary)]">{cfg.totalLabel}</span>
  <TrendIcon size={18} style={{ color: cfg.primaryColor }} />
  </div>
- <p className={`text-2xl font-semibold ${cfg.accentClass}`}>{formatCurrency(totals.totalAmount)}</p>
+ <p className={`text-2xl font-medium ${cfg.accentClass}`}>{formatCurrency(totals.totalAmount)}</p>
  <p className="mt-1 text-xs text-[var(--text-disabled)]">{rows.length} documentos abiertos</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-2 flex items-center justify-between">
- <span className="text-sm font-semibold text-[var(--text-secondary)]">Vencido</span>
+ <span className="text-sm font-medium text-[var(--text-secondary)]">Vencido</span>
  <AlertCircle size={18} className="text-[var(--warning)]" />
  </div>
- <p className="text-2xl font-semibold text-[var(--warning)]">{formatCurrency(totals.overdueAmount)}</p>
+ <p className="text-2xl font-medium text-[var(--warning)]">{formatCurrency(totals.overdueAmount)}</p>
  <p className="mt-1 text-xs text-[var(--text-disabled)]">{totals.overdueCount} documentos</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-2 flex items-center justify-between">
- <span className="text-sm font-semibold text-[var(--text-secondary)]">Crítico (+90d)</span>
+ <span className="text-sm font-medium text-[var(--text-secondary)]">Crítico (+90d)</span>
  <Clock size={18} className="text-[var(--warning)]" />
  </div>
- <p className="text-2xl font-semibold text-[var(--warning)]">{formatCurrency(totals.criticalAmount)}</p>
+ <p className="text-2xl font-medium text-[var(--warning)]">{formatCurrency(totals.criticalAmount)}</p>
  <p className="mt-1 text-xs text-[var(--text-disabled)]">{totals.criticalCount} documentos</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-2 flex items-center justify-between">
- <span className="text-sm font-semibold text-[var(--text-secondary)]">Al corriente</span>
+ <span className="text-sm font-medium text-[var(--text-secondary)]">Al corriente</span>
  <TrendIcon size={18} className="text-[var(--text-primary)]" />
  </div>
- <p className="text-2xl font-semibold text-[var(--text-primary)]">{formatCurrency(totals.currentAmount)}</p>
+ <p className="text-2xl font-medium text-[var(--text-primary)]">{formatCurrency(totals.currentAmount)}</p>
  <p className="mt-1 text-xs text-[var(--text-disabled)]">{totals.currentCount} documentos</p>
  </div>
  </div>
 
  <div className="grid gap-6 lg:grid-cols-2">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
- <h3 className="mb-4 text-lg font-semibold text-[var(--text-primary)]">Antigüedad</h3>
+ <h3 className="mb-4 text-lg font-medium text-[var(--text-primary)]">Antigüedad</h3>
  <ResponsiveContainer width="100%" height={260}>
  <BarChart data={agingData}>
  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -183,15 +183,15 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  </div>
 
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
- <h3 className="mb-4 text-lg font-semibold text-[var(--text-primary)]">Resumen por antigüedad</h3>
+ <h3 className="mb-4 text-lg font-medium text-[var(--text-primary)]">Resumen por antigüedad</h3>
  <div className="space-y-3">
  {agingData.map((bucket) => (
  <div key={bucket.name} className="flex items-center justify-between rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">{bucket.name}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{bucket.name}</p>
  <p className="text-xs text-[var(--text-secondary)]">{bucket.count} documentos</p>
  </div>
- <span className={`text-sm font-semibold ${cfg.accentClass}`}>{formatCurrency(bucket.amount)}</span>
+ <span className={`text-sm font-medium ${cfg.accentClass}`}>{formatCurrency(bucket.amount)}</span>
  </div>
  ))}
  </div>
@@ -200,7 +200,7 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
 
  <div className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="border-b border-[var(--border)] px-5 py-4">
- <h3 className="text-lg font-semibold text-[var(--text-primary)]">{cfg.detailTitle}</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)]">{cfg.detailTitle}</h3>
  </div>
  <div className="overflow-x-auto">
  <table className="w-full min-w-[860px] text-left">
@@ -219,14 +219,14 @@ const ReportCXCXP = ({ user, type = 'cxc' }) => {
  <tr key={entry.id} className="hover:bg-[var(--surface)]">
  <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">{entry.dueDate ? formatDate(entry.dueDate) : 'Sin fecha'}</td>
  <td className="px-4 py-3">
- <p className="text-sm font-semibold text-[var(--text-primary)]">{entry.counterpartyName}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{entry.counterpartyName}</p>
  <p className="text-xs text-[var(--text-secondary)]">{entry.description || 'Sin descripción'}</p>
  </td>
  <td className="px-4 py-3 text-sm text-[var(--text-primary)]">{entry.documentNumber || 'Sin documento'}</td>
  <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">{entry.projectName || 'Sin proyecto'}</td>
- <td className={`px-4 py-3 text-right text-sm font-semibold ${cfg.accentClass}`}>{formatCurrency(entry.openAmount)}</td>
+ <td className={`px-4 py-3 text-right text-sm font-medium ${cfg.accentClass}`}>{formatCurrency(entry.openAmount)}</td>
  <td className="px-4 py-3 text-center">
- <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${entry.daysOverdue > 90 ? 'bg-transparent text-[var(--warning)]' : entry.daysOverdue > 30 ? 'bg-transparent text-[var(--warning)]' : 'bg-transparent text-[var(--success)]'}`}>
+ <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${entry.daysOverdue > 90 ? 'bg-transparent text-[var(--warning)]' : entry.daysOverdue > 30 ? 'bg-transparent text-[var(--warning)]' : 'bg-transparent text-[var(--success)]'}`}>
  {entry.daysOverdue} d
  </span>
  </td>

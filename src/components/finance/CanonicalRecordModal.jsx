@@ -36,7 +36,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  <div className="flex items-start justify-between border-b border-[var(--border)] px-5 py-4">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">Edición operativa</p>
- <h3 className="mt-1 text-[22px] font-semibold tracking-tight text-[var(--text-primary)]">Editar {projectLabel}</h3>
+ <h3 className="mt-1 text-[22px] font-medium tracking-tight text-[var(--text-primary)]">Editar {projectLabel}</h3>
  <p className="mt-1 text-[12px] text-[var(--text-secondary)]">{record.description}</p>
  </div>
  <button
@@ -215,7 +215,7 @@ const CanonicalRecordModal = ({ isOpen, onClose, record, onSubmit, projects = []
  <button
  type="submit"
  disabled={submitting}
- className="inline-flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-4 py-2.5 text-[13px] font-semibold text-[var(--black)] transition-colors hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-60"
+ className="inline-flex items-center gap-2 rounded-lg bg-[var(--text-primary)] px-4 py-2.5 text-[13px] font-medium text-[var(--black)] transition-colors hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-60"
  >
  {submitting ? <Loader2 size={15} className="animate-spin" /> : null}
  Guardar cambios

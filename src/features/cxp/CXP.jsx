@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { TrendingDown, Clock, AlertCircle, DollarSign, CheckCircle2, Circle, ArrowDownCircle, RefreshCw } from 'lucide-react';
+import { TrendingDown, Clock, AlertCircle, DollarSign, CheckCircle2, ArrowDownCircle } from 'lucide-react';
 import { formatCurrency, formatDate, getDaysOverdue, safe } from '../../utils/formatters';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
+import { KPIGrid, KPI, Button, Badge, Panel, EmptyState, Toast } from '@/components/ui/nexus';
 
 const CXP = ({
  transactions,
@@ -65,53 +66,42 @@ const CXP = ({
  return (
  <div className="space-y-6">
  {toast && (
- <div className={`fixed top-6 right-6 z-[100] flex items-center gap-2 px-5 py-3 rounded-md text-sm font-medium animate-fadeIn ${
- toast.type === 'success' ? 'bg-[var(--success)] text-white' : 'bg-[var(--accent)] text-white'
- }`}>
+ <Toast variant={toast.type === 'success' ? 'ok' : 'err'} onDismiss={() => setToast(null)}>
  {toast.message}
- </div>
+ </Toast>
  )}
 
- <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
- <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
- <div className="flex items-center justify-between mb-2">
- <h3 className="nd-label text-[var(--text-secondary)]">Total por Pagar</h3>
- <TrendingDown className="text-[var(--accent)]" size={20} />
- </div>
- <p className="nd-display text-3xl font-bold text-[var(--accent)]">{formatCurrency(totalPayable)}</p>
- <p className="text-xs text-[var(--text-disabled)] mt-1">{payables.length} facturas pendientes</p>
- </div>
- <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
- <div className="flex items-center justify-between mb-2">
- <h3 className="nd-label text-[var(--text-secondary)]">Pagado Parcialmente</h3>
- <DollarSign className="text-[var(--warning)]" size={20} />
- </div>
- <p className="nd-display text-3xl font-bold text-[var(--warning)]">{formatCurrency(totalPartial)}</p>
- <p className="text-xs text-[var(--text-disabled)] mt-1">{partialPayables.length} facturas con abono</p>
- </div>
- <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
- <div className="flex items-center justify-between mb-2">
- <h3 className="nd-label text-[var(--text-secondary)]">Vencido</h3>
- <AlertCircle className="text-[var(--accent)]" size={20} />
- </div>
- <p className="nd-display text-3xl font-bold text-[var(--accent)]">{formatCurrency(totalOverdue)}</p>
- <p className="text-xs text-[var(--text-disabled)] mt-1">{overduePayables.length} facturas vencidas</p>
- </div>
- <div className="bg-[var(--surface)] rounded-md p-6 border border-[var(--border)]">
- <div className="flex items-center justify-between mb-2">
- <h3 className="nd-label text-[var(--text-secondary)]">Vence Esta Semana</h3>
- <Clock className="text-[var(--warning)]" size={20} />
- </div>
- <p className="nd-display text-3xl font-bold text-[var(--warning)]">{formatCurrency(totalDueThisWeek)}</p>
- <p className="text-xs text-[var(--text-disabled)] mt-1">{dueThisWeek.length} facturas próximas</p>
- </div>
- </div>
+ <KPIGrid cols={4}>
+ <KPI
+ label="Total por pagar"
+ value={formatCurrency(totalPayable)}
+ meta={`${payables.length} facturas pendientes`}
+ icon={TrendingDown}
+ />
+ <KPI
+ label="Pagado parcialmente"
+ value={formatCurrency(totalPartial)}
+ meta={`${partialPayables.length} facturas con abono`}
+ tone="warn"
+ icon={DollarSign}
+ />
+ <KPI
+ label="Vencido"
+ value={formatCurrency(totalOverdue)}
+ meta={`${overduePayables.length} facturas vencidas`}
+ tone="err"
+ icon={AlertCircle}
+ />
+ <KPI
+ label="Vence esta semana"
+ value={formatCurrency(totalDueThisWeek)}
+ meta={`${dueThisWeek.length} facturas próximas`}
+ tone="warn"
+ icon={Clock}
+ />
+ </KPIGrid>
 
- <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] overflow-hidden">
- <div className="px-6 py-4 border-b border-[var(--border)] flex items-center justify-between">
- <h2 className="nd-display text-base font-medium text-[var(--text-display)]">Cuentas por Pagar</h2>
- <span className="text-xs text-[var(--text-secondary)]">{sorted.length} facturas pendientes</span>
- </div>
+ <Panel title="Cuentas por pagar" meta={`${sorted.length} facturas pendientes`} padding={false}>
  <div className="overflow-x-auto">
  <table className="w-full text-left">
  <thead className="bg-[var(--surface)] border-b border-[var(--border)]">
@@ -147,11 +137,9 @@ const CXP = ({
  </div>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
- <span className="text-sm font-semibold text-[var(--text-display)]">{safe(t.description)}</span>
+ <span className="text-sm font-medium text-[var(--text-display)]">{safe(t.description)}</span>
  {t.isRecurring && (
- <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-[var(--surface)] text-[var(--text-secondary)] border border-[var(--border)]">
- <RefreshCw size={10} /> Recurrente
- </span>
+ <Badge variant="neutral" dot>Recurrente</Badge>
  )}
  </div>
  <span className="text-xs text-[var(--text-disabled)] block mt-0.5">{safe(t.project)}</span>
@@ -167,44 +155,45 @@ const CXP = ({
  </div>
  </td>
  <td className="px-4 py-4 hidden md:table-cell">
- <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-transparent text-[var(--accent)] border border-[var(--border-visible)]">
- {safe(t.category)}
- </span>
+ <Badge variant="neutral">{safe(t.category)}</Badge>
  </td>
  <td className="px-4 py-4 text-right whitespace-nowrap">
  <div className="flex flex-col items-end">
- <span className="nd-mono text-sm font-bold text-[var(--accent)]">-{formatCurrency(t.amount)}</span>
+ <span className="nd-mono text-sm tabular-nums text-[var(--accent)]">-{formatCurrency(t.amount)}</span>
  {isPartial && <span className="text-xs text-[var(--warning)]">Restante: {formatCurrency(remaining)}</span>}
  </div>
  </td>
  <td className="px-4 py-4 text-center">
  {isPartial ? (
- <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-transparent text-[var(--warning)] border-[var(--border-visible)]"><Circle size={14} /> Pago Parcial</span>
+ <Badge variant="warn" dot>Pago Parcial</Badge>
  ) : isOverdue ? (
- <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-transparent text-[var(--accent)] border-[var(--border-visible)]"><Circle size={14} /> Vencido</span>
+ <Badge variant="err" dot>Vencido</Badge>
  ) : (
- <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-transparent text-[var(--warning)] border-[var(--border-visible)]"><Circle size={14} /> Pendiente</span>
+ <Badge variant="warn" dot>Pendiente</Badge>
  )}
  </td>
  {canAct && (
  <td className="px-4 py-4 text-center">
  <div className="flex items-center justify-center gap-2">
- <button
+ <Button
+ variant="primary"
+ size="sm"
+ icon={CheckCircle2}
  onClick={() => handleMarkPagado(t)}
+ loading={isLoading}
  disabled={isLoading}
- className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold text-white bg-[var(--interactive)] hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 "
  >
- <CheckCircle2 size={14} />
  {isLoading ? 'Guardando...' : 'Pagado'}
- </button>
- <button
+ </Button>
+ <Button
+ variant="ghost"
+ size="sm"
+ icon={DollarSign}
  onClick={() => { setPaymentTransaction(t); setIsPaymentModalOpen(true); }}
  disabled={isLoading}
- className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold text-[var(--warning)] bg-transparent hover:bg-transparent border border-[var(--border-visible)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
  >
- <DollarSign size={14} />
  Abono
- </button>
+ </Button>
  </div>
  </td>
  )}
@@ -213,20 +202,19 @@ const CXP = ({
  })}
  {sorted.length === 0 && (
  <tr>
- <td colSpan={canAct ? 6 : 5} className="px-4 py-16 text-center">
- <div className="flex flex-col items-center gap-3 text-[var(--text-disabled)]">
- <div className="w-16 h-16 bg-[var(--surface-raised)] rounded-full flex items-center justify-center">
- <TrendingDown className="w-8 h-8 text-[var(--text-disabled)]" />
- </div>
- <p className="text-sm">No hay cuentas por pagar pendientes</p>
- </div>
+ <td colSpan={canAct ? 6 : 5}>
+ <EmptyState
+ icon={TrendingDown}
+ title="Sin cuentas por pagar"
+ description="Las facturas pendientes aparecerán aquí."
+ />
  </td>
  </tr>
  )}
  </tbody>
  </table>
  </div>
- </div>
+ </Panel>
 
  <PartialPaymentModal
  isOpen={isPaymentModalOpen}

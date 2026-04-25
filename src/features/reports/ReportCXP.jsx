@@ -5,6 +5,7 @@ import { exportCXPToPDF } from '../../utils/pdfExport';
 import {
  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
+import { Button } from '@/components/ui/nexus';
 
 const ReportCXP = ({ transactions }) => {
  // Filtrar solo gastos pendientes
@@ -52,58 +53,55 @@ const ReportCXP = ({ transactions }) => {
  <div className="space-y-6">
  <div className="flex justify-between items-center">
  <div>
- <h2 className="text-xl font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Reporte de cuentas por pagar</h2>
+ <h2 className="text-xl font-medium tracking-[-0.03em] text-[var(--text-primary)]">Reporte de cuentas por pagar</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Antigüedad, vencimientos y detalle operativo de pagos pendientes.</p>
  </div>
- <button
- onClick={() => exportCXPToPDF(transactions)}
- className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition hover:bg-[var(--accent)]"
- >
- <Download size={18} /> Exportar PDF
- </button>
+ <Button variant="primary" icon={Download} onClick={() => exportCXPToPDF(transactions)}>
+ Exportar PDF
+ </Button>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Total por pagar</h3>
+ <h3 className="text-sm font-medium uppercase tracking-[0.18em] text-[var(--text-secondary)]">Total por pagar</h3>
  <TrendingDown className="text-[var(--accent)]" size={20} />
  </div>
- <p className="text-2xl font-semibold text-[var(--accent)]">{formatCurrency(totalPayable)}</p>
+ <p className="text-2xl font-medium text-[var(--accent)]">{formatCurrency(totalPayable)}</p>
  <p className="mt-1 text-xs text-[var(--text-secondary)]">{payables.length} facturas</p>
  </div>
 
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Monto vencido</h3>
+ <h3 className="text-sm font-medium uppercase tracking-[0.18em] text-[var(--text-secondary)]">Monto vencido</h3>
  <AlertCircle className="text-[var(--accent)]" size={20} />
  </div>
- <p className="text-2xl font-semibold text-[var(--accent)]">{formatCurrency(overdueAmount)}</p>
+ <p className="text-2xl font-medium text-[var(--accent)]">{formatCurrency(overdueAmount)}</p>
  <p className="mt-1 text-xs text-[var(--text-secondary)]">{agingAnalysis.over90.count} facturas</p>
  </div>
 
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Crítico (90+ días)</h3>
+ <h3 className="text-sm font-medium uppercase tracking-[0.18em] text-[var(--text-secondary)]">Crítico (90+ días)</h3>
  <Clock className="text-[var(--warning)]" size={20} />
  </div>
- <p className="text-2xl font-semibold text-[var(--warning)]">{formatCurrency(criticalAmount)}</p>
+ <p className="text-2xl font-medium text-[var(--warning)]">{formatCurrency(criticalAmount)}</p>
  <p className="mt-1 text-xs text-[var(--text-secondary)]">{agingAnalysis.days60_90.count + agingAnalysis.over90.count} facturas</p>
  </div>
 
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center justify-between mb-2">
- <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">Al corriente</h3>
+ <h3 className="text-sm font-medium uppercase tracking-[0.18em] text-[var(--text-secondary)]">Al corriente</h3>
  <TrendingDown className="text-[var(--success)]" size={20} />
  </div>
- <p className="text-2xl font-semibold text-[var(--success)]">{formatCurrency(currentAmount)}</p>
+ <p className="text-2xl font-medium text-[var(--success)]">{formatCurrency(currentAmount)}</p>
  <p className="mt-1 text-xs text-[var(--text-secondary)]">{agingAnalysis.current.count} facturas</p>
  </div>
  </div>
 
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
- <h3 className="mb-4 text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Análisis de antigüedad</h3>
+ <h3 className="mb-4 text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">Análisis de antigüedad</h3>
  <ResponsiveContainer width="100%" height={250}>
  <BarChart data={chartData}>
  <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.22)" />
@@ -116,13 +114,13 @@ const ReportCXP = ({ transactions }) => {
  </div>
 
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
- <h3 className="mb-4 text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Resumen por antigüedad</h3>
+ <h3 className="mb-4 text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">Resumen por antigüedad</h3>
  <table className="w-full">
  <thead>
  <tr className="border-b border-[var(--border)]">
- <th className="py-2 text-left text-sm font-semibold text-[var(--text-secondary)]">Periodo</th>
- <th className="py-2 text-center text-sm font-semibold text-[var(--text-secondary)]">Facturas</th>
- <th className="py-2 text-right text-sm font-semibold text-[var(--text-secondary)]">Monto</th>
+ <th className="py-2 text-left text-sm font-medium text-[var(--text-secondary)]">Periodo</th>
+ <th className="py-2 text-center text-sm font-medium text-[var(--text-secondary)]">Facturas</th>
+ <th className="py-2 text-right text-sm font-medium text-[var(--text-secondary)]">Monto</th>
  </tr>
  </thead>
  <tbody>
@@ -134,9 +132,9 @@ const ReportCXP = ({ transactions }) => {
  </tr>
  ))}
  <tr className="bg-[var(--surface-raised)]">
- <td className="py-3 text-sm font-semibold text-[var(--text-primary)]">Total</td>
- <td className="py-3 text-center text-sm font-semibold text-[var(--text-primary)]">{payables.length}</td>
- <td className="py-3 text-right text-sm font-semibold text-[var(--accent)]">{formatCurrency(totalPayable)}</td>
+ <td className="py-3 text-sm font-medium text-[var(--text-primary)]">Total</td>
+ <td className="py-3 text-center text-sm font-medium text-[var(--text-primary)]">{payables.length}</td>
+ <td className="py-3 text-right text-sm font-medium text-[var(--accent)]">{formatCurrency(totalPayable)}</td>
  </tr>
  </tbody>
  </table>
@@ -145,18 +143,18 @@ const ReportCXP = ({ transactions }) => {
 
  <div className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="border-b border-[var(--border)] px-6 py-4">
- <h3 className="text-lg font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Detalle de cuentas por pagar</h3>
+ <h3 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">Detalle de cuentas por pagar</h3>
  </div>
  <div className="overflow-x-auto">
  <table className="w-full text-left">
  <thead className="border-b border-[var(--border)] bg-[var(--surface-raised)]">
  <tr>
- <th className="px-4 py-3 text-xs font-semibold uppercase text-[var(--text-secondary)]">Fecha</th>
- <th className="px-4 py-3 text-xs font-semibold uppercase text-[var(--text-secondary)]">Descripción</th>
- <th className="px-4 py-3 text-xs font-semibold uppercase text-[var(--text-secondary)]">Proyecto</th>
- <th className="px-4 py-3 text-xs font-semibold uppercase text-[var(--text-secondary)]">Categoría</th>
- <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-[var(--text-secondary)]">Monto</th>
- <th className="px-4 py-3 text-center text-xs font-semibold uppercase text-[var(--text-secondary)]">Días</th>
+ <th className="px-4 py-3 text-xs font-medium uppercase text-[var(--text-secondary)]">Fecha</th>
+ <th className="px-4 py-3 text-xs font-medium uppercase text-[var(--text-secondary)]">Descripción</th>
+ <th className="px-4 py-3 text-xs font-medium uppercase text-[var(--text-secondary)]">Proyecto</th>
+ <th className="px-4 py-3 text-xs font-medium uppercase text-[var(--text-secondary)]">Categoría</th>
+ <th className="px-4 py-3 text-right text-xs font-medium uppercase text-[var(--text-secondary)]">Monto</th>
+ <th className="px-4 py-3 text-center text-xs font-medium uppercase text-[var(--text-secondary)]">Días</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-[var(--border)]">

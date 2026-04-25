@@ -63,7 +63,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
  <div className="w-full max-w-md overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
  <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-5">
  <div>
- <h3 className="text-xl font-bold text-[var(--text-primary)]">
+ <h3 className="text-xl font-medium text-[var(--text-primary)]">
  {transaction.type === 'income' ? 'Registrar cobro' : 'Registrar pago'}
  </h3>
  <p className="mt-0.5 max-w-[280px] truncate text-sm text-[var(--text-secondary)]">{safe(transaction.description)}</p>
@@ -80,16 +80,16 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
 
  <div className="px-6 pt-5 pb-3 grid grid-cols-3 gap-3">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
- <p className="mb-1 text-[10px] font-semibold uppercase text-[var(--text-disabled)]">Total</p>
- <p className="text-sm font-bold text-[var(--text-primary)]">{formatCurrency(transaction.amount)}</p>
+ <p className="mb-1 text-[10px] font-medium uppercase text-[var(--text-disabled)]">Total</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{formatCurrency(transaction.amount)}</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
- <p className="mb-1 text-[10px] font-semibold uppercase text-[var(--text-disabled)]">Pagado</p>
- <p className="text-sm font-bold text-[var(--success)]">{formatCurrency(paidAmount)}</p>
+ <p className="mb-1 text-[10px] font-medium uppercase text-[var(--text-disabled)]">Pagado</p>
+ <p className="text-sm font-medium text-[var(--success)]">{formatCurrency(paidAmount)}</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
- <p className="mb-1 text-[10px] font-semibold uppercase text-[var(--text-disabled)]">Restante</p>
- <p className="text-sm font-bold text-[var(--warning)]">{formatCurrency(remaining)}</p>
+ <p className="mb-1 text-[10px] font-medium uppercase text-[var(--text-disabled)]">Restante</p>
+ <p className="text-sm font-medium text-[var(--warning)]">{formatCurrency(remaining)}</p>
  </div>
  </div>
 
@@ -107,7 +107,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
 
  <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-4">
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-primary)]">
+ <label className="mb-2 block text-sm font-medium text-[var(--text-primary)]">
  Monto del pago <span className="text-[var(--accent)]">*</span>
  </label>
  <div className="relative">
@@ -144,7 +144,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
 
  <div className="grid grid-cols-2 gap-4">
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-primary)]">Fecha</label>
+ <label className="mb-2 block text-sm font-medium text-[var(--text-primary)]">Fecha</label>
  <input
  type="date"
  required
@@ -154,7 +154,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
  />
  </div>
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-primary)]">Método</label>
+ <label className="mb-2 block text-sm font-medium text-[var(--text-primary)]">Método</label>
  <select
  className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)] focus:bg-[var(--surface)] focus:"
  value={formData.method}
@@ -168,7 +168,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
  </div>
 
  <div>
- <label className="mb-2 block text-sm font-semibold text-[var(--text-primary)]">Nota (opcional)</label>
+ <label className="mb-2 block text-sm font-medium text-[var(--text-primary)]">Nota (opcional)</label>
  <input
  type="text"
  placeholder="ej. Pago parcial factura #123"
@@ -181,7 +181,7 @@ const PartialPaymentModalInner = ({ transaction, onClose, onSubmit }) => {
  <button
  type="submit"
  disabled={submitting}
- className={`flex w-full items-center justify-center gap-2 rounded-md bg-[var(--text-primary)] py-4 font-bold text-[var(--black)] transition-all duration-200 ${submitting ? 'cursor-not-allowed opacity-50' : 'hover:opacity-85 hover:'}`}
+ className={`flex w-full items-center justify-center gap-2 rounded-md bg-[var(--text-primary)] py-4 font-medium text-[var(--black)] transition-all duration-200 ${submitting ? 'cursor-not-allowed opacity-50' : 'hover:opacity-85 hover:'}`}
  >
  {submitting ? <Loader2 size={18} className="animate-spin" /> : <DollarSign size={18} />}
  {submitting ? 'Registrando...' : transaction.type === 'income' ? 'Registrar cobro' : 'Registrar pago'}

@@ -157,7 +157,7 @@ const Recurrencia = ({ user }) => {
  <div className="flex items-center justify-between">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Automatización</p>
- <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Recurrencia automática</h2>
+ <h2 className="mt-2 text-[24px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">Recurrencia automática</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Controla los movimientos periódicos y genera los pendientes del mes con un solo paso.</p>
  </div>
  <button
@@ -180,21 +180,21 @@ const Recurrencia = ({ user }) => {
  <p className="nd-label text-[var(--text-secondary)]">Total recurrentes</p>
  <RefreshCw size={18} className="text-[var(--text-primary)]" />
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{totalRecurring}</p>
+ <p className="nd-display text-[28px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">{totalRecurring}</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">Próximas este mes</p>
  <CalendarClock size={18} className="text-[var(--warning)]" />
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">{dueThisMonth}</p>
+ <p className="nd-display text-[28px] font-medium tracking-[-0.03em] text-[var(--warning)]">{dueThisMonth}</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">Monto mensual estimado</p>
  <TrendingUp size={18} className="text-[var(--success)]" />
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--success)]">{formatCurrency(monthlyEstimate)}</p>
+ <p className="nd-display text-[28px] font-medium tracking-[-0.03em] text-[var(--success)]">{formatCurrency(monthlyEstimate)}</p>
  </div>
  </div>
 
@@ -251,7 +251,7 @@ const Recurrencia = ({ user }) => {
  </span>
  </td>
  <td className="px-4 py-3 text-right">
- <span className={`text-[13px] font-semibold ${
+ <span className={`text-[13px] font-medium ${
  t.type === 'income' ? 'text-[var(--success)]' : 'text-[var(--accent)]'
  }`}>
  {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}

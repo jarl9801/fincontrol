@@ -110,7 +110,7 @@ const RecordAuditTrailModal = ({ isOpen, onClose, record, logs = [], loading = f
  <div className="flex items-start justify-between border-b border-[var(--border)] px-6 py-5">
  <div>
  <p className="nd-label text-[var(--text-secondary)]">Trazabilidad del registro</p>
- <h3 className="mt-2 text-[24px] font-semibold tracking-tight text-[var(--text-primary)]">{record.description || 'Registro sin descripción'}</h3>
+ <h3 className="mt-2 text-[24px] font-medium tracking-tight text-[var(--text-primary)]">{record.description || 'Registro sin descripción'}</h3>
  <p className="mt-2 text-[13px] text-[var(--text-disabled)]">
  {record.recordFamilyLabel} · {record.documentNumber || 'Sin documento'} · {record.counterpartyName || 'Sin contraparte'}
  </p>
@@ -147,19 +147,19 @@ const RecordAuditTrailModal = ({ isOpen, onClose, record, logs = [], loading = f
  <div className="grid gap-3 border-b border-[var(--border)] px-6 py-4 md:grid-cols-4">
  <div className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3">
  <p className="nd-label text-[var(--text-disabled)]">Importe</p>
- <p className="mt-1 text-[18px] font-semibold text-[var(--text-primary)]">€{formatCurrency(record.amount || 0)}</p>
+ <p className="mt-1 text-[18px] font-medium text-[var(--text-primary)]">€{formatCurrency(record.amount || 0)}</p>
  </div>
  <div className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3">
  <p className="nd-label text-[var(--text-disabled)]">Estado</p>
- <p className="mt-1 text-[18px] font-semibold text-[var(--text-primary)]">{record.statusLabel || record.status || '—'}</p>
+ <p className="mt-1 text-[18px] font-medium text-[var(--text-primary)]">{record.statusLabel || record.status || '—'}</p>
  </div>
  <div className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3">
  <p className="nd-label text-[var(--text-disabled)]">Último editor</p>
- <p className="mt-1 truncate text-[14px] font-semibold text-[var(--text-primary)]">{record.lastEditor || 'Sin rastro'}</p>
+ <p className="mt-1 truncate text-[14px] font-medium text-[var(--text-primary)]">{record.lastEditor || 'Sin rastro'}</p>
  </div>
  <div className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3">
  <p className="nd-label text-[var(--text-disabled)]">Último cambio</p>
- <p className="mt-1 text-[14px] font-semibold text-[var(--text-primary)]">{formatDateTime(record.lastEditedAt) || 'Sin fecha'}</p>
+ <p className="mt-1 text-[14px] font-medium text-[var(--text-primary)]">{formatDateTime(record.lastEditedAt) || 'Sin fecha'}</p>
  </div>
  </div>
 
@@ -174,7 +174,7 @@ const RecordAuditTrailModal = ({ isOpen, onClose, record, logs = [], loading = f
  ) : timeline.length === 0 ? (
  <div className="flex flex-col items-center justify-center py-18 text-center">
  <History className="h-8 w-8 text-[var(--text-secondary)]" />
- <p className="mt-3 text-[14px] font-semibold text-[var(--text-primary)]">No hay eventos de auditoría todavía</p>
+ <p className="mt-3 text-[14px] font-medium text-[var(--text-primary)]">No hay eventos de auditoría todavía</p>
  <p className="mt-1 max-w-md text-[13px] leading-6 text-[var(--text-disabled)]">
  Las próximas ediciones, pagos, anulaciones o cancelaciones de este registro aparecerán aquí.
  </p>
@@ -198,8 +198,8 @@ const RecordAuditTrailModal = ({ isOpen, onClose, record, logs = [], loading = f
  </div>
  <div className="min-w-0">
  <div className="flex flex-wrap items-center gap-2">
- <span className="text-[13px] font-semibold text-[var(--text-primary)]">{entry.description}</span>
- <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${style.bg} ${style.color}`}>
+ <span className="text-[13px] font-medium text-[var(--text-primary)]">{entry.description}</span>
+ <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${style.bg} ${style.color}`}>
  {style.label}
  </span>
  <span className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2 py-0.5 text-[10px] text-[var(--text-disabled)]">

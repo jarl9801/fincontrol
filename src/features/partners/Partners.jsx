@@ -138,7 +138,7 @@ const Partners = ({ user, userRole }) => {
  <p className="nd-labelst text-[var(--text-secondary)]">
  Master data
  </p>
- <h3 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">
+ <h3 className="text-xl font-medium tracking-tight text-[var(--text-primary)]">
  Geschäftspartner
  </h3>
  </div>
@@ -147,7 +147,7 @@ const Partners = ({ user, userRole }) => {
  <button
  type="button"
  onClick={handleOpenCreate}
- className="inline-flex items-center gap-2 rounded-full border border-[var(--border-visible)] bg-[var(--surface)] px-5 py-2.5 text-sm font-semibold text-white transition hover:"
+ className="inline-flex items-center gap-2 rounded-full border border-[var(--border-visible)] bg-[var(--surface)] px-5 py-2.5 text-sm font-medium text-[var(--text-primary)] transition hover:"
  >
  <Plus size={15} />
  Nuevo Partner
@@ -178,7 +178,7 @@ const Partners = ({ user, userRole }) => {
  <Icon size={15} />
  {label}
  <span
- className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+ className={`rounded-full px-2 py-0.5 text-xs font-medium ${
  isActive
  ? 'bg-[var(--surface)] text-[var(--text-primary)]'
  : 'bg-[var(--surface)] text-[var(--text-secondary)]'
@@ -214,7 +214,7 @@ const Partners = ({ user, userRole }) => {
  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-transparent">
  <Building2 size={28} className="text-[var(--text-secondary)]" />
  </div>
- <p className="text-base font-semibold text-[var(--text-disabled)]">
+ <p className="text-base font-medium text-[var(--text-disabled)]">
  {searchQuery ? 'Sin resultados' : 'Sin Geschäftspartner registrados'}
  </p>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">
@@ -226,7 +226,7 @@ const Partners = ({ user, userRole }) => {
  <button
  type="button"
  onClick={handleOpenCreate}
- className="mt-4 inline-flex items-center gap-2 rounded-md border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-2.5 text-sm font-semibold text-[var(--text-primary)] transition hover:bg-[var(--surface)]"
+ className="mt-4 inline-flex items-center gap-2 rounded-md border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-2.5 text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--surface)]"
  >
  <Plus size={15} />
  Crear primer partner
@@ -283,7 +283,7 @@ const Partners = ({ user, userRole }) => {
  <td className="px-5 py-3.5">
  <div>
  <p
- className={`font-semibold ${
+ className={`font-medium ${
  isInactive ? 'text-[var(--text-secondary)] line-through' : 'text-[var(--text-primary)]'
  }`}
  >
@@ -301,7 +301,7 @@ const Partners = ({ user, userRole }) => {
  {/* Type */}
  <td className="px-4 py-3.5">
  <span
- className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+ className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium ${
  TYPE_COLORS[partner.type] || TYPE_COLORS.both
  }`}
  >
@@ -335,7 +335,7 @@ const Partners = ({ user, userRole }) => {
  {/* Default Tax Rate */}
  <td className="px-4 py-3.5">
  {partner.defaultTaxRate != null ? (
- <span className="rounded-full bg-transparent px-2.5 py-1 text-xs font-semibold text-[var(--warning)]">
+ <span className="rounded-full bg-transparent px-2.5 py-1 text-xs font-medium text-[var(--warning)]">
  {(partner.defaultTaxRate * 100).toFixed(0)}%
  </span>
  ) : (
@@ -349,7 +349,7 @@ const Partners = ({ user, userRole }) => {
  type="button"
  onClick={() => handleToggleStatus(partner)}
  disabled={actionLoading === partner.id}
- className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all ${
+ className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
  isInactive
  ? 'bg-[var(--surface)] text-[var(--text-secondary)]'
  : 'bg-transparent text-[var(--success)]'
@@ -370,7 +370,7 @@ const Partners = ({ user, userRole }) => {
  {/* Transaction count */}
  <td className="px-4 py-3.5 text-center">
  {txCount > 0 ? (
- <span className="inline-flex items-center gap-1 rounded-full bg-[var(--surface)] px-2.5 py-1 text-xs font-semibold text-[var(--text-primary)]">
+ <span className="inline-flex items-center gap-1 rounded-full bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text-primary)]">
  {txCount} transacción{txCount !== 1 ? 'es' : ''}
  </span>
  ) : (

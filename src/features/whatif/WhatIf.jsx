@@ -30,7 +30,7 @@ function SliderControl({ label, value, onChange, min, max, step = 1, unit = '%' 
  <div className="space-y-2">
  <div className="flex items-center justify-between">
  <span className="text-[12px] font-medium text-[var(--text-secondary)]">{label}</span>
- <span className={`text-[13px] font-semibold tabular-nums ${value > 0 ? 'text-[var(--success)]' : value < 0 ? 'text-[var(--accent)]' : 'text-[var(--text-disabled)]'}`}>
+ <span className={`text-[13px] font-medium tabular-nums ${value > 0 ? 'text-[var(--success)]' : value < 0 ? 'text-[var(--accent)]' : 'text-[var(--text-disabled)]'}`}>
  {value > 0 ? '+' : ''}{value}{unit}
  </span>
  </div>
@@ -58,7 +58,7 @@ function MetricCard({ label, value, delta, prefix = '€' }) {
  return (
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 ">
  <p className="nd-label text-[var(--text-disabled)]">{label}</p>
- <p className={`mt-1 text-[18px] font-bold tabular-nums ${isNegative ? 'text-[var(--negative)]' : 'text-[var(--text-primary)]'}`}>
+ <p className={`mt-1 text-[18px] font-medium tabular-nums ${isNegative ? 'text-[var(--negative)]' : 'text-[var(--text-primary)]'}`}>
  {prefix}{formatCurrency(value)}
  </p>
  {delta !== undefined && delta !== null && (
@@ -77,10 +77,10 @@ function ComparisonTable({ rows }) {
  <table className="w-full text-[12px]">
  <thead>
  <tr className="border-b border-[var(--border)]">
- <th className="px-4 py-3 text-left font-semibold text-[var(--text-secondary)]">Métrica</th>
- <th className="px-4 py-3 text-right font-semibold text-[var(--text-secondary)]">Actual</th>
- <th className="px-4 py-3 text-right font-semibold text-[var(--text-secondary)]">Simulado</th>
- <th className="px-4 py-3 text-right font-semibold text-[var(--text-secondary)]">Δ</th>
+ <th className="px-4 py-3 text-left font-medium text-[var(--text-secondary)]">Métrica</th>
+ <th className="px-4 py-3 text-right font-medium text-[var(--text-secondary)]">Actual</th>
+ <th className="px-4 py-3 text-right font-medium text-[var(--text-secondary)]">Simulado</th>
+ <th className="px-4 py-3 text-right font-medium text-[var(--text-secondary)]">Δ</th>
  </tr>
  </thead>
  <tbody>
@@ -92,10 +92,10 @@ function ComparisonTable({ rows }) {
  <tr key={row.label} className="border-b border-[var(--border)] last:border-0">
  <td className="px-4 py-2.5 font-medium text-[var(--text-secondary)]">{row.label}</td>
  <td className="px-4 py-2.5 text-right tabular-nums text-[var(--text-disabled)]">€{formatCurrency(row.actual)}</td>
- <td className={`px-4 py-2.5 text-right tabular-nums font-semibold ${isNeg ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'}`}>
+ <td className={`px-4 py-2.5 text-right tabular-nums font-medium ${isNeg ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'}`}>
  €{formatCurrency(row.simulated)}
  </td>
- <td className={`px-4 py-2.5 text-right tabular-nums font-semibold ${isPos ? 'text-[var(--success)]' : isNeg ? 'text-[var(--accent)]' : 'text-[var(--text-disabled)]'}`}>
+ <td className={`px-4 py-2.5 text-right tabular-nums font-medium ${isPos ? 'text-[var(--success)]' : isNeg ? 'text-[var(--accent)]' : 'text-[var(--text-disabled)]'}`}>
  {isPos ? '+' : ''}€{formatCurrency(delta)}
  </td>
  </tr>
@@ -165,7 +165,7 @@ const CustomTooltip = ({ active, payload, label }) => {
  if (!active || !payload?.length) return null;
  return (
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 ">
- <p className="mb-1 text-[11px] font-semibold text-[var(--text-secondary)]">{label}</p>
+ <p className="mb-1 text-[11px] font-medium text-[var(--text-secondary)]">{label}</p>
  {payload.map((entry) => (
  <p key={entry.dataKey} className="nd-mono text-[11px] tabular-nums" style={{ color: entry.color }}>
  {entry.name}: €{formatCurrency(entry.value)}
@@ -285,7 +285,7 @@ export default function WhatIf({ user }) {
  <HelpButton title="Aviso importante" size={14}>
  <p>Los valores mostrados son simulaciones basadas en tendencias históricas y parámetros ajustables. No son predicciones — la realidad puede variar según condiciones del mercado, cobros, pagos inesperados, etc.</p>
  </HelpButton>
- <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[var(--border-visible)] bg-[var(--surface)]/80 px-3 py-1.5 text-[11px] font-semibold text-[var(--text-primary)]">
+ <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[var(--border-visible)] bg-[var(--surface)]/80 px-3 py-1.5 text-[11px] font-medium text-[var(--text-primary)]">
  <Zap size={12} />
  Basado en datos reales
  </span>
@@ -299,7 +299,7 @@ export default function WhatIf({ user }) {
  key={s.id}
  type="button"
  onClick={() => applyScenario(s)}
- className={`inline-flex items-center gap-2 rounded-lg border px-5 py-3 text-[12px] font-semibold transition-all ${
+ className={`inline-flex items-center gap-2 rounded-lg border px-5 py-3 text-[12px] font-medium transition-all ${
  activeScenario === s.id
  ? 'border-[var(--text-primary)] bg-[var(--text-primary)]/10 text-[var(--text-primary)] '
  : 'border-[var(--border)] bg-[var(--surface)] text-[var(--text-secondary)] hover:bg-[var(--surface)]'
@@ -321,7 +321,7 @@ export default function WhatIf({ user }) {
  <div className="space-y-5 lg:col-span-4">
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center gap-2">
- <h3 className="text-[13px] font-semibold text-[var(--text-primary)]">Parámetros de simulación</h3>
+ <h3 className="text-[13px] font-medium text-[var(--text-primary)]">Parámetros de simulación</h3>
  <HelpButton title="Parámetros" size={14}>
  <p>Cada control modifica una variable financiera. Al mover un slider, los resultados se recalculan en tiempo real. Puedes combinar varios parámetros para simular escenarios complejos.</p>
  </HelpButton>
@@ -333,7 +333,7 @@ export default function WhatIf({ user }) {
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4">
  <div className="flex items-center justify-between mb-2">
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">Gasto mensual base</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">Gasto mensual base</p>
  <p className="text-xs text-[var(--text-disabled)]">
  {gastoBaseManual !== null
  ? `Manual: ${formatCurrency(gastoBaseManual)} EUR/mes`
@@ -450,7 +450,7 @@ export default function WhatIf({ user }) {
  ].map((item) => (
  <div key={item.label} className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 ">
  <p className="nd-label text-[var(--text-disabled)]">{item.label}</p>
- <p className={`mt-1 text-[16px] font-bold tabular-nums ${item.value < 0 ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'}`}>
+ <p className={`mt-1 text-[16px] font-medium tabular-nums ${item.value < 0 ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'}`}>
  €{formatCurrency(item.value)}
  </p>
  </div>
@@ -478,7 +478,7 @@ export default function WhatIf({ user }) {
  {/* Chart */}
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4 flex items-center gap-2">
- <h3 className="text-[13px] font-semibold text-[var(--text-primary)]">Proyección de caja — 12 meses</h3>
+ <h3 className="text-[13px] font-medium text-[var(--text-primary)]">Proyección de caja — 12 meses</h3>
  <HelpButton title="Gráfico de proyección" size={14}>
  <p><strong>Línea azul:</strong> Proyección de caja sin cambios (escenario actual mantenido 12 meses).</p>
  <p><strong>Línea naranja:</strong> Proyección con los parámetros simulados aplicados.</p>
