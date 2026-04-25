@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TrendingDown, TrendingUp, Edit2, Trash2, X, Check, Plus, Loader2 } from 'lucide-react';
 import { useCategories } from '../../hooks/useCategories';
+import { Button } from '@/components/ui/nexus';
 
 const Categories = ({ user }) => {
  const {
@@ -132,17 +133,17 @@ const Categories = ({ user }) => {
  <div className="space-y-6">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Configuración financiera</p>
- <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Categorías</h2>
+ <h2 className="mt-2 nd-display text-[24px] font-light tracking-[-0.03em] text-[var(--text-primary)]">Categorías</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Mantén el catálogo de ingresos y gastos con una estructura clara para el análisis financiero.</p>
  </div>
 
  <div className="rounded-md border border-[var(--border-visible)] bg-transparent p-6 ">
  <div className="flex items-center gap-3 mb-4">
  <div className="rounded-lg bg-transparent p-2.5">
- <TrendingDown className="text-[var(--accent)]" size={18} />
+ <TrendingDown className="text-[var(--text-disabled)]" size={16} />
  </div>
  <div>
- <h3 className="text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Categorías de gastos</h3>
+ <h3 className="text-base font-medium tracking-[-0.02em] text-[var(--text-primary)]">Categorías de gastos</h3>
  <p className="text-sm text-[var(--text-secondary)]">{expenseCategories.length} categorías activas</p>
  </div>
  </div>
@@ -156,12 +157,9 @@ const Categories = ({ user }) => {
  onChange={(e) => setNewExpense(e.target.value)}
  onKeyDown={(e) => e.key === 'Enter' && handleAddExpense()}
  />
- <button
- onClick={handleAddExpense}
- className="inline-flex items-center gap-1 rounded-lg bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
- >
- <Plus size={16} /> Agregar
- </button>
+ <Button variant="primary" icon={Plus} onClick={handleAddExpense}>
+ Agregar
+ </Button>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -174,10 +172,10 @@ const Categories = ({ user }) => {
  <div className="rounded-md border border-[var(--border-visible)] bg-transparent p-6 ">
  <div className="flex items-center gap-3 mb-4">
  <div className="rounded-lg bg-transparent p-2.5">
- <TrendingUp className="text-[var(--success)]" size={18} />
+ <TrendingUp className="text-[var(--text-disabled)]" size={16} />
  </div>
  <div>
- <h3 className="text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Categorías de ingresos</h3>
+ <h3 className="text-base font-medium tracking-[-0.02em] text-[var(--text-primary)]">Categorías de ingresos</h3>
  <p className="text-sm text-[var(--success)]">{incomeCategories.length} categorías activas</p>
  </div>
  </div>
@@ -191,12 +189,9 @@ const Categories = ({ user }) => {
  onChange={(e) => setNewIncome(e.target.value)}
  onKeyDown={(e) => e.key === 'Enter' && handleAddIncome()}
  />
- <button
- onClick={handleAddIncome}
- className="inline-flex items-center gap-1 rounded-lg bg-[var(--success)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--success)]"
- >
- <Plus size={16} /> Agregar
- </button>
+ <Button variant="primary" icon={Plus} onClick={handleAddIncome}>
+ Agregar
+ </Button>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">

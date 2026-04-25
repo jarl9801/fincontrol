@@ -20,6 +20,7 @@ import { useProjects } from '../../hooks/useProjects';
 import { formatDate } from '../../utils/formatters';
 import ConfirmModal from '../../components/ui/ConfirmModal';
 import Toast from '../../components/ui/Toast';
+import { Button } from '@/components/ui/nexus';
 
 // ============================================
 // Operators (Auftraggeber) — known UMTELKOMD project owners.
@@ -288,26 +289,25 @@ const Projects = ({ user }) => {
  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Configuración operativa</p>
- <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Proyectos</h2>
+ <h2 className="mt-2 nd-display text-[24px] font-light tracking-[-0.03em] text-[var(--text-primary)]">Proyectos</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">
  Administra el catálogo de proyectos para reportes, cobros, pagos y seguimiento financiero.
  </p>
  </div>
  <div className="flex flex-wrap gap-2">
- <button
- onClick={handleImportDefaults}
+ <Button
+ variant="secondary"
+ icon={Download}
  disabled={importing}
+ loading={importing}
+ onClick={handleImportDefaults}
  title="Crear los 8 proyectos predefinidos de UMTELKOMD (idempotente)"
- className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-3 text-sm font-semibold text-[var(--text-primary)] transition hover:opacity-85 disabled:opacity-50"
  >
- <Download size={16} /> {importing ? 'Importando…' : 'Importar predefinidos'}
- </button>
- <button
- onClick={handleOpenAdd}
- className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--text-primary)] px-5 py-3 text-sm font-semibold text-[var(--black)] transition hover:opacity-85"
- >
- <Plus size={18} /> Nuevo proyecto
- </button>
+ {importing ? 'Importando…' : 'Importar predefinidos'}
+ </Button>
+ <Button variant="primary" icon={Plus} onClick={handleOpenAdd}>
+ Nuevo proyecto
+ </Button>
  </div>
  </div>
 
@@ -319,7 +319,7 @@ const Projects = ({ user }) => {
  </div>
  <div>
  <p className="nd-label text-[var(--text-secondary)]">Total proyectos</p>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{projects.length}</p>
+ <p className="nd-display text-[28px] font-light tabular-nums tracking-[-0.03em] text-[var(--text-primary)]">{projects.length}</p>
  </div>
  </div>
  </div>
@@ -330,7 +330,7 @@ const Projects = ({ user }) => {
  </div>
  <div>
  <p className="nd-label text-[var(--text-secondary)]">Activos</p>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--success)]">{activeProjects.length}</p>
+ <p className="nd-display text-[28px] font-light tabular-nums tracking-[-0.03em] text-[var(--success)]">{activeProjects.length}</p>
  </div>
  </div>
  </div>
@@ -341,7 +341,7 @@ const Projects = ({ user }) => {
  </div>
  <div>
  <p className="nd-label text-[var(--text-secondary)]">Inactivos</p>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-secondary)]">{inactiveProjects.length}</p>
+ <p className="nd-display text-[28px] font-light tabular-nums tracking-[-0.03em] text-[var(--text-secondary)]">{inactiveProjects.length}</p>
  </div>
  </div>
  </div>
@@ -357,7 +357,7 @@ const Projects = ({ user }) => {
  return (
  <span
  key={op.value}
- className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold ${operatorColor(op.value)}`}
+ className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium ${operatorColor(op.value)}`}
  >
  {op.label}: {count}
  </span>
@@ -367,7 +367,7 @@ const Projects = ({ user }) => {
  const unassigned = projects.filter((p) => !p.operator && p.status === 'active').length;
  if (unassigned === 0) return null;
  return (
- <span className="inline-flex items-center gap-1 rounded-full border border-[var(--border)] px-2.5 py-1 text-xs font-semibold text-[var(--text-secondary)]">
+ <span className="inline-flex items-center gap-1 rounded-full border border-[var(--border)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)]">
  Sin operador: {unassigned}
  </span>
  );
@@ -404,7 +404,7 @@ const Projects = ({ user }) => {
  {activeProjects.map((project) => (
  <tr key={project.id} className="transition-colors hover:bg-[var(--surface)]">
  <td className="px-6 py-4">
- <span className="inline-flex items-center rounded-md bg-transparent px-2.5 py-1 text-sm font-semibold text-[var(--text-primary)]">
+ <span className="inline-flex items-center rounded-md bg-transparent px-2.5 py-1 text-sm font-medium text-[var(--text-primary)]">
  {project.code}
  </span>
  <div className="mt-1 flex items-center gap-1 text-[10px] text-[var(--text-secondary)]">
@@ -423,7 +423,7 @@ const Projects = ({ user }) => {
  </td>
  <td className="px-6 py-4">
  <div>
- <p className="font-semibold text-[var(--text-primary)]">{project.name}</p>
+ <p className="font-medium text-[var(--text-primary)]">{project.name}</p>
  {project.description && (
  <p className="mt-0.5 max-w-xs truncate text-xs text-[var(--text-secondary)]">{project.description}</p>
  )}
@@ -433,7 +433,7 @@ const Projects = ({ user }) => {
  <select
  value={project.operator || ''}
  onChange={(e) => handleInlineOperatorChange(project, e.target.value)}
- className={`rounded-full border bg-transparent px-2 py-1 text-xs font-semibold outline-none transition focus:border-[var(--text-primary)] ${operatorColor(project.operator)}`}
+ className={`rounded-full border bg-transparent px-2 py-1 text-xs font-medium outline-none transition focus:border-[var(--text-primary)] ${operatorColor(project.operator)}`}
  title="Cambiar operador (se guarda automáticamente)"
  >
  <option value="">— sin operador</option>
@@ -495,7 +495,7 @@ const Projects = ({ user }) => {
  {inactiveProjects.map((project) => (
  <tr key={project.id} className="bg-[var(--surface)] transition-colors hover:bg-[var(--surface)]">
  <td className="px-6 py-4">
- <span className="inline-flex items-center rounded-md bg-transparent px-2.5 py-1 text-sm font-semibold text-[var(--text-secondary)]">
+ <span className="inline-flex items-center rounded-md bg-transparent px-2.5 py-1 text-sm font-medium text-[var(--text-secondary)]">
  {project.code}
  </span>
  <div className="mt-1 flex items-center gap-1 text-[10px] text-[var(--text-secondary)] opacity-60">
@@ -513,7 +513,7 @@ const Projects = ({ user }) => {
  </td>
  <td className="px-6 py-4">
  <div>
- <p className="font-semibold text-[var(--text-disabled)] line-through">{project.name}</p>
+ <p className="font-medium text-[var(--text-disabled)] line-through">{project.name}</p>
  {project.description && (
  <p className="mt-0.5 max-w-xs truncate text-xs text-[var(--text-secondary)]">{project.description}</p>
  )}
@@ -523,7 +523,7 @@ const Projects = ({ user }) => {
  <select
  value={project.operator || ''}
  onChange={(e) => handleInlineOperatorChange(project, e.target.value)}
- className={`rounded-full border bg-transparent px-2 py-1 text-xs font-semibold outline-none transition focus:border-[var(--text-primary)] opacity-60 ${operatorColor(project.operator)}`}
+ className={`rounded-full border bg-transparent px-2 py-1 text-xs font-medium outline-none transition focus:border-[var(--text-primary)] opacity-60 ${operatorColor(project.operator)}`}
  title="Cambiar operador (se guarda automáticamente)"
  >
  <option value="">— sin operador</option>
@@ -612,7 +612,7 @@ const Projects = ({ user }) => {
  <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-5">
  <div>
  <p className="nd-label text-[var(--text-primary)]">Ficha de proyecto</p>
- <h3 className="text-xl font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
+ <h3 className="text-xl font-medium tracking-[-0.03em] text-[var(--text-primary)]">
  {editingProject ? 'Editar proyecto' : 'Nuevo proyecto'}
  </h3>
  </div>
@@ -666,7 +666,7 @@ const Projects = ({ user }) => {
  key={op.value}
  type="button"
  onClick={() => setFormData({ ...formData, operator: op.value })}
- className={`flex items-center justify-center gap-2 rounded-md border-2 px-4 py-3 text-sm font-semibold transition-all ${
+ className={`flex items-center justify-center gap-2 rounded-md border-2 px-4 py-3 text-sm font-medium transition-all ${
  selected
  ? `bg-transparent ${operatorColor(op.value)}`
  : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border-visible)]'
@@ -793,13 +793,9 @@ const Projects = ({ user }) => {
  </div>
  </div>
 
- <button
- type="submit"
- className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--text-primary)] py-4 text-sm font-semibold text-[var(--black)] transition hover:opacity-85"
- >
- <Check size={18} />
+ <Button type="submit" variant="primary" icon={Check} className="w-full">
  {editingProject ? 'Guardar cambios' : 'Crear proyecto'}
- </button>
+ </Button>
  </form>
  </div>
  </div>
