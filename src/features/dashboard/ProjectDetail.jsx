@@ -117,7 +117,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
  <ArrowLeft size={20} />
  </button>
  <div className="flex-1">
- <h2 className="text-xl font-semibold tracking-[-0.03em] text-[var(--text-primary)]">{projectName}</h2>
+ <h2 className="text-xl font-medium tracking-[-0.03em] text-[var(--text-primary)]">{projectName}</h2>
  <p className="text-sm text-[var(--text-secondary)]">{projectTransactions.length} transacciones</p>
  </div>
  </div>
@@ -125,21 +125,21 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
  <div className="rounded-lg border border-[var(--border-visible)] bg-transparent p-3">
  <p className="text-xs font-medium text-[var(--success)]">Ingresos</p>
- <p className="text-lg font-semibold text-[var(--success)]">{formatCurrency(totalIncome)} €</p>
+ <p className="text-lg font-medium text-[var(--success)]">{formatCurrency(totalIncome)} €</p>
  </div>
  <div className="rounded-lg border border-[var(--border-visible)] bg-transparent p-3">
  <p className="text-xs font-medium text-[var(--accent)]">Gastos</p>
- <p className="text-lg font-semibold text-[var(--accent)]">{formatCurrency(totalExpenses)} €</p>
+ <p className="text-lg font-medium text-[var(--accent)]">{formatCurrency(totalExpenses)} €</p>
  </div>
  <div className={`rounded-lg border p-3 ${margin >= 0 ? 'border-[var(--border-visible)] bg-transparent' : 'border-[var(--border-visible)] bg-transparent'}`}>
  <p className={`text-xs font-medium ${margin >= 0 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>Margen</p>
- <p className={`text-lg font-semibold ${margin >= 0 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
+ <p className={`text-lg font-medium ${margin >= 0 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
  {margin >= 0 ? '+' : ''}{formatCurrency(margin)} €
  </p>
  </div>
  <div className={`rounded-lg border p-3 ${roi >= 0 ? 'border-[var(--border)] bg-[var(--surface)]' : 'border-[var(--border-visible)] bg-transparent'}`}>
  <p className={`text-xs font-medium ${roi >= 0 ? 'text-[var(--text-secondary)]' : 'text-[var(--accent)]'}`}>ROI</p>
- <p className={`text-lg font-semibold ${roi >= 0 ? 'text-[var(--text-primary)]' : 'text-[var(--accent)]'}`}>
+ <p className={`text-lg font-medium ${roi >= 0 ? 'text-[var(--text-primary)]' : 'text-[var(--accent)]'}`}>
  {roi.toFixed(1)}%
  </p>
  </div>
@@ -148,7 +148,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
 
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
- <h4 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Tendencia mensual</h4>
+ <h4 className="mb-4 text-sm font-medium text-[var(--text-primary)]">Tendencia mensual</h4>
  <div className="h-56">
  <ResponsiveContainer width="100%" height="100%">
  <LineChart data={monthlyTrend}>
@@ -165,7 +165,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
  </div>
 
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
- <h4 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Distribución de gastos</h4>
+ <h4 className="mb-4 text-sm font-medium text-[var(--text-primary)]">Distribución de gastos</h4>
  <div className="h-56">
  {categoryDistribution.length > 0 ? (
  <ResponsiveContainer width="100%" height="100%">
@@ -194,7 +194,7 @@ const ProjectDetail = ({ projectName, transactions, user, onClose }) => {
  </div>
 
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 lg:col-span-2">
- <h4 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Evolución del margen mensual</h4>
+ <h4 className="mb-4 text-sm font-medium text-[var(--text-primary)]">Evolución del margen mensual</h4>
  <div className="h-56">
  <ResponsiveContainer width="100%" height="100%">
  <BarChart data={marginEvolution}>

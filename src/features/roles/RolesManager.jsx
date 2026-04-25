@@ -96,7 +96,7 @@ const RolesManager = ({ userRole }) => {
  return (
  <div className="flex flex-col items-center justify-center py-16">
  <Shield className="text-[var(--text-disabled)] mb-4" size={48} />
- <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2">Acceso Restringido</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)] mb-2">Acceso Restringido</h3>
  <p className="text-[var(--text-secondary)] text-sm">Solo los administradores pueden gestionar roles y permisos.</p>
  </div>
  );
@@ -119,17 +119,17 @@ const RolesManager = ({ userRole }) => {
  <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--border)]">
  <div className="flex items-center gap-2 mb-4">
  <Users className="text-[var(--interactive)]" size={20} />
- <h3 className="text-lg font-bold text-[var(--text-primary)]">Usuarios Activos</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)]">Usuarios Activos</h3>
  </div>
  <div className="overflow-x-auto">
  <table className="w-full text-left">
  <thead>
  <tr className="border-b border-[var(--border)]">
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Usuario</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Email</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Rol</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Permisos</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Ultima sesion</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Usuario</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Email</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Rol</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Permisos</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Ultima sesion</th>
  </tr>
  </thead>
  <tbody>
@@ -141,7 +141,7 @@ const RolesManager = ({ userRole }) => {
  <td className="py-3 text-[var(--text-secondary)] text-sm">{u.email}</td>
  <td className="py-3">
  <span
- className="px-2.5 py-1 rounded-full text-xs font-semibold"
+ className="px-2.5 py-1 rounded-full text-xs font-medium"
  style={{
  color: getRoleColor(u.role),
  backgroundColor: 'var(--surface-raised)',
@@ -172,12 +172,12 @@ const RolesManager = ({ userRole }) => {
  <div className="flex items-center justify-between mb-4">
  <div className="flex items-center gap-2">
  <CheckSquare className="text-[var(--success)]" size={20} />
- <h3 className="text-lg font-bold text-[var(--text-primary)]">Matriz de Permisos</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)]">Matriz de Permisos</h3>
  </div>
  <button
  onClick={handleSavePermissions}
  disabled={saving}
- className="flex items-center gap-2 px-4 py-2 bg-[var(--success)] hover:opacity-80 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+ className="flex items-center gap-2 px-4 py-2 bg-[var(--success)] hover:opacity-80 text-[var(--text-primary)] rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
  >
  {saving ? <Loader2 size={16} className="animate-spin" /> : <Shield size={16} />}
  {saving ? 'Guardando...' : 'Guardar Permisos'}
@@ -187,7 +187,7 @@ const RolesManager = ({ userRole }) => {
  <table className="w-full text-left">
  <thead>
  <tr className="border-b border-[var(--border)]">
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Modulo</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Modulo</th>
  {AVAILABLE_ROLES.map((role) => (
  <th key={role.key} className="pb-3 nd-label text-center" style={{ color: getRoleColor(role.key) }}>
  {role.label}
@@ -228,7 +228,7 @@ const RolesManager = ({ userRole }) => {
  <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--border)]">
  <div className="flex items-center gap-2 mb-4">
  <UserPlus className="text-[var(--text-secondary)]" size={20} />
- <h3 className="text-lg font-bold text-[var(--text-primary)]">Invitar Usuario</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)]">Invitar Usuario</h3>
  </div>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
  <div>
@@ -259,7 +259,7 @@ const RolesManager = ({ userRole }) => {
  <div>
  <button
  onClick={handleInvite}
- className="flex items-center gap-2 px-6 py-2.5 bg-[var(--text-secondary)] hover:bg-[var(--text-secondary)] text-white rounded-lg font-medium transition-colors w-full justify-center"
+ className="flex items-center gap-2 px-6 py-2.5 bg-[var(--text-secondary)] hover:bg-[var(--text-secondary)] text-[var(--text-primary)] rounded-lg font-medium transition-colors w-full justify-center"
  >
  <UserPlus size={18} />
  Invitar
@@ -270,7 +270,7 @@ const RolesManager = ({ userRole }) => {
 
  {/* Available Roles Reference */}
  <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--border)]">
- <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4">Roles Disponibles</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)] mb-4">Roles Disponibles</h3>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
  {AVAILABLE_ROLES.map((role) => (
  <div key={role.key} className="flex items-center gap-3 p-3 bg-[var(--surface-raised)] rounded-lg">

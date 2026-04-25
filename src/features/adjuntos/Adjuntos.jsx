@@ -41,7 +41,7 @@ const Adjuntos = ({ user }) => {
  <div className="flex items-center justify-between">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Documentación</p>
- <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Adjuntos</h2>
+ <h2 className="mt-2 text-[24px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">Adjuntos</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Centraliza facturas, justificantes y respaldos de cada registro financiero.</p>
  </div>
  <div className="inline-flex items-center gap-2 rounded-lg border border-[var(--border-visible)] bg-transparent px-3 py-2">
@@ -56,21 +56,21 @@ const Adjuntos = ({ user }) => {
  <p className="nd-label text-[var(--text-secondary)]">Total archivos</p>
  <Paperclip size={18} className="text-[var(--text-primary)]" />
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">0</p>
+ <p className="nd-display text-[28px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">0</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">Registros con adjuntos</p>
  <FileText size={18} className="text-[var(--success)]" />
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--success)]">0</p>
+ <p className="nd-display text-[28px] font-medium tracking-[-0.03em] text-[var(--success)]">0</p>
  </div>
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="flex items-center justify-between mb-2">
  <p className="nd-label text-[var(--text-secondary)]">Espacio usado</p>
  <Image size={18} className="text-[var(--warning)]" />
  </div>
- <p className="nd-display text-[28px] font-semibold tracking-[-0.03em] text-[var(--warning)]">0 MB</p>
+ <p className="nd-display text-[28px] font-medium tracking-[-0.03em] text-[var(--warning)]">0 MB</p>
  </div>
  </div>
 

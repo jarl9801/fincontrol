@@ -175,7 +175,7 @@ const BackupManager = ({ user }) => {
  <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--border)]">
  <div className="flex items-center gap-2 mb-4">
  <Download className="text-[var(--interactive)]" size={20} />
- <h3 className="text-lg font-bold text-[var(--text-primary)]">Exportar Backup</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)]">Exportar Backup</h3>
  </div>
  <p className="text-sm text-[var(--text-secondary)] mb-4">
  Descarga todos los datos de Firestore como un archivo JSON. Incluye: {COLLECTIONS.join(', ')}.
@@ -195,7 +195,7 @@ const BackupManager = ({ user }) => {
  <button
  onClick={handleExport}
  disabled={exporting}
- className="flex items-center gap-2 px-6 py-2.5 bg-[var(--interactive)] hover:opacity-80 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+ className="flex items-center gap-2 px-6 py-2.5 bg-[var(--interactive)] hover:opacity-80 text-[var(--text-primary)] rounded-lg font-medium transition-colors disabled:opacity-50"
  >
  {exporting ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
  {exporting ? 'Exportando...' : 'Descargar Backup Completo'}
@@ -210,7 +210,7 @@ const BackupManager = ({ user }) => {
  <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--border)]">
  <div className="flex items-center gap-2 mb-4">
  <Upload className="text-[var(--warning)]" size={20} />
- <h3 className="text-lg font-bold text-[var(--text-primary)]">Restaurar desde Backup</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)]">Restaurar desde Backup</h3>
  </div>
  <p className="text-sm text-[var(--text-secondary)] mb-4">
  Selecciona un archivo JSON de backup generado previamente para previsualizar y restaurar los datos.
@@ -238,7 +238,7 @@ const BackupManager = ({ user }) => {
  <div className="bg-[var(--surface-raised)] rounded-md p-4 border border-[var(--border)]">
  <div className="flex items-center gap-2 mb-3">
  <Eye className="text-[var(--warning)]" size={18} />
- <h4 className="text-sm font-bold text-[var(--text-primary)]">Vista Previa del Backup</h4>
+ <h4 className="text-sm font-medium text-[var(--text-primary)]">Vista Previa del Backup</h4>
  </div>
  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
  <div>
@@ -260,7 +260,7 @@ const BackupManager = ({ user }) => {
  </div>
  <div>
  <p className="text-xs text-[var(--text-disabled)]">Total documentos</p>
- <p className="text-sm text-[var(--success)] font-bold">{importPreview.totalDocs}</p>
+ <p className="text-sm text-[var(--success)] font-medium">{importPreview.totalDocs}</p>
  </div>
  </div>
 
@@ -269,8 +269,8 @@ const BackupManager = ({ user }) => {
  <table className="w-full text-left">
  <thead>
  <tr className="border-b border-[var(--border)]">
- <th className="pb-2 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Coleccion</th>
- <th className="pb-2 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide text-right">Documentos</th>
+ <th className="pb-2 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Coleccion</th>
+ <th className="pb-2 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide text-right">Documentos</th>
  </tr>
  </thead>
  <tbody>
@@ -298,7 +298,7 @@ const BackupManager = ({ user }) => {
  <button
  onClick={handleImport}
  disabled={importing}
- className="flex items-center gap-2 px-6 py-2.5 bg-[var(--warning)] hover:opacity-80 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+ className="flex items-center gap-2 px-6 py-2.5 bg-[var(--warning)] hover:opacity-80 text-[var(--text-primary)] rounded-lg font-medium transition-colors disabled:opacity-50"
  >
  {importing ? <Loader2 size={18} className="animate-spin" /> : <Upload size={18} />}
  {importing ? 'Procesando...' : 'Restaurar Datos'}
@@ -318,18 +318,18 @@ const BackupManager = ({ user }) => {
  <div className="bg-[var(--surface)] rounded-lg p-6 border border-[var(--border)]">
  <div className="flex items-center gap-2 mb-4">
  <Clock className="text-[var(--text-secondary)]" size={20} />
- <h3 className="text-lg font-bold text-[var(--text-primary)]">Historial de Backups</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)]">Historial de Backups</h3>
  </div>
 
  <div className="overflow-x-auto">
  <table className="w-full text-left">
  <thead>
  <tr className="border-b border-[var(--border)]">
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Fecha</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Tipo</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Estado</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Tamano</th>
- <th className="pb-3 text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Usuario</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Fecha</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Tipo</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Estado</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Tamano</th>
+ <th className="pb-3 text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wide">Usuario</th>
  </tr>
  </thead>
  <tbody>

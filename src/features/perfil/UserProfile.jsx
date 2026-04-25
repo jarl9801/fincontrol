@@ -10,7 +10,7 @@ import { useToast } from '../../contexts/ToastContext';
 
 const InputField = ({ label, value, onChange, type = 'text', disabled = false, placeholder, icon: Icon }) => (
  <div>
- <label className="block text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">{label}</label>
+ <label className="block text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">{label}</label>
  <div className="relative">
  {Icon && <Icon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)]" />}
  <input
@@ -19,7 +19,7 @@ const InputField = ({ label, value, onChange, type = 'text', disabled = false, p
  onChange={onChange}
  disabled={disabled}
  placeholder={placeholder}
- className={`w-full ${Icon ? 'pl-9' : 'pl-3'} pr-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+ className={`w-full ${Icon ? 'pl-9' : 'pl-3'} pr-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
  />
  </div>
  </div>
@@ -148,16 +148,16 @@ const UserProfile = ({ user, userRole }) => {
  <img src={photoPreview} alt="Avatar" className="w-20 h-20 rounded-full object-cover border-2 border-[var(--border)]" />
  ) : (
  <div className="w-20 h-20 rounded-full bg-[var(--surface-raised)] flex items-center justify-center border-2 border-[var(--border)]">
- <span className="text-2xl font-bold text-white">{initials}</span>
+ <span className="text-2xl font-medium text-[var(--text-primary)]">{initials}</span>
  </div>
  )}
  <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
- <Camera size={20} className="text-white" />
+ <Camera size={20} className="text-[var(--text-primary)]" />
  <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
  </label>
  </div>
- <h2 className="text-lg font-medium text-white mt-3">{user?.displayName || user?.email}</h2>
- <span className={`mt-1.5 inline-flex px-3 py-1 rounded-full text-[11px] font-semibold border ${role.color}`}>
+ <h2 className="text-lg font-medium text-[var(--text-primary)] mt-3">{user?.displayName || user?.email}</h2>
+ <span className={`mt-1.5 inline-flex px-3 py-1 rounded-full text-[11px] font-medium border ${role.color}`}>
  <Shield size={12} className="mr-1.5" /> {role.label}
  </span>
  </div>
@@ -167,7 +167,7 @@ const UserProfile = ({ user, userRole }) => {
  <div className="bg-[var(--surface)] rounded-md border border-[var(--border)] overflow-hidden">
  <div className="px-5 py-3.5 border-b border-[var(--border)] flex items-center gap-2">
  <User size={15} className="text-[var(--interactive)]" />
- <h3 className="text-[13px] font-semibold text-[var(--text-secondary)]">Información Personal</h3>
+ <h3 className="text-[13px] font-medium text-[var(--text-secondary)]">Información Personal</h3>
  </div>
  <div className="p-5 space-y-4">
  <InputField
@@ -192,7 +192,7 @@ const UserProfile = ({ user, userRole }) => {
  <button
  onClick={handleSaveProfile}
  disabled={saving}
- className="flex items-center justify-center gap-2 w-full bg-[var(--interactive)] hover:opacity-80 disabled:opacity-50 text-white px-4 py-2.5 rounded-lg text-[13px] font-semibold transition-all"
+ className="flex items-center justify-center gap-2 w-full bg-[var(--interactive)] hover:opacity-80 disabled:opacity-50 text-[var(--text-primary)] px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all"
  >
  {saving ? 'Guardando...' : <><Save size={14} /> Guardar Cambios</>}
  </button>
@@ -203,11 +203,11 @@ const UserProfile = ({ user, userRole }) => {
  <div className="bg-[var(--surface)] rounded-md border border-[var(--border)] overflow-hidden">
  <div className="px-5 py-3.5 border-b border-[var(--border)] flex items-center gap-2">
  <Lock size={15} className="text-[var(--warning)]" />
- <h3 className="text-[13px] font-semibold text-[var(--text-secondary)]">Cambiar Contraseña</h3>
+ <h3 className="text-[13px] font-medium text-[var(--text-secondary)]">Cambiar Contraseña</h3>
  </div>
  <div className="p-5 space-y-4">
  <div>
- <label className="block text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Contraseña Actual</label>
+ <label className="block text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Contraseña Actual</label>
  <div className="relative">
  <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)]" />
  <input
@@ -215,7 +215,7 @@ const UserProfile = ({ user, userRole }) => {
  value={currentPassword}
  onChange={(e) => setCurrentPassword(e.target.value)}
  placeholder="********"
- className="w-full pl-9 pr-10 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all"
+ className="w-full pl-9 pr-10 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all"
  />
  <button onClick={() => setShowCurrentPw(!showCurrentPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)] hover:text-[var(--text-secondary)]">
  {showCurrentPw ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -224,7 +224,7 @@ const UserProfile = ({ user, userRole }) => {
  </div>
 
  <div>
- <label className="block text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Nueva Contraseña</label>
+ <label className="block text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Nueva Contraseña</label>
  <div className="relative">
  <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)]" />
  <input
@@ -232,7 +232,7 @@ const UserProfile = ({ user, userRole }) => {
  value={newPassword}
  onChange={(e) => setNewPassword(e.target.value)}
  placeholder="Min. 8 caracteres"
- className="w-full pl-9 pr-10 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all"
+ className="w-full pl-9 pr-10 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all"
  />
  <button onClick={() => setShowNewPw(!showNewPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)] hover:text-[var(--text-secondary)]">
  {showNewPw ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -250,7 +250,7 @@ const UserProfile = ({ user, userRole }) => {
  </div>
 
  <div>
- <label className="block text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Confirmar Contraseña</label>
+ <label className="block text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Confirmar Contraseña</label>
  <div className="relative">
  <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-disabled)]" />
  <input
@@ -258,7 +258,7 @@ const UserProfile = ({ user, userRole }) => {
  value={confirmPassword}
  onChange={(e) => setConfirmPassword(e.target.value)}
  placeholder="Repetir contraseña"
- className="w-full pl-9 pr-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all"
+ className="w-full pl-9 pr-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--interactive)] focus:border-[var(--text-primary)] transition-all"
  />
  </div>
  {confirmPassword && (
@@ -275,7 +275,7 @@ const UserProfile = ({ user, userRole }) => {
  <button
  onClick={handleChangePassword}
  disabled={changingPassword || !currentPassword || !newPassword || !confirmPassword || !!pwValidation || !pwMatch}
- className="flex items-center justify-center gap-2 w-full bg-[var(--warning)] hover:opacity-80 disabled:opacity-40 text-black px-4 py-2.5 rounded-lg text-[13px] font-semibold transition-all"
+ className="flex items-center justify-center gap-2 w-full bg-[var(--warning)] hover:opacity-80 disabled:opacity-40 text-black px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all"
  >
  {changingPassword ? 'Cambiando...' : <><Lock size={14} /> Cambiar Contraseña</>}
  </button>
@@ -286,24 +286,24 @@ const UserProfile = ({ user, userRole }) => {
  {/* Preferences */}
  <div className="bg-[var(--surface)] rounded-md border border-[var(--border)] overflow-hidden">
  <div className="px-5 py-3.5 border-b border-[var(--border)]">
- <h3 className="text-[13px] font-semibold text-[var(--text-secondary)]">Preferencias</h3>
+ <h3 className="text-[13px] font-medium text-[var(--text-secondary)]">Preferencias</h3>
  </div>
  <div className="p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
  <div>
- <label className="block text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Idioma</label>
- <select disabled className="w-full px-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white opacity-50 cursor-not-allowed">
+ <label className="block text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Idioma</label>
+ <select disabled className="w-full px-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-[var(--text-primary)] opacity-50 cursor-not-allowed">
  <option>Español</option>
  </select>
  </div>
  <div>
- <label className="block text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Moneda</label>
- <select disabled className="w-full px-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white opacity-50 cursor-not-allowed">
+ <label className="block text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Moneda</label>
+ <select disabled className="w-full px-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-[var(--text-primary)] opacity-50 cursor-not-allowed">
  <option>EUR (€)</option>
  </select>
  </div>
  <div>
- <label className="block text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Zona Horaria</label>
- <select disabled className="w-full px-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-white opacity-50 cursor-not-allowed">
+ <label className="block text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">Zona Horaria</label>
+ <select disabled className="w-full px-3 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[13px] text-[var(--text-primary)] opacity-50 cursor-not-allowed">
  <option>Europe/Berlin (CET)</option>
  </select>
  </div>

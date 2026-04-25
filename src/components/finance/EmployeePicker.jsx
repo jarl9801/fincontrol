@@ -102,7 +102,7 @@ const EmployeePicker = ({ value = [], onChange, user, label = 'Técnicos / Emple
 
   return (
     <div className="relative">
-      <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-[var(--text-disabled)]">
+      <label className="mb-2 flex items-center gap-2 text-sm font-medium text-[var(--text-disabled)]">
         <HardHat size={14} className="text-[var(--text-secondary)]" />
         {label}
         {helpText && <span className="text-xs font-normal text-[var(--text-secondary)]">{helpText}</span>}
@@ -118,7 +118,7 @@ const EmployeePicker = ({ value = [], onChange, user, label = 'Técnicos / Emple
             return (
               <span
                 key={id}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${
                   isOrphan
                     ? 'border-[var(--warning)] text-[var(--warning)]'
                     : 'border-[var(--border-visible)] bg-[var(--surface-raised)] text-[var(--text-primary)]'

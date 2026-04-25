@@ -110,7 +110,7 @@ const KpiCard = ({ title, value, subtitle, tone = 'neutral', icon }) => {
  <div className="mb-3 flex items-center justify-between gap-3">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">{title}</p>
- <p className={`mt-2 nd-display text-[28px] font-semibold tracking-tight ${palette.value}`}>{value}</p>
+ <p className={`mt-2 nd-display text-[28px] font-medium tracking-tight ${palette.value}`}>{value}</p>
  </div>
  <div className={`flex h-11 w-11 items-center justify-center rounded-lg ${palette.icon}`}>
  <IconComponent size={18} />
@@ -125,7 +125,7 @@ const Section = ({ title, subtitle, children, action }) => (
  <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-5 flex items-start justify-between gap-4">
  <div>
- <h3 className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">{title}</h3>
+ <h3 className="text-[18px] font-medium tracking-tight text-[var(--text-primary)]">{title}</h3>
  {subtitle ? <p className="mt-1 text-sm text-[var(--text-secondary)]">{subtitle}</p> : null}
  </div>
  {action}
@@ -279,7 +279,7 @@ const ProyectoDashboard = ({ user }) => {
  <div className="grid gap-5 xl:grid-cols-[1.1fr,0.9fr]">
  <div>
  <p className="mb-3 nd-label text-[var(--text-secondary)]">Proyectos</p>
- <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Rentabilidad y seguimiento por proyecto.</h2>
+ <h2 className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">Rentabilidad y seguimiento por proyecto.</h2>
  <p className="mt-3 max-w-2xl text-[15px] leading-7 text-[var(--text-disabled)]">
  Revisa ingresos, gastos, documentos abiertos y evolución mensual de cada proyecto desde una sola vista.
  </p>
@@ -308,7 +308,7 @@ const ProyectoDashboard = ({ user }) => {
  {selectedProject ? (
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
  <p className="nd-label text-[var(--text-disabled)]">Proyecto activo</p>
- <p className="mt-2 text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">{selectedProject.name}</p>
+ <p className="mt-2 text-[18px] font-medium tracking-tight text-[var(--text-primary)]">{selectedProject.name}</p>
  <p className="mt-1 text-[12px] text-[var(--text-secondary)]">
  {selectedProject.code || 'Sin código'}{selectedProject.client ? ` · ${selectedProject.client}` : ''}
  </p>
@@ -321,7 +321,7 @@ const ProyectoDashboard = ({ user }) => {
  {!selectedProject ? (
  <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-16 text-center ">
  <FolderKanban size={40} className="mx-auto text-[var(--text-disabled)]" />
- <p className="mt-4 text-[16px] font-semibold text-[var(--text-primary)]">No hay proyecto seleccionado</p>
+ <p className="mt-4 text-[16px] font-medium text-[var(--text-primary)]">No hay proyecto seleccionado</p>
  <p className="mt-2 text-[13px] text-[var(--text-secondary)]">Selecciona un proyecto para revisar su comportamiento financiero.</p>
  </section>
  ) : (
@@ -362,7 +362,7 @@ const ProyectoDashboard = ({ user }) => {
  <div className="grid gap-4 lg:grid-cols-2">
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
  <div className="mb-3 flex items-center justify-between">
- <p className="text-sm font-semibold text-[var(--text-primary)]">Ingresos frente a meta</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">Ingresos frente a meta</p>
  <span className="text-xs text-[var(--text-secondary)]">{formatCurrency(projectBudget.incomeTarget || 0)}</span>
  </div>
  <div className="mb-3 h-2 overflow-hidden rounded-full bg-[var(--border)]">
@@ -381,7 +381,7 @@ const ProyectoDashboard = ({ user }) => {
 
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
  <div className="mb-3 flex items-center justify-between">
- <p className="text-sm font-semibold text-[var(--text-primary)]">Gastos frente a límite</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">Gastos frente a límite</p>
  <span className="text-xs text-[var(--text-secondary)]">{formatCurrency(projectBudget.expenseLimit || 0)}</span>
  </div>
  <div className="mb-3 h-2 overflow-hidden rounded-full bg-[var(--border)]">
@@ -463,7 +463,7 @@ const ProyectoDashboard = ({ user }) => {
  <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }} />
  <span className="text-[13px] font-medium text-[var(--text-primary)]">{entry.name}</span>
  </div>
- <span className="text-[12px] font-semibold text-[var(--text-secondary)]">{formatCurrency(entry.value)}</span>
+ <span className="text-[12px] font-medium text-[var(--text-secondary)]">{formatCurrency(entry.value)}</span>
  </div>
  ))}
  </div>
@@ -497,10 +497,10 @@ const ProyectoDashboard = ({ user }) => {
  {recentRows.map((entry) => (
  <tr key={entry.id} className="hover:bg-[var(--surface)]">
  <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">{formatDate(entry.postedDate)}</td>
- <td className="px-4 py-3 text-sm font-semibold text-[var(--text-primary)]">{entry.description || 'Movimiento sin descripción'}</td>
+ <td className="px-4 py-3 text-sm font-medium text-[var(--text-primary)]">{entry.description || 'Movimiento sin descripción'}</td>
  <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">{entry.kind || 'Movimiento'}</td>
  <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">{entry.counterpartyName || 'Sin contraparte'}</td>
- <td className={`px-4 py-3 text-right text-sm font-semibold ${entry.direction === 'in' ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
+ <td className={`px-4 py-3 text-right text-sm font-medium ${entry.direction === 'in' ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
  {entry.direction === 'in' ? '+' : '-'}
  {formatCurrency(entry.amount)}
  </td>

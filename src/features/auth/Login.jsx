@@ -104,7 +104,7 @@ placeholder="********"
 <button
 type="submit"
 disabled={loading}
-className={`w-full rounded-full bg-[var(--text-primary)] py-3 nd-mono text-[13px] font-bold uppercase tracking-[0.06em] text-[var(--black)] transition-opacity ${loading ? 'cursor-not-allowed opacity-50' : 'hover:opacity-85'}`}
+className={`w-full rounded-full bg-[var(--text-primary)] py-3 nd-mono text-[13px] font-medium uppercase tracking-[0.06em] text-[var(--black)] transition-opacity ${loading ? 'cursor-not-allowed opacity-50' : 'hover:opacity-85'}`}
 >
 {loading ? '[Loading...]' : 'Iniciar Sesión'}
 </button>

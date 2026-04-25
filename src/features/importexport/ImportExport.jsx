@@ -511,14 +511,14 @@ const ImportExport = ({ user }) => {
  <div className="space-y-6 animate-fadeIn">
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-5 ">
  <p className="nd-label text-[var(--text-primary)]">Operación de datos</p>
- <h2 className="mt-2 text-[24px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">Importación y exportación</h2>
+ <h2 className="mt-2 text-[24px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">Importación y exportación</h2>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Mueve registros en bloque con control previo de columnas y duplicados.</p>
  </div>
 
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center gap-2 mb-4">
  <Download size={18} className="text-[var(--success)]" />
- <h3 className="text-[15px] font-semibold text-[var(--text-primary)]">Exportar transacciones</h3>
+ <h3 className="text-[15px] font-medium text-[var(--text-primary)]">Exportar transacciones</h3>
  <span className="ml-auto text-[11px] text-[var(--text-secondary)]">{allTransactions.length} transacciones disponibles</span>
  </div>
  <div className="flex gap-3">
@@ -542,7 +542,7 @@ const ImportExport = ({ user }) => {
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center gap-2 mb-4">
  <Upload size={18} className="text-[var(--warning)]" />
- <h3 className="text-[15px] font-semibold text-[var(--text-primary)]">Importar transacciones</h3>
+ <h3 className="text-[15px] font-medium text-[var(--text-primary)]">Importar transacciones</h3>
  </div>
 
  {!importData ? (
@@ -711,7 +711,7 @@ const ImportExport = ({ user }) => {
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-6 ">
  <div className="flex items-center gap-2 mb-4">
  <Landmark size={18} className="text-[var(--text-primary)]" />
- <h3 className="text-[15px] font-semibold text-[var(--text-primary)]">Importar movimientos bancarios</h3>
+ <h3 className="text-[15px] font-medium text-[var(--text-primary)]">Importar movimientos bancarios</h3>
  <span className="ml-auto text-[11px] text-[var(--text-secondary)]">{bankMovements.length} movimientos en sistema</span>
  </div>
  <p className="mb-4 text-[12px] text-[var(--text-secondary)]">
@@ -810,20 +810,20 @@ const ImportExport = ({ user }) => {
  {/* Summary stats */}
  <div className="grid grid-cols-3 gap-3">
  <div className="rounded-md border border-[var(--border-visible)] bg-transparent p-3 text-center">
- <p className="text-[10px] font-semibold uppercase text-[var(--success)]">Entradas</p>
- <p className="text-sm font-bold text-[var(--success)]">
+ <p className="text-[10px] font-medium uppercase text-[var(--success)]">Entradas</p>
+ <p className="text-sm font-medium text-[var(--success)]">
  €{bankImportData.movements.filter(m => m.direction === 'in').reduce((s, m) => s + m.amount, 0).toLocaleString('de-DE', { minimumFractionDigits: 2 })}
  </p>
  </div>
  <div className="rounded-md border border-[var(--border-visible)] bg-transparent p-3 text-center">
- <p className="text-[10px] font-semibold uppercase text-[var(--text-secondary)]">Salidas</p>
- <p className="text-sm font-bold text-[var(--accent)]">
+ <p className="text-[10px] font-medium uppercase text-[var(--text-secondary)]">Salidas</p>
+ <p className="text-sm font-medium text-[var(--accent)]">
  €{bankImportData.movements.filter(m => m.direction === 'out').reduce((s, m) => s + m.amount, 0).toLocaleString('de-DE', { minimumFractionDigits: 2 })}
  </p>
  </div>
  <div className="rounded-md border border-[var(--border-visible)] bg-[var(--surface)] p-3 text-center">
- <p className="text-[10px] font-semibold uppercase text-[var(--text-primary)]">Nuevos</p>
- <p className="text-sm font-bold text-[var(--text-primary)]">
+ <p className="text-[10px] font-medium uppercase text-[var(--text-primary)]">Nuevos</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">
  {bankImportData.movements.length - bankImportData.dupes.size} de {bankImportData.movements.length}
  </p>
  </div>

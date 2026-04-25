@@ -31,7 +31,7 @@ const StatCard = ({ title, value, subtitle, accent, icon }) => {
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">{title}</p>
- <p className="mt-2 nd-display nd-display text-[28px] font-semibold tracking-tight text-[var(--text-display)]">{value}</p>
+ <p className="mt-2 nd-display nd-display text-[28px] font-medium tracking-tight text-[var(--text-display)]">{value}</p>
  </div>
  <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: 'var(--surface)', color: accent }}>
  <IconComponent size={18} />
@@ -45,8 +45,8 @@ const StatCard = ({ title, value, subtitle, accent, icon }) => {
 const ScenarioCard = ({ title, balance, delta, accent, subtitle }) => (
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5">
  <p className="nd-label text-[var(--text-disabled)]">{title}</p>
- <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight" style={{ color: accent }}>{formatCurrency(balance)}</p>
- <p className={`mt-2 text-sm font-semibold ${delta >= 0 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
+ <p className="mt-2 nd-display text-[28px] font-medium tracking-tight" style={{ color: accent }}>{formatCurrency(balance)}</p>
+ <p className={`mt-2 text-sm font-medium ${delta >= 0 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
  {delta >= 0 ? '+' : ''}{formatCurrency(delta)}
  </p>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">{subtitle}</p>
@@ -124,14 +124,14 @@ const ProyeccionCashflow = ({ user }) => {
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="nd-label text-[var(--text-secondary)] mb-3">Proyección de tesorería</p>
- <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Horizonte de 8 semanas usando CXC, CXP y caja real.</h2>
+ <h2 className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">Horizonte de 8 semanas usando CXC, CXP y caja real.</h2>
  <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[var(--text-secondary)]">
  La proyección parte del saldo bancario actual y suma o resta solo compromisos abiertos con vencimiento conocido.
  </p>
  </div>
  <div className="rounded-lg border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-3">
  <p className="nd-label text-[var(--text-secondary)]">Horizonte</p>
- <p className="mt-1 text-sm font-semibold text-[var(--text-primary)]">Próximas 8 semanas</p>
+ <p className="mt-1 text-sm font-medium text-[var(--text-primary)]">Próximas 8 semanas</p>
  </div>
  </div>
  </section>
@@ -188,7 +188,7 @@ const ProyeccionCashflow = ({ user }) => {
  <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
  <div className="mb-4">
  <p className="nd-label text-[var(--text-disabled)]">Curva de liquidez</p>
- <h3 className="nd-display mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-display)]">Saldo proyectado por semana</h3>
+ <h3 className="nd-display mt-1 text-[18px] font-medium tracking-tight text-[var(--text-display)]">Saldo proyectado por semana</h3>
  </div>
  <ResponsiveContainer width="100%" height={360}>
  <AreaChart
@@ -229,7 +229,7 @@ const ProyeccionCashflow = ({ user }) => {
 
  <section className="overflow-hidden rounded-md border border-[var(--border)] bg-[var(--surface)] ">
  <div className="border-b border-[var(--border)] px-5 py-4">
- <h3 className="nd-display flex items-center gap-2 text-lg font-semibold text-[var(--text-display)]">
+ <h3 className="nd-display flex items-center gap-2 text-lg font-medium text-[var(--text-display)]">
  <Activity size={18} className="text-[var(--text-secondary)]" />
  Desglose semanal comprometido
  </h3>
@@ -250,11 +250,11 @@ const ProyeccionCashflow = ({ user }) => {
  <tbody className="divide-y divide-[var(--border)]">
  {projectionData.map((row) => (
  <tr key={row.label} className="hover:bg-[var(--surface)]">
- <td className="px-4 py-3 font-semibold text-white">{row.label}</td>
+ <td className="px-4 py-3 font-medium text-[var(--text-primary)]">{row.label}</td>
  <td className="px-4 py-3 text-[var(--text-secondary)]">{row.range}</td>
  <td className="px-4 py-3 text-right text-[var(--success)]">{formatCurrency(row.committedIn)}</td>
  <td className="px-4 py-3 text-right text-[var(--accent)]">{formatCurrency(row.committedOut)}</td>
- <td className={`px-4 py-3 text-right font-semibold ${row.base >= 0 ? 'text-[var(--text-secondary)]' : 'text-[var(--accent)]'}`}>{formatCurrency(row.base)}</td>
+ <td className={`px-4 py-3 text-right font-medium ${row.base >= 0 ? 'text-[var(--text-secondary)]' : 'text-[var(--accent)]'}`}>{formatCurrency(row.base)}</td>
  <td className={`px-4 py-3 text-right ${row.optimistic >= 0 ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>{formatCurrency(row.optimistic)}</td>
  <td className="px-4 py-3 text-right text-[var(--accent)]">{formatCurrency(row.pessimistic)}</td>
  </tr>
@@ -269,15 +269,15 @@ const ProyeccionCashflow = ({ user }) => {
  <Target className="mt-0.5 text-[var(--text-secondary)]" size={18} />
  <div className="grid gap-3 md:grid-cols-3">
  <div>
- <p className="text-sm font-semibold text-[var(--text-secondary)]">Base</p>
+ <p className="text-sm font-medium text-[var(--text-secondary)]">Base</p>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Usa únicamente CXC y CXP abiertas por vencimiento, sin asumir ventas o compras futuras todavía no registradas.</p>
  </div>
  <div>
- <p className="text-sm font-semibold text-[var(--text-secondary)]">Optimista</p>
+ <p className="text-sm font-medium text-[var(--text-secondary)]">Optimista</p>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Asume mejor conversión de cobro y algo menos de salida sobre los pagos comprometidos.</p>
  </div>
  <div>
- <p className="text-sm font-semibold text-[var(--text-secondary)]">Pesimista</p>
+ <p className="text-sm font-medium text-[var(--text-secondary)]">Pesimista</p>
  <p className="mt-1 text-sm text-[var(--text-secondary)]">Asume retrasos de cobro y mayor presión de pagos. Útil para anticipar necesidades de liquidez.</p>
  </div>
  </div>

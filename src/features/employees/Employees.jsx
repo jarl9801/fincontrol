@@ -144,7 +144,7 @@ const Employees = ({ user, userRole }) => {
           </div>
           <div>
             <p className="nd-labelst text-[var(--text-secondary)]">Master data</p>
-            <h3 className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">
+            <h3 className="text-xl font-medium tracking-tight text-[var(--text-primary)]">
               Empleados
             </h3>
           </div>
@@ -153,7 +153,7 @@ const Employees = ({ user, userRole }) => {
         <button
           type="button"
           onClick={handleOpenCreate}
-          className="inline-flex items-center gap-2 rounded-full border border-[var(--border-visible)] bg-[var(--surface)] px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-80"
+          className="inline-flex items-center gap-2 rounded-full border border-[var(--border-visible)] bg-[var(--surface)] px-5 py-2.5 text-sm font-medium text-[var(--text-primary)] transition hover:opacity-80"
         >
           <Plus size={15} />
           Nuevo empleado
@@ -183,7 +183,7 @@ const Employees = ({ user, userRole }) => {
                 <Icon size={15} />
                 {label}
                 <span
-                  className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                  className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                     isActive
                       ? 'bg-[var(--surface)] text-[var(--text-primary)]'
                       : 'bg-[var(--surface)] text-[var(--text-secondary)]'
@@ -218,7 +218,7 @@ const Employees = ({ user, userRole }) => {
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-transparent">
               <HardHat size={28} className="text-[var(--text-secondary)]" />
             </div>
-            <p className="text-base font-semibold text-[var(--text-disabled)]">
+            <p className="text-base font-medium text-[var(--text-disabled)]">
               {searchQuery ? 'Sin resultados' : 'Sin empleados registrados'}
             </p>
             <p className="mt-1 text-sm text-[var(--text-secondary)]">
@@ -230,7 +230,7 @@ const Employees = ({ user, userRole }) => {
               <button
                 type="button"
                 onClick={handleOpenCreate}
-                className="mt-4 inline-flex items-center gap-2 rounded-md border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-2.5 text-sm font-semibold text-[var(--text-primary)] transition hover:bg-[var(--surface)]"
+                className="mt-4 inline-flex items-center gap-2 rounded-md border border-[var(--border-visible)] bg-[var(--surface)] px-4 py-2.5 text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--surface)]"
               >
                 <Plus size={15} />
                 Crear primer empleado
@@ -287,7 +287,7 @@ const Employees = ({ user, userRole }) => {
                       <td className="px-5 py-3.5">
                         <div>
                           <p
-                            className={`font-semibold ${
+                            className={`font-medium ${
                               isInactive
                                 ? 'text-[var(--text-secondary)] line-through'
                                 : 'text-[var(--text-primary)]'
@@ -306,7 +306,7 @@ const Employees = ({ user, userRole }) => {
                       {/* Type */}
                       <td className="px-4 py-3.5">
                         <span
-                          className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+                          className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium ${
                             TYPE_COLORS[employee.type] || TYPE_COLORS.internal
                           }`}
                         >
@@ -366,7 +366,7 @@ const Employees = ({ user, userRole }) => {
                           type="button"
                           onClick={() => handleToggleStatus(employee)}
                           disabled={actionLoading === employee.id}
-                          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all ${
+                          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
                             isInactive
                               ? 'bg-[var(--surface)] text-[var(--text-secondary)]'
                               : 'bg-transparent text-[var(--success)]'
@@ -388,7 +388,7 @@ const Employees = ({ user, userRole }) => {
                       <td className="px-4 py-3.5 text-center">
                         {txCount > 0 ? (
                           <span
-                            className="inline-flex items-center gap-1 rounded-full bg-[var(--surface)] px-2.5 py-1 text-xs font-semibold text-[var(--text-primary)]"
+                            className="inline-flex items-center gap-1 rounded-full bg-[var(--surface)] px-2.5 py-1 text-xs font-medium text-[var(--text-primary)]"
                             title="Match aproximado por nombre/alias en descripciones"
                           >
                             {txCount}
