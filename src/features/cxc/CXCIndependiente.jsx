@@ -243,7 +243,7 @@ const CXCIndependiente = ({ user, userRole }) => {
  onClick={() => setStatusFilter(filter.id)}
  className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
  statusFilter === filter.id
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--success)]'
+ ? 'border-[var(--accent)] bg-transparent text-[var(--accent)]'
  : 'border-[var(--border)] bg-[var(--surface)] text-[var(--text-secondary)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]'
  }`}
  >
@@ -274,13 +274,13 @@ const CXCIndependiente = ({ user, userRole }) => {
  return (
  <tr key={row.id} className="cursor-pointer hover:bg-[var(--surface)]" onClick={() => setDetailRecord(row)}>
  <td className="px-4 py-4">
- <p className="text-sm font-semibold text-[var(--text-primary)]">{row.counterpartyName}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{row.counterpartyName}</p>
  <p className="text-xs text-[var(--text-secondary)]">{row.description || 'Sin descripción'}</p>
  </td>
  <td className="px-4 py-4 text-sm text-[var(--text-primary)]">{row.documentNumber || 'Sin documento'}</td>
  <td className="px-4 py-4 text-sm text-[var(--text-secondary)]">{row.projectName || 'Sin proyecto'}</td>
- <td className="px-4 py-4 text-right text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(row.grossAmount)}</td>
- <td className="px-4 py-4 text-right text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(row.openAmount)}</td>
+ <td className="px-4 py-4 text-right nd-mono text-sm tabular-nums text-[var(--text-primary)]">{formatCurrency(row.grossAmount)}</td>
+ <td className="px-4 py-4 text-right nd-mono text-sm tabular-nums text-[var(--text-primary)]">{formatCurrency(row.openAmount)}</td>
  <td className="px-4 py-4 text-center text-sm text-[var(--text-secondary)]">{row.dueDate ? formatDate(row.dueDate) : 'Sin fecha'}</td>
  <td className="px-4 py-4 text-center">
  <Badge
