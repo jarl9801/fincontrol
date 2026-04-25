@@ -283,19 +283,16 @@ const CXCIndependiente = ({ user, userRole }) => {
  <td className="px-4 py-4 text-right text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(row.openAmount)}</td>
  <td className="px-4 py-4 text-center text-sm text-[var(--text-secondary)]">{row.dueDate ? formatDate(row.dueDate) : 'Sin fecha'}</td>
  <td className="px-4 py-4 text-center">
- <span
- className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${
- row.status === 'settled'
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--success)]'
- : row.status === 'overdue'
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--accent)]'
- : row.status === 'partial'
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--warning)]'
- : 'border-[var(--border-visible)] bg-[var(--surface)] text-[var(--text-secondary)]'
- }`}
+ <Badge
+ variant={
+ row.status === 'settled' ? 'ok'
+ : row.status === 'overdue' ? 'err'
+ : row.status === 'partial' ? 'warn'
+ : 'neutral'
+ }
  >
  {statusLabels[row.status]}
- </span>
+ </Badge>
  </td>
  <td className="px-4 py-4 text-center text-xs text-[var(--text-secondary)]">{row.source}</td>
  {canAct && (
