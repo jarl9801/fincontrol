@@ -74,7 +74,7 @@ const RatioCard = ({ title, value, unit = '', benchmark, inverse = false, descri
  <IconComponent className={colors.icon} size={18} />
  </div>
  <div>
- <h4 className="text-sm font-semibold text-[var(--text-primary)]">{title}</h4>
+ <h4 className="text-sm font-medium text-[var(--text-primary)]">{title}</h4>
  <p className="text-xs text-[var(--text-secondary)]">{description}</p>
  </div>
  </div>
@@ -82,7 +82,7 @@ const RatioCard = ({ title, value, unit = '', benchmark, inverse = false, descri
  </div>
  <div className="flex items-center justify-between gap-3">
  <div>
- <p className={`nd-display text-3xl font-bold ${colors.text}`}>{displayValue}{unit}</p>
+ <p className={`nd-display text-3xl font-medium ${colors.text}`}>{displayValue}{unit}</p>
  <p className="mt-1 text-xs text-[var(--text-disabled)]">
  Referencia {inverse ? 'máx.' : 'mín.'}: {benchmark.good}{unit}
  </p>
@@ -97,7 +97,7 @@ const RatioCard = ({ title, value, unit = '', benchmark, inverse = false, descri
  </div>
  </div>
  </div>
- <div className={`px-4 py-2 text-xs font-semibold ${colors.bg} ${colors.text}`}>
+ <div className={`px-4 py-2 text-xs font-medium ${colors.bg} ${colors.text}`}>
  {status === 'good' ? 'Saludable' : status === 'warning' ? 'Requiere atención' : 'Crítico'}
  </div>
  </div>
@@ -107,7 +107,7 @@ const RatioCard = ({ title, value, unit = '', benchmark, inverse = false, descri
 const SummaryMetric = ({ label, value, subvalue, tone }) => (
  <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 ">
  <p className="text-sm text-[var(--text-secondary)]">{label}</p>
- <p className={`mt-1 text-2xl font-semibold ${tone}`}>{value}</p>
+ <p className={`mt-1 text-2xl font-medium ${tone}`}>{value}</p>
  {subvalue && <p className="mt-1 text-xs text-[var(--text-disabled)]">{subvalue}</p>}
  </div>
 );
@@ -199,7 +199,7 @@ const FinancialRatios = ({ user }) => {
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
  <p className="mb-3 nd-label text-[var(--text-secondary)]">Ratios financieros</p>
- <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">Liquidez, cobertura y eficiencia operativa.</h2>
+ <h2 className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">Liquidez, cobertura y eficiencia operativa.</h2>
  <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[var(--text-disabled)]">
  Los indicadores se calculan desde caja real, facturas abiertas y ritmo de entradas y salidas para ofrecer una lectura útil de la operación.
  </p>
@@ -261,7 +261,7 @@ const FinancialRatios = ({ user }) => {
  <Wallet className="text-[var(--text-primary)]" size={18} />
  </div>
  <div>
- <h3 className="text-lg font-semibold text-[var(--text-primary)]">Liquidez</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)]">Liquidez</h3>
  <p className="text-sm text-[var(--text-secondary)]">Capacidad de sostener obligaciones desde caja real y compromisos abiertos.</p>
  </div>
  </div>
@@ -279,7 +279,7 @@ const FinancialRatios = ({ user }) => {
  <Clock className="text-[var(--warning)]" size={18} />
  </div>
  <div>
- <h3 className="text-lg font-semibold text-[var(--text-primary)]">Actividad</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)]">Actividad</h3>
  <p className="text-sm text-[var(--text-secondary)]">Velocidad de cobro y pago sobre el saldo abierto actual.</p>
  </div>
  </div>
@@ -297,7 +297,7 @@ const FinancialRatios = ({ user }) => {
  <Percent className="text-[var(--success)]" size={18} />
  </div>
  <div>
- <h3 className="text-lg font-semibold text-[var(--text-primary)]">Rentabilidad y presión</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)]">Rentabilidad y presión</h3>
  <p className="text-sm text-[var(--text-secondary)]">Indicadores gerenciales basados en caja y envejecimiento de cartera y deuda.</p>
  </div>
  </div>
@@ -315,7 +315,7 @@ const FinancialRatios = ({ user }) => {
  <BarChart3 className="text-[var(--text-primary)]" size={18} />
  </div>
  <div>
- <h3 className="text-lg font-semibold text-[var(--text-primary)]">Comparativa frente a referencia</h3>
+ <h3 className="text-lg font-medium text-[var(--text-primary)]">Comparativa frente a referencia</h3>
  <p className="text-sm text-[var(--text-secondary)]">Referencia rápida para liquidez y resistencia operativa.</p>
  </div>
  </div>
@@ -346,15 +346,15 @@ const FinancialRatios = ({ user }) => {
  <Info className="mt-0.5 text-[var(--text-primary)]" size={18} />
  <div className="grid gap-3 md:grid-cols-3">
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">Liquidez</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">Liquidez</p>
  <p className="mt-1 text-sm text-[var(--text-disabled)]">El ratio corriente y la prueba ácida usan caja real más compromisos abiertos, sin adelantar cobros que aún no ocurrieron.</p>
  </div>
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">Actividad</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">Actividad</p>
  <p className="mt-1 text-sm text-[var(--text-disabled)]">Los días de cobro y pago se estiman con saldo abierto actual frente al ritmo del período seleccionado.</p>
  </div>
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">Rentabilidad</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">Rentabilidad</p>
  <p className="mt-1 text-sm text-[var(--text-disabled)]">El margen mostrado corresponde a caja realizada. Una contabilidad completa requeriría un libro contable fuera del alcance de esta fase.</p>
  </div>
  </div>
