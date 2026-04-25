@@ -137,7 +137,7 @@ const CXC = ({
  </div>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
- <span className="text-sm font-semibold text-[var(--text-display)]">{safe(t.description)}</span>
+ <span className="text-sm font-medium text-[var(--text-display)]">{safe(t.description)}</span>
  {t.isRecurring && (
  <Badge variant="neutral" dot>Recurrente</Badge>
  )}
@@ -159,7 +159,7 @@ const CXC = ({
  </td>
  <td className="px-4 py-4 text-right whitespace-nowrap">
  <div className="flex flex-col items-end">
- <span className="nd-mono text-sm font-bold text-[var(--success)]">+{formatCurrency(t.amount)}</span>
+ <span className="nd-mono text-sm tabular-nums text-[var(--success)]">+{formatCurrency(t.amount)}</span>
  {isPartial && <span className="text-xs text-[var(--warning)]">Restante: {formatCurrency(remaining)}</span>}
  </div>
  </td>
