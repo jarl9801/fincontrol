@@ -15,7 +15,7 @@ import { useReceivables } from '../../hooks/useReceivables';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
 import { formatCurrency, formatDate } from '../../utils/formatters';
-import { KPIGrid, KPI, Badge } from '@/components/ui/nexus';
+import { KPIGrid, KPI, Badge, Button } from '@/components/ui/nexus';
 
 const statusLabels = {
  issued: 'Emitida',
@@ -298,22 +298,23 @@ const CXCIndependiente = ({ user, userRole }) => {
  {canAct && (
  <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
  <div className="flex justify-end gap-2">
- <button
- type="button"
+ <Button
+ variant="ghost"
+ size="sm"
  disabled={!canSettle}
  onClick={() => setSelectedRow(row)}
- className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-xs font-semibold text-[var(--text-secondary)] transition-all hover:bg-[var(--surface)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-40"
  >
  Abono
- </button>
- <button
- type="button"
+ </Button>
+ <Button
+ variant="primary"
+ size="sm"
  disabled={!canSettle || loadingId === row.id}
+ loading={loadingId === row.id}
  onClick={() => handleSettle(row)}
- className="rounded-full bg-[var(--text-primary)] px-3 py-2 text-xs font-semibold text-[var(--black)] transition-all hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-40"
  >
  Liquidar
- </button>
+ </Button>
  </div>
  </td>
  )}
