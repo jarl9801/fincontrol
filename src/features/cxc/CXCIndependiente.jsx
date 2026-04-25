@@ -164,11 +164,11 @@ const CXCIndependiente = ({ user, userRole }) => {
 
  return (
  <div className="space-y-6 pb-12">
- <section className="rounded-md border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-6 py-7">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="nd-label text-[var(--success)] mb-3">Cuentas por cobrar</p>
- <h2 className="nd-display text-[32px] font-semibold tracking-tight text-[var(--text-display)]">
+ <p className="nd-label text-[var(--text-secondary)] mb-3">Cuentas por cobrar</p>
+ <h2 className="nd-display text-[32px] font-light tracking-tight text-[var(--text-display)]">
  Seguimiento de cobros, abonos y vencimientos.{' '}
  <HelpButton title="Cuentas por cobrar">
  <p><strong>Cartera abierta</strong> — Total de facturas emitidas que aun no se han cobrado completamente.</p>
