@@ -3,7 +3,7 @@ import { TrendingUp, Clock, AlertCircle, DollarSign, CheckCircle2, ArrowUpCircle
 import { formatCurrency, formatDate, getDaysOverdue, safe } from '../../utils/formatters';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
-import { KPIGrid, KPI, Button, Badge, Panel, EmptyState } from '@/components/ui/nexus';
+import { KPIGrid, KPI, Button, Badge, Panel, EmptyState, Toast } from '@/components/ui/nexus';
 
 const CXC = ({
  transactions,
@@ -66,11 +66,9 @@ const CXC = ({
  return (
  <div className="space-y-6">
  {toast && (
- <div className={`fixed top-6 right-6 z-[100] flex items-center gap-2 px-5 py-3 rounded-md text-sm font-medium animate-fadeIn ${
- toast.type === 'success' ? 'bg-[var(--success)] text-white' : 'bg-[var(--accent)] text-white'
- }`}>
+ <Toast variant={toast.type === 'success' ? 'ok' : 'err'} onDismiss={() => setToast(null)}>
  {toast.message}
- </div>
+ </Toast>
  )}
 
  <KPIGrid cols={4}>
