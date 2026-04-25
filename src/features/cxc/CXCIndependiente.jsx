@@ -15,7 +15,7 @@ import { useReceivables } from '../../hooks/useReceivables';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
 import { formatCurrency, formatDate } from '../../utils/formatters';
-import { KPIGrid, KPI } from '@/components/ui/nexus';
+import { KPIGrid, KPI, Badge } from '@/components/ui/nexus';
 
 const statusLabels = {
  issued: 'Emitida',
@@ -40,17 +40,15 @@ const AgingBar = ({ buckets }) => {
  if (total <= 0) return null;
 
  return (
- <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5">
  <div className="mb-4 flex items-center justify-between">
  <div>
  <p className="nd-label text-[var(--text-disabled)]">Antigüedad</p>
- <h3 className="nd-display mt-1 text-[18px] font-semibold tracking-tight text-[var(--text-display)]">Cartera vencida por tramos</h3>
+ <h3 className="nd-display mt-1 text-[18px] font-medium tracking-tight text-[var(--text-display)]">Cartera vencida por tramos</h3>
  </div>
- <span className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs font-semibold text-[var(--text-secondary)]">
- {formatCurrency(total)}
- </span>
+ <Badge variant="neutral">{formatCurrency(total)}</Badge>
  </div>
- <div className="mb-4 flex h-3 overflow-hidden rounded-full bg-[var(--border)]">
+ <div className="mb-4 flex h-3 overflow-hidden rounded-md bg-[var(--border)]">
  {buckets.map((bucket, index) =>
  bucket.total > 0 ? (
  <div key={bucket.label} style={{ width: `${(bucket.total / total) * 100}%`, backgroundColor: bucketColor[index] }} />
@@ -64,7 +62,7 @@ const AgingBar = ({ buckets }) => {
  <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: bucketColor[index] }} />
  <span className="nd-label text-[var(--text-disabled)]">{bucket.label}</span>
  </div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(bucket.total)}</p>
+ <p className="nd-mono text-sm tabular-nums text-[var(--text-primary)]">{formatCurrency(bucket.total)}</p>
  </div>
  ))}
  </div>
