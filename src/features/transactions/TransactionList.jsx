@@ -31,6 +31,7 @@ import { usePayables } from '../../hooks/usePayables';
 import { useProjects } from '../../hooks/useProjects';
 import { exportTransactionsToPDF } from '../../utils/pdfExport';
 import { formatCurrency } from '../../utils/formatters';
+import { KPIGrid, KPI, Button, Badge } from '@/components/ui/nexus';
 
 const safeString = (value) => {
  if (value == null) return '';
@@ -254,47 +255,6 @@ const getSearchIndex = (record) => {
  .join(' ');
 };
 
-const MetricCard = ({ label, value, icon, tone = 'neutral', onClick }) => {
- const Icon = icon;
- const palette =
- tone === 'positive'
- ? {
- value: 'text-[var(--success)]',
- icon: 'text-[var(--success)]',
- card: 'bg-[var(--surface)]',
- }
- : tone === 'negative'
- ? {
- value: 'text-[var(--warning)]',
- icon: 'text-[var(--warning)]',
- card: 'bg-[var(--surface)]',
- }
- : {
- value: 'text-[var(--text-primary)]',
- icon: 'text-[var(--text-primary)]',
- card: 'bg-[var(--surface)]',
- };
-
- return (
- <div
- className={`rounded-lg border border-[var(--border)] px-4 py-3 ${palette.card} ${onClick ? 'cursor-pointer transition-transform duration-200' : ''}`}
- onClick={onClick}
- role={onClick ? 'button' : undefined}
- tabIndex={onClick ? 0 : undefined}
- onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
- >
- <div className="flex items-center justify-between gap-3">
- <div>
- <p className="nd-label text-[var(--text-disabled)]">{label}</p>
- <p className={`mt-2 text-[22px] font-semibold tracking-tight ${palette.value}`}>{value}</p>
- </div>
- <div className={`flex h-10 w-10 items-center justify-center rounded-[15px] border border-white/70 bg-[var(--surface)] ${palette.icon}`}>
- <Icon size={16} />
- </div>
- </div>
- </div>
- );
-};
 
 const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, user }) => {
  const [showFilters, setShowFilters] = useState(false);
@@ -939,23 +899,25 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  </div>
  )}
 
- <section className="rounded-[32px] border border-[var(--border)] bg-[var(--black)] p-5 md:p-6">
+ <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 md:p-6">
  <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
  <div className="max-w-3xl">
  <p className="nd-label text-[var(--text-secondary)]">Control operativo</p>
- <h2 className="mt-2 nd-display text-[28px] font-semibold tracking-tight text-[var(--text-primary)] md:text-[32px]">Mesa central de registros financieros</h2>
+ <h2 className="mt-2 nd-display text-[28px] font-light tracking-tight text-[var(--text-primary)] md:text-[32px]">Mesa central de registros financieros</h2>
  <p className="mt-2 max-w-2xl text-[13px] leading-6 text-[var(--text-disabled)]">
  Revisa en una sola vista movimientos bancarios, facturas por cobrar, facturas por pagar y registros históricos sin duplicados.
  </p>
  </div>
 
- <div className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:min-w-[520px]">
- <MetricCard label="Registros" value={formatCount(metrics.total)} icon={Landmark} onClick={() => { setQuickFilter('all'); setAdvancedFilters(FILTER_DEFAULTS); setSearchTerm(''); }} />
- <MetricCard label="Histórico" value={formatCount(metrics.legacy)} icon={ReceiptText} onClick={() => { setQuickFilter('all'); setAdvancedFilters(prev => prev.family === 'legacy' ? FILTER_DEFAULTS : { ...FILTER_DEFAULTS, family: 'legacy' }); }} />
- <MetricCard label="Movimientos" value={formatCount(metrics.movements)} icon={WalletCards} onClick={() => { setQuickFilter('all'); setAdvancedFilters(prev => prev.family === 'movement' ? FILTER_DEFAULTS : { ...FILTER_DEFAULTS, family: 'movement' }); }} />
- <MetricCard label="Documentos abiertos" value={formatCount(metrics.openDocs)} icon={Filter} tone="negative" onClick={() => { setAdvancedFilters(FILTER_DEFAULTS); setQuickFilter(prev => prev === 'pendientes' ? 'all' : 'pendientes'); }} />
- {uncategorizedMovements.length > 0 && <MetricCard label="Sin categoría" value={formatCount(uncategorizedMovements.length)} icon={AlertTriangle} tone="negative" onClick={() => setBulkCatOpen((v) => !v)} />}
- {metrics.noCC > 0 && <MetricCard label="Sin CC" value={formatCount(metrics.noCC)} icon={AlertTriangle} tone="negative" onClick={() => { setQuickFilter('all'); setAdvancedFilters(prev => ({ ...FILTER_DEFAULTS, noCostCenter: !prev.noCostCenter })); }} />}
+ <div className="xl:min-w-[520px]">
+ <KPIGrid cols={4}>
+ <KPI label="Registros" value={formatCount(metrics.total)} icon={Landmark} onClick={() => { setQuickFilter('all'); setAdvancedFilters(FILTER_DEFAULTS); setSearchTerm(''); }} />
+ <KPI label="Histórico" value={formatCount(metrics.legacy)} icon={ReceiptText} onClick={() => { setQuickFilter('all'); setAdvancedFilters(prev => prev.family === 'legacy' ? FILTER_DEFAULTS : { ...FILTER_DEFAULTS, family: 'legacy' }); }} />
+ <KPI label="Movimientos" value={formatCount(metrics.movements)} icon={WalletCards} onClick={() => { setQuickFilter('all'); setAdvancedFilters(prev => prev.family === 'movement' ? FILTER_DEFAULTS : { ...FILTER_DEFAULTS, family: 'movement' }); }} />
+ <KPI label="Documentos abiertos" value={formatCount(metrics.openDocs)} tone="warn" icon={Filter} onClick={() => { setAdvancedFilters(FILTER_DEFAULTS); setQuickFilter(prev => prev === 'pendientes' ? 'all' : 'pendientes'); }} />
+ {uncategorizedMovements.length > 0 && <KPI label="Sin categoría" value={formatCount(uncategorizedMovements.length)} tone="warn" icon={AlertTriangle} onClick={() => setBulkCatOpen((v) => !v)} />}
+ {metrics.noCC > 0 && <KPI label="Sin CC" value={formatCount(metrics.noCC)} tone="warn" icon={AlertTriangle} onClick={() => { setQuickFilter('all'); setAdvancedFilters(prev => ({ ...FILTER_DEFAULTS, noCostCenter: !prev.noCostCenter })); }} />}
+ </KPIGrid>
  </div>
  </div>
  </section>
@@ -979,7 +941,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
 
  <div className="flex items-center justify-between px-1">
  <p className="text-[13px] text-[var(--text-secondary)]">
- Mostrando <span className="font-semibold text-[var(--text-primary)]">{formatCount(filteredRecords.length)}</span> registros
+ Mostrando <span className="font-medium text-[var(--text-primary)]">{formatCount(filteredRecords.length)}</span> registros
  {filteredRecords.length !== unifiedRecords.length && (
  <span className="text-[var(--text-secondary)]"> de {formatCount(unifiedRecords.length)}</span>
  )}
@@ -1004,7 +966,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <section className="rounded-md border border-[var(--border-visible)] bg-transparent p-5 space-y-4">
  <div className="flex items-center justify-between">
  <div>
- <h3 className="text-[15px] font-semibold text-[var(--text-primary)]">Categorización en lote</h3>
+ <h3 className="text-[15px] font-medium text-[var(--text-primary)]">Categorización en lote</h3>
  <p className="mt-0.5 text-xs text-[var(--text-secondary)]">{uncategorizedMovements.length} movimientos bancarios sin categoría. Selecciona y asigna.</p>
  </div>
  <button onClick={() => setBulkCatOpen(false)} className="rounded-lg p-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
@@ -1041,13 +1003,14 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  {costCenters.map((cc) => <option key={cc.id} value={cc.name}>{cc.name}</option>)}
  </select>
  </label>
- <button
+ <Button
+ variant="primary"
  disabled={!bulkCategory || bulkSelected.size === 0 || bulkSubmitting}
+ loading={bulkSubmitting}
  onClick={handleBulkApply}
- className="rounded-md bg-[var(--text-primary)] px-5 py-2 text-sm font-semibold text-[var(--black)] transition-colors hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed"
  >
  {bulkSubmitting ? 'Aplicando...' : `Aplicar a ${bulkSelected.size} seleccionados`}
- </button>
+ </Button>
  </div>
 
  {/* Select all / none */}
@@ -1114,7 +1077,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <td className="px-3 py-2 whitespace-nowrap text-[var(--text-secondary)]">{m.postedDate?.slice(0, 10) || '—'}</td>
  <td className="px-3 py-2 max-w-[280px] truncate text-[var(--text-primary)]">{m.description || '—'}</td>
  <td className="px-3 py-2 text-[var(--text-secondary)]">{m.counterpartyName || '—'}</td>
- <td className={`px-3 py-2 text-right font-semibold ${m.direction === 'in' ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
+ <td className={`px-3 py-2 text-right nd-mono tabular-nums ${m.direction === 'in' ? 'text-[var(--success)]' : 'text-[var(--warning)]'}`}>
  {m.direction === 'in' ? '+' : '-'}{formatCurrency(Math.abs(m.netAmount ?? m.amount))}
  </td>
  <td className="px-3 py-2 text-xs text-[var(--text-secondary)]">{m.direction === 'in' ? 'Entrada' : 'Salida'}</td>
@@ -1300,10 +1263,10 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <div className="bg-[var(--surface)] rounded-lg w-full max-w-xl max-h-[85vh] overflow-hidden animate-scaleIn flex flex-col" onClick={(e) => e.stopPropagation()}>
  <div className="px-6 py-4 border-b border-[var(--border)] flex justify-between items-start shrink-0">
  <div className="min-w-0 flex-1">
- <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${r.type === 'income' ? 'bg-transparent text-[var(--success)]' : 'bg-transparent text-[var(--accent)]'}`}>
+ <Badge variant={r.type === 'income' ? 'ok' : 'err'}>
  {r.type === 'income' ? 'Ingreso' : 'Egreso'} · {familyLabels[r.recordFamily] || r.recordFamily}
- </span>
- <h3 className="mt-2 text-lg font-bold text-[var(--text-primary)] break-words">{r.description}</h3>
+ </Badge>
+ <h3 className="mt-2 text-lg font-medium text-[var(--text-primary)] break-words">{r.description}</h3>
  </div>
  <button onClick={() => setDetailRecord(null)} className="ml-3 shrink-0 text-[var(--text-disabled)] hover:text-[var(--text-secondary)] transition-colors">
  <X size={20} />
@@ -1312,17 +1275,17 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
 
  <div className="overflow-y-auto px-6 py-5 space-y-5">
  <div className="flex items-baseline justify-between">
- <span className={`text-[32px] font-bold tracking-tight ${r.type === 'income' ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
+ <span className={`nd-display text-[32px] font-light tabular-nums tracking-tight ${r.type === 'income' ? 'text-[var(--success)]' : 'text-[var(--accent)]'}`}>
  {r.type === 'income' ? '+' : '-'}{formatCurrency(r.amount)}
  </span>
- <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
- r.status === 'paid' ? 'bg-transparent text-[var(--success)]' :
- r.status === 'void' || r.status === 'cancelled' ? 'bg-[var(--surface)] text-[var(--text-secondary)]' :
- r.status === 'overdue' ? 'bg-transparent text-[var(--accent)]' :
- 'bg-transparent text-[var(--warning)]'
- }`}>
+ <Badge variant={
+ r.status === 'paid' ? 'ok' :
+ r.status === 'void' || r.status === 'cancelled' ? 'neutral' :
+ r.status === 'overdue' ? 'err' :
+ 'warn'
+ }>
  {statusLabels[r.status] || r.status}
- </span>
+ </Badge>
  </div>
 
  {r.status === 'partial' && (
@@ -1359,7 +1322,7 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <p className="text-sm text-[var(--text-primary)]">{p.method || 'Pago'}</p>
  <p className="text-[11px] text-[var(--text-disabled)]">{p.date} {p.user ? `· ${p.user}` : ''}</p>
  </div>
- <span className="text-sm font-semibold text-[var(--success)]">{formatCurrency(p.amount)}</span>
+ <span className="nd-mono text-sm tabular-nums text-[var(--success)]">{formatCurrency(p.amount)}</span>
  </div>
  ))}
  </div>
@@ -1414,15 +1377,15 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 p-4 animate-fadeIn" role="dialog" aria-modal="true" onClick={() => setStatusChangeRecord(null)}>
  <div className="bg-[var(--surface)] rounded-lg w-full max-w-md overflow-hidden animate-scaleIn" onClick={(e) => e.stopPropagation()}>
  <div className="px-6 py-4 border-b border-[var(--border)] flex justify-between items-center">
- <h3 className="font-bold text-lg text-[var(--text-primary)]">Cambiar estado</h3>
+ <h3 className="font-medium text-lg text-[var(--text-primary)]">Cambiar estado</h3>
  <button onClick={() => setStatusChangeRecord(null)} className="text-[var(--text-disabled)] hover:text-[var(--text-secondary)] transition-colors">
  <X size={20} />
  </button>
  </div>
 
  <div className="p-6">
- <div className="rounded-md border border-[var(--border)] bg-[var(--black)] p-3 mb-5">
- <p className="text-sm font-medium text-white">{statusChangeRecord.description}</p>
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface-raised)] p-3 mb-5">
+ <p className="text-sm font-medium text-[var(--text-primary)]">{statusChangeRecord.description}</p>
  <p className="mt-1 text-xs text-[var(--text-secondary)]">
  {familyLabels[family]} · {statusLabels[status] || status} · {formatCurrency(statusChangeRecord.amount)}
  </p>
@@ -1436,10 +1399,10 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  className="flex w-full items-center gap-3 rounded-md border border-[var(--border-visible)] bg-transparent px-4 py-3 text-left transition-all hover:bg-transparent"
  >
  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-transparent">
- <span className="text-[var(--warning)] text-sm font-bold">CXC</span>
+ <span className="nd-mono text-[var(--warning)] text-sm">CXC</span>
  </div>
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">Revertir a Pendiente</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">Revertir a Pendiente</p>
  <p className="text-xs text-[var(--text-secondary)]">
  {isMovement ? 'Revierte el cobro — vuelve a cuenta por cobrar' : 'Pasa a CXC abierta'}
  </p>
@@ -1453,10 +1416,10 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  className="flex w-full items-center gap-3 rounded-md border border-[var(--border-visible)] bg-transparent px-4 py-3 text-left transition-all hover:bg-transparent"
  >
  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-transparent">
- <span className="text-[var(--success)] text-lg font-bold">&#10003;</span>
+ <span className="text-[var(--success)] text-lg">&#10003;</span>
  </div>
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">Marcar como Liquidado</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">Marcar como Liquidado</p>
  <p className="text-xs text-[var(--text-secondary)]">Confirma cobro/pago completo</p>
  </div>
  </button>
@@ -1468,10 +1431,10 @@ const TransactionList = ({ transactions, userRole, searchTerm, setSearchTerm, us
  className="flex w-full items-center gap-3 rounded-md border border-[var(--border-visible)] bg-transparent px-4 py-3 text-left transition-all hover:bg-transparent"
  >
  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-transparent">
- <span className="text-[var(--accent)] text-lg font-bold">&#10005;</span>
+ <span className="text-[var(--accent)] text-lg">&#10005;</span>
  </div>
  <div>
- <p className="text-sm font-semibold text-[var(--text-primary)]">Anular</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">Anular</p>
  <p className="text-xs text-[var(--text-secondary)]">Cancela — no afecta caja ni compromisos</p>
  </div>
  </button>
