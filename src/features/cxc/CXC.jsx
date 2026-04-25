@@ -3,7 +3,7 @@ import { TrendingUp, Clock, AlertCircle, DollarSign, CheckCircle2, ArrowUpCircle
 import { formatCurrency, formatDate, getDaysOverdue, safe } from '../../utils/formatters';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
-import { KPIGrid, KPI, Button, Badge, Panel } from '@/components/ui/nexus';
+import { KPIGrid, KPI, Button, Badge, Panel, EmptyState } from '@/components/ui/nexus';
 
 const CXC = ({
  transactions,
@@ -204,13 +204,12 @@ const CXC = ({
  })}
  {sorted.length === 0 && (
  <tr>
- <td colSpan={canAct ? 6 : 5} className="px-4 py-16 text-center">
- <div className="flex flex-col items-center gap-3 text-[var(--text-disabled)]">
- <div className="w-16 h-16 bg-[var(--surface-raised)] rounded-full flex items-center justify-center">
- <TrendingUp className="w-8 h-8 text-[var(--text-disabled)]" />
- </div>
- <p className="text-sm">No hay cuentas por cobrar pendientes</p>
- </div>
+ <td colSpan={canAct ? 6 : 5}>
+ <EmptyState
+ icon={TrendingUp}
+ title="Sin cuentas por cobrar"
+ description="Las facturas pendientes aparecerán aquí."
+ />
  </td>
  </tr>
  )}
