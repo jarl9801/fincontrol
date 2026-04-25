@@ -15,6 +15,7 @@ import { useReceivables } from '../../hooks/useReceivables';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
 import { formatCurrency, formatDate } from '../../utils/formatters';
+import { KPIGrid, KPI } from '@/components/ui/nexus';
 
 const statusLabels = {
  issued: 'Emitida',
@@ -33,30 +34,6 @@ const filters = [
 ];
 
 const bucketColor = ['var(--warning)', 'var(--accent)', 'var(--accent)', 'var(--accent)'];
-
-const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
- const IconComponent = icon;
- return (
- <div
- className={`rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ${onClick ? 'cursor-pointer transition-transform duration-200' : ''}`}
- onClick={onClick}
- role={onClick ? 'button' : undefined}
- tabIndex={onClick ? 0 : undefined}
- onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
- >
- <div className="mb-4 flex items-center justify-between">
- <div>
- <p className="nd-label text-[var(--text-disabled)]">{title}</p>
- <p className="mt-2 nd-display text-[28px] font-semibold tracking-tight text-[var(--text-display)]">{value}</p>
- </div>
- <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: 'var(--surface)', color: accent }}>
- <IconComponent size={18} />
- </div>
- </div>
- <p className="text-sm text-[var(--text-secondary)]">{subtitle}</p>
- </div>
- );
-};
 
 const AgingBar = ({ buckets }) => {
  const total = buckets.reduce((sum, bucket) => sum + bucket.total, 0);
@@ -210,12 +187,38 @@ const CXCIndependiente = ({ user, userRole }) => {
  </div>
  </section>
 
- <div className="grid gap-4 lg:grid-cols-4">
- <StatCard title="Cartera abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="var(--success)" icon={BadgeEuro} onClick={() => setStatusFilter('all')} />
- <StatCard title="Cobrado parcial" value={formatCurrency(totalPartial)} subtitle={totalPartial > 0 ? 'Abonos recibidos en facturas aún no cobradas' : 'Sin cobros parciales — todas pendientes o liquidadas'} accent="var(--text-disabled)" icon={ArrowUpRight} onClick={() => setStatusFilter('partial')} />
- <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overdueReceivables.length} documentos fuera de plazo`} accent="var(--accent)" icon={AlertTriangle} onClick={() => setStatusFilter('overdue')} />
- <StatCard title="Ventana 14d" value={formatCurrency(dueSoon)} subtitle={`${metrics.upcomingReceivables.length} cobros proximos`} accent="var(--warning)" icon={Clock3} onClick={() => setStatusFilter('issued')} />
- </div>
+ <KPIGrid cols={4}>
+ <KPI
+ label="Cartera abierta"
+ value={formatCurrency(totalOpen)}
+ meta={`${openRows.length} documentos activos`}
+ icon={BadgeEuro}
+ onClick={() => setStatusFilter('all')}
+ />
+ <KPI
+ label="Cobrado parcial"
+ value={formatCurrency(totalPartial)}
+ meta={totalPartial > 0 ? 'Abonos recibidos en facturas aún no cobradas' : 'Sin cobros parciales — todas pendientes o liquidadas'}
+ icon={ArrowUpRight}
+ onClick={() => setStatusFilter('partial')}
+ />
+ <KPI
+ label="Vencido"
+ value={formatCurrency(totalOverdue)}
+ meta={`${metrics.overdueReceivables.length} documentos fuera de plazo`}
+ tone="err"
+ icon={AlertTriangle}
+ onClick={() => setStatusFilter('overdue')}
+ />
+ <KPI
+ label="Ventana 14d"
+ value={formatCurrency(dueSoon)}
+ meta={`${metrics.upcomingReceivables.length} cobros proximos`}
+ tone="warn"
+ icon={Clock3}
+ onClick={() => setStatusFilter('issued')}
+ />
+ </KPIGrid>
 
  <AgingBar buckets={metrics.receivablesAging} />
 
