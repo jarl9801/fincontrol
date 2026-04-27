@@ -45,6 +45,7 @@ const Vehicles = lazy(() => import('./features/vehicles/Vehicles'));
 const Insurances = lazy(() => import('./features/insurances/Insurances'));
 const RecurringCosts = lazy(() => import('./features/recurring-costs/RecurringCosts'));
 const DatevImport = lazy(() => import('./features/datev-import/DatevImport'));
+const Classifier = lazy(() => import('./features/classifier/Classifier'));
 const FinanceActionLauncher = lazy(() => import('./components/finance/FinanceActionLauncher'));
 
 const VIEW_TITLES = {
@@ -81,6 +82,7 @@ const VIEW_TITLES = {
  '/seguros': 'Seguros',
  '/costos-recurrentes': 'Costos recurrentes',
  '/datev': 'Importar DATEV',
+ '/clasificar': 'Bandeja semanal',
 };
 
 const LoadingState = () => (
@@ -279,6 +281,7 @@ function AppContent() {
  <Route path="/seguros" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Insurances user={user} userRole={userRole} /></ProtectedRoute>} />
  <Route path="/costos-recurrentes" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><RecurringCosts user={user} userRole={userRole} /></ProtectedRoute>} />
  <Route path="/datev" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><DatevImport user={user} userRole={userRole} /></ProtectedRoute>} />
+ <Route path="/clasificar" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Classifier user={user} userRole={userRole} /></ProtectedRoute>} />
  <Route path="*" element={<Navigate to="/" replace />} />
  </Routes>
  </Suspense>
