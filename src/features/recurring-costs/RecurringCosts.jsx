@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Plus, Pencil, Trash2, Repeat, Search, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Plus, Pencil, Trash2, Repeat, Search, ToggleLeft, ToggleRight, CalendarCheck2 } from 'lucide-react';
 import { useRecurringCosts } from '../../hooks/useRecurringCosts';
 import { useEmployees } from '../../hooks/useEmployees';
 import { useProperties } from '../../hooks/useProperties';
@@ -9,6 +9,7 @@ import { useProjects } from '../../hooks/useProjects';
 import { monthlyEquivalent } from '../../finance/assetSchemas';
 import { formatCurrency } from '../../utils/formatters';
 import RecurringCostFormModal from '../../components/ui/RecurringCostFormModal';
+import GenerateMonthModal from '../../components/ui/GenerateMonthModal';
 import ConfirmModal from '../../components/ui/ConfirmModal';
 import { Button, Badge, KPIGrid, KPI, Panel, EmptyState } from '@/components/ui/nexus';
 
@@ -48,6 +49,7 @@ const RecurringCosts = ({ user }) => {
  const [searchQuery, setSearchQuery] = useState('');
  const [showInactive, setShowInactive] = useState(false);
  const [isModalOpen, setIsModalOpen] = useState(false);
+ const [isGenerateOpen, setIsGenerateOpen] = useState(false);
  const [editingCost, setEditingCost] = useState(null);
  const [confirmDelete, setConfirmDelete] = useState(null);
 
@@ -127,9 +129,14 @@ const RecurringCosts = ({ user }) => {
  Aplican a empleados, viviendas, vehículos o costos generales.
  </p>
  </div>
+ <div className="flex items-center gap-2">
+ <Button variant="secondary" icon={CalendarCheck2} onClick={() => setIsGenerateOpen(true)}>
+ Generar mes
+ </Button>
  <Button variant="primary" icon={Plus} onClick={openCreate}>
  Nuevo costo
  </Button>
+ </div>
  </header>
 
  <KPIGrid cols={4}>
@@ -286,6 +293,12 @@ const RecurringCosts = ({ user }) => {
  message={`¿Seguro que querés eliminar "${confirmDelete?.concept}"? Las cuentas por pagar ya generadas NO se borran.`}
  confirmText="Eliminar"
  variant="danger"
+ />
+
+ <GenerateMonthModal
+ isOpen={isGenerateOpen}
+ onClose={() => setIsGenerateOpen(false)}
+ user={user}
  />
  </div>
  );
