@@ -146,7 +146,7 @@ export default function FlujoCajaAnual({ user }) {
       monthTotalsIncome: sumCols(ir),
       monthTotalsExpense: sumCols(er),
     };
-  }, [yearTx]);
+  }, [yearMovements]);
 
   // ── Net & Cumulative rows ──
   const { netRow, acumRow } = useMemo(() => {
