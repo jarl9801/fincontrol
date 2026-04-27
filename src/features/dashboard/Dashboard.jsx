@@ -20,6 +20,7 @@ import {
 import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { summarizeVAT } from '../../finance/reporting';
+import ForwardProjectionPanel from './ForwardProjectionPanel';
 
 /* ===== Nothing Tooltip ===== */
 const ChartTooltip = ({ active, payload, label }) => {
@@ -247,6 +248,9 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  </div>
  </div>
  </section>
+
+ {/* ===== FORWARD PROJECTION — combines CXC, CXP and recurring rules ===== */}
+ <ForwardProjectionPanel user={user} />
 
  {/* ===== CHARTS — Two columns ===== */}
  <div className="grid gap-8 xl:grid-cols-[1.4fr,1fr]">
