@@ -1,512 +1,444 @@
 import { useState, useEffect, useMemo } from 'react';
-import { X, Save, Loader2, HardHat, Briefcase } from 'lucide-react';
+import { X, Save, HardHat, Briefcase, Wallet } from 'lucide-react';
 import { useProjects } from '../../hooks/useProjects';
-import { PROJECTS as PROJECT_CONSTANTS } from '../../constants/projects';
+import {
+ employeeDefaults,
+ EMPLOYEE_TYPES,
+ EMPLOYEE_STATUSES,
+ TAX_CLASSES,
+ KRANKENKASSEN,
+} from '../../finance/assetSchemas';
 import { Button } from '@/components/ui/nexus';
+
+const TYPE_LABELS = {
+ internal: 'Interno (con nómina)',
+ external: 'Externo (sin nómina)',
+ contractor: 'Contratista (factura)',
+};
+
+const STATUS_LABELS = {
+ active: 'Activo',
+ 'on-leave': 'Permiso',
+ inactive: 'Inactivo',
+};
 
 /**
  * EmployeeFormModal — create/edit employees.
  *
- * Mirrors PartnerFormModal patterns: plain useState form, validate-before-submit,
- * Nothing Design System tokens, Spanish labels.
- *
- * Project picker: tries to load projects from Firestore (useProjects); if the
- * Firestore collection is empty (initial state), falls back to PROJECT_CONSTANTS
- * so the form is usable from day one.
+ * Internal employees show full payroll section (IBAN/BIC/StKl/Krankenkasse +
+ * Brutto/Netto/Lst+KiSt/SV-AN/SV-AG/Gesamtkosten). External and contractor
+ * types show only basic identity + bank for payments.
  */
-const EmployeeFormModal = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  editingEmployee,
-  user,
-}) => {
-  const [submitting, setSubmitting] = useState(false);
-  const [errors, setErrors] = useState({});
-  const { projects: firestoreProjects } = useProjects(user);
+const EmployeeFormModal = ({ isOpen, onClose, onSubmit, editingEmployee, user }) => {
+ const { projects } = useProjects(user);
 
-  // Project options: prefer Firestore data, fall back to constants
-  const projectOptions = useMemo(() => {
-    if (firestoreProjects && firestoreProjects.length > 0) {
-      return firestoreProjects.map((p) => ({
-        id: p.id,
-        label: p.name || p.code || p.id,
-      }));
-    }
-    return PROJECT_CONSTANTS.map((label) => ({ id: label, label }));
-  }, [firestoreProjects]);
+ const [form, setForm] = useState(employeeDefaults());
+ const [submitting, setSubmitting] = useState(false);
+ const [error, setError] = useState('');
+ const [section, setSection] = useState('basic'); // basic | payroll | assignment
 
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    type: 'internal',
-    aliasesText: '',
-    projectIds: [],
-    role: '',
-    defaultCostCenter: '',
-    email: '',
-    phone: '',
-    startDate: '',
-    endDate: '',
-    notes: '',
-    status: 'active',
-  });
+ useEffect(() => {
+ if (isOpen) {
+ setForm(editingEmployee ? { ...employeeDefaults(), ...editingEmployee } : employeeDefaults());
+ setError('');
+ setSection('basic');
+ }
+ }, [isOpen, editingEmployee]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    if (editingEmployee) {
-      setFormData({
-        firstName: editingEmployee.firstName || '',
-        lastName: editingEmployee.lastName || '',
-        type: editingEmployee.type || 'internal',
-        aliasesText: (editingEmployee.aliases || []).join(', '),
-        projectIds: editingEmployee.projectIds || [],
-        role: editingEmployee.role || '',
-        defaultCostCenter: editingEmployee.defaultCostCenter || '',
-        email: editingEmployee.email || '',
-        phone: editingEmployee.phone || '',
-        startDate: editingEmployee.startDate || '',
-        endDate: editingEmployee.endDate || '',
-        notes: editingEmployee.notes || '',
-        status: editingEmployee.status || 'active',
-      });
-    } else {
-      setFormData({
-        firstName: '',
-        lastName: '',
-        type: 'internal',
-        aliasesText: '',
-        projectIds: [],
-        role: '',
-        defaultCostCenter: '',
-        email: '',
-        phone: '',
-        startDate: '',
-        endDate: '',
-        notes: '',
-        status: 'active',
-      });
-    }
-    setErrors({});
-  }, [isOpen, editingEmployee]);
+ const activeProjects = useMemo(
+ () => projects.filter((p) => p.active !== false && p.activo !== false),
+ [projects],
+ );
 
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'El nombre es obligatorio';
-    } else if (formData.firstName.trim().length < 2) {
-      newErrors.firstName = 'Mínimo 2 caracteres';
-    }
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'El apellido es obligatorio';
-    }
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Formato de email inválido';
-    }
-    if (formData.startDate && formData.endDate && formData.endDate < formData.startDate) {
-      newErrors.endDate = 'La fecha de baja no puede ser anterior al alta';
-    }
-    return newErrors;
-  };
+ if (!isOpen) return null;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+ const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+ const isInternal = form.type === 'internal';
 
-    setSubmitting(true);
-    try {
-      const aliases = formData.aliasesText
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean);
-      const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim();
-      await onSubmit({
-        fullName,
-        firstName: formData.firstName.trim(),
-        lastName: formData.lastName.trim(),
-        aliases,
-        type: formData.type,
-        status: formData.status,
-        projectIds: formData.projectIds,
-        role: formData.role,
-        defaultCostCenter: formData.defaultCostCenter,
-        email: formData.email,
-        phone: formData.phone,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        notes: formData.notes,
-      });
-    } finally {
-      setSubmitting(false);
-    }
-  };
+ const handleSubmit = async (e) => {
+ e?.preventDefault?.();
+ const fullName = (form.fullName || `${form.firstName} ${form.lastName}`).trim();
+ if (!fullName) {
+ setError('El nombre completo es obligatorio');
+ setSection('basic');
+ return;
+ }
+ setSubmitting(true);
+ const result = await onSubmit({ ...form, fullName });
+ setSubmitting(false);
+ if (result?.success) onClose();
+ else setError(result?.error?.message || 'Error al guardar');
+ };
 
-  const toggleProject = (projectId) => {
-    setFormData((prev) => {
-      const has = prev.projectIds.includes(projectId);
-      return {
-        ...prev,
-        projectIds: has
-          ? prev.projectIds.filter((id) => id !== projectId)
-          : [...prev.projectIds, projectId],
-      };
-    });
-  };
+ const toggleProject = (projectId) => {
+ const current = Array.isArray(form.projectIds) ? form.projectIds : [];
+ const next = current.includes(projectId)
+ ? current.filter((id) => id !== projectId)
+ : [...current, projectId];
+ set('projectIds', next);
+ };
 
-  if (!isOpen) return null;
+ return (
+ <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 p-4 animate-fadeIn" onClick={onClose}>
+ <div className="bg-[var(--surface)] rounded-lg w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+ <header className="px-6 py-4 border-b border-[var(--border)] flex items-center justify-between">
+ <div className="flex items-center gap-3">
+ <HardHat size={18} className="text-[var(--text-disabled)]" />
+ <h2 className="text-lg font-medium text-[var(--text-primary)]">
+ {editingEmployee ? 'Editar empleado' : 'Nuevo empleado'}
+ </h2>
+ </div>
+ <button type="button" onClick={onClose} className="text-[var(--text-disabled)] hover:text-[var(--text-primary)]">
+ <X size={20} />
+ </button>
+ </header>
 
-  return (
-    <div
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 p-4 animate-fadeIn"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-md border border-[var(--border)] bg-[var(--surface)] animate-scaleIn">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface-raised)] px-6 py-5">
-          <div>
-            <h3 className="text-xl font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-              {editingEmployee ? 'Editar empleado' : 'Nuevo empleado'}
-            </h3>
-            <p className="mt-0.5 text-sm text-[var(--text-secondary)]">
-              {editingEmployee
-                ? 'Actualiza los datos del colaborador'
-                : 'Registra un nuevo colaborador interno o externo'}
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            className="rounded-lg p-2 text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-disabled)]"
-            aria-label="Cerrar"
-          >
-            <X size={20} />
-          </button>
-        </div>
+ {/* Tabs */}
+ <div className="px-6 border-b border-[var(--border)]">
+ <div className="nx-tabs">
+ <button type="button" onClick={() => setSection('basic')} className={`nx-tab ${section === 'basic' ? 'active' : ''}`}>
+ Datos básicos
+ </button>
+ {isInternal && (
+ <button type="button" onClick={() => setSection('payroll')} className={`nx-tab ${section === 'payroll' ? 'active' : ''}`}>
+ Nómina
+ </button>
+ )}
+ <button type="button" onClick={() => setSection('assignment')} className={`nx-tab ${section === 'assignment' ? 'active' : ''}`}>
+ Asignación
+ </button>
+ </div>
+ </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          {/* Type selector — internal vs external */}
-          <div className="grid grid-cols-2 gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] p-1.5">
-            {[
-              { value: 'internal', label: 'Interno', icon: HardHat },
-              { value: 'external', label: 'Externo', icon: Briefcase },
-            ].map(({ value, label, icon: Icon }) => (
-              <button
-                key={value}
-                type="button"
-                onClick={() => setFormData({ ...formData, type: value })}
-                className={`
-                  flex items-center justify-center gap-2 py-3 text-sm font-medium rounded-md transition-all
-                  ${formData.type === value
-                    ? 'bg-[var(--surface-raised)] text-[var(--text-primary)] border border-[var(--border-visible)]'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}
-                `}
-              >
-                <Icon size={16} />
-                {label}
-              </button>
-            ))}
-          </div>
+ <form onSubmit={handleSubmit} className="overflow-y-auto px-6 py-5 flex-1 space-y-4">
+ {/* ───── BASIC ───── */}
+ {section === 'basic' && (
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <label className="block md:col-span-2">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Nombre completo *</span>
+ <input
+ type="text"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--border-visible)]"
+ value={form.fullName}
+ onChange={(e) => set('fullName', e.target.value)}
+ placeholder="Ej: Juan Dios Lesmes Linares"
+ autoFocus
+ />
+ </label>
 
-          {/* Datos personales */}
-          <div className="flex items-center gap-2 pt-1">
-            <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">
-              Datos personales
-            </span>
-            <div className="h-px flex-1 bg-[var(--border)]" />
-          </div>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Nombre</span>
+ <input
+ type="text"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.firstName}
+ onChange={(e) => set('firstName', e.target.value)}
+ />
+ </label>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Apellidos</span>
+ <input
+ type="text"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.lastName}
+ onChange={(e) => set('lastName', e.target.value)}
+ />
+ </label>
 
-          <div className="grid grid-cols-2 gap-4">
-            {/* First name */}
-            <div>
-              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
-                Nombre <span className="text-[var(--accent)]">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="Jorge"
-                className={`w-full rounded-lg border px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition ${
-                  errors.firstName
-                    ? 'border-[var(--accent)] bg-transparent'
-                    : 'border-[var(--border)] bg-[var(--surface-raised)] focus:border-[var(--text-primary)]'
-                }`}
-                value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-              />
-              {errors.firstName && (
-                <p className="mt-1 text-xs text-[var(--accent)]">{errors.firstName}</p>
-              )}
-            </div>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Tipo *</span>
+ <select
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.type}
+ onChange={(e) => set('type', e.target.value)}
+ >
+ {EMPLOYEE_TYPES.map((t) => (
+ <option key={t} value={t}>{TYPE_LABELS[t] || t}</option>
+ ))}
+ </select>
+ </label>
 
-            {/* Last name */}
-            <div>
-              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
-                Apellido <span className="text-[var(--accent)]">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="Moran"
-                className={`w-full rounded-lg border px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition ${
-                  errors.lastName
-                    ? 'border-[var(--accent)] bg-transparent'
-                    : 'border-[var(--border)] bg-[var(--surface-raised)] focus:border-[var(--text-primary)]'
-                }`}
-                value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              />
-              {errors.lastName && (
-                <p className="mt-1 text-xs text-[var(--accent)]">{errors.lastName}</p>
-              )}
-            </div>
-          </div>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Estado</span>
+ <select
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.status}
+ onChange={(e) => set('status', e.target.value)}
+ >
+ {EMPLOYEE_STATUSES.map((s) => (
+ <option key={s} value={s}>{STATUS_LABELS[s] || s}</option>
+ ))}
+ </select>
+ </label>
 
-          {/* Aliases */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
-              Alias (separados por coma)
-            </label>
-            <input
-              type="text"
-              placeholder="Jorge Lider, Jorge L., Jorgito"
-              className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)]"
-              value={formData.aliasesText}
-              onChange={(e) => setFormData({ ...formData, aliasesText: e.target.value })}
-            />
-            <p className="mt-1 text-xs text-[var(--text-secondary)]">
-              Variantes del nombre que aparezcan en transacciones (para el matching futuro).
-            </p>
-          </div>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Cargo / Rol</span>
+ <input
+ type="text"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.role}
+ onChange={(e) => set('role', e.target.value)}
+ placeholder="Ej: Técnico, Administración, Dirección"
+ />
+ </label>
 
-          {/* Role */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
-              Rol / Cargo
-            </label>
-            <input
-              type="text"
-              placeholder="Fusionador, Líder de obra, Supervisor..."
-              className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)]"
-              value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-            />
-          </div>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Email</span>
+ <input
+ type="email"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.email}
+ onChange={(e) => set('email', e.target.value)}
+ />
+ </label>
 
-          {/* Asignaciones */}
-          <div className="flex items-center gap-2 pt-1">
-            <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">
-              Asignaciones
-            </span>
-            <div className="h-px flex-1 bg-[var(--border)]" />
-          </div>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Teléfono</span>
+ <input
+ type="tel"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.phone}
+ onChange={(e) => set('phone', e.target.value)}
+ />
+ </label>
 
-          {/* Projects multi-select */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
-              Proyectos
-            </label>
-            <div className="grid grid-cols-1 gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] p-3 sm:grid-cols-2">
-              {projectOptions.map((proj) => {
-                const checked = formData.projectIds.includes(proj.id);
-                return (
-                  <label
-                    key={proj.id}
-                    className={`flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-xs transition ${
-                      checked
-                        ? 'border-[var(--border-visible)] bg-[var(--surface)] text-[var(--text-primary)]'
-                        : 'border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() => toggleProject(proj.id)}
-                      className="h-3.5 w-3.5 accent-[var(--text-primary)]"
-                    />
-                    <span className="truncate">{proj.label}</span>
-                  </label>
-                );
-              })}
-            </div>
-            <p className="mt-1 text-xs text-[var(--text-secondary)]">
-              Un colaborador puede pertenecer a varios proyectos a la vez.
-            </p>
-          </div>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Inicio</span>
+ <input
+ type="date"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.startDate}
+ onChange={(e) => set('startDate', e.target.value)}
+ />
+ </label>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Fin (si aplica)</span>
+ <input
+ type="date"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.endDate}
+ onChange={(e) => set('endDate', e.target.value)}
+ />
+ </label>
 
-          {/* Cost center */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
-              Centro de costo predeterminado
-            </label>
-            <input
-              type="text"
-              placeholder="CC-LOG, CC-ADM..."
-              className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)]"
-              value={formData.defaultCostCenter}
-              onChange={(e) => setFormData({ ...formData, defaultCostCenter: e.target.value })}
-            />
-          </div>
+ <label className="block md:col-span-2">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Aliases (separados por coma)</span>
+ <input
+ type="text"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={Array.isArray(form.aliases) ? form.aliases.join(', ') : ''}
+ onChange={(e) => set('aliases', e.target.value.split(',').map((a) => a.trim()).filter(Boolean))}
+ placeholder="Ej: Pedro, P. Pizarro"
+ />
+ </label>
 
-          {/* Contacto */}
-          <div className="flex items-center gap-2 pt-1">
-            <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">
-              Contacto
-            </span>
-            <div className="h-px flex-1 bg-[var(--border)]" />
-          </div>
+ <label className="block md:col-span-2">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Notas</span>
+ <textarea
+ rows={3}
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.notes}
+ onChange={(e) => set('notes', e.target.value)}
+ />
+ </label>
+ </div>
+ )}
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {/* Email */}
-            <div>
-              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="empleado@umtelkomd.com"
-                className={`w-full rounded-lg border px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition ${
-                  errors.email
-                    ? 'border-[var(--accent)] bg-transparent'
-                    : 'border-[var(--border)] bg-[var(--surface-raised)] focus:border-[var(--text-primary)]'
-                }`}
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              />
-              {errors.email && (
-                <p className="mt-1 text-xs text-[var(--accent)]">{errors.email}</p>
-              )}
-            </div>
+ {/* ───── PAYROLL (solo internos) ───── */}
+ {section === 'payroll' && isInternal && (
+ <div className="space-y-5">
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3">
+ <p className="nd-label text-[var(--text-secondary)] flex items-center gap-2">
+ <Wallet size={14} /> Datos bancarios
+ </p>
+ <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">IBAN</span>
+ <input
+ type="text"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none nd-mono uppercase"
+ value={form.iban}
+ onChange={(e) => set('iban', e.target.value)}
+ placeholder="DE00 0000 0000 0000 0000 00"
+ />
+ </label>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">BIC</span>
+ <input
+ type="text"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none nd-mono uppercase"
+ value={form.bic}
+ onChange={(e) => set('bic', e.target.value)}
+ />
+ </label>
+ </div>
+ </div>
 
-            {/* Phone */}
-            <div>
-              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
-                Teléfono
-              </label>
-              <input
-                type="tel"
-                placeholder="+49 ..."
-                className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)]"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              />
-            </div>
-          </div>
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3">
+ <p className="nd-label text-[var(--text-secondary)] flex items-center gap-2">
+ <Briefcase size={14} /> Datos fiscales y SS
+ </p>
+ <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Steuerklasse (StKl)</span>
+ <select
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.taxClass}
+ onChange={(e) => set('taxClass', e.target.value)}
+ >
+ <option value="">— Sin asignar —</option>
+ {TAX_CLASSES.map((t) => (
+ <option key={t} value={t}>{t}</option>
+ ))}
+ </select>
+ </label>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Krankenkasse</span>
+ <select
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.krankenkasse}
+ onChange={(e) => set('krankenkasse', e.target.value)}
+ >
+ <option value="">— Sin asignar —</option>
+ {KRANKENKASSEN.map((k) => (
+ <option key={k} value={k}>{k}</option>
+ ))}
+ </select>
+ </label>
+ </div>
+ </div>
 
-          {/* Período */}
-          <div className="flex items-center gap-2 pt-1">
-            <span className="text-[10px] font-medium uppercase tracking-widest text-[var(--text-secondary)]">
-              Período
-            </span>
-            <div className="h-px flex-1 bg-[var(--border)]" />
-          </div>
+ <div className="rounded-md border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3">
+ <p className="nd-label text-[var(--text-secondary)]">Salario mensual €</p>
+ <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-4">
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Brutto</span>
+ <input
+ type="number"
+ step="0.01"
+ min="0"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none nd-mono tabular-nums"
+ value={form.bruttoMonthly || ''}
+ onChange={(e) => set('bruttoMonthly', e.target.value)}
+ />
+ </label>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Netto (al empleado)</span>
+ <input
+ type="number"
+ step="0.01"
+ min="0"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none nd-mono tabular-nums"
+ value={form.nettoMonthly || ''}
+ onChange={(e) => set('nettoMonthly', e.target.value)}
+ />
+ </label>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">LSt + KiSt</span>
+ <input
+ type="number"
+ step="0.01"
+ min="0"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none nd-mono tabular-nums"
+ value={form.lstKistMonthly || ''}
+ onChange={(e) => set('lstKistMonthly', e.target.value)}
+ />
+ </label>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">SV-AN</span>
+ <input
+ type="number"
+ step="0.01"
+ min="0"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none nd-mono tabular-nums"
+ value={form.svAnMonthly || ''}
+ onChange={(e) => set('svAnMonthly', e.target.value)}
+ />
+ </label>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">SV-AG</span>
+ <input
+ type="number"
+ step="0.01"
+ min="0"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none nd-mono tabular-nums"
+ value={form.svAgMonthly || ''}
+ onChange={(e) => set('svAgMonthly', e.target.value)}
+ />
+ </label>
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Gesamtkosten</span>
+ <input
+ type="number"
+ step="0.01"
+ min="0"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none nd-mono tabular-nums"
+ value={form.gesamtkostenMonthly || ''}
+ onChange={(e) => set('gesamtkostenMonthly', e.target.value)}
+ />
+ </label>
+ </div>
+ <p className="mt-3 text-[11px] text-[var(--text-disabled)] leading-relaxed">
+ Estos valores son referencia. Los pagos reales se generan desde
+ <span className="text-[var(--text-secondary)]"> Costos recurrentes</span> con
+ reglas tipo "Salario neto" / "SV BARMER" / etc.
+ </p>
+ </div>
+ </div>
+ )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
-                Fecha de alta
-              </label>
-              <input
-                type="date"
-                className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)]"
-                value={formData.startDate}
-                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-              />
-            </div>
-            <div>
-              <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
-                Fecha de baja
-              </label>
-              <input
-                type="date"
-                className={`w-full rounded-lg border px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition ${
-                  errors.endDate
-                    ? 'border-[var(--accent)] bg-transparent'
-                    : 'border-[var(--border)] bg-[var(--surface-raised)] focus:border-[var(--text-primary)]'
-                }`}
-                value={formData.endDate}
-                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-              />
-              {errors.endDate && (
-                <p className="mt-1 text-xs text-[var(--accent)]">{errors.endDate}</p>
-              )}
-            </div>
-          </div>
+ {/* ───── ASSIGNMENT ───── */}
+ {section === 'assignment' && (
+ <div className="space-y-4">
+ <label className="block">
+ <span className="mb-1.5 block nd-label text-[var(--text-disabled)]">Centro de costo por defecto</span>
+ <input
+ type="text"
+ className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
+ value={form.defaultCostCenter}
+ onChange={(e) => set('defaultCostCenter', e.target.value)}
+ placeholder="Ej: CC-NOM, CC-OPE, OPE"
+ />
+ </label>
 
-          {/* Notes */}
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[var(--text-disabled)]">
-              Notas
-            </label>
-            <textarea
-              rows="2"
-              placeholder="Notas internas sobre este colaborador..."
-              className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-primary)]"
-              value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-            />
-          </div>
+ <div>
+ <span className="mb-2 block nd-label text-[var(--text-disabled)]">Proyectos asignados</span>
+ {activeProjects.length === 0 ? (
+ <p className="text-[12px] text-[var(--text-disabled)] italic">No hay proyectos activos para asignar.</p>
+ ) : (
+ <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+ {activeProjects.map((p) => {
+ const checked = (form.projectIds || []).includes(p.id);
+ return (
+ <label key={p.id} className="flex items-center gap-2 cursor-pointer text-[13px] text-[var(--text-primary)]">
+ <input
+ type="checkbox"
+ checked={checked}
+ onChange={() => toggleProject(p.id)}
+ className="h-4 w-4"
+ />
+ <span className="truncate">{p.nombre || p.name || p.codigo || p.code || p.id}</span>
+ </label>
+ );
+ })}
+ </div>
+ )}
+ </div>
+ </div>
+ )}
 
-          {/* Status toggle (only when editing) */}
-          {editingEmployee && (
-            <div className="flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] p-4">
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <input
-                    type="checkbox"
-                    className="sr-only peer"
-                    checked={formData.status === 'active'}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        status: e.target.checked ? 'active' : 'inactive',
-                      })
-                    }
-                  />
-                  <div className="h-5 w-10 rounded-full bg-[var(--border)] transition-colors peer-checked:bg-transparent"></div>
-                  <div className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-[var(--surface)] transition-transform peer-checked:translate-x-5"></div>
-                </div>
-                <span className="text-sm font-medium text-[var(--text-disabled)]">Activo</span>
-              </div>
-              <span className="text-xs text-[var(--text-secondary)]">
-                {formData.status === 'active'
-                  ? 'Aparece en pickers y reportes'
-                  : 'Inactivo — oculto del autocompletado'}
-              </span>
-            </div>
-          )}
+ {error && <p className="text-sm text-[var(--error)]">{error}</p>}
+ </form>
 
-          {/* Action buttons */}
-          <div className="flex gap-3 pt-1">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] py-3.5 font-medium text-[var(--text-secondary)] transition hover:bg-transparent hover:text-[var(--text-disabled)]"
-            >
-              Cancelar
-            </button>
-            <Button
-              type="submit"
-              variant="primary"
-              icon={Save}
-              loading={submitting}
-              disabled={submitting}
-              className="flex-[2]"
-            >
-              {submitting
-                ? 'Guardando...'
-                : editingEmployee
-                ? 'Guardar cambios'
-                : 'Crear empleado'}
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+ <footer className="px-6 py-4 border-t border-[var(--border)] flex justify-end gap-3">
+ <Button variant="ghost" onClick={onClose} disabled={submitting}>Cancelar</Button>
+ <Button variant="primary" icon={Save} loading={submitting} disabled={submitting} onClick={handleSubmit}>
+ {editingEmployee ? 'Guardar cambios' : 'Crear empleado'}
+ </Button>
+ </footer>
+ </div>
+ </div>
+ );
 };
 
 export default EmployeeFormModal;

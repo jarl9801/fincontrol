@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState, useCallback } from 'react';
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   onSnapshot,
   orderBy,
@@ -20,19 +21,17 @@ const EMPLOYEES_COLLECTION = 'employees';
  *
  * Path: artifacts/{appId}/public/data/employees
  *
- * Employee model:
- *   {
- *     id, fullName, firstName, lastName, aliases[],
- *     type: 'internal' | 'external',
- *     status: 'active' | 'inactive',
- *     projectIds: string[],          // multi-project assignment
- *     role, defaultCostCenter,
- *     email, phone, startDate, endDate, notes,
- *     createdAt, updatedAt, createdBy
- *   }
+ * Employee model (extended with payroll fields):
+ *   Identity: fullName, firstName, lastName, aliases[],
+ *             type, status ('active'|'on-leave'|'inactive'), projectIds,
+ *             role, defaultCostCenter, email, phone, startDate, endDate, notes
+ *   Payroll: iban, bic, taxClass, krankenkasse,
+ *            bruttoMonthly, nettoMonthly, lstKistMonthly,
+ *            svAnMonthly, svAgMonthly, gesamtkostenMonthly
+ *   Meta:    createdAt, updatedAt, createdBy
  *
- * Mirrors usePartners.js conventions: real-time onSnapshot, field defaults,
- * timestamp-to-ISO conversion, audit logging on every mutation.
+ * The payroll fields are reference values used to seed recurringCosts.
+ * Actual monthly payments are recurringCosts entries with ownerType='employee'.
  */
 export const useEmployees = (user) => {
   const [employees, setEmployees] = useState([]);
@@ -68,6 +67,17 @@ export const useEmployees = (user) => {
             phone: raw.phone || '',
             startDate: raw.startDate || '',
             endDate: raw.endDate || '',
+            // Payroll
+            iban: raw.iban || '',
+            bic: raw.bic || '',
+            taxClass: raw.taxClass || '',
+            krankenkasse: raw.krankenkasse || '',
+            bruttoMonthly: Number(raw.bruttoMonthly) || 0,
+            nettoMonthly: Number(raw.nettoMonthly) || 0,
+            lstKistMonthly: Number(raw.lstKistMonthly) || 0,
+            svAnMonthly: Number(raw.svAnMonthly) || 0,
+            svAgMonthly: Number(raw.svAgMonthly) || 0,
+            gesamtkostenMonthly: Number(raw.gesamtkostenMonthly) || 0,
             notes: raw.notes || '',
             createdAt: raw.createdAt?.toDate?.()?.toISOString() || null,
             updatedAt: raw.updatedAt?.toDate?.()?.toISOString() || null,
@@ -140,6 +150,12 @@ export const useEmployees = (user) => {
     const firstName = (data.firstName || '').trim();
     const lastName = (data.lastName || '').trim();
     const computedFullName = fullName || `${firstName} ${lastName}`.trim();
+    const allowedTypes = ['internal', 'external', 'contractor'];
+    const allowedStatuses = ['active', 'on-leave', 'inactive'];
+    const num = (v) => {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : 0;
+    };
     return {
       fullName: computedFullName,
       firstName,
@@ -147,8 +163,8 @@ export const useEmployees = (user) => {
       aliases: Array.isArray(data.aliases)
         ? data.aliases.map((a) => String(a).trim()).filter(Boolean)
         : [],
-      type: data.type === 'external' ? 'external' : 'internal',
-      status: data.status === 'inactive' ? 'inactive' : 'active',
+      type: allowedTypes.includes(data.type) ? data.type : 'internal',
+      status: allowedStatuses.includes(data.status) ? data.status : 'active',
       projectIds: Array.isArray(data.projectIds) ? data.projectIds.filter(Boolean) : [],
       role: (data.role || '').trim(),
       defaultCostCenter: (data.defaultCostCenter || '').trim(),
@@ -156,6 +172,17 @@ export const useEmployees = (user) => {
       phone: (data.phone || '').trim(),
       startDate: data.startDate || '',
       endDate: data.endDate || '',
+      // Payroll
+      iban: (data.iban || '').replace(/\s+/g, '').toUpperCase(),
+      bic: (data.bic || '').trim().toUpperCase(),
+      taxClass: (data.taxClass || '').trim(),
+      krankenkasse: (data.krankenkasse || '').trim(),
+      bruttoMonthly: num(data.bruttoMonthly),
+      nettoMonthly: num(data.nettoMonthly),
+      lstKistMonthly: num(data.lstKistMonthly),
+      svAnMonthly: num(data.svAnMonthly),
+      svAgMonthly: num(data.svAgMonthly),
+      gesamtkostenMonthly: num(data.gesamtkostenMonthly),
       notes: (data.notes || '').trim(),
     };
   };
@@ -228,6 +255,35 @@ export const useEmployees = (user) => {
     return updateEmployee(employee.id, { ...employee, status: newStatus });
   };
 
+  const deleteEmployee = async (employeeId) => {
+    if (!user) return { success: false, error: new Error('No user') };
+    try {
+      const employeeRef = doc(
+        db,
+        'artifacts',
+        appId,
+        'public',
+        'data',
+        EMPLOYEES_COLLECTION,
+        employeeId,
+      );
+      const before = employees.find((e) => e.id === employeeId);
+      await deleteDoc(employeeRef);
+      await writeAuditLogEntry({
+        action: 'delete',
+        entityType: 'employee',
+        entityId: employeeId,
+        description: `Mitarbeiter eliminado: ${before?.fullName || employeeId}`,
+        userEmail: user.email,
+        before,
+      });
+      return { success: true };
+    } catch (err) {
+      logError('Error deleting employee:', err);
+      return { success: false, error: err };
+    }
+  };
+
   return {
     employees,
     loading,
@@ -237,6 +293,7 @@ export const useEmployees = (user) => {
     findByText,
     createEmployee,
     updateEmployee,
+    deleteEmployee,
     toggleEmployeeStatus,
   };
 };
