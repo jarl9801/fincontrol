@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { TableProperties } from 'lucide-react';
-import { useTransactions } from '../../hooks/useTransactions';
+import { useBankMovements } from '../../hooks/useBankMovements';
 import { useReceivables } from '../../hooks/useReceivables';
 import { usePayables } from '../../hooks/usePayables';
 import { formatCurrency, formatDate } from '../../utils/formatters';
@@ -90,35 +90,38 @@ function KpiCard({ label, value, color, prefix = '', negative = false, signed = 
 
 export default function FlujoCajaAnual({ user }) {
   const [selectedYear, setSelectedYear] = useState(CURRENT_YEAR);
-  const { transactions, loading: txLoading } = useTransactions(user);
+  // Source of truth: bankMovements (DATEV truth). The previous implementation
+  // used `transactions` which was deprecated in the asset-management refactor.
+  const { bankMovements, loading: bmLoading } = useBankMovements(user);
   const { receivables, loading: rxLoading } = useReceivables(user);
   const { payables, loading: pyLoading } = usePayables(user);
 
-  const loading = txLoading || rxLoading || pyLoading;
+  const loading = bmLoading || rxLoading || pyLoading;
 
-  // ── Filter transactions by selected year ──
-  const yearTx = useMemo(() => {
-    return (transactions || []).filter((t) => {
-      const y = t.date?.slice(0, 4);
+  // ── Filter movements by selected year (using postedDate) ──
+  const yearMovements = useMemo(() => {
+    return (bankMovements || []).filter((m) => {
+      if (m.status === 'void') return false;
+      const y = m.postedDate?.slice(0, 4);
       return y === String(selectedYear);
     });
-  }, [transactions, selectedYear]);
+  }, [bankMovements, selectedYear]);
 
   // ── Build category→month matrix ──
   const { incomeRows, expenseRows, monthTotalsIncome, monthTotalsExpense } = useMemo(() => {
     const incomeMap = {};
     const expenseMap = {};
 
-    yearTx.forEach((t) => {
-      const monthIdx = parseInt(t.date?.slice(5, 7), 10) - 1;
+    yearMovements.forEach((m) => {
+      const monthIdx = parseInt(m.postedDate?.slice(5, 7), 10) - 1;
       if (monthIdx < 0 || monthIdx > 11) return;
-      const cat = t.category || 'Sin categoría';
-      const amount = Number(t.amount) || 0;
+      const cat = m.categoryName || 'Sin categoría';
+      const amount = Math.abs(Number(m.amount) || 0);
 
-      if (t.type === 'income') {
+      if (m.direction === 'in') {
         if (!incomeMap[cat]) incomeMap[cat] = new Array(12).fill(0);
         incomeMap[cat][monthIdx] += amount;
-      } else if (t.type === 'expense') {
+      } else if (m.direction === 'out') {
         if (!expenseMap[cat]) expenseMap[cat] = new Array(12).fill(0);
         expenseMap[cat][monthIdx] += amount;
       }
