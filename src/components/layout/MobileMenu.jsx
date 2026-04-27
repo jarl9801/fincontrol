@@ -29,6 +29,7 @@ const NAV_ITEMS = [
  // Operativo
  { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
  { path: '/clasificar', label: 'Bandeja', icon: Inbox, permission: 'settings' },
+ { path: '/movimientos', label: 'Movimientos', icon: Database, permission: 'dashboard' },
  { path: '/cashflow', label: 'Tesoreria', icon: WalletCards, permission: 'reports' },
  { path: '/cxc', label: 'CXC', icon: ReceiptText, permission: 'cxc' },
  { path: '/cxp', label: 'CXP', icon: ReceiptText, permission: 'cxp' },
