@@ -30,6 +30,7 @@ import { auth } from '../../services/firebase';
 const NAV_ITEMS = [
  // Operativo
  { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
+ { path: '/cfo', label: 'CFO', icon: Briefcase, permission: 'reports', accent: '.OS' },
  { path: '/clasificar', label: 'Bandeja', icon: Inbox, permission: 'settings' },
  { path: '/movimientos', label: 'Movimientos', icon: Database, permission: 'dashboard' },
  { path: '/cashflow', label: 'Tesoreria', icon: WalletCards, permission: 'reports' },
@@ -138,7 +139,12 @@ const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, onNewTrans
  />
  )}
  <Icon size={16} />
- <span className="font-mono text-[11px] uppercase tracking-[0.14em]">{item.label}</span>
+ <span className="font-mono text-[11px] uppercase tracking-[0.14em]">
+ {item.label}
+ {item.accent && (
+ <span style={{ color: 'var(--color-accent)' }}>{item.accent}</span>
+ )}
+ </span>
  </button>
  );
  })}

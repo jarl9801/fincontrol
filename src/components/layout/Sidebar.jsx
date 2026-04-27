@@ -35,6 +35,7 @@ import { formatCurrency } from '../../utils/formatters';
 const NAV_ITEMS = [
  // Operativo
  { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
+ { path: '/cfo', label: 'CFO', icon: Briefcase, permission: 'reports', accent: '.OS' },
  { path: '/clasificar', label: 'Bandeja', icon: Inbox, permission: 'settings' },
  { path: '/movimientos', label: 'Movimientos', icon: Database, permission: 'dashboard' },
  { path: '/cashflow', label: 'Tesoreria', icon: WalletCards, permission: 'reports' },
@@ -174,7 +175,12 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
  }`}
  >
  <Icon size={13} />
- <span>{item.label}</span>
+ <span>
+ {item.label}
+ {item.accent && (
+ <span style={{ color: 'var(--color-accent)' }}>{item.accent}</span>
+ )}
+ </span>
  {active && (
  <span
  aria-hidden="true"
