@@ -46,7 +46,7 @@ const EmployeeFormModal = ({ isOpen, onClose, onSubmit, editingEmployee, user })
  }, [isOpen, editingEmployee]);
 
  const activeProjects = useMemo(
- () => projects.filter((p) => p.active !== false),
+ () => projects.filter((p) => p.active !== false && p.activo !== false),
  [projects],
  );
 
@@ -417,7 +417,7 @@ const EmployeeFormModal = ({ isOpen, onClose, onSubmit, editingEmployee, user })
  onChange={() => toggleProject(p.id)}
  className="h-4 w-4"
  />
- <span className="truncate">{p.name}</span>
+ <span className="truncate">{p.nombre || p.name || p.codigo || p.code || p.id}</span>
  </label>
  );
  })}

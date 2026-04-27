@@ -213,9 +213,13 @@ const RecurringCostFormModal = ({
  onChange={(e) => set('costCenterId', e.target.value)}
  >
  <option value="">— Sin asignar —</option>
- {costCenters.map((c) => (
- <option key={c.id || c} value={c.id || c.code || c}>{c.name || c.code || c}</option>
- ))}
+ {costCenters.map((c) => {
+ const id = String(c.id || c.codigo || c.code || '');
+ const label = String(c.nombre || c.name || c.codigo || c.code || id);
+ return (
+ <option key={id} value={id}>{label}</option>
+ );
+ })}
  </select>
  </label>
 
@@ -227,9 +231,13 @@ const RecurringCostFormModal = ({
  onChange={(e) => set('projectId', e.target.value)}
  >
  <option value="">— Sin asignar —</option>
- {projects.map((p) => (
- <option key={p.id || p} value={p.id || p}>{p.name || p}</option>
- ))}
+ {projects.map((p) => {
+ const id = String(p.id || '');
+ const label = String(p.nombre || p.name || p.codigo || p.code || id);
+ return (
+ <option key={id} value={id}>{label}</option>
+ );
+ })}
  </select>
  </label>
 
