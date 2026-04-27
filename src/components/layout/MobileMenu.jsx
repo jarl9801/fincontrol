@@ -6,6 +6,7 @@ import {
  Briefcase,
  Building2,
  Car,
+ Database,
  FolderKanban,
  HardHat,
  Home,
@@ -46,6 +47,7 @@ const NAV_ITEMS = [
  { path: '/vehiculos', label: 'Vehículos', icon: Car, permission: 'settings' },
  { path: '/seguros', label: 'Seguros', icon: Shield, permission: 'settings' },
  { path: '/costos-recurrentes', label: 'Recurrentes', icon: Repeat, permission: 'settings' },
+ { path: '/datev', label: 'DATEV', icon: Database, permission: 'settings' },
 ];
 
 const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, onNewTransaction }) => {

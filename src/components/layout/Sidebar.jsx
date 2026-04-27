@@ -6,6 +6,7 @@ import {
  Briefcase,
  Building2,
  Car,
+ Database,
  FolderKanban,
  Globe,
  HardHat,
@@ -46,6 +47,7 @@ const NAV_ITEMS = [
  { path: '/vehiculos', label: 'Vehículos', icon: Car, permission: 'settings' },
  { path: '/seguros', label: 'Seguros', icon: Shield, permission: 'settings' },
  { path: '/costos-recurrentes', label: 'Recurrentes', icon: Repeat, permission: 'settings' },
+ { path: '/datev', label: 'DATEV', icon: Database, permission: 'settings' },
 ];
 
 const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceData, bankAccount }) => {

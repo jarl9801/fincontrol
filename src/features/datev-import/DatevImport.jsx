@@ -1,0 +1,313 @@
+import { useState, useCallback, useMemo } from 'react';
+import { Upload, FileText, CheckCircle2, AlertCircle, X, Database } from 'lucide-react';
+import { useBankMovements } from '../../hooks/useBankMovements';
+import { useDatevImport } from '../../hooks/useDatevImport';
+import { useToast } from '../../contexts/ToastContext';
+import { parseDatevCSV, diffAgainstExisting } from '../../finance/datevParser';
+import { formatCurrency } from '../../utils/formatters';
+import { Button, Badge, KPIGrid, KPI, Panel } from '@/components/ui/nexus';
+
+const readFileAsText = (file) =>
+ new Promise((resolve, reject) => {
+ const reader = new FileReader();
+ reader.onload = (e) => resolve(e.target.result);
+ reader.onerror = reject;
+ reader.readAsText(file, 'UTF-8');
+ });
+
+const DatevImport = ({ user }) => {
+ const { bankMovements } = useBankMovements(user);
+ const { importRows } = useDatevImport(user);
+ const { showToast } = useToast();
+
+ // Each entry: { id, file, name, parsed, diff, status, importing, result }
+ const [files, setFiles] = useState([]);
+ const [isDragging, setIsDragging] = useState(false);
+
+ const handleFiles = useCallback(
+ async (fileList) => {
+ if (!fileList || fileList.length === 0) return;
+ const incoming = Array.from(fileList).filter(
+ (f) => f.name.toLowerCase().endsWith('.csv') || f.type === 'text/csv',
+ );
+ if (incoming.length === 0) {
+ showToast('Solo archivos CSV', 'error');
+ return;
+ }
+
+ const newEntries = await Promise.all(
+ incoming.map(async (f, idx) => {
+ const text = await readFileAsText(f);
+ const parsed = parseDatevCSV(text);
+ const diff = diffAgainstExisting(parsed.rows, bankMovements);
+ return {
+ id: `${Date.now()}-${idx}-${f.name}`,
+ file: f,
+ name: f.name,
+ parsed,
+ diff,
+ status: 'ready',
+ importing: false,
+ result: null,
+ };
+ }),
+ );
+
+ setFiles((prev) => [...prev, ...newEntries]);
+ },
+ [bankMovements, showToast],
+ );
+
+ const onDrop = useCallback(
+ (e) => {
+ e.preventDefault();
+ setIsDragging(false);
+ handleFiles(e.dataTransfer.files);
+ },
+ [handleFiles],
+ );
+
+ const onFileSelect = (e) => {
+ handleFiles(e.target.files);
+ e.target.value = '';
+ };
+
+ const removeFile = (id) => {
+ setFiles((prev) => prev.filter((f) => f.id !== id));
+ };
+
+ const importOne = async (entry) => {
+ if (entry.diff.newRows.length === 0) return;
+ setFiles((prev) =>
+ prev.map((f) => (f.id === entry.id ? { ...f, importing: true, status: 'importing' } : f)),
+ );
+ const result = await importRows(entry.diff.newRows, entry.name);
+ setFiles((prev) =>
+ prev.map((f) =>
+ f.id === entry.id
+ ? { ...f, importing: false, status: 'done', result }
+ : f,
+ ),
+ );
+ if (result.success) {
+ showToast(`${entry.name}: ${result.imported} importados`, 'success');
+ } else {
+ showToast(`${entry.name}: ${result.errors.length} errores`, 'error');
+ }
+ };
+
+ const importAll = async () => {
+ for (const f of files) {
+ if (f.status === 'done') continue;
+ if (f.diff.newRows.length === 0) continue;
+ await importOne(f);
+ }
+ };
+
+ const totals = useMemo(() => {
+ let totalRows = 0;
+ let totalNew = 0;
+ let totalDup = 0;
+ let totalErrors = 0;
+ let totalImported = 0;
+ files.forEach((f) => {
+ totalRows += f.parsed.rows.length;
+ totalNew += f.diff.newRows.length;
+ totalDup += f.diff.duplicateRows.length;
+ totalErrors += f.parsed.errors.length;
+ if (f.result) totalImported += f.result.imported;
+ });
+ return { totalRows, totalNew, totalDup, totalErrors, totalImported };
+ }, [files]);
+
+ const filesPending = files.some((f) => f.status === 'ready' && f.diff.newRows.length > 0);
+
+ return (
+ <div className="space-y-6 pb-12">
+ <header className="flex items-end justify-between gap-4 flex-wrap">
+ <div>
+ <p className="nd-label text-[var(--text-secondary)]">DATEV · Importación</p>
+ <h2 className="mt-2 nd-display text-[28px] font-light tracking-tight text-[var(--text-primary)]">
+ Importar movimientos bancarios
+ </h2>
+ <p className="mt-1 text-sm text-[var(--text-secondary)] max-w-2xl">
+ Sube uno o varios CSVs (Sparkasse Kontobewegungen). El sistema detecta duplicados
+ contra los movimientos ya cargados (mismo fecha + monto + dirección + contraparte) y
+ solo crea los nuevos.
+ </p>
+ </div>
+ {filesPending && (
+ <Button variant="primary" icon={Upload} onClick={importAll}>
+ Importar todos los pendientes
+ </Button>
+ )}
+ </header>
+
+ <KPIGrid cols={4}>
+ <KPI label="Archivos" value={files.length} meta="En esta sesión" icon={FileText} />
+ <KPI
+ label="Nuevos"
+ value={totals.totalNew}
+ meta="A crear (no en sistema)"
+ tone={totals.totalNew > 0 ? 'warn' : 'default'}
+ />
+ <KPI
+ label="Duplicados"
+ value={totals.totalDup}
+ meta="Ya existen — se omiten"
+ tone="ok"
+ />
+ <KPI
+ label="Importados"
+ value={totals.totalImported}
+ meta={totals.totalErrors ? `${totals.totalErrors} errores parseo` : 'OK'}
+ tone={totals.totalImported > 0 ? 'ok' : 'default'}
+ icon={Database}
+ />
+ </KPIGrid>
+
+ <div
+ className={`rounded-md border-2 border-dashed px-6 py-12 text-center transition-colors ${
+ isDragging
+ ? 'border-[var(--accent)] bg-[rgba(255,77,46,0.05)]'
+ : 'border-[var(--border)] bg-[var(--surface)]'
+ }`}
+ onDragOver={(e) => {
+ e.preventDefault();
+ setIsDragging(true);
+ }}
+ onDragLeave={() => setIsDragging(false)}
+ onDrop={onDrop}
+ >
+ <Upload size={32} className="mx-auto text-[var(--text-disabled)]" />
+ <p className="mt-3 text-sm text-[var(--text-primary)]">
+ Arrastrá archivos CSV aquí o
+ <label className="ml-1 text-[var(--accent)] cursor-pointer underline">
+ examiná
+ <input type="file" multiple accept=".csv" className="hidden" onChange={onFileSelect} />
+ </label>
+ </p>
+ <p className="mt-1 text-[12px] text-[var(--text-disabled)]">
+ Sparkasse "Kontobewegungen Export" · UTF-8 · separador ;
+ </p>
+ </div>
+
+ {files.length > 0 && (
+ <Panel title="Archivos cargados" meta={`${files.length} archivo(s)`} padding={false}>
+ <div className="overflow-x-auto">
+ <table className="nx-table w-full">
+ <thead>
+ <tr>
+ <th>Archivo</th>
+ <th>Período</th>
+ <th className="text-right">Total filas</th>
+ <th className="text-right">Nuevos</th>
+ <th className="text-right">Duplicados</th>
+ <th className="text-right">Errores parseo</th>
+ <th className="text-center">Estado</th>
+ <th className="text-right">Acciones</th>
+ </tr>
+ </thead>
+ <tbody>
+ {files.map((f) => (
+ <tr key={f.id}>
+ <td className="font-medium text-[var(--text-primary)]">{f.name}</td>
+ <td className="nd-mono text-[var(--text-secondary)]">
+ {f.parsed.period
+ ? `${f.parsed.period.minDate} → ${f.parsed.period.maxDate}`
+ : '—'}
+ </td>
+ <td className="text-right nd-mono tabular-nums">{f.parsed.rows.length}</td>
+ <td className="text-right nd-mono tabular-nums text-[var(--warning)]">
+ {f.diff.newRows.length}
+ </td>
+ <td className="text-right nd-mono tabular-nums text-[var(--text-disabled)]">
+ {f.diff.duplicateRows.length}
+ </td>
+ <td className="text-right nd-mono tabular-nums">
+ {f.parsed.errors.length > 0 ? (
+ <span className="text-[var(--error)]">{f.parsed.errors.length}</span>
+ ) : (
+ '—'
+ )}
+ </td>
+ <td className="text-center">
+ {f.status === 'ready' && f.diff.newRows.length === 0 && (
+ <Badge variant="neutral">Nada nuevo</Badge>
+ )}
+ {f.status === 'ready' && f.diff.newRows.length > 0 && (
+ <Badge variant="warn" dot>
+ Pendiente
+ </Badge>
+ )}
+ {f.status === 'importing' && <Badge variant="info" dot>Importando…</Badge>}
+ {f.status === 'done' && (
+ <Badge
+ variant={f.result?.errors?.length > 0 ? 'err' : 'ok'}
+ dot
+ >
+ {f.result?.errors?.length > 0
+ ? `${f.result.imported}/${f.diff.newRows.length} OK`
+ : 'Importado'}
+ </Badge>
+ )}
+ </td>
+ <td className="text-right">
+ <div className="flex items-center justify-end gap-2">
+ {f.status === 'ready' && f.diff.newRows.length > 0 && (
+ <Button
+ variant="primary"
+ size="sm"
+ icon={Upload}
+ onClick={() => importOne(f)}
+ >
+ Importar {f.diff.newRows.length}
+ </Button>
+ )}
+ {f.status !== 'importing' && (
+ <Button variant="ghost" size="sm" icon={X} onClick={() => removeFile(f.id)}>
+ Quitar
+ </Button>
+ )}
+ </div>
+ </td>
+ </tr>
+ ))}
+ </tbody>
+ </table>
+ </div>
+ </Panel>
+ )}
+
+ {files.some((f) => f.parsed.errors.length > 0) && (
+ <div className="rounded-md border border-[var(--warning)]/40 bg-[rgba(255,176,32,0.05)] px-4 py-3 flex items-start gap-3">
+ <AlertCircle size={16} className="text-[var(--warning)] flex-shrink-0 mt-0.5" />
+ <div>
+ <p className="text-sm text-[var(--text-primary)]">
+ Algunas filas no pudieron parsearse (probablemente sin fecha o sin monto).
+ </p>
+ <p className="mt-1 text-[12px] text-[var(--text-disabled)]">
+ Revisá los archivos o pasame el detalle si es masivo.
+ </p>
+ </div>
+ </div>
+ )}
+
+ {files.every((f) => f.status === 'done') && files.length > 0 && totals.totalImported > 0 && (
+ <div className="rounded-md border border-[var(--success)]/40 bg-[rgba(74,222,128,0.05)] px-4 py-3 flex items-start gap-3">
+ <CheckCircle2 size={16} className="text-[var(--success)] flex-shrink-0 mt-0.5" />
+ <div>
+ <p className="text-sm text-[var(--text-primary)]">
+ Importación completa: {totals.totalImported} movimientos creados, {totals.totalDup} duplicados omitidos.
+ </p>
+ <p className="mt-1 text-[12px] text-[var(--text-disabled)]">
+ Los movimientos quedan sin categoría ni proyecto. Asignalos desde la vista correspondiente o creá reglas en Costos recurrentes.
+ </p>
+ </div>
+ </div>
+ )}
+ </div>
+ );
+};
+
+export default DatevImport;
