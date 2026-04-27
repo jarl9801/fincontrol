@@ -9,6 +9,7 @@ import { useToast } from '../../contexts/ToastContext';
 
 const COLLECTIONS = [
  'transactions',
+ 'bankMovements',
  'projects',
  'costCenters',
  'categories',
