@@ -124,8 +124,8 @@ const ForwardProjectionPanel = ({ user }) => {
  )}
 
  <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-4">
- <div className="h-[280px]">
- <ResponsiveContainer width="100%" height="100%">
+ <div style={{ width: '100%', height: 280, minHeight: 280, minWidth: 0 }}>
+ <ResponsiveContainer width="100%" height="100%" minWidth={0}>
  <AreaChart data={proj.series} margin={{ top: 6, right: 12, left: 0, bottom: 0 }}>
  <defs>
  <linearGradient id="balanceGradient" x1="0" y1="0" x2="0" y2="1">
