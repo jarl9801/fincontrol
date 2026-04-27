@@ -1,7 +1,6 @@
 import { signOut } from 'firebase/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
- ArrowLeftRight,
  BarChart3,
  Briefcase,
  Building2,
@@ -11,13 +10,11 @@ import {
  Globe,
  HardHat,
  Home,
- Landmark,
  LayoutDashboard,
  LogOut,
  Plus,
  ReceiptText,
  Repeat,
- Scale,
  Shield,
  Settings,
  SlidersHorizontal,
@@ -27,27 +24,33 @@ import {
 import { auth } from '../../services/firebase';
 import { formatCurrency } from '../../utils/formatters';
 
+// Sidebar nav items, ordered into logical groups separated by `divider:true` markers.
+// Routes still in App.jsx but NOT exposed here (accessible by URL only):
+//   /conciliacion — DATEV ya viene reconciliado, queda como herramienta avanzada
+//   /import-export — reemplazado por /datev
+//   /transactions — "Mesa central" legacy; las vistas operativas son CXC/CXP/DATEV
 const NAV_ITEMS = [
+ // Operativo
  { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
  { path: '/cashflow', label: 'Tesoreria', icon: WalletCards, permission: 'reports' },
- { path: '/flujo-caja-anual', label: 'Flujo Anual', icon: TableProperties, permission: 'reports' },
- { path: '/transactions', label: 'Transacciones', icon: Landmark, permission: 'dashboard' },
  { path: '/cxc', label: 'CXC', icon: ReceiptText, permission: 'cxc' },
  { path: '/cxp', label: 'CXP', icon: ReceiptText, permission: 'cxp' },
+ // Reportes
+ { path: '/flujo-caja-anual', label: 'Flujo Anual', icon: TableProperties, permission: 'reports' },
  { path: '/reportes', label: 'Reportes', icon: BarChart3, permission: 'reports' },
  { path: '/proyectos', label: 'Proyectos', icon: FolderKanban, permission: 'reports' },
  { path: '/presupuesto', label: 'Presupuesto', icon: Briefcase, permission: 'reports' },
  { path: '/whatif', label: 'Simulador', icon: SlidersHorizontal, permission: 'reports' },
- { path: '/conciliacion', label: 'Conciliacion', icon: Scale, permission: 'cxp' },
- { path: '/import-export', label: 'Importar', icon: ArrowLeftRight, permission: 'settings' },
- { path: '/configuracion', label: 'Config', icon: Settings, permission: 'settings' },
- { path: '/partners', label: 'Partners', icon: Building2, permission: 'settings' },
+ // Datos maestros
  { path: '/empleados', label: 'Empleados', icon: HardHat, permission: 'settings' },
- { path: '/viviendas', label: 'Viviendas', icon: Home, permission: 'settings' },
  { path: '/vehiculos', label: 'Vehículos', icon: Car, permission: 'settings' },
+ { path: '/viviendas', label: 'Viviendas', icon: Home, permission: 'settings' },
  { path: '/seguros', label: 'Seguros', icon: Shield, permission: 'settings' },
+ { path: '/partners', label: 'Partners', icon: Building2, permission: 'settings' },
+ // Configuración
  { path: '/costos-recurrentes', label: 'Recurrentes', icon: Repeat, permission: 'settings' },
  { path: '/datev', label: 'DATEV', icon: Database, permission: 'settings' },
+ { path: '/configuracion', label: 'Config', icon: Settings, permission: 'settings' },
 ];
 
 const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceData, bankAccount }) => {
@@ -145,7 +148,9 @@ const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceD
  </div>
 
  {/* Nav row */}
- <nav className="-mx-5 mt-4 border-t border-[var(--color-line)] px-5 pt-2">
+ <nav className="-mx-5 mt-4 border-t border-[var(--color-line)] px-5 pt-2 relative">
+ {/* Right-side fade hint that there is more to scroll */}
+ <span aria-hidden="true" className="pointer-events-none absolute right-0 top-2 bottom-0 w-12 bg-gradient-to-l from-[var(--color-bg-0)] to-transparent z-10" />
  <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide pb-0.5">
  {visibleItems.map((item) => {
  const Icon = item.icon;

@@ -1,7 +1,6 @@
 import { signOut } from 'firebase/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
- ArrowLeftRight,
  BarChart3,
  Briefcase,
  Building2,
@@ -10,14 +9,12 @@ import {
  FolderKanban,
  HardHat,
  Home,
- Landmark,
  LayoutDashboard,
  LogOut,
  Menu,
  Plus,
  ReceiptText,
  Repeat,
- Scale,
  Shield,
  Settings,
  SlidersHorizontal,
@@ -28,26 +25,27 @@ import {
 import { auth } from '../../services/firebase';
 
 const NAV_ITEMS = [
+ // Operativo
  { path: '/', label: 'Dashboard', icon: LayoutDashboard, permission: 'dashboard' },
  { path: '/cashflow', label: 'Tesoreria', icon: WalletCards, permission: 'reports' },
- { path: '/flujo-caja-anual', label: 'Flujo Anual', icon: TableProperties, permission: 'reports' },
- { path: '/transactions', label: 'Transacciones', icon: Landmark, permission: 'dashboard' },
  { path: '/cxc', label: 'CXC', icon: ReceiptText, permission: 'cxc' },
  { path: '/cxp', label: 'CXP', icon: ReceiptText, permission: 'cxp' },
+ // Reportes
+ { path: '/flujo-caja-anual', label: 'Flujo Anual', icon: TableProperties, permission: 'reports' },
  { path: '/reportes', label: 'Reportes', icon: BarChart3, permission: 'reports' },
  { path: '/proyectos', label: 'Proyectos', icon: FolderKanban, permission: 'reports' },
  { path: '/presupuesto', label: 'Presupuesto', icon: Briefcase, permission: 'reports' },
  { path: '/whatif', label: 'Simulador', icon: SlidersHorizontal, permission: 'reports' },
- { path: '/conciliacion', label: 'Conciliacion', icon: Scale, permission: 'cxp' },
- { path: '/import-export', label: 'Importar', icon: ArrowLeftRight, permission: 'settings' },
- { path: '/configuracion', label: 'Config', icon: Settings, permission: 'settings' },
- { path: '/partners', label: 'Partners', icon: Building2, permission: 'settings' },
+ // Datos maestros
  { path: '/empleados', label: 'Empleados', icon: HardHat, permission: 'settings' },
- { path: '/viviendas', label: 'Viviendas', icon: Home, permission: 'settings' },
  { path: '/vehiculos', label: 'Vehículos', icon: Car, permission: 'settings' },
+ { path: '/viviendas', label: 'Viviendas', icon: Home, permission: 'settings' },
  { path: '/seguros', label: 'Seguros', icon: Shield, permission: 'settings' },
+ { path: '/partners', label: 'Partners', icon: Building2, permission: 'settings' },
+ // Configuración
  { path: '/costos-recurrentes', label: 'Recurrentes', icon: Repeat, permission: 'settings' },
  { path: '/datev', label: 'DATEV', icon: Database, permission: 'settings' },
+ { path: '/configuracion', label: 'Config', icon: Settings, permission: 'settings' },
 ];
 
 const MobileMenu = ({ isOpen, onClose, user, userRole, hasPermission, onNewTransaction }) => {
