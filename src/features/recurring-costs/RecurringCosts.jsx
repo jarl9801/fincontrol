@@ -4,6 +4,7 @@ import { useRecurringCosts } from '../../hooks/useRecurringCosts';
 import { useEmployees } from '../../hooks/useEmployees';
 import { useProperties } from '../../hooks/useProperties';
 import { useVehicles } from '../../hooks/useVehicles';
+import { useInsurances } from '../../hooks/useInsurances';
 import { useCostCenters } from '../../hooks/useCostCenters';
 import { useProjects } from '../../hooks/useProjects';
 import { monthlyEquivalent } from '../../finance/assetSchemas';
@@ -17,6 +18,7 @@ const OWNER_TYPE_LABELS = {
  employee: 'Empleado',
  property: 'Vivienda',
  vehicle: 'Vehículo',
+ insurance: 'Seguro',
  general: 'General',
 };
 
@@ -42,6 +44,7 @@ const RecurringCosts = ({ user }) => {
  const { employees } = useEmployees(user);
  const { properties } = useProperties(user);
  const { vehicles } = useVehicles(user);
+ const { insurances } = useInsurances(user);
  const { costCenters } = useCostCenters(user);
  const { projects } = useProjects(user);
 
@@ -71,7 +74,7 @@ const RecurringCosts = ({ user }) => {
  }, [recurringCosts, filter, showInactive, searchQuery]);
 
  const stats = useMemo(() => {
- const counts = { all: 0, employee: 0, property: 0, vehicle: 0, general: 0 };
+ const counts = { all: 0, employee: 0, property: 0, vehicle: 0, insurance: 0, general: 0 };
  recurringCosts.forEach((c) => {
  if (!c.active) return;
  counts.all++;
@@ -84,6 +87,7 @@ const RecurringCosts = ({ user }) => {
  employee: totalMonthlyEquivalent('employee'),
  property: totalMonthlyEquivalent('property'),
  vehicle: totalMonthlyEquivalent('vehicle'),
+ insurance: totalMonthlyEquivalent('insurance'),
  general: totalMonthlyEquivalent('general'),
  },
  };
@@ -113,6 +117,7 @@ const RecurringCosts = ({ user }) => {
  { key: 'employee', label: 'Empleados', count: stats.counts.employee || 0 },
  { key: 'property', label: 'Viviendas', count: stats.counts.property || 0 },
  { key: 'vehicle', label: 'Vehículos', count: stats.counts.vehicle || 0 },
+ { key: 'insurance', label: 'Seguros', count: stats.counts.insurance || 0 },
  { key: 'general', label: 'Generales', count: stats.counts.general || 0 },
  ];
 
@@ -158,9 +163,9 @@ const RecurringCosts = ({ user }) => {
  meta={`${stats.counts.property || 0} reglas activas`}
  />
  <KPI
- label="Vehículos"
- value={formatCurrency(stats.monthlyByType.vehicle)}
- meta={`${stats.counts.vehicle || 0} reglas activas`}
+ label="Vehículos + Seguros"
+ value={formatCurrency(stats.monthlyByType.vehicle + stats.monthlyByType.insurance)}
+ meta={`${(stats.counts.vehicle || 0) + (stats.counts.insurance || 0)} reglas activas`}
  />
  </KPIGrid>
 
@@ -281,6 +286,7 @@ const RecurringCosts = ({ user }) => {
  employees={employees}
  properties={properties}
  vehicles={vehicles}
+ insurances={insurances}
  costCenters={costCenters}
  projects={projects}
  />

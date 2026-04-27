@@ -17,6 +17,7 @@ import {
  ReceiptText,
  Repeat,
  Scale,
+ Shield,
  Settings,
  SlidersHorizontal,
  TableProperties,
@@ -43,6 +44,7 @@ const NAV_ITEMS = [
  { path: '/empleados', label: 'Empleados', icon: HardHat, permission: 'settings' },
  { path: '/viviendas', label: 'Viviendas', icon: Home, permission: 'settings' },
  { path: '/vehiculos', label: 'Vehículos', icon: Car, permission: 'settings' },
+ { path: '/seguros', label: 'Seguros', icon: Shield, permission: 'settings' },
  { path: '/costos-recurrentes', label: 'Recurrentes', icon: Repeat, permission: 'settings' },
 ];
 

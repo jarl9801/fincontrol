@@ -12,6 +12,7 @@ const OWNER_TYPE_LABELS = {
  employee: 'Empleado',
  property: 'Vivienda',
  vehicle: 'Vehículo',
+ insurance: 'Seguro',
  general: 'General',
 };
 
@@ -31,6 +32,7 @@ const RecurringCostFormModal = ({
  employees = [],
  properties = [],
  vehicles = [],
+ insurances = [],
  costCenters = [],
  projects = [],
 }) => {
@@ -49,8 +51,9 @@ const RecurringCostFormModal = ({
  if (form.ownerType === 'employee') return employees.map((e) => ({ id: e.id, name: e.fullName }));
  if (form.ownerType === 'property') return properties.map((p) => ({ id: p.id, name: p.name }));
  if (form.ownerType === 'vehicle') return vehicles.map((v) => ({ id: v.id, name: v.name }));
+ if (form.ownerType === 'insurance') return insurances.map((i) => ({ id: i.id, name: i.name }));
  return [];
- }, [form.ownerType, employees, properties, vehicles]);
+ }, [form.ownerType, employees, properties, vehicles, insurances]);
 
  const conceptSuggestions = COST_CONCEPTS[form.ownerType] || [];
 

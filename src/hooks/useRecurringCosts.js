@@ -115,7 +115,7 @@ export const useRecurringCosts = (user) => {
       const n = Number(v);
       return Number.isFinite(n) ? n : 0;
     };
-    const ownerType = ['employee', 'property', 'vehicle', 'general'].includes(data.ownerType)
+    const ownerType = ['employee', 'property', 'vehicle', 'insurance', 'general'].includes(data.ownerType)
       ? data.ownerType
       : 'general';
     const ownerId = ownerType === 'general' ? null : (data.ownerId || null);

@@ -115,10 +115,47 @@ export const vehicleDefaults = () => ({
 });
 
 // ═══════════════════════════════════════════════════════════
+// Insurances
+// ═══════════════════════════════════════════════════════════
+
+export const INSURANCE_TYPES = [
+  'haftpflicht', // Responsabilidad civil
+  'kasko', // Vehículo (todo riesgo)
+  'business', // Seguro empresa / Betriebshaftpflicht
+  'health', // Salud / Krankenversicherung extra
+  'life', // Vida
+  'property', // Edificio / Inhaltversicherung
+  'equipment', // Equipos / herramientas
+  'liability', // Profesional
+  'other',
+];
+
+export const INSURANCE_STATUSES = ['active', 'expired', 'cancelled'];
+
+export const insuranceDefaults = () => ({
+  name: '', // Friendly: "Haftpflicht UMTELKOMD GmbH"
+  type: 'business',
+  insurer: '', // Counterparty / aseguradora
+  policyNumber: '',
+  coverageAmount: 0, // Monto de cobertura €
+  premiumAnnual: 0, // Prima anual € (referencia, real va en recurringCosts)
+  startDate: '',
+  endDate: '',
+  renewalDate: '', // Próxima renovación
+  status: 'active',
+  // Optional cross-reference to another asset (e.g. seguro kasko de un vehículo).
+  // Vacío si el seguro no está atado a un asset específico.
+  linkedAssetType: '', // vehicle | property | employee | ''
+  linkedAssetId: '',
+  defaultCostCenter: '',
+  notes: '',
+});
+
+// ═══════════════════════════════════════════════════════════
 // RecurringCosts
 // ═══════════════════════════════════════════════════════════
 
-export const COST_OWNER_TYPES = ['employee', 'property', 'vehicle', 'general'];
+export const COST_OWNER_TYPES = ['employee', 'property', 'vehicle', 'insurance', 'general'];
 
 export const COST_FREQUENCIES = ['monthly', 'quarterly', 'yearly', 'biweekly', 'weekly'];
 
@@ -144,6 +181,13 @@ export const COST_CONCEPTS = {
     'Combustible (presupuesto)',
     'Mantenimiento programado',
     'Impuesto vehicular (Kfz-Steuer)',
+  ],
+  insurance: [
+    'Cuota mensual',
+    'Cuota trimestral',
+    'Cuota anual',
+    'Renovación',
+    'Franquicia',
   ],
   general: [
     'Subscripción software',

@@ -42,6 +42,7 @@ const Partners = lazy(() => import('./features/partners/Partners'));
 const Employees = lazy(() => import('./features/employees/Employees'));
 const Properties = lazy(() => import('./features/properties/Properties'));
 const Vehicles = lazy(() => import('./features/vehicles/Vehicles'));
+const Insurances = lazy(() => import('./features/insurances/Insurances'));
 const RecurringCosts = lazy(() => import('./features/recurring-costs/RecurringCosts'));
 const FinanceActionLauncher = lazy(() => import('./components/finance/FinanceActionLauncher'));
 
@@ -76,6 +77,7 @@ const VIEW_TITLES = {
  '/empleados': 'Empleados',
  '/viviendas': 'Viviendas',
  '/vehiculos': 'Vehículos',
+ '/seguros': 'Seguros',
  '/costos-recurrentes': 'Costos recurrentes',
 };
 
@@ -272,6 +274,7 @@ function AppContent() {
  <Route path="/empleados" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Employees user={user} userRole={userRole} /></ProtectedRoute>} />
  <Route path="/viviendas" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Properties user={user} userRole={userRole} /></ProtectedRoute>} />
  <Route path="/vehiculos" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Vehicles user={user} userRole={userRole} /></ProtectedRoute>} />
+ <Route path="/seguros" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Insurances user={user} userRole={userRole} /></ProtectedRoute>} />
  <Route path="/costos-recurrentes" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><RecurringCosts user={user} userRole={userRole} /></ProtectedRoute>} />
  <Route path="*" element={<Navigate to="/" replace />} />
  </Routes>
