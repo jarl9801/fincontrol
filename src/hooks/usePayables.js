@@ -194,6 +194,21 @@ export const usePayables = (user) => {
   const registerPayment = async (payable, paymentData) => {
     if (!user) return { success: false };
 
+    // POLICY GUARD: every status change must reference a real bankMovement
+    // (typically imported from DATEV). The Bandeja flow uses linkToPayable
+    // (in useClassifier) which is the canonical path. registerPayment is a
+    // legacy entry point — only honor it when the caller provides
+    // paymentData.bankMovementId.
+    if (!paymentData?.bankMovementId) {
+      return {
+        success: false,
+        error: new Error(
+          'Política UMTELKOMD: todo pago debe vincularse a un movimiento bancario (DATEV). ' +
+          'Usá la página de CXP para conciliar con el extracto importado.',
+        ),
+      };
+    }
+
     try {
       const payableRef = doc(db, 'artifacts', appId, 'public', 'data', 'payables', payable.id);
       const nextOpenAmount = clampMoney(payable.openAmount - paymentData.amount);
@@ -205,6 +220,7 @@ export const usePayables = (user) => {
         method: paymentData.method,
         reference: paymentData.reference || '',
         note: paymentData.note || '',
+        bankMovementId: paymentData.bankMovementId,
         registeredBy: user.email,
         timestamp: new Date().toISOString(),
       };
@@ -371,24 +387,15 @@ export const usePayables = (user) => {
     }
   };
 
-  const markAsPaid = async (payable) => {
-    if (!user) return { success: false };
-
-    try {
-      const remaining = clampMoney(payable.openAmount);
-      if (remaining <= 0) return { success: true };
-
-      return await registerPayment(payable, {
-        amount: remaining,
-        date: toISODate(new Date()),
-        method: 'Transferencia',
-        note: 'Marcado como pagado',
-      });
-    } catch (error) {
-      logError('Error marking payable as paid:', error);
-      return { success: false, error };
-    }
-  };
+  // Deprecated: status-only shortcut — violates the "always link to bankMovement"
+  // policy. Returns an explicit error so legacy callers fail loudly.
+  const markAsPaid = async () => ({
+    success: false,
+    error: new Error(
+      'Política UMTELKOMD: no se puede marcar una CXP como pagada sin vincular un ' +
+      'movimiento bancario. Usá /cxp → Conciliar.',
+    ),
+  });
 
   return { payables, loading, createPayable, registerPayment, updatePayable, cancelPayable, markAsPaid };
 };
