@@ -5,14 +5,17 @@ import {
  BarChart3,
  Briefcase,
  Building2,
+ Car,
  FolderKanban,
  Globe,
  HardHat,
+ Home,
  Landmark,
  LayoutDashboard,
  LogOut,
  Plus,
  ReceiptText,
+ Repeat,
  Scale,
  Settings,
  SlidersHorizontal,
@@ -38,6 +41,9 @@ const NAV_ITEMS = [
  { path: '/configuracion', label: 'Config', icon: Settings, permission: 'settings' },
  { path: '/partners', label: 'Partners', icon: Building2, permission: 'settings' },
  { path: '/empleados', label: 'Empleados', icon: HardHat, permission: 'settings' },
+ { path: '/viviendas', label: 'Viviendas', icon: Home, permission: 'settings' },
+ { path: '/vehiculos', label: 'Vehículos', icon: Car, permission: 'settings' },
+ { path: '/costos-recurrentes', label: 'Recurrentes', icon: Repeat, permission: 'settings' },
 ];
 
 const Sidebar = ({ user, userRole, hasPermission, onNewTransaction, bankBalanceData, bankAccount }) => {

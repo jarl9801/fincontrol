@@ -40,6 +40,9 @@ const BackupManager = lazy(() => import('./features/backup/BackupManager'));
 const UserProfile = lazy(() => import('./features/perfil/UserProfile'));
 const Partners = lazy(() => import('./features/partners/Partners'));
 const Employees = lazy(() => import('./features/employees/Employees'));
+const Properties = lazy(() => import('./features/properties/Properties'));
+const Vehicles = lazy(() => import('./features/vehicles/Vehicles'));
+const RecurringCosts = lazy(() => import('./features/recurring-costs/RecurringCosts'));
 const FinanceActionLauncher = lazy(() => import('./components/finance/FinanceActionLauncher'));
 
 const VIEW_TITLES = {
@@ -71,6 +74,9 @@ const VIEW_TITLES = {
  '/whatif': 'Simulación',
  '/partners': 'Partners',
  '/empleados': 'Empleados',
+ '/viviendas': 'Viviendas',
+ '/vehiculos': 'Vehículos',
+ '/costos-recurrentes': 'Costos recurrentes',
 };
 
 const LoadingState = () => (
@@ -264,6 +270,9 @@ function AppContent() {
  <Route path="/perfil" element={<UserProfile user={user} userRole={userRole} />} />
  <Route path="/partners" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Partners user={user} userRole={userRole} /></ProtectedRoute>} />
  <Route path="/empleados" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Employees user={user} userRole={userRole} /></ProtectedRoute>} />
+ <Route path="/viviendas" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Properties user={user} userRole={userRole} /></ProtectedRoute>} />
+ <Route path="/vehiculos" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><Vehicles user={user} userRole={userRole} /></ProtectedRoute>} />
+ <Route path="/costos-recurrentes" element={<ProtectedRoute hasPermission={hasPermission} permission="settings"><RecurringCosts user={user} userRole={userRole} /></ProtectedRoute>} />
  <Route path="*" element={<Navigate to="/" replace />} />
  </Routes>
  </Suspense>
