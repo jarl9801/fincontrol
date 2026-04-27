@@ -5,14 +5,15 @@ import {
  BadgeEuro,
  Clock3,
  Filter,
+ Link2,
  Search,
 } from 'lucide-react';
 import HelpButton from '../../components/ui/HelpButton';
-import PartialPaymentModal from '../../components/ui/PartialPaymentModal';
+import LinkBankMovementModal from '../../components/ui/LinkBankMovementModal';
 import RecordDetailModal from '../../components/ui/RecordDetailModal';
 import { useToast } from '../../contexts/ToastContext';
-import { usePayables } from '../../hooks/usePayables';
-import { useTransactionActions } from '../../hooks/useTransactionActions';
+import { useBankMovements } from '../../hooks/useBankMovements';
+import { useClassifier } from '../../hooks/useClassifier';
 import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { KPIGrid, KPI, Badge, Button } from '@/components/ui/nexus';
@@ -70,11 +71,22 @@ const AgingBar = ({ buckets }) => {
  );
 };
 
+// Identifies a doc that was settled/partially paid before the
+// "always link to bankMovement" rule was introduced.
+const isLegacyPayment = (row) => {
+ if (!row) return false;
+ const status = row.status;
+ if (status !== 'settled' && status !== 'partial') return false;
+ const payments = Array.isArray(row.payments) ? row.payments : [];
+ if (payments.length === 0) return false;
+ return !payments.some((p) => p && p.bankMovementId);
+};
+
 const CXPIndependiente = ({ user, userRole }) => {
  const { showToast } = useToast();
  const metrics = useTreasuryMetrics({ user });
- const { registerPayment: registerPayablePayment, markAsPaid: settlePayable } = usePayables(user);
- const { registerPayment: registerLegacyPayment, markAsCompleted: settleLegacyPayable } = useTransactionActions(user);
+ const { bankMovements } = useBankMovements(user);
+ const { linkToPayable } = useClassifier(user);
 
  const [searchTerm, setSearchTerm] = useState('');
  const [statusFilter, setStatusFilter] = useState('all');
@@ -113,45 +125,30 @@ const CXPIndependiente = ({ user, userRole }) => {
 
  const canAct = userRole === 'admin' || userRole === 'manager';
 
- const handleSettle = async (row) => {
- if (loadingId) return;
- setLoadingId(row.id);
- try {
- let result = { success: false };
- if (row.source === 'payable') result = await settlePayable(row);
- if (row.source === 'legacy-transaction') {
- result = await settleLegacyPayable({
- id: row.legacyTransactionId,
- amount: row.grossAmount,
- type: 'expense',
- });
- }
- if (result.success) showToast('Cuenta por pagar liquidada');
- else showToast('No se pudo liquidar la cuenta', 'error');
- } finally {
- setLoadingId(null);
- }
+ // Política UMTELKOMD: cambiar status de una CXP SIEMPRE requiere
+ // vincular un bankMovement existente (importado de DATEV).
+ const handleLinkMovement = async (movement) => {
+ if (!selectedRow) return { success: false, error: 'Sin CXP seleccionada' };
+ if (selectedRow.source !== 'payable') {
+ return {
+ success: false,
+ error: 'Las CXP legacy no se pueden conciliar. Quedan como históricas.',
  };
-
- const handlePartialPayment = async (_transaction, paymentData) => {
- if (!selectedRow) return;
- let result = { success: false };
- if (selectedRow.source === 'payable') {
- result = await registerPayablePayment(selectedRow, paymentData);
  }
- if (selectedRow.source === 'legacy-transaction') {
- result = await registerLegacyPayment(
- {
- id: selectedRow.legacyTransactionId,
- amount: selectedRow.grossAmount,
- paidAmount: selectedRow.paidAmount,
- type: 'expense',
- },
- paymentData,
+ setLoadingId(selectedRow.id);
+ const result = await linkToPayable(selectedRow, movement);
+ setLoadingId(null);
+ if (result.success) {
+ showToast(
+ result.status === 'settled'
+ ? 'CXP liquidada y conciliada con DATEV'
+ : 'Pago parcial conciliado con DATEV',
+ 'success',
  );
+ } else {
+ showToast(result.error?.message || 'Error al vincular movimiento', 'error');
  }
- if (result.success) showToast('Pago parcial registrado');
- else showToast('No se pudo registrar el pago', 'error');
+ return result;
  };
 
  if (metrics.loading) {
@@ -270,7 +267,11 @@ const CXPIndependiente = ({ user, userRole }) => {
  </thead>
  <tbody className="divide-y divide-[var(--border)]">
  {rows.map((row) => {
- const canSettle = row.source !== 'legacy-opening' && row.status !== 'settled' && row.status !== 'cancelled';
+ const isLegacy = isLegacyPayment(row);
+ const canReconcile =
+ row.source === 'payable' &&
+ row.status !== 'cancelled' &&
+ (row.status !== 'settled' || isLegacy);
  return (
  <tr key={row.id} className="cursor-pointer hover:bg-[var(--surface)]" onClick={() => setDetailRecord(row)}>
  <td className="px-4 py-4">
@@ -283,6 +284,7 @@ const CXPIndependiente = ({ user, userRole }) => {
  <td className="px-4 py-4 text-right nd-mono text-sm tabular-nums text-[var(--warning)]">{formatCurrency(row.openAmount)}</td>
  <td className="px-4 py-4 text-center text-sm text-[var(--text-secondary)]">{row.dueDate ? formatDate(row.dueDate) : 'Sin fecha'}</td>
  <td className="px-4 py-4 text-center">
+ <div className="flex flex-col items-center gap-1">
  <Badge
  variant={
  row.status === 'settled' ? 'ok'
@@ -293,27 +295,27 @@ const CXPIndependiente = ({ user, userRole }) => {
  >
  {statusLabels[row.status]}
  </Badge>
+ {isLegacy && <Badge variant="warn">Pago legacy</Badge>}
+ </div>
  </td>
  <td className="px-4 py-4 text-center text-xs text-[var(--text-secondary)]">{row.source}</td>
  {canAct && (
  <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
  <div className="flex justify-end gap-2">
  <Button
- variant="ghost"
- size="sm"
- disabled={!canSettle}
- onClick={() => setSelectedRow(row)}
- >
- Abono
- </Button>
- <Button
  variant="primary"
  size="sm"
- disabled={!canSettle || loadingId === row.id}
+ icon={Link2}
+ disabled={!canReconcile || loadingId === row.id}
  loading={loadingId === row.id}
- onClick={() => handleSettle(row)}
+ onClick={() => setSelectedRow(row)}
+ title={
+ isLegacy
+ ? 'Pago legacy — vinculá el movimiento DATEV correspondiente'
+ : 'Vincular con movimiento bancario'
+ }
  >
- Liquidar
+ Conciliar
  </Button>
  </div>
  </td>
@@ -326,21 +328,13 @@ const CXPIndependiente = ({ user, userRole }) => {
  </div>
  </section>
 
- <PartialPaymentModal
+ <LinkBankMovementModal
  isOpen={Boolean(selectedRow)}
  onClose={() => setSelectedRow(null)}
- transaction={
- selectedRow
- ? {
- id: selectedRow.legacyTransactionId || selectedRow.id,
- description: selectedRow.description || selectedRow.counterpartyName,
- amount: selectedRow.grossAmount,
- paidAmount: selectedRow.paidAmount,
- type: 'expense',
- }
- : null
- }
- onSubmit={handlePartialPayment}
+ doc={selectedRow}
+ docKind="payable"
+ bankMovements={bankMovements}
+ onSubmit={handleLinkMovement}
  />
 
  <RecordDetailModal record={detailRecord} onClose={() => setDetailRecord(null)} userRole={userRole} />

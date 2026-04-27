@@ -190,6 +190,21 @@ export const useReceivables = (user) => {
   const registerPayment = async (receivable, paymentData) => {
     if (!user) return { success: false };
 
+    // POLICY GUARD: every status change must reference a real bankMovement
+    // (typically imported from DATEV). The Bandeja flow uses linkToReceivable
+    // (in useClassifier) which is the canonical path. registerPayment is a
+    // legacy entry point — only honor it when the caller provides
+    // paymentData.bankMovementId.
+    if (!paymentData?.bankMovementId) {
+      return {
+        success: false,
+        error: new Error(
+          'Política UMTELKOMD: todo cobro debe vincularse a un movimiento bancario (DATEV). ' +
+          'Usá la página de CXC para conciliar con el extracto importado.',
+        ),
+      };
+    }
+
     try {
       const receivableRef = doc(db, 'artifacts', appId, 'public', 'data', 'receivables', receivable.id);
       const nextOpenAmount = clampMoney(receivable.openAmount - paymentData.amount);
@@ -201,6 +216,7 @@ export const useReceivables = (user) => {
         method: paymentData.method,
         reference: paymentData.reference || '',
         note: paymentData.note || '',
+        bankMovementId: paymentData.bankMovementId,
         registeredBy: user.email,
         timestamp: new Date().toISOString(),
       };
@@ -367,24 +383,15 @@ export const useReceivables = (user) => {
     }
   };
 
-  const markAsPaid = async (receivable) => {
-    if (!user) return { success: false };
-
-    try {
-      const remaining = clampMoney(receivable.openAmount);
-      if (remaining <= 0) return { success: true };
-
-      return await registerPayment(receivable, {
-        amount: remaining,
-        date: toISODate(new Date()),
-        method: 'Transferencia',
-        note: 'Marcado como cobrado',
-      });
-    } catch (error) {
-      logError('Error marking receivable as paid:', error);
-      return { success: false, error };
-    }
-  };
+  // Deprecated: status-only shortcut — violates the "always link to bankMovement"
+  // policy. Returns an explicit error so legacy callers fail loudly.
+  const markAsPaid = async () => ({
+    success: false,
+    error: new Error(
+      'Política UMTELKOMD: no se puede marcar una CXC como cobrada sin vincular un ' +
+      'movimiento bancario. Usá /cxc → Conciliar.',
+    ),
+  });
 
   return { receivables, loading, createReceivable, registerPayment, updateReceivable, cancelReceivable, markAsPaid };
 };
