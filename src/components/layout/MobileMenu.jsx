@@ -2,6 +2,7 @@ import { signOut } from 'firebase/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
  BarChart3,
+ Bell,
  Briefcase,
  Building2,
  Car,
@@ -21,6 +22,7 @@ import {
  SlidersHorizontal,
  TableProperties,
  WalletCards,
+ Wand2,
  X,
 } from 'lucide-react';
 import { auth } from '../../services/firebase';
@@ -33,6 +35,7 @@ const NAV_ITEMS = [
  { path: '/cashflow', label: 'Tesoreria', icon: WalletCards, permission: 'reports' },
  { path: '/cxc', label: 'CXC', icon: ReceiptText, permission: 'cxc' },
  { path: '/cxp', label: 'CXP', icon: ReceiptText, permission: 'cxp' },
+ { path: '/alertas-op', label: 'Alertas', icon: Bell, permission: 'dashboard' },
  // Reportes
  { path: '/flujo-caja-anual', label: 'Flujo Anual', icon: TableProperties, permission: 'reports' },
  { path: '/reportes', label: 'Reportes', icon: BarChart3, permission: 'reports' },
@@ -47,6 +50,7 @@ const NAV_ITEMS = [
  { path: '/partners', label: 'Partners', icon: Building2, permission: 'settings' },
  // Configuración
  { path: '/costos-recurrentes', label: 'Recurrentes', icon: Repeat, permission: 'settings' },
+ { path: '/reglas', label: 'Reglas', icon: Wand2, permission: 'settings' },
  { path: '/datev', label: 'DATEV', icon: Database, permission: 'settings' },
  { path: '/configuracion', label: 'Config', icon: Settings, permission: 'settings' },
 ];
