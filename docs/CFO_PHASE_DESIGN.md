@@ -207,13 +207,31 @@ Lista corta de no-romper (extiende el AGENTS.md existente):
 
 ---
 
-## 5. Antes de arrancar — checklist humano (Jarl)
+## 5. Decisiones tomadas (Jarl, 28 abr 2026)
 
-- [ ] **Decidir sobre Firestore quota:** upgrade a Blaze plan (solo paga por uso, normalmente < €5/mes para esto) o reducir reads. Sin esto, `/cfo` no funcionará bien.
-- [ ] **Confirmar lista de proyectos vivos** que entran a margin tracker (NE3, NE4, Soplado, Fusión, ¿algo más?)
-- [ ] **Definir umbral de "cash crítico"** que dispara alerta en CashPositionPanel (¿€5k? ¿€10k?)
-- [ ] **Confirmar quién recibe el reporte mensual** (Beatriz, tío Juan, Isabelle)
-- [ ] **¿Hay presupuesto formal** para que VarianceMTD compare contra él? Si no, usa promedios.
+- **Cash crítico:** umbral €10.000 → CashPositionPanel pinta rojo bajo €10k
+- **Reporte mensual destinatario:** Jeisson Romero (`jromero@umtelkomd.com`) — single recipient por ahora, agregar Beatriz/tío Juan más adelante si se decide
+- **Variance:** sin presupuesto formal → usar **promedio de los 3 meses anteriores** como baseline. Cuando exista presupuesto, agregar toggle "vs Budget / vs Average".
+- **Firestore quota:** decisión Blaze pendiente. Si se queda en Spark, aplicar mitigaciones de §5.1
+- **Proyectos para margin tracker:** PENDIENTE confirmar lista exacta. Asumir por defecto: NE3, NE4, Soplado, Fusión (Claude debe leer `projects` collection y usar lo que esté ahí)
+
+### 5.1 Mitigaciones si NO hay Blaze (modo Spark estricto)
+
+Si la decisión es quedarse en plan gratuito, Claude DEBE implementar:
+
+1. **Cache en localStorage** del snapshot CFO con TTL 1h:
+   ```js
+   const CACHE_KEY = 'cfo:snapshot:v1';
+   const TTL_MS = 60 * 60 * 1000;
+   // useCFOSnapshot lee cache primero, solo refetch si expiró o user clickea "refrescar"
+   ```
+2. **Query con filtros temporales** en `bankMovements`:
+   - Solo últimos 120 días (suficiente para forecast 13W + lookback 90d)
+   - `where('date', '>=', subDays(today, 120))`
+3. **Botón "refrescar" explícito** en CFODashboard (no auto-refresh)
+4. **Indicador de "datos a las HH:MM"** visible siempre
+
+Si SÍ hay Blaze, igual conviene cachear (UX más rápida) pero sin TTL agresivo.
 
 ---
 
