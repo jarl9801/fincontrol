@@ -8,14 +8,19 @@ import {
  CheckCircle2,
  AlertTriangle,
  Search,
+ Wand2,
+ PlayCircle,
 } from 'lucide-react';
 import { useClassifier } from '../../hooks/useClassifier';
 import { useCategories } from '../../hooks/useCategories';
 import { useCostCenters } from '../../hooks/useCostCenters';
 import { useProjects } from '../../hooks/useProjects';
+import { useClassificationRules } from '../../hooks/useClassificationRules';
 import { useToast } from '../../contexts/ToastContext';
 import { formatCurrency } from '../../utils/formatters';
+import { findBestRule } from '../../finance/ruleEngine';
 import CategorizeModal from '../../components/ui/CategorizeModal';
+import RuleFormModal from '../../components/ui/RuleFormModal';
 import { Button, Badge, KPIGrid, KPI, Panel, EmptyState } from '@/components/ui/nexus';
 
 const TABS = [
@@ -36,12 +41,28 @@ const Classifier = ({ user }) => {
  const { expenseCategories, incomeCategories } = useCategories(user);
  const { costCenters } = useCostCenters(user);
  const { projects } = useProjects(user);
+ const { rules, createRule, applyRulesToMovements } = useClassificationRules(user);
  const { showToast } = useToast();
 
  const [activeTab, setActiveTab] = useState('income');
  const [searchQuery, setSearchQuery] = useState('');
  const [categorizingMovement, setCategorizingMovement] = useState(null);
+ const [ruleSeedMovement, setRuleSeedMovement] = useState(null);
  const [busyId, setBusyId] = useState(null);
+ const [applyingAll, setApplyingAll] = useState(false);
+
+ const allCategories = useMemo(
+ () => [
+ ...(incomeCategories || []).map((name) => ({ name, type: 'income' })),
+ ...(expenseCategories || []).map((name) => ({ name, type: 'expense' })),
+ ],
+ [incomeCategories, expenseCategories],
+ );
+
+ const ruleHitCount = useMemo(
+ () => (inboxMovements || []).reduce((sum, m) => (findBestRule(m, rules) ? sum + 1 : sum), 0),
+ [inboxMovements, rules],
+ );
 
  // Bucketize inbox by tab
  const buckets = useMemo(() => {
@@ -121,6 +142,29 @@ const Classifier = ({ user }) => {
  return r;
  };
 
+ const handleCreateRule = async (data) => {
+ const r = await createRule(data);
+ if (r.success) showToast('Regla creada — los próximos imports se autoclasifican', 'success');
+ return r;
+ };
+
+ const handleApplyAllRules = async () => {
+ if (ruleHitCount === 0) {
+ showToast('Ninguna regla coincide con la bandeja actual', 'info');
+ return;
+ }
+ setApplyingAll(true);
+ const result = await applyRulesToMovements(inboxMovements);
+ setApplyingAll(false);
+ if (result.applied > 0) {
+ showToast(`${result.applied} movimiento(s) clasificados automáticamente`, 'success');
+ } else if (result.errors.length > 0) {
+ showToast(`Errores aplicando reglas: ${result.errors.length}`, 'error');
+ } else {
+ showToast('Sin cambios — los matches ya estaban clasificados', 'info');
+ }
+ };
+
  const stats = {
  total: inboxMovements.length,
  income: buckets.income.length,
@@ -145,6 +189,17 @@ const Classifier = ({ user }) => {
  y categorizá los gastos espontáneos.
  </p>
  </div>
+ {ruleHitCount > 0 && (
+ <Button
+ variant="secondary"
+ icon={PlayCircle}
+ loading={applyingAll}
+ disabled={applyingAll}
+ onClick={handleApplyAllRules}
+ >
+ Aplicar reglas ({ruleHitCount})
+ </Button>
+ )}
  </header>
 
  <KPIGrid cols={4}>
@@ -236,6 +291,7 @@ const Classifier = ({ user }) => {
  busy={busyId === m.id}
  onLink={(item) => handleLinkReceivable(m, item)}
  onCategorize={() => setCategorizingMovement(m)}
+ onCreateRule={() => setRuleSeedMovement(m)}
  />
  );
  })}
@@ -264,6 +320,7 @@ const Classifier = ({ user }) => {
  busy={busyId === movement.id}
  onLink={(item) => handleLinkPayable(movement, item)}
  onCategorize={() => setCategorizingMovement(movement)}
+ onCreateRule={() => setRuleSeedMovement(movement)}
  />
  ))}
  </div>
@@ -291,6 +348,7 @@ const Classifier = ({ user }) => {
  busy={busyId === movement.id}
  onLink={matches.length > 0 ? (item) => handleLinkPayable(movement, item) : null}
  onCategorize={() => setCategorizingMovement(movement)}
+ onCreateRule={() => setRuleSeedMovement(movement)}
  />
  ))}
  </div>
@@ -311,11 +369,22 @@ const Classifier = ({ user }) => {
  costCenters={costCenters || []}
  projects={projects || []}
  />
+
+ <RuleFormModal
+ isOpen={Boolean(ruleSeedMovement)}
+ onClose={() => setRuleSeedMovement(null)}
+ onSubmit={handleCreateRule}
+ seedMovement={ruleSeedMovement}
+ categories={allCategories}
+ costCenters={costCenters || []}
+ projects={projects || []}
+ pendingMovements={inboxMovements}
+ />
  </div>
  );
 };
 
-const MovementRow = ({ movement, matches, direction, busy, onLink, onCategorize }) => {
+const MovementRow = ({ movement, matches, direction, busy, onLink, onCategorize, onCreateRule }) => {
  const ArrowIcon = direction === 'in' ? ArrowUpRight : ArrowDownRight;
  const colorClass = direction === 'in' ? 'text-[var(--success)]' : 'text-[var(--accent)]';
  const top = matches?.[0];
@@ -408,6 +477,11 @@ const MovementRow = ({ movement, matches, direction, busy, onLink, onCategorize 
  <Button variant="ghost" size="sm" icon={Tag} onClick={onCategorize} disabled={busy}>
  Categorizar
  </Button>
+ {onCreateRule && (
+ <Button variant="ghost" size="sm" icon={Wand2} onClick={onCreateRule} disabled={busy} title="Crear regla desde este movimiento">
+ Regla
+ </Button>
+ )}
  </div>
  </div>
  );

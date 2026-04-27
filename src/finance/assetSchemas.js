@@ -302,3 +302,33 @@ export const monthlyEquivalent = (rule) => {
       return a;
   }
 };
+
+// ═══════════════════════════════════════════════════════════
+// Classification Rules — auto-classify bank movements
+// ═══════════════════════════════════════════════════════════
+
+export const RULE_MATCH_TYPES = ['contains', 'exact', 'startsWith', 'regex'];
+export const RULE_DIRECTIONS = ['both', 'in', 'out'];
+export const RULE_FIELDS = ['counterpartyName', 'description'];
+
+export const classificationRuleDefaults = () => ({
+  name: '',                  // Friendly label: "AOK Rheinland — Salud BARMER"
+  field: 'counterpartyName', // Where to look: counterpartyName | description
+  matchType: 'contains',     // contains | exact | startsWith | regex
+  pattern: '',               // String/regex to match (case-insensitive)
+  direction: 'both',         // both | in | out
+  amountMin: null,           // Optional € threshold (null = ignore)
+  amountMax: null,
+  // Classification to apply when the rule matches
+  applyTo: {
+    categoryName: '',
+    costCenterId: '',
+    projectId: '',
+    projectName: '',
+  },
+  active: true,
+  priority: 100,             // Higher number = higher priority
+  hits: 0,                   // Times this rule has been applied (incremented by engine)
+  lastHitAt: '',             // ISO date of last application
+  notes: '',
+});

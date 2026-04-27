@@ -1,7 +1,8 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Upload, FileText, CheckCircle2, AlertCircle, X, Database } from 'lucide-react';
+import { Upload, FileText, CheckCircle2, AlertCircle, X, Database, Wand2 } from 'lucide-react';
 import { useBankMovements } from '../../hooks/useBankMovements';
 import { useDatevImport } from '../../hooks/useDatevImport';
+import { useClassificationRules } from '../../hooks/useClassificationRules';
 import { useToast } from '../../contexts/ToastContext';
 import { parseDatevCSV, diffAgainstExisting } from '../../finance/datevParser';
 import { formatCurrency } from '../../utils/formatters';
@@ -18,6 +19,7 @@ const readFileAsText = (file) =>
 const DatevImport = ({ user }) => {
  const { bankMovements } = useBankMovements(user);
  const { importRows } = useDatevImport(user);
+ const { rules } = useClassificationRules(user);
  const { showToast } = useToast();
 
  // Each entry: { id, file, name, parsed, diff, status, importing, result }
@@ -81,7 +83,7 @@ const DatevImport = ({ user }) => {
  setFiles((prev) =>
  prev.map((f) => (f.id === entry.id ? { ...f, importing: true, status: 'importing' } : f)),
  );
- const result = await importRows(entry.diff.newRows, entry.name);
+ const result = await importRows(entry.diff.newRows, entry.name, null, rules);
  setFiles((prev) =>
  prev.map((f) =>
  f.id === entry.id
@@ -90,7 +92,9 @@ const DatevImport = ({ user }) => {
  ),
  );
  if (result.success) {
- showToast(`${entry.name}: ${result.imported} importados`, 'success');
+ const auto = result.autoClassified || 0;
+ const detail = auto > 0 ? ` (${auto} auto-clasificados)` : '';
+ showToast(`${entry.name}: ${result.imported} importados${detail}`, 'success');
  } else {
  showToast(`${entry.name}: ${result.errors.length} errores`, 'error');
  }
@@ -135,6 +139,12 @@ const DatevImport = ({ user }) => {
  contra los movimientos ya cargados (mismo fecha + monto + dirección + contraparte) y
  solo crea los nuevos.
  </p>
+ {(rules || []).filter((r) => r.active).length > 0 && (
+ <p className="mt-2 inline-flex items-center gap-2 text-[12px] text-[var(--text-secondary)]">
+ <Wand2 size={12} className="text-[var(--accent)]" />
+ {(rules || []).filter((r) => r.active).length} regla(s) activas — los movimientos coincidentes se clasificarán automáticamente al importar.
+ </p>
+ )}
  </div>
  {filesPending && (
  <Button variant="primary" icon={Upload} onClick={importAll}>

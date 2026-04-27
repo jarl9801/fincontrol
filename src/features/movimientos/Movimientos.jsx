@@ -10,6 +10,7 @@ import {
  ChevronLeft,
  ChevronRight,
  Filter,
+ Wand2,
 } from 'lucide-react';
 import { useBankMovements } from '../../hooks/useBankMovements';
 import { useReceivables } from '../../hooks/useReceivables';
@@ -18,10 +19,12 @@ import { useCategories } from '../../hooks/useCategories';
 import { useCostCenters } from '../../hooks/useCostCenters';
 import { useProjects } from '../../hooks/useProjects';
 import { useClassifier } from '../../hooks/useClassifier';
+import { useClassificationRules } from '../../hooks/useClassificationRules';
 import { useToast } from '../../contexts/ToastContext';
 import { formatCurrency } from '../../utils/formatters';
 import MovementDetailModal from '../../components/ui/MovementDetailModal';
 import CategorizeModal from '../../components/ui/CategorizeModal';
+import RuleFormModal from '../../components/ui/RuleFormModal';
 import { Button, Badge, KPIGrid, KPI, Panel, EmptyState } from '@/components/ui/nexus';
 
 const PAGE_SIZE = 50;
@@ -35,8 +38,17 @@ const Movimientos = ({ user }) => {
  const { expenseCategories, incomeCategories } = useCategories(user);
  const { costCenters } = useCostCenters(user);
  const { projects } = useProjects(user);
- const { categorize } = useClassifier(user);
+ const { inboxMovements, categorize } = useClassifier(user);
+ const { createRule } = useClassificationRules(user);
  const { showToast } = useToast();
+
+ const allCategories = useMemo(
+ () => [
+ ...(incomeCategories || []).map((name) => ({ name, type: 'income' })),
+ ...(expenseCategories || []).map((name) => ({ name, type: 'expense' })),
+ ],
+ [incomeCategories, expenseCategories],
+ );
 
  // ─── Filters ───
  const allYears = useMemo(() => {
@@ -56,6 +68,7 @@ const Movimientos = ({ user }) => {
  const [page, setPage] = useState(1);
  const [detailMovement, setDetailMovement] = useState(null);
  const [editingMovement, setEditingMovement] = useState(null);
+ const [ruleSeedMovement, setRuleSeedMovement] = useState(null);
 
  const filtered = useMemo(() => {
  const q = searchQuery.trim().toLowerCase();
@@ -123,6 +136,12 @@ const Movimientos = ({ user }) => {
  const r = await categorize(editingMovement, classification);
  if (r.success) showToast('Categorización actualizada', 'success');
  else showToast(r.error?.message || 'Error al guardar', 'error');
+ return r;
+ };
+
+ const handleCreateRule = async (data) => {
+ const r = await createRule(data);
+ if (r.success) showToast('Regla creada', 'success');
  return r;
  };
 
@@ -315,6 +334,15 @@ const Movimientos = ({ user }) => {
  <Button variant="ghost" size="sm" icon={Pencil} onClick={() => setEditingMovement(m)}>
  Editar
  </Button>
+ <Button
+ variant="ghost"
+ size="sm"
+ icon={Wand2}
+ onClick={() => setRuleSeedMovement(m)}
+ title="Crear regla desde este movimiento"
+ >
+ Regla
+ </Button>
  </div>
  </td>
  </tr>
@@ -383,6 +411,17 @@ const Movimientos = ({ user }) => {
  }
  costCenters={costCenters || []}
  projects={projects || []}
+ />
+
+ <RuleFormModal
+ isOpen={Boolean(ruleSeedMovement)}
+ onClose={() => setRuleSeedMovement(null)}
+ onSubmit={handleCreateRule}
+ seedMovement={ruleSeedMovement}
+ categories={allCategories}
+ costCenters={costCenters || []}
+ projects={projects || []}
+ pendingMovements={inboxMovements}
  />
  </div>
  );
