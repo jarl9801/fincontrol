@@ -212,12 +212,12 @@ Lista corta de no-romper (extiende el AGENTS.md existente):
 - **Cash crítico:** umbral €10.000 → CashPositionPanel pinta rojo bajo €10k
 - **Reporte mensual destinatario:** Jeisson Romero (`jromero@umtelkomd.com`) — single recipient por ahora, agregar Beatriz/tío Juan más adelante si se decide
 - **Variance:** sin presupuesto formal → usar **promedio de los 3 meses anteriores** como baseline. Cuando exista presupuesto, agregar toggle "vs Budget / vs Average".
-- **Firestore quota:** decisión Blaze pendiente. Si se queda en Spark, aplicar mitigaciones de §5.1
+- **Firestore quota:** **Spark plan (gratuito), confirmado.** Single-user (solo Jarl), 50k reads/día sobra. Mitigaciones §5.1 son **obligatorias** para no quemar quota durante desarrollo.
 - **Proyectos para margin tracker:** PENDIENTE confirmar lista exacta. Asumir por defecto: NE3, NE4, Soplado, Fusión (Claude debe leer `projects` collection y usar lo que esté ahí)
 
-### 5.1 Mitigaciones si NO hay Blaze (modo Spark estricto)
+### 5.1 Mitigaciones Spark (OBLIGATORIAS)
 
-Si la decisión es quedarse en plan gratuito, Claude DEBE implementar:
+Single-user en Spark = funciona perfecto si Claude implementa esto desde Fase A:
 
 1. **Cache en localStorage** del snapshot CFO con TTL 1h:
    ```js
@@ -231,7 +231,14 @@ Si la decisión es quedarse en plan gratuito, Claude DEBE implementar:
 3. **Botón "refrescar" explícito** en CFODashboard (no auto-refresh)
 4. **Indicador de "datos a las HH:MM"** visible siempre
 
-Si SÍ hay Blaze, igual conviene cachear (UX más rápida) pero sin TTL agresivo.
+Si SÍ hay Blaze en el futuro, igual conviene cachear (UX más rápida) pero podés bajar el TTL.
+
+### 5.2 Single-user simplifications
+
+Como solo Jarl usa fincontrol:
+- **No hace falta el role guard** estricto en `/cfo` (ya estás logueado como admin siempre)
+- **No hace falta** botón "email a Beatriz" en reportes — solo download local
+- El "destinatario" del reporte mensual es informativo (footer del PDF), no envío automático
 
 ---
 
