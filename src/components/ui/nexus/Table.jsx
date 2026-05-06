@@ -12,6 +12,8 @@
  *
  * Use <Panel> as the wrapper for a titled table.
  */
+import { rowButtonProps } from '../../../utils/a11y';
+
 const ALIGN = {
   left:   'text-left',
   right:  'text-right',
@@ -30,7 +32,7 @@ const Table = ({
   if (loading) {
     return (
       <div className="px-4 py-12 text-center">
-        <p className="nd-label text-[var(--text-disabled)]">Cargando…</p>
+        <p className="label-mono text-[var(--color-fg-4)]">Cargando…</p>
       </div>
     );
   }
@@ -38,7 +40,7 @@ const Table = ({
   if (!rows || rows.length === 0) {
     return empty || (
       <div className="px-4 py-12 text-center">
-        <p className="nd-label text-[var(--text-disabled)]">Sin registros</p>
+        <p className="label-mono text-[var(--color-fg-4)]">Sin registros</p>
       </div>
     );
   }
@@ -63,8 +65,7 @@ const Table = ({
           {rows.map((row) => (
             <tr
               key={row[rowKey]}
-              onClick={onRowClick ? () => onRowClick(row) : undefined}
-              className={onRowClick ? 'cursor-pointer' : ''}
+              {...(onRowClick ? rowButtonProps(() => onRowClick(row)) : {})}
             >
               {columns.map((c) => {
                 const value = row[c.key];

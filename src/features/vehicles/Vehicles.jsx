@@ -3,6 +3,7 @@ import { Plus, Pencil, Trash2, Car, Search, Fuel } from 'lucide-react';
 import { useVehicles } from '../../hooks/useVehicles';
 import { useEmployees } from '../../hooks/useEmployees';
 import { useRecurringCosts } from '../../hooks/useRecurringCosts';
+import { rowButtonProps } from '../../utils/a11y';
 import { formatCurrency } from '../../utils/formatters';
 import VehicleFormModal from '../../components/ui/VehicleFormModal';
 import ConfirmModal from '../../components/ui/ConfirmModal';
@@ -150,7 +151,7 @@ const Vehicles = ({ user }) => {
  </thead>
  <tbody>
  {filtered.map((v) => (
- <tr key={v.id} className="cursor-pointer" onClick={() => openEdit(v)}>
+  <tr key={v.id} {...rowButtonProps(() => openEdit(v))}>
  <td className="font-medium text-[var(--text-primary)]">{v.name}</td>
  <td className="text-[var(--text-secondary)]">{v.model || '—'}</td>
  <td className="nd-mono text-[var(--text-secondary)]">{v.plate || '—'}</td>

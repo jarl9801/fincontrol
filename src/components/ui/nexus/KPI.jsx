@@ -17,11 +17,11 @@
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 
 const TONE = {
-  default: 'var(--text-primary)',
-  ok:      'var(--success)',
-  warn:    'var(--warning)',
-  err:     'var(--error)',
-  info:    'var(--info)',
+  default: 'var(--color-fg-1)',
+  ok:      'var(--color-ok)',
+  warn:    'var(--color-warn)',
+  err:     'var(--color-err)',
+  info:    'var(--color-info)',
 };
 
 export const KPIGrid = ({ cols = 4, children, className = '' }) => {
@@ -34,7 +34,7 @@ export const KPIGrid = ({ cols = 4, children, className = '' }) => {
 
   return (
     <div
-      className={`grid ${colCls} gap-px border border-[var(--border)] rounded-md overflow-hidden bg-[var(--border)] ${className}`}
+      className={`grid ${colCls} gap-px border border-[var(--color-line)] rounded-md overflow-hidden bg-[var(--color-line)] ${className}`}
     >
       {children}
     </div>
@@ -62,24 +62,22 @@ export const KPI = ({
       ? 'text-[18px]'
       : 'text-[22px]';
 
+  const Root = isClickable ? 'button' : 'div';
+
   return (
-    <div
-      role={isClickable ? 'button' : undefined}
-      tabIndex={isClickable ? 0 : undefined}
+    <Root
+      type={isClickable ? 'button' : undefined}
       onClick={onClick}
-      onKeyDown={isClickable ? (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); }
-      } : undefined}
-      className={`bg-[var(--surface)] px-5 py-4 ${
-        isClickable ? 'cursor-pointer hover:bg-[var(--surface-raised)] transition-colors' : ''
+      className={`bg-[var(--color-bg-1)] px-5 py-4 ${
+        isClickable ? 'w-full text-left cursor-pointer hover:bg-[var(--color-bg-2)] transition-colors' : ''
       } ${className}`}
     >
       <div className="flex items-start justify-between gap-3">
-        <p className="nd-label text-[var(--text-secondary)]">{label}</p>
-        {Icon && <Icon size={14} className="text-[var(--text-disabled)] flex-shrink-0 mt-0.5" />}
+        <p className="label-mono text-[var(--color-fg-3)]">{label}</p>
+        {Icon && <Icon size={14} className="text-[var(--color-fg-4)] flex-shrink-0 mt-0.5" />}
       </div>
       <p
-        className={`nd-mono ${valueSize} tabular-nums tracking-tight mt-2`}
+        className={`font-mono ${valueSize} tabular-nums tracking-tight mt-2`}
         style={{ color: valueColor }}
       >
         {value}
@@ -88,17 +86,17 @@ export const KPI = ({
         <div className="flex items-center gap-2 mt-2">
           {delta && (
             <span
-              className="nd-mono text-[11px] flex items-center gap-1"
-              style={{ color: trend === 'down' ? 'var(--error)' : 'var(--success)' }}
+              className="font-mono text-[11px] flex items-center gap-1"
+              style={{ color: trend === 'down' ? 'var(--color-err)' : 'var(--color-ok)' }}
             >
               {trend === 'down' ? <ArrowDownRight size={11} /> : <ArrowUpRight size={11} />}
               {delta}
             </span>
           )}
-          {meta && <p className="nd-mono text-[11px] text-[var(--text-disabled)]">{meta}</p>}
+          {meta && <p className="font-mono text-[11px] text-[var(--color-fg-4)]">{meta}</p>}
         </div>
       )}
-    </div>
+    </Root>
   );
 };
 

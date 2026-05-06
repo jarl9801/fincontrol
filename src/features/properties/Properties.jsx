@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Plus, Pencil, Trash2, Home, Search, Building2 } from 'lucide-react';
 import { useProperties } from '../../hooks/useProperties';
 import { useRecurringCosts } from '../../hooks/useRecurringCosts';
-import { monthlyEquivalent } from '../../finance/assetSchemas';
+import { rowButtonProps } from '../../utils/a11y';
 import { formatCurrency } from '../../utils/formatters';
 import PropertyFormModal from '../../components/ui/PropertyFormModal';
 import ConfirmModal from '../../components/ui/ConfirmModal';
@@ -141,7 +141,7 @@ const Properties = ({ user }) => {
  </thead>
  <tbody>
  {filtered.map((p) => (
- <tr key={p.id} className="cursor-pointer" onClick={() => openEdit(p)}>
+  <tr key={p.id} {...rowButtonProps(() => openEdit(p))}>
  <td className="font-medium text-[var(--text-primary)]">{p.name}</td>
  <td>{TYPE_LABELS[p.type] || p.type}</td>
  <td>{USE_LABELS[p.use] || p.use}</td>

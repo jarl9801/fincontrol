@@ -3,11 +3,11 @@
 ## Purpose
 Apply and maintain the **NEXUS.OS** design system across the FinControl UI. Dark-first, austere, editorial — the product surface for UMTELKOMD finance inside the NEXUS.OS brand family.
 
-This skill replaces the deprecated Nothing Design System (`nothing-design.md`).
+This skill is the canonical visual contract for FinControl UI.
 
 ## Philosophy
 - **Austere > decorative.** Surfaces, borders, type do the work. No gradients, no shadows, no glass.
-- **One accent.** `#FF4D2E` — used for CTAs, brand fragments like `.OS`, active states, chart highlights. Nothing else competes for attention.
+- **One accent.** `#FF4D2E` — used for CTAs, brand fragments like `.OS`, active states, chart highlights. No competing color gets equal weight.
 - **Type carries the voice.** Space Grotesk display at weight 300, JetBrains Mono for labels/data, Inter for body.
 - **Radii stay tight.** 4 / 6 / 10 px. No `xl`, `2xl`, `3xl`, `[Nrem]` ever.
 
@@ -149,17 +149,17 @@ Mono uppercase at `tracking-[0.1em]`, accent border-bottom on active.
 These break the aesthetic — flag them in review:
 
 1. `rounded-xl`, `rounded-2xl`, `rounded-3xl`, `rounded-[Nrem]` — always use `rounded-sm | md | lg`
-2. `rounded-full` on buttons, cards, panels — only on avatars, status dots, loaders, and `.nx-badge`
+2. `rounded-full` on buttons, cards, panels, and filter controls — only on avatars, status dots, loaders, progress, toggles, and `.nx-badge`
 3. `font-bold` on `<h1>` — use `font-light` (300). H2/panel titles use `font-medium` (500).
-4. `tracking-[0.18em+]` — max letter-spacing is `tracking-[0.14em]`. NDS used `0.28em`; drop it.
+4. `tracking-[0.18em+]` — max letter-spacing is `tracking-[0.14em]`. Older UI used wider tracking; drop it.
 5. Generic Tailwind colors (`text-blue-500`, `bg-green-400`, etc.) — always a Nexus token.
 6. `box-shadow` / `shadow-md` / any shadow utility — Nexus has none.
 7. `linear-gradient(...)` — forbidden.
-8. Square bracket loading text like `[CARGANDO...]` — that was a Nothing signature. Use `Cargando…` in `label-mono` style.
+8. Square bracket loading text like `[CARGANDO...]` — use `Cargando…` in `label-mono` style.
 9. `font-['Doto']`, `font-['Space Mono']` — replaced by `font-display` (Space Grotesk) and `font-mono` (JetBrains Mono).
 10. Colored card/panel backgrounds (`bg-info`, `bg-warn`) — only `.nx-badge` carries translucent semantic tints. Panels stay on `bg-2`.
 
-## Migration notes (from Nothing Design System)
+## Migration notes
 
 The `nd-*` / `n-*` utility classes (`nd-label`, `nd-mono`, `nd-display`, `nd-heading`, `n-label`, `n-tag`, `n-empty`, `dot-grid`, etc.) still exist in `index.css` as compatibility shims — they render Nexus styling under the old class names. New code should prefer the canonical Nexus equivalents:
 - `nd-label` / `n-label` → `label-mono`

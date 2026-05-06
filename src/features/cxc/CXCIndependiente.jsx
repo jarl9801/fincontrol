@@ -15,6 +15,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { useBankMovements } from '../../hooks/useBankMovements';
 import { useClassifier } from '../../hooks/useClassifier';
 import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
+import { rowButtonProps } from '../../utils/a11y';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { KPIGrid, KPI, Badge, Button } from '@/components/ui/nexus';
 
@@ -231,7 +232,7 @@ const CXCIndependiente = ({ user, userRole }) => {
  />
  </div>
  <div className="flex flex-wrap items-center gap-2">
- <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 nd-label text-[var(--text-disabled)]">
+  <div className="inline-flex items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 nd-label text-[var(--text-disabled)]">
  <Filter size={14} />
  Estado
  </div>
@@ -240,7 +241,7 @@ const CXCIndependiente = ({ user, userRole }) => {
  key={filter.id}
  type="button"
  onClick={() => setStatusFilter(filter.id)}
- className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
+  className={`rounded-md border px-3 py-2 text-sm font-medium transition-all ${
  statusFilter === filter.id
  ? 'border-[var(--accent)] bg-transparent text-[var(--accent)]'
  : 'border-[var(--border)] bg-[var(--surface)] text-[var(--text-secondary)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]'
@@ -277,7 +278,7 @@ const CXCIndependiente = ({ user, userRole }) => {
  // (legacy data) — only fully reconciled docs are truly locked.
  (row.status !== 'settled' || isLegacy);
  return (
- <tr key={row.id} className="cursor-pointer hover:bg-[var(--surface)]" onClick={() => setDetailRecord(row)}>
+  <tr key={row.id} {...rowButtonProps(() => setDetailRecord(row), 'hover:bg-[var(--surface)]')}>
  <td className="px-4 py-4">
  <p className="text-sm font-medium text-[var(--text-primary)]">{row.counterpartyName}</p>
  <p className="text-xs text-[var(--text-secondary)]">{row.description || 'Sin descripción'}</p>

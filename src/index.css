@@ -52,9 +52,10 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Motion tokens + NDS → Nexus compatibility aliases
-   (temporary during migration — lets existing components keep
-    referencing --text-primary, --surface, etc. without breaking)
+   Motion tokens + legacy compatibility aliases
+   DEPRECATED: compatibility layer only. New UI must use --color-*,
+   src/components/ui/nexus, and .nx-* patterns. Target removal: after
+   remaining legacy views are migrated.
    ═══════════════════════════════════════════════════════════ */
 :root {
   /* Motion */
@@ -66,7 +67,7 @@
   --transition-base: 0.2s cubic-bezier(0.3, 0, 0.2, 1);
   --transition-slow: 0.3s cubic-bezier(0.3, 0, 0.2, 1);
 
-  /* NDS → Nexus compat */
+  /* Legacy → Nexus compat */
   --black: #07080A;
   --surface: #0E1014;
   --surface-raised: #161920;
@@ -188,7 +189,7 @@
   --gray-800: #F5F3EE;
   --gray-900: #F5F3EE;
 
-  /* nd-* aliases */
+  /* Deprecated design aliases */
   --nd-black: #07080A;
   --nd-surface: #0E1014;
   --nd-surface-raised: #161920;
@@ -334,8 +335,8 @@ input::placeholder, textarea::placeholder {
 .form-control::placeholder { color: #4A4C50; }
 
 /* ═══════════════════════════════════════════════════════════
-   Legacy button classes — mapped to Nexus aesthetic
-   (keeps .btn, .btn-primary, etc. working during migration)
+   DEPRECATED legacy button classes — mapped to Nexus aesthetic
+   Do not use in new UI. Use src/components/ui/nexus/Button.jsx.
    ═══════════════════════════════════════════════════════════ */
 .btn {
   display: inline-flex;
@@ -364,7 +365,8 @@ input::placeholder, textarea::placeholder {
 .btn-secondary:hover { background: #262A34; }
 
 /* ═══════════════════════════════════════════════════════════
-   Legacy card — mapped to Nexus panel
+   DEPRECATED legacy card — mapped to Nexus panel
+   Do not use in new UI. Use src/components/ui/nexus/Panel.jsx.
    ═══════════════════════════════════════════════════════════ */
 .card {
   background: #161920;
@@ -386,7 +388,8 @@ input::placeholder, textarea::placeholder {
 .card-hover:hover { border-color: #2E3440; }
 
 /* ═══════════════════════════════════════════════════════════
-   Legacy badge/alert/table → Nexus
+   DEPRECATED legacy badge/alert/table → Nexus
+   Do not use in new UI. Use src/components/ui/nexus components.
    ═══════════════════════════════════════════════════════════ */
 .badge {
   display: inline-flex;
@@ -501,13 +504,13 @@ input::placeholder, textarea::placeholder {
   align-items: center;
   transition: all 120ms cubic-bezier(0.3, 0, 0.2, 1);
 }
-.nx-btn-primary { background: #FF4D2E; color: #0A0B0D; }
-.nx-btn-primary:hover { background: #FF6B50; }
-.nx-btn-secondary { background: #1D2029; color: #F5F3EE; border-color: #2E3440; }
-.nx-btn-secondary:hover { background: #262A34; }
-.nx-btn-ghost { background: transparent; color: #F5F3EE; border-color: #2E3440; }
-.nx-btn-ghost:hover { background: #1D2029; }
-.nx-btn-danger { background: transparent; color: #FF4D2E; border-color: rgba(255, 77, 46, 0.4); }
+.nx-btn-primary { background: var(--color-accent); color: var(--color-ink); }
+.nx-btn-primary:hover { background: var(--color-accent-hover); }
+.nx-btn-secondary { background: var(--color-bg-3); color: var(--color-fg-1); border-color: var(--color-line-s); }
+.nx-btn-secondary:hover { background: var(--color-bg-4); }
+.nx-btn-ghost { background: transparent; color: var(--color-fg-1); border-color: var(--color-line-s); }
+.nx-btn-ghost:hover { background: var(--color-bg-3); }
+.nx-btn-danger { background: transparent; color: var(--color-err); border-color: rgba(255, 77, 46, 0.4); }
 .nx-btn-danger:hover { background: rgba(255, 77, 46, 0.1); }
 .nx-btn-sm { padding: 6px 10px; font-size: 12px; }
 
@@ -530,11 +533,11 @@ input::placeholder, textarea::placeholder {
   border-radius: 50%;
   background: currentColor;
 }
-.nx-badge-ok { background: rgba(74, 222, 128, 0.12); color: #4ADE80; }
-.nx-badge-warn { background: rgba(255, 176, 32, 0.12); color: #FFB020; }
-.nx-badge-err { background: rgba(255, 77, 46, 0.12); color: #FF4D2E; }
-.nx-badge-info { background: rgba(107, 166, 255, 0.12); color: #6BA6FF; }
-.nx-badge-neutral { background: #1D2029; color: #B9BAB4; }
+.nx-badge-ok { background: rgba(74, 222, 128, 0.12); color: var(--color-ok); }
+.nx-badge-warn { background: rgba(255, 176, 32, 0.12); color: var(--color-warn); }
+.nx-badge-err { background: rgba(255, 77, 46, 0.12); color: var(--color-err); }
+.nx-badge-info { background: rgba(107, 166, 255, 0.12); color: var(--color-info); }
+.nx-badge-neutral { background: var(--color-bg-3); color: var(--color-fg-2); }
 
 /* ── Alerts ────────────────────────────────────────────────── */
 .nx-alert {
@@ -545,7 +548,7 @@ input::placeholder, textarea::placeholder {
   border: 1px solid;
   font-size: 13px;
   line-height: 1.5;
-  color: #F5F3EE;
+  color: var(--color-fg-1);
 }
 .nx-alert-ok { border-color: rgba(74, 222, 128, 0.3); background: rgba(74, 222, 128, 0.05); }
 .nx-alert-warn { border-color: rgba(255, 176, 32, 0.3); background: rgba(255, 176, 32, 0.05); }
@@ -555,7 +558,7 @@ input::placeholder, textarea::placeholder {
 /* ── Tabs ──────────────────────────────────────────────────── */
 .nx-tabs {
   display: flex;
-  border-bottom: 1px solid #222630;
+  border-bottom: 1px solid var(--color-line);
   gap: 4px;
 }
 .nx-tab {
@@ -564,7 +567,7 @@ input::placeholder, textarea::placeholder {
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #7B7D7A;
+  color: var(--color-fg-3);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
@@ -573,10 +576,10 @@ input::placeholder, textarea::placeholder {
   border-left: none;
   border-right: none;
 }
-.nx-tab:hover { color: #B9BAB4; }
+.nx-tab:hover { color: var(--color-fg-2); }
 .nx-tab.active {
-  color: #F5F3EE;
-  border-bottom-color: #FF4D2E;
+  color: var(--color-fg-1);
+  border-bottom-color: var(--color-accent);
 }
 
 /* ── Progress ──────────────────────────────────────────────── */
@@ -584,19 +587,19 @@ input::placeholder, textarea::placeholder {
   width: 100%;
   max-width: 240px;
   height: 6px;
-  background: #1D2029;
+  background: var(--color-bg-3);
   border-radius: 999px;
   overflow: hidden;
 }
-.nx-progress-fill { height: 100%; background: #FF4D2E; border-radius: 999px; }
+.nx-progress-fill { height: 100%; background: var(--color-accent); border-radius: 999px; }
 
 /* ── Toggle ────────────────────────────────────────────────── */
 .nx-toggle {
   width: 40px;
   height: 22px;
   border-radius: 999px;
-  background: #1D2029;
-  border: 1px solid #2E3440;
+  background: var(--color-bg-3);
+  border: 1px solid var(--color-line-s);
   position: relative;
   cursor: pointer;
 }
@@ -605,19 +608,19 @@ input::placeholder, textarea::placeholder {
   position: absolute;
   width: 16px;
   height: 16px;
-  background: #B9BAB4;
+  background: var(--color-fg-2);
   border-radius: 50%;
   top: 2px;
   left: 2px;
   transition: all 120ms cubic-bezier(0.3, 0, 0.2, 1);
 }
-.nx-toggle.on { background: #FF4D2E; border-color: #FF4D2E; }
-.nx-toggle.on::after { left: 20px; background: #0A0B0D; }
+.nx-toggle.on { background: var(--color-accent); border-color: var(--color-accent); }
+.nx-toggle.on::after { left: 20px; background: var(--color-ink); }
 
 /* ── KPI card ──────────────────────────────────────────────── */
 .nx-kpi {
-  background: #161920;
-  border: 1px solid #222630;
+  background: var(--color-bg-2);
+  border: 1px solid var(--color-line);
   border-radius: 10px;
   padding: 20px;
   position: relative;
@@ -627,7 +630,7 @@ input::placeholder, textarea::placeholder {
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #7B7D7A;
+  color: var(--color-fg-3);
 }
 .nx-kpi-v {
   font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -636,17 +639,17 @@ input::placeholder, textarea::placeholder {
   letter-spacing: -0.03em;
   line-height: 1;
   margin: 12px 0 8px;
-  color: #F5F3EE;
+  color: var(--color-fg-1);
 }
 .nx-kpi-d {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 11px;
-  color: #4ADE80;
+  color: var(--color-ok);
   display: flex;
   align-items: center;
   gap: 6px;
 }
-.nx-kpi-d.down { color: #FF4D2E; }
+.nx-kpi-d.down { color: var(--color-err); }
 
 /* ── Data table ────────────────────────────────────────────── */
 .nx-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -657,33 +660,33 @@ input::placeholder, textarea::placeholder {
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #7B7D7A;
-  border-bottom: 1px solid #222630;
+  color: var(--color-fg-3);
+  border-bottom: 1px solid var(--color-line);
   font-weight: 500;
 }
 .nx-table td {
   padding: 12px 14px;
-  border-bottom: 1px solid #222630;
-  color: #F5F3EE;
+  border-bottom: 1px solid var(--color-line);
+  color: var(--color-fg-1);
 }
-.nx-table tr:hover td { background: #161920; }
+.nx-table tr:hover td { background: var(--color-bg-2); }
 .nx-table .mono {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 12px;
-  color: #B9BAB4;
+  color: var(--color-fg-2);
 }
 .nx-table .num { font-variant-numeric: tabular-nums; }
 
 /* ── Panel ─────────────────────────────────────────────────── */
 .panel {
-  background: #161920;
-  border: 1px solid #222630;
+  background: var(--color-bg-2);
+  border: 1px solid var(--color-line);
   border-radius: 10px;
   overflow: hidden;
 }
 .phead {
   padding: 14px 18px;
-  border-bottom: 1px solid #222630;
+  border-bottom: 1px solid var(--color-line);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -693,7 +696,7 @@ input::placeholder, textarea::placeholder {
   font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   font-weight: 500;
   font-size: 15px;
-  color: #F5F3EE;
+  color: var(--color-fg-1);
   letter-spacing: -0.01em;
 }
 .phead .m {
@@ -701,27 +704,27 @@ input::placeholder, textarea::placeholder {
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #7B7D7A;
+  color: var(--color-fg-3);
 }
 .pbody { padding: 18px; }
 
 /* ── Code block ────────────────────────────────────────────── */
 .nx-code {
-  background: #0E1014;
-  border: 1px solid #222630;
+  background: var(--color-bg-1);
+  border: 1px solid var(--color-line);
   border-radius: 6px;
   padding: 16px 20px;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 12px;
   line-height: 1.7;
-  color: #B9BAB4;
+  color: var(--color-fg-2);
   white-space: pre;
   overflow: auto;
 }
-.nx-code .c { color: #7B7D7A; }
-.nx-code .k { color: #FF4D2E; }
-.nx-code .s { color: #4ADE80; }
-.nx-code .p { color: #6BA6FF; }
+.nx-code .c { color: var(--color-fg-3); }
+.nx-code .k { color: var(--color-accent); }
+.nx-code .s { color: var(--color-ok); }
+.nx-code .p { color: var(--color-info); }
 
 /* ═══════════════════════════════════════════════════════════
    Typography utilities
@@ -758,9 +761,8 @@ input::placeholder, textarea::placeholder {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   NDS compat utility classes (nd-* / n-*)
-   — these rendered brand signatures in NDS; under Nexus they
-   behave like standard display/mono utilities
+   DEPRECATED compat utility classes (nd-* / n-*)
+   New UI should use label-mono, font-mono, font-display, and .nx-*.
    ═══════════════════════════════════════════════════════════ */
 .nd-display {
   font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;

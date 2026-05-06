@@ -22,7 +22,7 @@ import { formatCurrency, formatDate } from '../../utils/formatters';
 import { summarizeVAT } from '../../finance/reporting';
 import ForwardProjectionPanel from './ForwardProjectionPanel';
 
-/* ===== Nothing Tooltip ===== */
+/* ===== NEXUS Tooltip ===== */
 const ChartTooltip = ({ active, payload, label }) => {
  if (!active || !payload?.length) return null;
  return (
@@ -37,7 +37,7 @@ const ChartTooltip = ({ active, payload, label }) => {
  );
 };
 
-/* ===== Segmented Progress Bar (Nothing signature) ===== */
+/* ===== Segmented Meter ===== */
 const SegmentedBar = ({ value, max, color = 'var(--text-display)', segments = 20, height = 8 }) => {
  const filled = Math.min(segments, Math.round((Math.abs(value) / Math.max(max, 1)) * segments));
  return (
@@ -90,12 +90,12 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  { id: 'bank-adjustment', title: 'Ajuste bancario', desc: 'Movimiento directo.', icon: Wallet },
  ];
 
- /* ===== Loading — Nothing bracket text ===== */
+ /* ===== Loading ===== */
  if (metrics.loading) {
  return (
  <div className="flex items-center justify-center py-32">
- <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">
- [LOADING...]
+  <p className="label-mono text-[var(--color-fg-3)]">
+  Cargando…
  </p>
  </div>
  );
@@ -111,7 +111,7 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  <p className="nd-label text-[var(--text-secondary)] mb-3">
  Caja real
  </p>
- <p className={`nd-display text-[64px] md:text-[80px] leading-[1] tracking-[-0.03em] tabular-nums ${
+  <p className={`nd-display text-[clamp(44px,14vw,64px)] md:text-[80px] leading-[1] tracking-[-0.03em] tabular-nums ${
  metrics.currentCash >= 0 ? 'text-[var(--text-display)]' : 'text-[var(--negative)]'
  }`}>
  {formatCurrency(metrics.currentCash)}
@@ -201,23 +201,24 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  value: formatCurrency(metrics.cashInflows),
  color: 'var(--text-primary)',
  },
- ].map((kpi, i) => (
- <div
- key={kpi.label}
- className={`bg-[var(--surface)] px-5 py-4 ${kpi.onClick ? 'cursor-pointer hover:bg-[var(--surface-raised)] transition-colors' : ''} ${i > 0 ? 'border-l border-[var(--border)]' : ''}`}
- onClick={kpi.onClick}
- role={kpi.onClick ? 'button' : undefined}
- tabIndex={kpi.onClick ? 0 : undefined}
- onKeyDown={kpi.onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); kpi.onClick(); } } : undefined}
- >
+  ].map((kpi, i) => {
+  const Root = kpi.onClick ? 'button' : 'div';
+  return (
+  <Root
+  key={kpi.label}
+  type={kpi.onClick ? 'button' : undefined}
+  className={`bg-[var(--surface)] px-5 py-4 text-left ${kpi.onClick ? 'w-full cursor-pointer hover:bg-[var(--surface-raised)] transition-colors' : ''} ${i > 0 ? 'border-l border-[var(--border)]' : ''}`}
+  onClick={kpi.onClick}
+  >
  <p className="nd-label text-[var(--text-secondary)]">
  {kpi.label}
  </p>
  <p className="nd-mono text-[20px] tabular-nums mt-1" style={{ color: kpi.color }}>
  {kpi.value}
  </p>
- </div>
- ))}
+  </Root>
+  );
+  })}
  </div>
  </section>
 
@@ -226,18 +227,18 @@ const Dashboard = ({ user, setView, onNewTransaction }) => {
  <p className="nd-label text-[var(--text-secondary)] mb-4">
  IVA Aleman — Umsatzsteuer
  </p>
- <div className="grid grid-cols-3 gap-px border border-[var(--border)] rounded-md overflow-hidden">
+  <div className="grid grid-cols-1 gap-px border border-[var(--border)] rounded-md overflow-hidden sm:grid-cols-3">
  <div className="bg-[var(--surface)] px-5 py-4">
  <p className="nd-label text-[var(--text-secondary)]">USt (ingresos)</p>
  <p className="nd-mono text-[20px] tabular-nums text-[var(--warning)] mt-1">{formatCurrency(vatSummary.outputVAT)}</p>
  <p className="nd-mono text-[11px] text-[var(--text-disabled)] mt-1">Debe a Finanzamt</p>
  </div>
- <div className="bg-[var(--surface)] px-5 py-4 border-l border-[var(--border)]">
+  <div className="bg-[var(--surface)] px-5 py-4 border-t border-[var(--border)] sm:border-l sm:border-t-0">
  <p className="nd-label text-[var(--text-secondary)]">Vorsteuer (gastos)</p>
  <p className="nd-mono text-[20px] tabular-nums text-[var(--text-primary)] mt-1">{formatCurrency(vatSummary.inputVAT)}</p>
  <p className="nd-mono text-[11px] text-[var(--text-disabled)] mt-1">Reclamable</p>
  </div>
- <div className="bg-[var(--surface)] px-5 py-4 border-l border-[var(--border)]">
+  <div className="bg-[var(--surface)] px-5 py-4 border-t border-[var(--border)] sm:border-l sm:border-t-0">
  <p className="nd-label text-[var(--text-secondary)]">Neto VAT</p>
  <p className={`nd-mono text-[20px] tabular-nums mt-1 ${vatSummary.netVAT >= 0 ? 'text-[var(--negative)]' : 'text-[var(--success)]'}`}>
  {vatSummary.netVAT >= 0 ? '+' : ''}{formatCurrency(vatSummary.netVAT)}

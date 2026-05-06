@@ -53,8 +53,8 @@ npm run build && npx firebase deploy --only hosting   # deploy
 - Accent: `#FF4D2E` (orange) — CTAs, brand `.OS`, active nav, chart highlights
 - Surfaces escalate: `#07080A` → `#0E1014` → `#161920` → `#1D2029`
 - Fonts: Space Grotesk (display, 300/400/500), JetBrains Mono (labels/data), Inter (body)
-- Radii: 4 / 6 / 10 px only — skill doc at `.claude/agents/nexus-design.md`
-- Nothing Design System is deprecated
+- Radii: 4 / 6 / 10 px for surfaces and controls. `rounded-full` is allowed only for avatars, status dots, loaders, progress tracks/fills, toggles, and `.nx-badge` pills — never buttons/cards/panels/filter controls.
+- The previous visual system is deprecated; NEXUS.OS is the only source of truth.
 
 ## ⚠️ CRITICAL — DO NOT BREAK THESE
 
