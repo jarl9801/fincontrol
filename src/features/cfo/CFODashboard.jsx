@@ -13,6 +13,7 @@ import {
 import { Badge, Button, KPI, KPIGrid, Panel } from '@/components/ui/nexus';
 import { useCFOSnapshot } from './hooks/useCFOSnapshot';
 import { formatCurrency } from '../../utils/formatters';
+import CashPositionPanel from './panels/CashPositionPanel';
 
 /**
  * CFODashboard — CFO entry point at /cfo.
@@ -27,13 +28,6 @@ import { formatCurrency } from '../../utils/formatters';
  */
 
 const PANELS = [
-  {
-    key: 'cash',
-    title: 'Cash Position',
-    description: 'Efectivo hoy + burn 30/90d + runway',
-    icon: Wallet,
-    phase: 'Fase B',
-  },
   {
     key: 'forecast',
     title: 'Forecast 13 semanas',
@@ -165,6 +159,8 @@ const CFODashboard = ({ user }) => {
           </div>
         </Panel>
       )}
+
+      {snapshot && <CashPositionPanel snapshot={snapshot} />}
 
       {snapshot && (
         <KPIGrid cols={4}>

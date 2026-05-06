@@ -113,6 +113,7 @@ export const fetchCFOSnapshot = async () => {
     recurringCostsSnap,
     employeesSnap,
     categoriesDocSnap,
+    bankAccountDocSnap,
   ] = await Promise.all([
     getDocs(bankMovementsQuery),
     getDocs(dataPath('receivables')),
@@ -121,9 +122,11 @@ export const fetchCFOSnapshot = async () => {
     getDocs(dataPath('recurringCosts')),
     getDocs(dataPath('employees')),
     getDoc(settingsDoc('categories')),
+    getDoc(settingsDoc('bankAccount')),
   ]);
 
   const categoriesData = categoriesDocSnap.exists() ? categoriesDocSnap.data() : {};
+  const bankAccountData = bankAccountDocSnap.exists() ? bankAccountDocSnap.data() : null;
 
   return {
     bankMovements: mapDocs(bankMovementsSnap),
@@ -136,6 +139,14 @@ export const fetchCFOSnapshot = async () => {
       expense: categoriesData.expenseCategories || EXPENSE_CATEGORIES,
       income: categoriesData.incomeCategories || INCOME_CATEGORIES,
     },
+    bankAccount: bankAccountData
+      ? {
+          bankName: bankAccountData.bankName || '',
+          balance: Number(bankAccountData.balance) || 0,
+          balanceDate: bankAccountData.balanceDate || null,
+          creditLineLimit: Number(bankAccountData.creditLineLimit) || 0,
+        }
+      : null,
     meta: {
       bankMovementsLookbackDays: CFO_BANKMOVEMENTS_LOOKBACK_DAYS,
       bankMovementsCutoffDate: cutoffDate,
