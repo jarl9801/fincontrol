@@ -5,6 +5,7 @@ import { useVehicles } from '../../hooks/useVehicles';
 import { useProperties } from '../../hooks/useProperties';
 import { useEmployees } from '../../hooks/useEmployees';
 import { useRecurringCosts } from '../../hooks/useRecurringCosts';
+import { rowButtonProps } from '../../utils/a11y';
 import { formatCurrency } from '../../utils/formatters';
 import InsuranceFormModal from '../../components/ui/InsuranceFormModal';
 import ConfirmModal from '../../components/ui/ConfirmModal';
@@ -193,7 +194,7 @@ const Insurances = ({ user }) => {
  const expiringSoon = days !== null && days >= 0 && days <= 60;
  const expired = days !== null && days < 0;
  return (
- <tr key={i.id} className="cursor-pointer" onClick={() => openEdit(i)}>
+  <tr key={i.id} {...rowButtonProps(() => openEdit(i))}>
  <td className="font-medium text-[var(--text-primary)]">{i.name}</td>
  <td>{TYPE_LABELS[i.type] || i.type}</td>
  <td className="text-[var(--text-secondary)]">{i.insurer || '—'}</td>

@@ -13,6 +13,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { useReceivables } from '../../hooks/useReceivables';
 import { useTransactionActions } from '../../hooks/useTransactionActions';
 import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
+import { rowButtonProps } from '../../utils/a11y';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 
 const statusOptions = [
@@ -201,7 +202,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  key={option.id}
  type="button"
  onClick={() => setStatusFilter(option.id)}
- className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
+  className={`rounded-md border px-3 py-2 text-sm font-medium transition-all ${
  statusFilter === option.id
  ? 'border-[var(--border-visible)] bg-transparent text-[var(--success)]'
  : 'border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]'
@@ -232,7 +233,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  {rows.map((row) => {
  const canSettle = row.source !== 'legacy-opening' && row.status !== 'settled' && row.status !== 'cancelled';
  return (
- <tr key={row.id} className="cursor-pointer hover:bg-[var(--surface)]" onClick={() => setDetailRecord(row)}>
+  <tr key={row.id} {...rowButtonProps(() => setDetailRecord(row), 'hover:bg-[var(--surface)]')}>
  <td className="px-4 py-4">
  <p className="text-sm font-medium text-[var(--text-primary)]">{row.counterpartyName}</p>
  <p className="text-xs text-[var(--text-secondary)]">{row.description || 'Sin descripción'}</p>

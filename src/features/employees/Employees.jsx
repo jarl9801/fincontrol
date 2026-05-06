@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Plus, Pencil, Trash2, Search, HardHat, Users, Briefcase, Wallet } from 'lucide-react';
 import { useEmployees } from '../../hooks/useEmployees';
 import { useRecurringCosts } from '../../hooks/useRecurringCosts';
+import { rowButtonProps } from '../../utils/a11y';
 import { formatCurrency } from '../../utils/formatters';
 import EmployeeFormModal from '../../components/ui/EmployeeFormModal';
 import ConfirmModal from '../../components/ui/ConfirmModal';
@@ -242,7 +243,7 @@ const Employees = ({ user }) => {
  </thead>
  <tbody>
  {filtered.map((e) => (
- <tr key={e.id} className="cursor-pointer" onClick={() => openEdit(e)}>
+  <tr key={e.id} {...rowButtonProps(() => openEdit(e))}>
  <td className="font-medium text-[var(--text-primary)]">{e.fullName || '—'}</td>
  <td>
  <Badge variant={e.type === 'internal' ? 'info' : 'neutral'}>

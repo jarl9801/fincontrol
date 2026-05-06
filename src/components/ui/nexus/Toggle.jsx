@@ -15,7 +15,7 @@ const Toggle = ({ checked = false, onChange, label, disabled = false, className 
       onClick={() => !disabled && onChange?.(!checked)}
       className={`nx-toggle ${checked ? 'on' : ''}`}
     />
-    {label && <span className="text-[13px] text-[var(--text-primary)]">{label}</span>}
+    {label && <span className="text-[13px] text-[var(--color-fg-1)]">{label}</span>}
   </label>
 );
 

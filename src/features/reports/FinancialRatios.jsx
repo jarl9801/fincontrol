@@ -212,7 +212,7 @@ const FinancialRatios = ({ user }) => {
  key={opt.value}
  type="button"
  onClick={() => setSelectedYear(opt.value)}
- className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
+  className={`rounded-md border px-3 py-2 text-sm font-medium transition-all ${
  selectedYear === opt.value
  ? 'border-[var(--border-visible)] bg-[var(--surface)] text-[var(--text-primary)]'
  : 'border-[var(--border)] bg-[var(--surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
@@ -232,7 +232,7 @@ const FinancialRatios = ({ user }) => {
  key={key}
  type="button"
  onClick={() => setSelectedPeriod(`month:${key}`)}
- className={`rounded-full border px-3 py-2 text-sm font-medium transition-all ${
+  className={`rounded-md border px-3 py-2 text-sm font-medium transition-all ${
  selectedPeriod === `month:${key}`
  ? 'border-[var(--border-visible)] bg-[var(--surface)] text-[var(--text-primary)]'
  : 'border-[var(--border)] bg-[var(--surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'

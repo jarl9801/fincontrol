@@ -26,4 +26,20 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    files: ['src/components/ui/nexus/**/*.{js,jsx}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Literal[value=/\\b(nd-|n-label|n-mono|n-tag)\\b|var\\(--(surface|surface-raised|text-primary|text-secondary|text-disabled|accent|border|success|warning|error|info)\\)/]',
+          message: 'NEXUS components must use canonical utilities and --color-* tokens, not compatibility aliases.',
+        },
+        {
+          selector: 'TemplateElement[value.raw=/\\b(nd-|n-label|n-mono|n-tag)\\b|var\\(--(surface|surface-raised|text-primary|text-secondary|text-disabled|accent|border|success|warning|error|info)\\)/]',
+          message: 'NEXUS components must use canonical utilities and --color-* tokens, not compatibility aliases.',
+        },
+      ],
+    },
+  },
 ])

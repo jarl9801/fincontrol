@@ -8,6 +8,7 @@ import { useInsurances } from '../../hooks/useInsurances';
 import { useCostCenters } from '../../hooks/useCostCenters';
 import { useProjects } from '../../hooks/useProjects';
 import { monthlyEquivalent } from '../../finance/assetSchemas';
+import { rowButtonProps } from '../../utils/a11y';
 import { formatCurrency } from '../../utils/formatters';
 import RecurringCostFormModal from '../../components/ui/RecurringCostFormModal';
 import GenerateMonthModal from '../../components/ui/GenerateMonthModal';
@@ -176,7 +177,7 @@ const RecurringCosts = ({ user }) => {
  key={c.key}
  type="button"
  onClick={() => setFilter(c.key)}
- className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-medium transition-all ${
+  className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-medium transition-all ${
  filter === c.key
  ? 'border border-[var(--accent)] bg-transparent text-[var(--accent)]'
  : 'border border-[var(--border)] bg-[var(--surface)] text-[var(--text-disabled)] hover:text-[var(--text-primary)]'
@@ -237,7 +238,7 @@ const RecurringCosts = ({ user }) => {
  </thead>
  <tbody>
  {filtered.map((c) => (
- <tr key={c.id} className="cursor-pointer" onClick={() => openEdit(c)}>
+  <tr key={c.id} {...rowButtonProps(() => openEdit(c))}>
  <td className="font-medium text-[var(--text-primary)]">{c.concept || '—'}</td>
  <td>{OWNER_TYPE_LABELS[c.ownerType] || c.ownerType}</td>
  <td className="text-[var(--text-secondary)]">{c.ownerName || '—'}</td>

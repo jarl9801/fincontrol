@@ -17,6 +17,7 @@ import { useCostCenters } from '../../hooks/useCostCenters';
 import { useProjects } from '../../hooks/useProjects';
 import { useToast } from '../../contexts/ToastContext';
 import { matchRule } from '../../finance/ruleEngine';
+import { rowButtonProps } from '../../utils/a11y';
 import RuleFormModal from '../../components/ui/RuleFormModal';
 import ConfirmModal from '../../components/ui/ConfirmModal';
 import { Button, Badge, KPIGrid, KPI, Panel, EmptyState } from '@/components/ui/nexus';
@@ -260,7 +261,7 @@ const Rules = ({ user }) => {
               </thead>
               <tbody>
                 {filtered.map((r) => (
-                  <tr key={r.id} className="cursor-pointer" onClick={() => openEdit(r)}>
+                  <tr key={r.id} {...rowButtonProps(() => openEdit(r))}>
                     <td className="font-medium text-[var(--text-primary)]">{r.name || '—'}</td>
                     <td className="text-[var(--text-secondary)]">
                       {FIELD_LABELS[r.field]} {MATCH_LABELS[r.matchType]}

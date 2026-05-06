@@ -85,7 +85,7 @@ This project uses the **NEXUS.OS** design system. Before making any UI changes, 
 Key rules:
 - All panels/cards use `bg-[var(--color-bg-1)]` or `bg-[var(--color-bg-2)]` — never colored backgrounds
 - Headings: `<h1>` = `font-light` (300), `<h2>` = `font-medium` (500), both on `var(--font-display)`
-- Radii: only `rounded-sm` / `rounded-md` / `rounded-lg` — never `xl` / `2xl` / `3xl`
+- Radii: `rounded-sm` / `rounded-md` / `rounded-lg` for controls and surfaces; `rounded-full` only for avatars, status dots, loaders, progress, toggles, and `.nx-badge`
 - Buttons use `.nx-btn .nx-btn-primary|-secondary|-ghost|-danger` — never `rounded-full` on buttons
 - Accent `#FF4D2E` is reserved for CTAs, active states, `.OS` brand fragment, chart highlights
-- The old Nothing Design System is deprecated — `.claude/agents/nothing-design.md` redirects here
+- The previous visual system is deprecated — NEXUS.OS is the only source of truth

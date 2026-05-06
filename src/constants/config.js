@@ -1,4 +1,4 @@
-// Nothing Design System — Monochrome Chart Palette
+// NEXUS.OS — Monochrome Chart Palette
 export const COLORS = [
   '#E8E8E8', // Primary white
   '#999999', // Secondary gray
