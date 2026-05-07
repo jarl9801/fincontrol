@@ -102,18 +102,18 @@ const CFODashboard = ({ user }) => {
     <div className="space-y-6 pb-12">
       <header className="flex items-end justify-between gap-4 flex-wrap">
         <div>
-          <p className="nd-label text-[var(--text-secondary)]">Capa CFO</p>
-          <h2 className="mt-2 nd-display text-[28px] font-light tracking-tight text-[var(--text-primary)]">
-            CFO<span className="text-[var(--accent)]">.OS</span> — Vista ejecutiva
+          <p className="label-mono text-[var(--color-fg-3)]">Capa CFO</p>
+          <h2 className="mt-2 font-display text-[28px] font-light tracking-tight text-[var(--color-fg-1)]">
+            CFO<span className="text-[var(--color-accent)]">.OS</span> — Vista ejecutiva
           </h2>
-          <p className="mt-1 text-sm text-[var(--text-secondary)] max-w-2xl">
+          <p className="mt-1 text-sm text-[var(--color-fg-3)] max-w-2xl">
             Caja real, pagos urgentes, cobros pendientes y calidad de datos. Primero control
             operativo; después forecast bonito. Read-only, single-fetch, cacheado.
           </p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-end">
-            <span className="inline-flex items-center gap-1.5 nd-mono text-[11px] text-[var(--text-disabled)]">
+            <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[var(--color-fg-4)]">
               <Clock size={12} />
               Datos a las {formatTimestamp(fetchedAt)}
             </span>
@@ -136,12 +136,12 @@ const CFODashboard = ({ user }) => {
       {error && (
         <Panel padding>
           <div className="flex items-start gap-3">
-            <AlertTriangle className="text-[var(--error)] flex-shrink-0 mt-0.5" size={18} />
+            <AlertTriangle className="text-[var(--color-err)] flex-shrink-0 mt-0.5" size={18} />
             <div>
-              <p className="text-[14px] text-[var(--text-primary)]">
+              <p className="text-[14px] text-[var(--color-fg-1)]">
                 No se pudo cargar el snapshot.
               </p>
-              <p className="mt-1 nd-mono text-[12px] text-[var(--text-disabled)]">
+              <p className="mt-1 font-mono text-[12px] text-[var(--color-fg-4)]">
                 {error.message || String(error)}
               </p>
             </div>
@@ -163,10 +163,10 @@ const CFODashboard = ({ user }) => {
               meta={p.phase}
             >
               <div className="flex flex-col items-start gap-3 py-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface-raised)]">
-                  <Icon size={18} className="text-[var(--text-disabled)]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--color-line)] bg-[var(--color-bg-2)]">
+                  <Icon size={18} className="text-[var(--color-fg-4)]" />
                 </div>
-                <p className="text-[13px] text-[var(--text-secondary)]">{p.description}</p>
+                <p className="text-[13px] text-[var(--color-fg-3)]">{p.description}</p>
                 <Badge variant="neutral">Coming soon</Badge>
               </div>
             </Panel>
@@ -176,7 +176,7 @@ const CFODashboard = ({ user }) => {
 
       {import.meta.env.DEV && !loading && !error && snapshot && (
         <Panel title="Snapshot diagnostics" meta="Solo desarrollo">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 nd-mono text-[12px] text-[var(--text-secondary)]">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 font-mono text-[12px] text-[var(--color-fg-3)]">
             <DiagRow label="bankMovements" value={counts.bankMovements} />
             <DiagRow label="receivables" value={counts.receivables} />
             <DiagRow label="payables" value={counts.payables} />
@@ -206,9 +206,9 @@ const CFODashboard = ({ user }) => {
 };
 
 const DiagRow = ({ label, value }) => (
-  <div className="flex items-center justify-between border-b border-[var(--border)] pb-1">
-    <span className="text-[var(--text-disabled)]">{label}</span>
-    <span className="text-[var(--text-primary)] tabular-nums">{value}</span>
+  <div className="flex items-center justify-between border-b border-[var(--color-line)] pb-1">
+    <span className="text-[var(--color-fg-4)]">{label}</span>
+    <span className="text-[var(--color-fg-1)] tabular-nums">{value}</span>
   </div>
 );
 

@@ -33,27 +33,26 @@ const statusLabels = {
 };
 
 const StatCard = ({ title, value, subtitle, accent, icon, onClick }) => {
- const IconComponent = icon;
+  const IconComponent = icon;
+  const Root = onClick ? 'button' : 'div';
 
- return (
- <div
- className={`rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ${onClick ? 'cursor-pointer hover: transition-transform duration-200' : ''}`}
- onClick={onClick}
- role={onClick ? 'button' : undefined}
- tabIndex={onClick ? 0 : undefined}
- onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
- >
- <div className="mb-4 flex items-center justify-between">
- <div>
- <p className="nd-label text-[var(--text-secondary)]">{title}</p>
- <p className="mt-2 nd-display text-[28px] font-medium tracking-tight text-[var(--text-primary)]">{value}</p>
- </div>
- <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: `${accent}1f`, color: accent }}>
+  return (
+  <Root
+  type={onClick ? 'button' : undefined}
+  className={`rounded-md border border-[var(--color-line)] bg-[var(--color-bg-1)] p-5 text-left ${onClick ? 'w-full cursor-pointer transition-colors hover:bg-[var(--color-bg-2)]' : ''}`}
+  onClick={onClick}
+  >
+  <div className="mb-4 flex items-center justify-between">
+  <div>
+  <p className="label-mono text-[var(--color-fg-3)]">{title}</p>
+  <p className="mt-2 font-display text-[28px] font-medium tracking-tight text-[var(--color-fg-1)]">{value}</p>
+  </div>
+  <div className="flex h-11 w-11 items-center justify-center rounded-lg" style={{ backgroundColor: `${accent}1f`, color: accent }}>
  <IconComponent size={18} />
  </div>
  </div>
- <p className="text-sm text-[var(--text-secondary)]">{subtitle}</p>
- </div>
+  <p className="text-sm text-[var(--color-fg-3)]">{subtitle}</p>
+  </Root>
  );
 };
 
@@ -149,19 +148,19 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  if (metrics.loading) {
  return (
  <div className="flex items-center justify-center py-28">
- <p className="nd-mono text-xs text-[var(--text-secondary)] tracking-[0.08em] uppercase">[LOADING...]</p>
+  <p className="label-mono text-[var(--color-fg-3)]">Cargando…</p>
  </div>
  );
  }
 
  return (
  <div className="space-y-6 pb-12">
- <section className="rounded-md border border-[var(--border)] bg-[var(--black)] px-6 py-7 ">
+  <section className="rounded-md border border-[var(--color-line)] bg-[var(--color-bg-0)] px-6 py-7">
  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
  <div>
- <p className="mb-3 nd-label text-[var(--success)]">Ingresos</p>
- <h2 className="nd-display text-[32px] font-medium tracking-tight text-[var(--text-display)]">Cobros reales y cartera pendiente en una sola vista.</h2>
- <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[var(--text-secondary)]">
+  <p className="mb-3 label-mono text-[var(--color-ok)]">Ingresos</p>
+  <h2 className="font-display text-[32px] font-medium tracking-tight text-[var(--color-fg-1)]">Cobros reales y cartera pendiente en una sola vista.</h2>
+  <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[var(--color-fg-3)]">
  La caja entra solo con movimientos bancarios `posted`. Las facturas abiertas permanecen como cartera hasta registrar un cobro real.
  </p>
  </div>
@@ -169,7 +168,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  <button
  type="button"
  onClick={() => onNewTransaction('income')}
- className="inline-flex items-center gap-2 rounded-lg bg-[var(--success)] px-4 py-3 text-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--success)]"
+  className="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent)] px-4 py-3 text-sm font-medium text-[var(--color-ink)] transition-colors hover:bg-[var(--color-accent-hover)]"
  >
  <Plus size={16} />
  Nueva factura CXC
@@ -179,18 +178,18 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  </section>
 
  <div className="grid gap-4 lg:grid-cols-4">
- <StatCard title="Cobrado real" value={formatCurrency(collectedReal)} subtitle={`${collectionMovements.length} cobros bancarios registrados`} accent="var(--success)" icon={Wallet} onClick={() => setStatusFilter('settled')} />
- <StatCard title="Cartera abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="var(--text-secondary)" icon={BadgeEuro} onClick={() => setStatusFilter('all')} />
- <StatCard title="Cobro parcial" value={formatCurrency(totalPartial)} subtitle="Importe ya cobrado sobre facturas aún abiertas" accent="var(--warning)" icon={ArrowUpCircle} />
- <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overdueReceivables.length} documentos fuera de plazo`} accent="var(--accent)" icon={AlertTriangle} onClick={() => setStatusFilter('overdue')} />
+  <StatCard title="Cobrado real" value={formatCurrency(collectedReal)} subtitle={`${collectionMovements.length} cobros bancarios registrados`} accent="var(--color-ok)" icon={Wallet} onClick={() => setStatusFilter('settled')} />
+  <StatCard title="Cartera abierta" value={formatCurrency(totalOpen)} subtitle={`${openRows.length} documentos activos`} accent="var(--color-fg-3)" icon={BadgeEuro} onClick={() => setStatusFilter('all')} />
+  <StatCard title="Cobro parcial" value={formatCurrency(totalPartial)} subtitle="Importe ya cobrado sobre facturas aún abiertas" accent="var(--color-warn)" icon={ArrowUpCircle} />
+  <StatCard title="Vencido" value={formatCurrency(totalOverdue)} subtitle={`${metrics.overdueReceivables.length} documentos fuera de plazo`} accent="var(--color-accent)" icon={AlertTriangle} onClick={() => setStatusFilter('overdue')} />
  </div>
 
- <section className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-5 ">
+  <section className="rounded-md border border-[var(--color-line)] bg-[var(--color-bg-1)] p-5">
  <div className="mb-4 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
  <div className="relative w-full xl:max-w-sm">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" size={16} />
+  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-fg-3)]" size={16} />
  <input
- className="w-full rounded-lg border border-[var(--border)] bg-[var(--black)] py-3 pl-10 pr-4 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-[var(--border-visible)]"
+  className="w-full rounded-md border border-[var(--color-line)] bg-[var(--color-bg-0)] py-3 pl-10 pr-4 text-sm text-[var(--color-fg-1)] outline-none transition-all placeholder:text-[var(--color-fg-4)] focus:border-[var(--color-line-s)]"
  placeholder="Buscar cliente, documento o proyecto"
  value={searchTerm}
  onChange={(event) => setSearchTerm(event.target.value)}
@@ -204,8 +203,8 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  onClick={() => setStatusFilter(option.id)}
   className={`rounded-md border px-3 py-2 text-sm font-medium transition-all ${
  statusFilter === option.id
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--success)]'
- : 'border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--surface)] hover:text-[var(--text-primary)]'
+  ? 'border-[var(--color-line-s)] bg-[var(--color-bg-2)] text-[var(--color-ok)]'
+  : 'border-[var(--color-line)] text-[var(--color-fg-3)] hover:bg-[var(--color-bg-2)] hover:text-[var(--color-fg-1)]'
  }`}
  >
  {option.label}
@@ -217,7 +216,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  <div className="overflow-x-auto">
  <table className="w-full min-w-[980px] text-left">
  <thead>
- <tr className="border-b border-[var(--border)] nd-label text-[var(--text-secondary)]">
+  <tr className="border-b border-[var(--color-line)] label-mono text-[var(--color-fg-3)]">
  <th className="px-4 py-3">Cliente</th>
  <th className="px-4 py-3">Documento</th>
  <th className="px-4 py-3">Proyecto</th>
@@ -229,34 +228,34 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  {canAct && <th className="px-4 py-3 text-right">Acciones</th>}
  </tr>
  </thead>
- <tbody className="divide-y divide-[var(--border)]">
+  <tbody className="divide-y divide-[var(--color-line)]">
  {rows.map((row) => {
  const canSettle = row.source !== 'legacy-opening' && row.status !== 'settled' && row.status !== 'cancelled';
  return (
-  <tr key={row.id} {...rowButtonProps(() => setDetailRecord(row), 'hover:bg-[var(--surface)]')}>
+   <tr key={row.id} {...rowButtonProps(() => setDetailRecord(row), 'hover:bg-[var(--color-bg-2)]')}>
  <td className="px-4 py-4">
- <p className="text-sm font-medium text-[var(--text-primary)]">{row.counterpartyName}</p>
- <p className="text-xs text-[var(--text-secondary)]">{row.description || 'Sin descripción'}</p>
+  <p className="text-sm font-medium text-[var(--color-fg-1)]">{row.counterpartyName}</p>
+  <p className="text-xs text-[var(--color-fg-3)]">{row.description || 'Sin descripción'}</p>
  </td>
- <td className="px-4 py-4 text-sm text-[var(--text-primary)]">{row.documentNumber || 'Sin documento'}</td>
- <td className="px-4 py-4 text-sm text-[var(--text-secondary)]">{row.projectName || 'Sin proyecto'}</td>
- <td className="px-4 py-4 text-right text-sm font-medium text-[var(--text-primary)]">{formatCurrency(row.grossAmount)}</td>
- <td className="px-4 py-4 text-right text-sm font-medium text-[var(--text-secondary)]">{formatCurrency(row.openAmount)}</td>
- <td className="px-4 py-4 text-center text-sm text-[var(--text-secondary)]">{row.dueDate ? formatDate(row.dueDate) : 'Sin fecha'}</td>
+  <td className="px-4 py-4 text-sm text-[var(--color-fg-1)]">{row.documentNumber || 'Sin documento'}</td>
+  <td className="px-4 py-4 text-sm text-[var(--color-fg-3)]">{row.projectName || 'Sin proyecto'}</td>
+  <td className="px-4 py-4 text-right text-sm font-medium text-[var(--color-fg-1)]">{formatCurrency(row.grossAmount)}</td>
+  <td className="px-4 py-4 text-right text-sm font-medium text-[var(--color-fg-3)]">{formatCurrency(row.openAmount)}</td>
+  <td className="px-4 py-4 text-center text-sm text-[var(--color-fg-3)]">{row.dueDate ? formatDate(row.dueDate) : 'Sin fecha'}</td>
  <td className="px-4 py-4 text-center">
  <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-medium ${
  row.status === 'settled'
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--success)]'
+  ? 'border-[var(--color-line-s)] bg-transparent text-[var(--color-ok)]'
  : row.status === 'overdue'
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--accent)]'
+  ? 'border-[var(--color-line-s)] bg-transparent text-[var(--color-accent)]'
  : row.status === 'partial'
- ? 'border-[var(--border-visible)] bg-transparent text-[var(--warning)]'
- : 'border-[var(--border-visible)] bg-[var(--surface)] text-[var(--text-secondary)]'
+  ? 'border-[var(--color-line-s)] bg-transparent text-[var(--color-warn)]'
+  : 'border-[var(--color-line-s)] bg-[var(--color-bg-1)] text-[var(--color-fg-3)]'
  }`}>
  {statusLabels[row.status]}
  </span>
  </td>
- <td className="px-4 py-4 text-center text-xs text-[var(--text-secondary)]">{row.source}</td>
+  <td className="px-4 py-4 text-center text-xs text-[var(--color-fg-3)]">{row.source}</td>
  {canAct && (
  <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
  <div className="flex justify-end gap-2">
@@ -265,7 +264,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  <button
  type="button"
  onClick={() => setSelectedRow(row)}
- className="rounded-md border border-[var(--border)] px-3 py-2 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface)]"
+  className="rounded-md border border-[var(--color-line)] px-3 py-2 text-xs font-medium text-[var(--color-fg-3)] transition-colors hover:bg-[var(--color-bg-2)] hover:text-[var(--color-fg-1)]"
  >
  Abono
  </button>
@@ -273,7 +272,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  type="button"
  onClick={() => handleSettle(row)}
  disabled={loadingId === row.id}
- className="rounded-md bg-[var(--success)] px-3 py-2 text-xs font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--success)] disabled:opacity-50"
+  className="rounded-md bg-[var(--color-accent)] px-3 py-2 text-xs font-medium text-[var(--color-ink)] transition-colors hover:bg-[var(--color-accent-hover)] disabled:opacity-50"
  >
  {loadingId === row.id ? 'Procesando...' : 'Liquidar'}
  </button>
@@ -287,7 +286,7 @@ const Ingresos = ({ userRole, user, onNewTransaction }) => {
  })}
  {rows.length === 0 && (
  <tr>
- <td colSpan={canAct ? 9 : 8} className="px-4 py-8 text-center text-sm text-[var(--text-secondary)]">
+  <td colSpan={canAct ? 9 : 8} className="px-4 py-8 text-center text-sm text-[var(--color-fg-3)]">
  No hay ingresos que coincidan con los filtros.
  </td>
  </tr>
