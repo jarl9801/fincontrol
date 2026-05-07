@@ -35,9 +35,9 @@ const TooltipContent = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
-    <div className="border border-[var(--border-visible)] bg-[var(--surface)] px-3 py-2 rounded-md">
-      <p className="nd-mono text-[11px] text-[var(--text-secondary)]">{d.date}</p>
-      <p className="nd-mono text-[12px] tabular-nums text-[var(--text-primary)]">
+    <div className="border border-[var(--color-line-s)] bg-[var(--color-bg-1)] px-3 py-2 rounded-md">
+      <p className="font-mono text-[11px] text-[var(--color-fg-3)]">{d.date}</p>
+      <p className="font-mono text-[12px] tabular-nums text-[var(--color-fg-1)]">
         {formatCurrency(d.balance)}
       </p>
     </div>
@@ -75,12 +75,12 @@ const CashPositionPanel = ({ snapshot }) => {
     return (
       <Panel title="Cash Position" meta="Fase B" padding>
         <div className="flex items-start gap-3">
-          <AlertTriangle className="text-[var(--warning)] flex-shrink-0 mt-0.5" size={18} />
+          <AlertTriangle className="text-[var(--color-warn)] flex-shrink-0 mt-0.5" size={18} />
           <div>
-            <p className="text-[14px] text-[var(--text-primary)]">
+            <p className="text-[14px] text-[var(--color-fg-1)]">
               No hay cuenta bancaria configurada.
             </p>
-            <p className="mt-1 text-[12px] text-[var(--text-secondary)]">
+            <p className="mt-1 text-[12px] text-[var(--color-fg-3)]">
               Definí starting balance + balance date en /configuracion → Cuenta bancaria
               para que la capa CFO pueda calcular cash hoy y runway.
             </p>
@@ -160,9 +160,9 @@ const CashPositionPanel = ({ snapshot }) => {
         </KPIGrid>
 
         {cashCritical && (
-          <div className="flex items-start gap-3 rounded-md border border-[var(--error)] bg-[var(--surface)] px-4 py-3">
-            <AlertTriangle className="text-[var(--error)] flex-shrink-0 mt-0.5" size={16} />
-            <div className="text-[12px] text-[var(--text-primary)]">
+          <div className="flex items-start gap-3 rounded-md border border-[var(--color-err)] bg-[var(--color-bg-1)] px-4 py-3">
+            <AlertTriangle className="text-[var(--color-err)] flex-shrink-0 mt-0.5" size={16} />
+            <div className="text-[12px] text-[var(--color-fg-1)]">
               Cash actual ({formatCurrency(cash.cashToday)}) está por debajo del umbral
               crítico de {formatCurrency(runway.criticalThreshold)}. Revisar cobranza y
               recortar gastos discrecionales.
@@ -172,35 +172,35 @@ const CashPositionPanel = ({ snapshot }) => {
 
         <div
           style={{ width: '100%', height: 200, minHeight: 200, minWidth: 0 }}
-          className="rounded-md border border-[var(--border)] bg-[var(--surface-raised)] px-2 py-3"
+          className="rounded-md border border-[var(--color-line)] bg-[var(--color-bg-2)] px-2 py-3"
         >
           <ResponsiveContainer width="100%" height="100%" minWidth={0}>
             <AreaChart data={sparkline} margin={{ top: 4, right: 12, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="cashFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.25} />
-                  <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
+                  <stop offset="0%" stopColor="var(--color-accent)" stopOpacity={0.25} />
+                  <stop offset="100%" stopColor="var(--color-accent)" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="2 4" stroke="var(--border)" vertical={false} />
+              <CartesianGrid strokeDasharray="2 4" stroke="var(--color-line)" vertical={false} />
               <XAxis
                 dataKey="date"
-                tick={{ fontSize: 10, fill: 'var(--text-disabled)' }}
+                tick={{ fontSize: 10, fill: 'var(--color-fg-4)' }}
                 tickFormatter={(v) => v.slice(5)}
                 interval="preserveStartEnd"
                 minTickGap={32}
-                stroke="var(--border)"
+                stroke="var(--color-line)"
               />
               <YAxis
-                tick={{ fontSize: 10, fill: 'var(--text-disabled)' }}
+                tick={{ fontSize: 10, fill: 'var(--color-fg-4)' }}
                 tickFormatter={(v) => `${Math.round(v / 1000)}k`}
                 width={42}
-                stroke="var(--border)"
+                stroke="var(--color-line)"
               />
-              <Tooltip content={<TooltipContent />} cursor={{ stroke: 'var(--border-visible)' }} />
+              <Tooltip content={<TooltipContent />} cursor={{ stroke: 'var(--color-line-s)' }} />
               <ReferenceLine
                 y={runway.criticalThreshold}
-                stroke="var(--error)"
+                stroke="var(--color-err)"
                 strokeDasharray="3 3"
                 strokeWidth={1}
                 ifOverflow="extendDomain"
@@ -208,7 +208,7 @@ const CashPositionPanel = ({ snapshot }) => {
               <Area
                 type="monotone"
                 dataKey="balance"
-                stroke="var(--accent)"
+                stroke="var(--color-accent)"
                 strokeWidth={1.5}
                 fill="url(#cashFill)"
                 isAnimationActive={false}
@@ -217,7 +217,7 @@ const CashPositionPanel = ({ snapshot }) => {
           </ResponsiveContainer>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 text-[11px] text-[var(--text-disabled)]">
+        <div className="flex flex-wrap items-center gap-2 text-[11px] text-[var(--color-fg-4)]">
           <Badge variant="neutral">90d burn: {formatCurrency(burn90.perMonth)}/mes</Badge>
           <Badge variant={net90PerMonth >= 0 ? 'ok' : 'warn'}>
             Neto 90d: {formatCurrency(net90PerMonth)}/mes
