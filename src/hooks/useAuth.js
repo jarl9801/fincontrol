@@ -4,6 +4,19 @@ import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../services/firebase';
 import { USER_ROLES, ROLE_PERMISSIONS } from '../constants/config';
 
+const LOCAL_TEST_AUTH_KEY = 'fincontrol.localTestAuth';
+
+const LOCAL_TEST_USER = {
+  uid: 'local-test-user',
+  email: 'test.local@umtelkomd.test',
+  displayName: 'Local Test User',
+  isAnonymous: true,
+};
+
+const isLocalTestAuthEnabled = () => (
+  import.meta.env.DEV && window.localStorage.getItem(LOCAL_TEST_AUTH_KEY) === 'true'
+);
+
 /**
  * Reads user role from Firestore `users/{uid}` document.
  * Falls back to config.js email mapping if Firestore doc doesn't exist yet
@@ -28,6 +41,13 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isLocalTestAuthEnabled()) {
+      setUser(LOCAL_TEST_USER);
+      setUserRole('admin');
+      setLoading(false);
+      return undefined;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);

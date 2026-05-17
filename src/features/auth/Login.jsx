@@ -8,6 +8,12 @@ const Login = () => {
  const [loginData, setLoginData] = useState({ email: '', password: '' });
  const [loginError, setLoginError] = useState('');
  const [loading, setLoading] = useState(false);
+ const canUseLocalTestAuth = import.meta.env.DEV;
+
+ const handleLocalTestAuth = () => {
+ window.localStorage.setItem('fincontrol.localTestAuth', 'true');
+ window.location.reload();
+ };
 
  const handleLogin = async (e) => {
  e.preventDefault();
@@ -119,6 +125,22 @@ placeholder="********"
  Iniciar Sesión
  </Button>
  </form>
+
+ {canUseLocalTestAuth && (
+ <div className="mt-4 rounded-md border border-[var(--color-line)] bg-[var(--color-bg-0)] p-3">
+ <p className="mb-3 text-[12px] leading-5 text-[var(--color-fg-3)]">
+ Modo local para revisar UI sin crear usuarios ni tocar Firebase Auth. Los datos pueden aparecer vacíos si Firestore bloquea lecturas sin sesión real.
+ </p>
+ <Button
+ type="button"
+ variant="secondary"
+ onClick={handleLocalTestAuth}
+ className="w-full justify-center py-2.5 font-mono text-[11px] uppercase tracking-[0.06em]"
+ >
+ Entrar en modo prueba local
+ </Button>
+ </div>
+ )}
 
  <p className="mt-6 text-center font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--color-fg-4)]">
   Rebuilt around software · {new Date().getFullYear()}
