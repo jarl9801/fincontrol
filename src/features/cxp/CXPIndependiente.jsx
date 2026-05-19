@@ -137,7 +137,7 @@ const CXPIndependiente = ({ user, userRole }) => {
  };
  }
  setLoadingId(selectedRow.id);
- const result = await linkToPayable(selectedRow, movement);
+ const result = await linkToPayable(movement, selectedRow);
  setLoadingId(null);
  if (result.success) {
  showToast(

@@ -139,7 +139,7 @@ const CXCIndependiente = ({ user, userRole }) => {
  };
  }
  setLoadingId(selectedRow.id);
- const result = await linkToReceivable(selectedRow, movement);
+ const result = await linkToReceivable(movement, selectedRow);
  setLoadingId(null);
  if (result.success) {
  showToast(
