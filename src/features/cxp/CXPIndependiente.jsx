@@ -15,6 +15,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { useBankMovements } from '../../hooks/useBankMovements';
 import { useClassifier } from '../../hooks/useClassifier';
 import { useTreasuryMetrics } from '../../hooks/useTreasuryMetrics';
+import { daysUntil } from '../../finance/utils';
 import { rowButtonProps } from '../../utils/a11y';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { KPIGrid, KPI, Badge, Button } from '@/components/ui/nexus';
@@ -95,9 +96,13 @@ const CXPIndependiente = ({ user, userRole }) => {
  const [loadingId, setLoadingId] = useState(null);
  const [detailRecord, setDetailRecord] = useState(null);
 
+ const visiblePayables = useMemo(
+ () => metrics.payables.filter((entry) => entry.source === 'payable'),
+ [metrics.payables],
+ );
+
  const rows = useMemo(() => {
- const source = metrics.payables;
- return source
+ return visiblePayables
  .filter((entry) => {
  if (statusFilter === 'partial') {
  if (entry.stage !== 'partial' && !(entry.paidAmount > 0 && entry.openAmount > 0)) return false;
@@ -114,15 +119,37 @@ const CXPIndependiente = ({ user, userRole }) => {
  );
  })
  .sort((left, right) => (right.dueDate || '').localeCompare(left.dueDate || ''));
- }, [metrics.payables, searchTerm, statusFilter]);
+ }, [visiblePayables, searchTerm, statusFilter]);
 
- const openRows = metrics.payables.filter((entry) => ['issued', 'partial', 'overdue'].includes(entry.status));
+ const openRows = visiblePayables.filter((entry) => ['issued', 'partial', 'overdue'].includes(entry.status));
+ const overdueRows = metrics.overduePayables.filter((entry) => entry.source === 'payable');
+ const upcomingRows = metrics.upcomingPayables.filter((entry) => entry.source === 'payable');
+ const visiblePayablesAging = useMemo(() => {
+ const buckets = [
+ { label: '0-30d', total: 0 },
+ { label: '31-60d', total: 0 },
+ { label: '61-90d', total: 0 },
+ { label: '>90d', total: 0 },
+ ];
+
+ openRows.forEach((entry) => {
+ if (!entry.dueDate) return;
+ const overdueDays = Math.max(0, -daysUntil(entry.dueDate));
+ if (overdueDays === 0) return;
+ if (overdueDays <= 30) buckets[0].total += entry.openAmount || 0;
+ else if (overdueDays <= 60) buckets[1].total += entry.openAmount || 0;
+ else if (overdueDays <= 90) buckets[2].total += entry.openAmount || 0;
+ else buckets[3].total += entry.openAmount || 0;
+ });
+
+ return buckets;
+ }, [openRows]);
  const totalOpen = openRows.reduce((sum, entry) => sum + entry.openAmount, 0);
- const totalOverdue = metrics.overduePayables.reduce((sum, entry) => sum + entry.openAmount, 0);
- const totalPartial = metrics.payables
+ const totalOverdue = overdueRows.reduce((sum, entry) => sum + entry.openAmount, 0);
+ const totalPartial = visiblePayables
  .filter((entry) => entry.stage === 'partial' || (entry.paidAmount > 0 && entry.openAmount > 0))
  .reduce((sum, entry) => sum + entry.paidAmount, 0);
- const dueSoon = metrics.upcomingPayables.reduce((sum, entry) => sum + entry.openAmount, 0);
+ const dueSoon = upcomingRows.reduce((sum, entry) => sum + entry.openAmount, 0);
 
  const canAct = userRole === 'admin' || userRole === 'manager';
 
@@ -201,7 +228,7 @@ const CXPIndependiente = ({ user, userRole }) => {
  <KPI
  label="Vencido"
  value={formatCurrency(totalOverdue)}
- meta={`${metrics.overduePayables.length} documentos fuera de plazo`}
+ meta={`${overdueRows.length} documentos fuera de plazo`}
  tone="err"
  icon={AlertTriangle}
  onClick={() => setStatusFilter('overdue')}
@@ -209,14 +236,14 @@ const CXPIndependiente = ({ user, userRole }) => {
  <KPI
  label="Ventana 14d"
  value={formatCurrency(dueSoon)}
- meta={`${metrics.upcomingPayables.length} pagos proximos`}
+ meta={`${upcomingRows.length} pagos proximos`}
  tone="warn"
  icon={Clock3}
  onClick={() => setStatusFilter('issued')}
  />
  </KPIGrid>
 
- <AgingBar buckets={metrics.payablesAging} />
+ <AgingBar buckets={visiblePayablesAging} />
 
   <section className="rounded-md border border-[var(--color-line)] bg-[var(--color-bg-1)] p-5">
  <div className="mb-4 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
